@@ -1,7 +1,7 @@
 
 import React from 'react';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import RevenueSection from './RevenueExpensesComponents/RevenueSection';
+import ExpensesSection from './RevenueExpensesComponents/ExpensesSection';
 
 interface RevenueExpensesProps {
   totalRevenue: string;
@@ -28,228 +28,36 @@ interface RevenueExpensesProps {
   setOtherExpenses: (value: string) => void;
 }
 
-const RevenueExpenses: React.FC<RevenueExpensesProps> = ({
-  totalRevenue,
-  setTotalRevenue,
-  invoicedRevenue,
-  setInvoicedRevenue,
-  nonInvoicedRevenue,
-  setNonInvoicedRevenue,
-  newInvoicedRevenue,
-  setNewInvoicedRevenue,
-  totalExpenses,
-  setTotalExpenses,
-  invoicedExpenses,
-  setInvoicedExpenses,
-  nonInvoicedExpenses,
-  setNonInvoicedExpenses,
-  personalTax,
-  setPersonalTax,
-  socialSecurity,
-  setSocialSecurity,
-  depreciation,
-  setDepreciation,
-  otherExpenses,
-  setOtherExpenses,
-}) => {
+const RevenueExpenses: React.FC<RevenueExpensesProps> = (props) => {
   return (
     <div className="space-y-6 border rounded-lg p-6 bg-white">
-      <div className="space-y-6">
-        <h2 className="text-xl font-bold border-l-4 border-tax-blue pl-3">销售收入（不含销项税）</h2>
-        
-        <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-center">
-          <div className="md:col-span-2"></div>
-          <div className="md:col-span-3"></div>
-          <div className="md:col-span-1 flex items-center">
-            <div className="w-36">
-              <Input
-                type="number"
-                value={totalRevenue}
-                onChange={(e) => setTotalRevenue(e.target.value)}
-                className="text-right w-full"
-              />
-            </div>
-            <span className="ml-2">万元</span>
-          </div>
-        </div>
-        
-        <div className="pl-4 space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-center">
-            <div className="md:col-span-1 text-right font-medium">其中：</div>
-            <div className="md:col-span-1">已开票</div>
-            <div className="md:col-span-3"></div>
-            <div className="md:col-span-1 flex items-center">
-              <div className="w-36">
-                <Input
-                  type="number"
-                  value={invoicedRevenue}
-                  onChange={(e) => setInvoicedRevenue(e.target.value)}
-                  className="text-right w-full"
-                />
-              </div>
-              <span className="ml-2">万元</span>
-            </div>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-center">
-            <div className="md:col-span-1"></div>
-            <div className="md:col-span-1">不需要的开票</div>
-            <div className="md:col-span-3"></div>
-            <div className="md:col-span-1 flex items-center">
-              <div className="w-36">
-                <Input
-                  type="number"
-                  value={nonInvoicedRevenue}
-                  onChange={(e) => setNonInvoicedRevenue(e.target.value)}
-                  className="text-right w-full"
-                />
-              </div>
-              <span className="ml-2">万元</span>
-            </div>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-center">
-            <div className="md:col-span-1"></div>
-            <div className="md:col-span-1">暂未开票的销售额</div>
-            <div className="md:col-span-3"></div>
-            <div className="md:col-span-1 flex items-center">
-              <div className="w-36">
-                <Input
-                  type="number"
-                  value={newInvoicedRevenue}
-                  onChange={(e) => setNewInvoicedRevenue(e.target.value)}
-                  className="text-right w-full"
-                />
-              </div>
-              <span className="ml-2">万元</span>
-            </div>
-          </div>
-        </div>
-      </div>
+      <RevenueSection
+        totalRevenue={props.totalRevenue}
+        setTotalRevenue={props.setTotalRevenue}
+        invoicedRevenue={props.invoicedRevenue}
+        setInvoicedRevenue={props.setInvoicedRevenue}
+        nonInvoicedRevenue={props.nonInvoicedRevenue}
+        setNonInvoicedRevenue={props.setNonInvoicedRevenue}
+        newInvoicedRevenue={props.newInvoicedRevenue}
+        setNewInvoicedRevenue={props.setNewInvoicedRevenue}
+      />
 
-      <div className="space-y-6">
-        <h2 className="text-xl font-bold border-l-4 border-tax-blue pl-3">成本费用（不含可抵扣进项税）</h2>
-        
-        <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-center">
-          <div className="md:col-span-2"></div>
-          <div className="md:col-span-3"></div>
-          <div className="md:col-span-1 flex items-center">
-            <div className="w-36">
-              <Input
-                type="number"
-                value={totalExpenses}
-                onChange={(e) => setTotalExpenses(e.target.value)}
-                className="text-right w-full"
-              />
-            </div>
-            <span className="ml-2">万元</span>
-          </div>
-        </div>
-        
-        <div className="pl-4 space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-center">
-            <div className="md:col-span-1 text-right font-medium">其中：</div>
-            <div className="md:col-span-1">有发票的</div>
-            <div className="md:col-span-3"></div>
-            <div className="md:col-span-1 flex items-center">
-              <div className="w-36">
-                <Input
-                  type="number"
-                  value={invoicedExpenses}
-                  onChange={(e) => setInvoicedExpenses(e.target.value)}
-                  className="text-right w-full"
-                />
-              </div>
-              <span className="ml-2">万元</span>
-            </div>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-center">
-            <div className="md:col-span-1"></div>
-            <div className="md:col-span-1">没有发票的</div>
-            <div className="md:col-span-3"></div>
-            <div className="md:col-span-1 flex items-center">
-              <div className="w-36">
-                <Input
-                  type="number"
-                  value={nonInvoicedExpenses}
-                  onChange={(e) => setNonInvoicedExpenses(e.target.value)}
-                  className="text-right w-full"
-                />
-              </div>
-              <span className="ml-2">万元</span>
-            </div>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-center">
-            <div className="md:col-span-1"></div>
-            <div className="md:col-span-1">已申报个税的薪资</div>
-            <div className="md:col-span-3"></div>
-            <div className="md:col-span-1 flex items-center">
-              <div className="w-36">
-                <Input
-                  type="number"
-                  value={personalTax}
-                  onChange={(e) => setPersonalTax(e.target.value)}
-                  className="text-right w-full"
-                />
-              </div>
-              <span className="ml-2">万元</span>
-            </div>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-center">
-            <div className="md:col-span-1"></div>
-            <div className="md:col-span-1">社保</div>
-            <div className="md:col-span-3"></div>
-            <div className="md:col-span-1 flex items-center">
-              <div className="w-36">
-                <Input
-                  type="number"
-                  value={socialSecurity}
-                  onChange={(e) => setSocialSecurity(e.target.value)}
-                  className="text-right w-full"
-                />
-              </div>
-              <span className="ml-2">万元</span>
-            </div>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-center">
-            <div className="md:col-span-1"></div>
-            <div className="md:col-span-1">资产的折旧/摊销</div>
-            <div className="md:col-span-3"></div>
-            <div className="md:col-span-1 flex items-center">
-              <div className="w-36">
-                <Input
-                  type="number"
-                  value={depreciation}
-                  onChange={(e) => setDepreciation(e.target.value)}
-                  className="text-right w-full"
-                />
-              </div>
-              <span className="ml-2">万元</span>
-            </div>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-center">
-            <div className="md:col-span-1"></div>
-            <div className="md:col-span-1">其他</div>
-            <div className="md:col-span-3"></div>
-            <div className="md:col-span-1 flex items-center">
-              <div className="w-36">
-                <Input
-                  type="number"
-                  value={otherExpenses}
-                  onChange={(e) => setOtherExpenses(e.target.value)}
-                  className="text-right w-full"
-                />
-              </div>
-              <span className="ml-2">万元</span>
-            </div>
-          </div>
-        </div>
-      </div>
+      <ExpensesSection
+        totalExpenses={props.totalExpenses}
+        setTotalExpenses={props.setTotalExpenses}
+        invoicedExpenses={props.invoicedExpenses}
+        setInvoicedExpenses={props.setInvoicedExpenses}
+        nonInvoicedExpenses={props.nonInvoicedExpenses}
+        setNonInvoicedExpenses={props.setNonInvoicedExpenses}
+        personalTax={props.personalTax}
+        setPersonalTax={props.setPersonalTax}
+        socialSecurity={props.socialSecurity}
+        setSocialSecurity={props.setSocialSecurity}
+        depreciation={props.depreciation}
+        setDepreciation={props.setDepreciation}
+        otherExpenses={props.otherExpenses}
+        setOtherExpenses={props.setOtherExpenses}
+      />
     </div>
   );
 };
