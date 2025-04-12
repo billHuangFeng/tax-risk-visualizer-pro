@@ -1,7 +1,8 @@
-
 import React from 'react';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHeader, TableHead, TableRow } from '@/components/ui/table';
+import { Info } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface TaxAdjustmentsProps {
   rdExpenses: {
@@ -41,6 +42,8 @@ interface TaxAdjustmentsProps {
   };
   setInsuranceExpenses: (value: { actual: string; deductible: string; adjustment: string }) => void;
   totalAdjustment: string;
+  onInfoClick?: (infoKey: string) => void;
+  infoData?: Record<string, any>;
 }
 
 const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
@@ -57,11 +60,12 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
   insuranceExpenses,
   setInsuranceExpenses,
   totalAdjustment,
+  onInfoClick,
+  infoData,
 }) => {
   const handleRdExpensesChange = (field: string, value: string) => {
     const newRdExpenses = { ...rdExpenses, [field]: value };
     
-    // For demonstration, calculate automatic deductible as 200% of actual
     if (field === 'actual') {
       const actualValue = parseFloat(value) || 0;
       newRdExpenses.deductible = (actualValue * 2).toFixed(2);
@@ -76,7 +80,6 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
     
     if (field === 'actual') {
       const actualValue = parseFloat(value) || 0;
-      // Assuming a limit of 15.00 for demonstration
       const limit = 15.00;
       newEntertainmentExpenses.deductible = limit.toFixed(2);
       
@@ -131,7 +134,6 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
     
     if (field === 'actual') {
       const actualValue = parseFloat(value) || 0;
-      // Insurance expenses are not deductible for demonstration
       newInsuranceExpenses.deductible = '0.00';
       newInsuranceExpenses.adjustment = `-${actualValue.toFixed(2)}`;
     }
@@ -147,12 +149,30 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
         <div className="md:col-span-2"></div>
         <div className="md:col-span-5"></div>
         <div className="md:col-span-1">
-          <Input
-            type="text"
-            value={totalAdjustment}
-            readOnly
-            className="text-right font-bold"
-          />
+          <div className="flex items-center">
+            <Input
+              type="text"
+              value={totalAdjustment}
+              readOnly
+              className="text-right font-bold"
+            />
+            {infoData && onInfoClick && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button 
+                    onClick={() => onInfoClick('riskValue')} 
+                    className="ml-1 text-tax-blue hover:text-tax-light-blue focus:outline-none"
+                    aria-label="调整总额说明"
+                  >
+                    <Info className="h-4 w-4" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <span className="text-xs">点击查看详情</span>
+                </TooltipContent>
+              </Tooltip>
+            )}
+          </div>
         </div>
         <span>万元</span>
       </div>
@@ -173,7 +193,27 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
             </TableHeader>
             <TableBody>
               <TableRow>
-                <TableCell className="font-medium">可加计扣除的研发费用</TableCell>
+                <TableCell className="font-medium">
+                  <div className="flex items-center">
+                    可加计扣除的研发费用
+                    {infoData && onInfoClick && (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button 
+                            onClick={() => onInfoClick('rdExpenses')} 
+                            className="ml-1 text-tax-blue hover:text-tax-light-blue focus:outline-none"
+                            aria-label="研发费用说明"
+                          >
+                            <Info className="h-4 w-4" />
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <span className="text-xs">点击查看详情</span>
+                        </TooltipContent>
+                      </Tooltip>
+                    )}
+                  </div>
+                </TableCell>
                 <TableCell>
                   <Input
                     type="number"
@@ -202,7 +242,27 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
               </TableRow>
               
               <TableRow>
-                <TableCell className="font-medium">超标准的业务招待费</TableCell>
+                <TableCell className="font-medium">
+                  <div className="flex items-center">
+                    超标准的业务招待费
+                    {infoData && onInfoClick && (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button 
+                            onClick={() => onInfoClick('entertainmentExpenses')} 
+                            className="ml-1 text-tax-blue hover:text-tax-light-blue focus:outline-none"
+                            aria-label="业务招待费说明"
+                          >
+                            <Info className="h-4 w-4" />
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <span className="text-xs">点击查看详情</span>
+                        </TooltipContent>
+                      </Tooltip>
+                    )}
+                  </div>
+                </TableCell>
                 <TableCell>
                   <Input
                     type="number"
@@ -231,7 +291,27 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
               </TableRow>
               
               <TableRow>
-                <TableCell className="font-medium">广告费和业务宣传费</TableCell>
+                <TableCell className="font-medium">
+                  <div className="flex items-center">
+                    广告费和业务宣传费
+                    {infoData && onInfoClick && (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button 
+                            onClick={() => onInfoClick('advertisingExpenses')} 
+                            className="ml-1 text-tax-blue hover:text-tax-light-blue focus:outline-none"
+                            aria-label="广告费说明"
+                          >
+                            <Info className="h-4 w-4" />
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <span className="text-xs">点击查看详情</span>
+                        </TooltipContent>
+                      </Tooltip>
+                    )}
+                  </div>
+                </TableCell>
                 <TableCell>
                   <Input
                     type="number"
@@ -260,7 +340,27 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
               </TableRow>
               
               <TableRow>
-                <TableCell className="font-medium">职工教育经费</TableCell>
+                <TableCell className="font-medium">
+                  <div className="flex items-center">
+                    职工教育经费
+                    {infoData && onInfoClick && (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button 
+                            onClick={() => onInfoClick('educationExpenses')} 
+                            className="ml-1 text-tax-blue hover:text-tax-light-blue focus:outline-none"
+                            aria-label="职工教育经费说明"
+                          >
+                            <Info className="h-4 w-4" />
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <span className="text-xs">点击查看详情</span>
+                        </TooltipContent>
+                      </Tooltip>
+                    )}
+                  </div>
+                </TableCell>
                 <TableCell>
                   <Input
                     type="number"
@@ -289,7 +389,27 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
               </TableRow>
               
               <TableRow>
-                <TableCell className="font-medium">职工福利费</TableCell>
+                <TableCell className="font-medium">
+                  <div className="flex items-center">
+                    职工福利费
+                    {infoData && onInfoClick && (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button 
+                            onClick={() => onInfoClick('welfareExpenses')} 
+                            className="ml-1 text-tax-blue hover:text-tax-light-blue focus:outline-none"
+                            aria-label="职工福利费说明"
+                          >
+                            <Info className="h-4 w-4" />
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <span className="text-xs">点击查看详情</span>
+                        </TooltipContent>
+                      </Tooltip>
+                    )}
+                  </div>
+                </TableCell>
                 <TableCell>
                   <Input
                     type="number"
@@ -318,7 +438,27 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
               </TableRow>
               
               <TableRow>
-                <TableCell className="font-medium">补充养老保险和补充医疗保险支出</TableCell>
+                <TableCell className="font-medium">
+                  <div className="flex items-center">
+                    补充养老保险和补充医疗保险支出
+                    {infoData && onInfoClick && (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button 
+                            onClick={() => onInfoClick('insuranceExpenses')} 
+                            className="ml-1 text-tax-blue hover:text-tax-light-blue focus:outline-none"
+                            aria-label="补充保险支出说明"
+                          >
+                            <Info className="h-4 w-4" />
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <span className="text-xs">点击查看详情</span>
+                        </TooltipContent>
+                      </Tooltip>
+                    )}
+                  </div>
+                </TableCell>
                 <TableCell>
                   <Input
                     type="number"
