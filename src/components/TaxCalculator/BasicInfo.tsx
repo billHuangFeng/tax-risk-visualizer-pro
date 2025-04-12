@@ -85,28 +85,32 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
           <Label htmlFor="totalAssets" className="md:col-span-1 font-medium">资产总额：</Label>
-          <div className="md:col-span-2 flex items-center">
-            <Input
-              id="totalAssets"
-              type="number"
-              value={totalAssets}
-              onChange={(e) => setTotalAssets(e.target.value)}
-              className="w-full"
-            />
+          <div className="flex items-center">
+            <div className="w-36">
+              <Input
+                id="totalAssets"
+                type="number"
+                value={totalAssets}
+                onChange={(e) => setTotalAssets(e.target.value)}
+                className="w-full"
+              />
+            </div>
             <span className="ml-2">万元</span>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
           <Label htmlFor="employeeCount" className="md:col-span-1 font-medium">发薪资、劳务费的员工人数：</Label>
-          <div className="md:col-span-2 flex items-center">
-            <Input
-              id="employeeCount"
-              type="number"
-              value={employeeCount}
-              onChange={(e) => setEmployeeCount(e.target.value)}
-              className="w-full"
-            />
+          <div className="flex items-center">
+            <div className="w-36">
+              <Input
+                id="employeeCount"
+                type="number"
+                value={employeeCount}
+                onChange={(e) => setEmployeeCount(e.target.value)}
+                className="w-full"
+              />
+            </div>
             <span className="ml-2">人</span>
           </div>
         </div>

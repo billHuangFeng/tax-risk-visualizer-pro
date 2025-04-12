@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -97,5 +98,21 @@
 
   body {
     @apply bg-background text-foreground;
+  }
+  
+  /* Custom width for number inputs to fit numbers with thousand separators */
+  .w-36 {
+    width: 9rem; /* Just wide enough for numbers less than 10,000,000 with commas */
+  }
+  
+  /* Remove spinner buttons from number inputs */
+  input[type=number]::-webkit-inner-spin-button, 
+  input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none; 
+    margin: 0; 
+  }
+  
+  input[type=number] {
+    -moz-appearance: textfield;
   }
 }
