@@ -92,7 +92,7 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
                 type="number"
                 value={totalAssets}
                 onChange={(e) => setTotalAssets(e.target.value)}
-                className="w-full"
+                className="text-right w-full"
               />
             </div>
             <span className="ml-2">万元</span>
@@ -108,7 +108,7 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
                 type="number"
                 value={employeeCount}
                 onChange={(e) => setEmployeeCount(e.target.value)}
-                className="w-full"
+                className="text-right w-full"
               />
             </div>
             <span className="ml-2">人</span>
