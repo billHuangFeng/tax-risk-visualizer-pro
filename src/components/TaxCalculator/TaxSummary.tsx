@@ -4,6 +4,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Progress } from '@/components/ui/progress';
+import { Info } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface TaxSummaryProps {
   taxableIncome: string;
@@ -14,6 +16,8 @@ interface TaxSummaryProps {
   setActualTax: (value: string) => void;
   riskValue: string;
   riskPercentage: number;
+  onInfoClick?: (infoKey: string) => void;
+  infoData?: Record<string, any>;
 }
 
 const TaxSummary: React.FC<TaxSummaryProps> = ({
@@ -25,6 +29,8 @@ const TaxSummary: React.FC<TaxSummaryProps> = ({
   setActualTax,
   riskValue,
   riskPercentage,
+  onInfoClick,
+  infoData,
 }) => {
   const getRiskColor = (percentage: number) => {
     if (percentage < 30) return 'bg-green-500';
@@ -38,6 +44,12 @@ const TaxSummary: React.FC<TaxSummaryProps> = ({
     return '高风险';
   };
 
+  const handleInfoClick = (key: string) => {
+    if (onInfoClick) {
+      onInfoClick(key);
+    }
+  };
+
   return (
     <div className="space-y-6 border rounded-lg p-6 bg-white">
       <h2 className="text-xl font-bold border-l-4 border-tax-blue pl-3">企业所得税</h2>
@@ -46,13 +58,20 @@ const TaxSummary: React.FC<TaxSummaryProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-center">
           <div className="md:col-span-2 font-medium">应纳税所得额</div>
           <div className="md:col-span-3"></div>
-          <div className="md:col-span-1">
+          <div className="md:col-span-1 relative">
             <Input
               type="text"
               value={taxableIncome}
               readOnly
-              className="text-right font-bold"
+              className="text-right font-bold pr-8"
             />
+            <button 
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 text-tax-blue hover:text-tax-light-blue"
+              onClick={() => handleInfoClick('taxableIncome')}
+              title="查看应纳税所得额说明"
+            >
+              <Info size={16} />
+            </button>
           </div>
           <span>万元</span>
         </div>
@@ -86,13 +105,20 @@ const TaxSummary: React.FC<TaxSummaryProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-center">
           <div className="md:col-span-2 font-medium">理论应纳企业所得税</div>
           <div className="md:col-span-3"></div>
-          <div className="md:col-span-1">
+          <div className="md:col-span-1 relative">
             <Input
               type="text"
               value={theoreticalTax}
               readOnly
-              className="text-right font-bold"
+              className="text-right font-bold pr-8"
             />
+            <button 
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 text-tax-blue hover:text-tax-light-blue"
+              onClick={() => handleInfoClick('theoreticalTax')}
+              title="查看理论应纳企业所得税说明"
+            >
+              <Info size={16} />
+            </button>
           </div>
           <span>万元</span>
         </div>
@@ -100,13 +126,20 @@ const TaxSummary: React.FC<TaxSummaryProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-center">
           <div className="md:col-span-2 font-medium">实际申报企业所得税</div>
           <div className="md:col-span-3"></div>
-          <div className="md:col-span-1">
+          <div className="md:col-span-1 relative">
             <Input
               type="number"
               value={actualTax}
               onChange={(e) => setActualTax(e.target.value)}
-              className="text-right font-bold"
+              className="text-right font-bold pr-8"
             />
+            <button 
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 text-tax-blue hover:text-tax-light-blue"
+              onClick={() => handleInfoClick('actualTax')}
+              title="查看实际申报企业所得税说明"
+            >
+              <Info size={16} />
+            </button>
           </div>
           <span>万元</span>
         </div>
@@ -114,13 +147,20 @@ const TaxSummary: React.FC<TaxSummaryProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-center">
           <div className="md:col-span-2 font-medium">风险差值 = |理论应纳税额 - 实际申报税额|</div>
           <div className="md:col-span-3"></div>
-          <div className="md:col-span-1">
+          <div className="md:col-span-1 relative">
             <Input
               type="text"
               value={riskValue}
               readOnly
-              className="text-right font-bold text-tax-red"
+              className="text-right font-bold text-tax-red pr-8"
             />
+            <button 
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 text-tax-blue hover:text-tax-light-blue"
+              onClick={() => handleInfoClick('riskValue')}
+              title="查看风险差值说明"
+            >
+              <Info size={16} />
+            </button>
           </div>
           <span>万元</span>
         </div>
@@ -130,7 +170,12 @@ const TaxSummary: React.FC<TaxSummaryProps> = ({
             <span className="font-bold">税务风险评估</span>
             <span className="font-bold">{getRiskLevel(riskPercentage)}</span>
           </div>
-          <Progress value={riskPercentage} className="h-4" indicatorClassName={getRiskColor(riskPercentage)} />
+          <Progress value={riskPercentage} className="h-4" style={{ backgroundColor: '#e5e7eb' }}>
+            <div 
+              className={`h-full ${getRiskColor(riskPercentage)}`} 
+              style={{ width: `${riskPercentage}%` }}
+            />
+          </Progress>
           <div className="mt-2 flex justify-between text-sm">
             <span>低风险</span>
             <span>中等风险</span>
