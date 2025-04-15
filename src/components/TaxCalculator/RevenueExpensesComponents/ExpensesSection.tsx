@@ -1,7 +1,8 @@
-
 import React, { useEffect } from 'react';
 import NumberInput from './NumberInput';
 import GridRow from './GridRow';
+import { AlertTriangle } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface ExpensesSectionProps {
   totalExpenses: string;
@@ -36,7 +37,6 @@ const ExpensesSection: React.FC<ExpensesSectionProps> = ({
   otherExpenses,
   setOtherExpenses,
 }) => {
-  // Calculate other expenses automatically
   useEffect(() => {
     const total = parseFloat(totalExpenses) || 0;
     const invoiced = parseFloat(invoicedExpenses) || 0;
@@ -57,17 +57,29 @@ const ExpensesSection: React.FC<ExpensesSectionProps> = ({
           <NumberInput
             value={totalExpenses}
             onChange={setTotalExpenses}
-            className="font-bold"  // Added font-bold here
+            className="font-bold"
           />
         </div>
       </div>
       
       <div className="pl-4 space-y-4">
         <GridRow prefix="其中：" label="有发票的">
-          <NumberInput
-            value={invoicedExpenses}
-            onChange={setInvoicedExpenses}
-          />
+          <div className="flex items-center">
+            <NumberInput
+              value={invoicedExpenses}
+              onChange={setInvoicedExpenses}
+            />
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <AlertTriangle 
+                  className="h-4 w-4 text-tax-red ml-2 cursor-pointer"
+                />
+              </TooltipTrigger>
+              <TooltipContent>
+                <p className="text-xs max-w-xs">可按规定税前扣除的情形包括：政府性基金、税金、社保费、住房公积金、公益性捐赠、法院判决支出、协会会费、交通票据、补偿金等。具体情形请查看政策详情。</p>
+              </TooltipContent>
+            </Tooltip>
+          </div>
         </GridRow>
         
         <GridRow label="没有发票的">
@@ -102,7 +114,7 @@ const ExpensesSection: React.FC<ExpensesSectionProps> = ({
           <NumberInput
             value={otherExpenses}
             onChange={setOtherExpenses}
-            className="bg-gray-100 font-bold"  // Added font-bold here
+            className="bg-gray-100 font-bold"
             disabled={true}
           />
         </GridRow>
@@ -112,4 +124,3 @@ const ExpensesSection: React.FC<ExpensesSectionProps> = ({
 };
 
 export default ExpensesSection;
-
