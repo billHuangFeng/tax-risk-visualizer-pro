@@ -57,16 +57,16 @@ const FloatingContactButton = () => {
         onClick={handleContactAdvisor}
         className={cn(
           "rounded-full w-24 h-24 bg-blue-600 text-white border-4 border-white",
-          "flex flex-col items-center justify-center gap-1 p-0",
+          "flex flex-col items-center justify-center gap-2 p-0", // Increased gap for more space between icon and text
           "hover:bg-blue-700 transition-all duration-200",
-          "shadow-[0_6px_12px_rgba(0,0,0,0.2)]", // 更自然的阴影
-          "active:shadow-[0_3px_6px_rgba(0,0,0,0.2)]", // 点击时阴影变浅
+          "shadow-[0_6px_12px_rgba(0,0,0,0.2)]",
+          "active:shadow-[0_3px_6px_rgba(0,0,0,0.2)]",
           "transform transition-transform",
-          "hover:-translate-y-1 active:translate-y-0" // 悬停和点击的细微位移
+          "hover:-translate-y-1 active:translate-y-0"
         )}
       >
-        <Phone className="w-6 h-6" />
         <span className="text-sm whitespace-pre-line">立即{'\n'}咨询专家</span>
+        <Phone className="w-6 h-6" />
       </Button>
     </div>
   );
