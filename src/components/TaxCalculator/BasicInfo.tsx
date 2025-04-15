@@ -57,7 +57,7 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
                 htmlFor="excludedIndustry" 
                 className="font-medium text-sm"
               >
-                是不能享受研发加计扣除优惠政策的企业？
+                是能享受研发加计扣除优惠政策的企业？
               </Label>
               <p className="text-sm text-muted-foreground">
                 如：1.烟草制造业、2.住宿和餐饮业、3.批发和零售业、4.房地产业、5.租赁和商务服务业、6.娱乐业
