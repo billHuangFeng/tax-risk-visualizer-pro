@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Input } from '@/components/ui/input';
 import { TableCell, TableRow } from '@/components/ui/table';
@@ -49,7 +48,7 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
           )}
         </div>
       </TableCell>
-      <TableCell className="w-[12%]">
+      <TableCell className="w-[8%]">
         <div className="w-input-sm">
           <Input
             type="number"
@@ -59,7 +58,7 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
           />
         </div>
       </TableCell>
-      <TableCell className="w-[12%]">
+      <TableCell className="w-[8%]">
         <div className="w-input-sm">
           <Input
             type="text"
@@ -69,7 +68,7 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
           />
         </div>
       </TableCell>
-      <TableCell className="w-[31%]">
+      <TableCell className="w-[39%]">
         <Input
           type="text"
           value={values.adjustment}
@@ -83,4 +82,3 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
 };
 
 export default ExpenseRow;
-
