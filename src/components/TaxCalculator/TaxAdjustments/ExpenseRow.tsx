@@ -24,7 +24,6 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
   values,
   onChange,
   onInfoClick,
-  isNegativeAdjustment,
 }) => {
   return (
     <TableRow>
@@ -74,12 +73,10 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
           type="text"
           value={values.adjustment}
           readOnly
-          className={`text-right bg-muted w-full ${
-            parseFloat(values.adjustment) < 0 || 
-            (title === '超标准的业务招待费' && values.adjustment !== '0.00') || 
-            (title === '补充养老保险和补充医疗保险支出' && values.adjustment !== '0.00') 
+          className={`text-right bg-muted w-full font-bold ${
+            parseFloat(values.adjustment) !== 0
               ? 'text-tax-red' 
-              : ''
+              : 'text-foreground'
           }`}
         />
       </TableCell>
