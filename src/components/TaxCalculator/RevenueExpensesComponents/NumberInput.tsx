@@ -18,7 +18,7 @@ const NumberInput: React.FC<NumberInputProps> = ({
   disabled = false
 }) => {
   return (
-    <div className="flex items-center w-full justify-end">
+    <div className="flex items-center min-w-[120px] max-w-full justify-end">
       <Input
         type="number"
         value={value}

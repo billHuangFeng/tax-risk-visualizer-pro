@@ -26,7 +26,7 @@ const TaxInputRow: React.FC<TaxInputRowProps> = ({
 }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-center">
-      <div className={`md:col-span-2 font-medium ${className}`}>
+      <div className={`break-words font-medium ${className}`}>
         {label}
         {showInfo && (
           <button 
@@ -38,8 +38,8 @@ const TaxInputRow: React.FC<TaxInputRowProps> = ({
           </button>
         )}
       </div>
-      <div className="md:col-span-2"></div>
-      <div className="md:col-span-2 flex items-center justify-end">
+      <div className="hidden md:block md:col-span-2"></div>
+      <div className="flex items-center justify-end">
         <div className="w-[120px]">
           <Input
             type={type}
