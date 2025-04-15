@@ -38,9 +38,9 @@ const TaxInputRow: React.FC<TaxInputRowProps> = ({
           </button>
         )}
       </div>
-      <div className="md:col-span-3"></div>
-      <div className="md:col-span-1 flex items-center">
-        <div className="w-[144rem] relative">
+      <div className="md:col-span-2"></div>
+      <div className="md:col-span-2 flex items-center justify-end">
+        <div className="w-[120px]">
           <Input
             type={type}
             value={value}
