@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Check, X } from 'lucide-react';
+import { Check } from 'lucide-react';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { AlertTriangle } from 'lucide-react';
 
@@ -92,14 +92,6 @@ const RiskIndicator: React.FC<RiskIndicatorProps> = ({
             >
               <Check className="mr-2 h-4 w-4" />
               好的
-            </Button>
-            <Button 
-              variant="outline"
-              onClick={() => setShowRiskDetails(false)}
-              className="px-8"
-            >
-              <X className="mr-2 h-4 w-4" />
-              算了
             </Button>
           </div>
         </div>
