@@ -6,7 +6,6 @@ import RevenueExpenses from '@/components/TaxCalculator/RevenueExpenses';
 import TaxAdjustments from '@/components/TaxCalculator/TaxAdjustments';
 import TaxSummary from '@/components/TaxCalculator/TaxSummary';
 import CalculatorLayout from '@/components/TaxCalculator/CalculatorLayout';
-import SaveButtonWrapper from '@/components/TaxCalculator/SaveButtonWrapper';
 import { useCalculator } from '@/hooks/useCalculator';
 import taxInfoData from '@/constants/taxInfoData';
 import type { TaxInfoPanelItem } from '@/types/calculator';
@@ -108,7 +107,6 @@ const Index = () => {
             onReset={calculator.handleReset}
             onExport={calculator.handleExport}
           />
-          <SaveButtonWrapper />
         </div>
       </CalculatorLayout>
     </>
