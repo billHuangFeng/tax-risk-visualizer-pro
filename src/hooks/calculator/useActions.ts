@@ -10,14 +10,6 @@ export const useActions = (riskValue: string, riskPercentage: number) => {
     return '高风险';
   };
 
-  const handleCalculate = () => {
-    toast({
-      title: "计算已完成",
-      description: `企业所得税风险值：${riskValue} 万元 (${getRiskLevel(riskPercentage)})`,
-      variant: "default",
-    });
-  };
-
   const handleReset = () => {
     toast({
       title: "表单已重置",
@@ -35,7 +27,6 @@ export const useActions = (riskValue: string, riskPercentage: number) => {
   };
 
   return {
-    handleCalculate,
     handleReset,
     handleExport,
   };

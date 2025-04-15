@@ -104,7 +104,6 @@ const Index = () => {
 
         <CalculatorActions
           riskPercentage={calculator.riskPercentage}
-          onCalculate={calculator.handleCalculate}
           onReset={calculator.handleReset}
           onExport={calculator.handleExport}
         />
