@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 
 export const useTaxAdjustments = () => {
@@ -38,6 +37,12 @@ export const useTaxAdjustments = () => {
     adjustment: '1217.00',
   });
   
+  const [nonDeductibleExpenses, setNonDeductibleExpenses] = useState({
+    actual: '0',
+    deductible: '0.00',
+    adjustment: '0.00',
+  });
+  
   const [totalAdjustment, setTotalAdjustment] = useState('2924.00');
 
   // Calculate total adjustment whenever any individual adjustment changes
@@ -49,7 +54,8 @@ export const useTaxAdjustments = () => {
         parseFloat(advertisingExpenses.adjustment) || 0,
         parseFloat(educationExpenses.adjustment) || 0,
         parseFloat(welfareExpenses.adjustment) || 0,
-        parseFloat(insuranceExpenses.adjustment) || 0
+        parseFloat(insuranceExpenses.adjustment) || 0,
+        parseFloat(nonDeductibleExpenses.adjustment) || 0
       ];
       
       const total = adjustments.reduce((sum, curr) => sum + curr, 0);
@@ -63,7 +69,8 @@ export const useTaxAdjustments = () => {
     advertisingExpenses.adjustment,
     educationExpenses.adjustment,
     welfareExpenses.adjustment,
-    insuranceExpenses.adjustment
+    insuranceExpenses.adjustment,
+    nonDeductibleExpenses.adjustment
   ]);
 
   return {
@@ -79,6 +86,8 @@ export const useTaxAdjustments = () => {
     setWelfareExpenses,
     insuranceExpenses,
     setInsuranceExpenses,
+    nonDeductibleExpenses,
+    setNonDeductibleExpenses,
     totalAdjustment,
     setTotalAdjustment,
   };

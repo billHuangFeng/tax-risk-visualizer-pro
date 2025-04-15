@@ -1,4 +1,3 @@
-
 const taxInfoData = {
   rdExpenses: {
     title: "研发费用",
@@ -71,6 +70,12 @@ const taxInfoData = {
     description: "企业聘用并发放薪资的员工总数，是判断小型微利企业的重要指标之一",
     analysis: "员工人数是企业规模的重要指标，对税收优惠政策的适用有直接影响",
     risk: "员工人数变化可能导致企业税收优惠资格的变更，应及时关注政策动态"
+  },
+  nonDeductibleExpenses: {
+    title: "没有发票不能税前扣除的费用",
+    description: "无法取得合规发票且不符合特殊规定的支出，不得在税前扣除",
+    analysis: "这类支出将全额调增应纳税所得额，增加企业所得税负担",
+    risk: "金额较大时将显著增加税负，建议加强发票管理，规范支出凭证"
   }
 };
 

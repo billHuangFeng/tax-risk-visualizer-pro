@@ -1,4 +1,3 @@
-
 interface ExpenseValues {
   actual: string;
   deductible: string;
@@ -121,5 +120,19 @@ export const handleInsuranceExpenses = (
     actual: value,
     deductible: deductibleAmount.toFixed(2),
     adjustment: (actualValue - deductibleAmount).toFixed(2), // Corrected calculation
+  };
+};
+
+export const handleNonDeductibleExpenses = (
+  value: string,
+  currentValues: ExpenseValues
+): ExpenseValues => {
+  const actualValue = parseFloat(value) || 0;
+  const deductibleAmount = 0; // Always 0 for non-deductible expenses
+  
+  return {
+    actual: value,
+    deductible: deductibleAmount.toFixed(2),
+    adjustment: actualValue.toFixed(2), // Adjustment equals the actual value
   };
 };

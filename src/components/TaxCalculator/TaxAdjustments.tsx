@@ -10,7 +10,8 @@ import {
   handleAdvertisingExpenses,
   handleEducationExpenses,
   handleWelfareExpenses,
-  handleInsuranceExpenses 
+  handleInsuranceExpenses,
+  handleNonDeductibleExpenses 
 } from './TaxAdjustments/ExpenseHandlers';
 
 interface TaxAdjustmentsProps {
@@ -29,6 +30,8 @@ interface TaxAdjustmentsProps {
   totalAdjustment: string;
   totalRevenue: string;
   personalTax: string;
+  nonDeductibleExpenses: { actual: string; deductible: string; adjustment: string; };
+  setNonDeductibleExpenses: (value: { actual: string; deductible: string; adjustment: string; }) => void;
   onInfoClick?: (infoKey: string) => void;
   infoData?: Record<string, any>;
   isExcludedIndustry: boolean;
@@ -50,20 +53,19 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
   totalAdjustment,
   totalRevenue,
   personalTax,
+  nonDeductibleExpenses,
+  setNonDeductibleExpenses,
   onInfoClick,
   infoData,
   isExcludedIndustry,
 }) => {
-  // Recalculate R&D expenses when industry status changes
   useEffect(() => {
     if (rdExpenses.actual) {
       setRdExpenses(handleRdExpenses(rdExpenses.actual, { ...rdExpenses }, isExcludedIndustry));
     }
   }, [isExcludedIndustry, setRdExpenses, rdExpenses.actual]);
   
-  // Recalculate all expense values when revenue or personalTax changes
   useEffect(() => {
-    // Update entertainment expenses
     if (entertainmentExpenses.actual) {
       setEntertainmentExpenses(handleEntertainmentExpenses(
         entertainmentExpenses.actual, 
@@ -73,7 +75,6 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
       ));
     }
     
-    // Update advertising expenses
     if (advertisingExpenses.actual) {
       setAdvertisingExpenses(handleAdvertisingExpenses(
         advertisingExpenses.actual, 
@@ -84,9 +85,7 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
     }
   }, [totalRevenue, setEntertainmentExpenses, setAdvertisingExpenses, entertainmentExpenses.actual, advertisingExpenses.actual, isExcludedIndustry]);
   
-  // Recalculate education, welfare and insurance expenses when personalTax changes
   useEffect(() => {
-    // Update education expenses
     if (educationExpenses.actual) {
       setEducationExpenses(handleEducationExpenses(
         educationExpenses.actual, 
@@ -96,7 +95,6 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
       ));
     }
     
-    // Update welfare expenses
     if (welfareExpenses.actual) {
       setWelfareExpenses(handleWelfareExpenses(
         welfareExpenses.actual, 
@@ -106,7 +104,6 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
       ));
     }
     
-    // Update insurance expenses
     if (insuranceExpenses.actual) {
       setInsuranceExpenses(handleInsuranceExpenses(
         insuranceExpenses.actual, 
@@ -222,6 +219,13 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
                 onChange={handleChangeWithParams(handleInsuranceExpenses, setInsuranceExpenses)}
                 onInfoClick={onInfoClick}
                 isNegativeAdjustment
+              />
+              <ExpenseRow
+                title="没有发票不能税前扣除的费用"
+                infoKey="nonDeductibleExpenses"
+                values={nonDeductibleExpenses}
+                onChange={(field, value) => field === 'actual' && setNonDeductibleExpenses(handleNonDeductibleExpenses(value, { actual: value, deductible: '', adjustment: '' }))}
+                onInfoClick={onInfoClick}
               />
             </TableBody>
           </Table>
