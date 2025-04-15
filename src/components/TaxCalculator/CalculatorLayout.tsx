@@ -3,6 +3,7 @@ import React from 'react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { AlertCircle, Info } from 'lucide-react';
 import { TaxInfoPanelItem } from '@/types/calculator';
+import TaxInfoPanel from '@/components/TaxCalculator/TaxInfoPanel';
 
 interface CalculatorLayoutProps {
   children: React.ReactNode;
