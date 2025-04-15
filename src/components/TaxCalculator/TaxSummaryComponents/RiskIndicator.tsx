@@ -12,8 +12,7 @@ interface RiskIndicatorProps {
 
 const RiskIndicator: React.FC<RiskIndicatorProps> = ({ 
   riskPercentage, 
-  riskValue = '0',
-  totalRevenue = '0'
+  riskValue = '0'
 }) => {
   const getRiskLevel = (percentage: number) => {
     if (percentage < 30) return '低风险';
@@ -21,17 +20,27 @@ const RiskIndicator: React.FC<RiskIndicatorProps> = ({
     return '高风险';
   };
 
-  const calculateProfitRiskPercentage = () => {
-    const riskValueNum = parseFloat(riskValue) || 0;
-    const revenueNum = parseFloat(totalRevenue) || 1; // Use 1 to avoid division by zero
-    
-    // Corrected formula: (风险差值*18.25%*3+风险差值)/销售收入
-    // Which simplifies to: riskValue * (1 + 0.1825 * 3) / revenue * 100
-    return ((riskValueNum * 0.1825 * 3 + riskValueNum) / revenueNum * 100).toFixed(2);
+  const calculateRiskDetails = () => {
+    const baseRisk = parseFloat(riskValue) || 0;
+    // 补税金额
+    const taxAmount = baseRisk;
+    // 滞纳金 = 风险差值 * 0.05% * 365 * 3
+    const lateFee = baseRisk * 0.0005 * 365 * 3;
+    // 罚款 = 风险差值（假设1倍）
+    const penalty = baseRisk;
+    // 总风险金额
+    const totalRisk = taxAmount + lateFee + penalty;
+
+    return {
+      taxAmount: (taxAmount / 10000).toFixed(2),
+      lateFee: (lateFee / 10000).toFixed(2),
+      penalty: (penalty / 10000).toFixed(2),
+      totalRisk: (totalRisk / 10000).toFixed(2)
+    };
   };
 
   const showRiskAlert = riskPercentage >= 30;
-  const profitRiskPercentage = calculateProfitRiskPercentage();
+  const riskDetails = calculateRiskDetails();
 
   return (
     <div className="space-y-4 pt-4 border-t">
@@ -64,8 +73,13 @@ const RiskIndicator: React.FC<RiskIndicatorProps> = ({
         <Alert variant="destructive" className="mt-4">
           <AlertTriangle className="h-4 w-4" />
           <AlertTitle>风险提示</AlertTitle>
-          <AlertDescription>
-            你面临的风险为{profitRiskPercentage}%的利润。请立即咨询税务顾问。
+          <AlertDescription className="space-y-2">
+            <p>你面临高达{riskDetails.totalRisk}万元的风险。具体如下：</p>
+            <ol className="list-decimal pl-4">
+              <li>补税{riskDetails.taxAmount}万元；</li>
+              <li>滞纳金{riskDetails.lateFee}万元（每天0.05%，假设3年后暴雷）；</li>
+              <li>罚款{riskDetails.penalty}万元（逃税罚款0.5-5倍，假设被罚款1倍）。</li>
+            </ol>
           </AlertDescription>
         </Alert>
       )}
