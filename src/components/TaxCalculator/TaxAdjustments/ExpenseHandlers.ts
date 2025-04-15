@@ -1,4 +1,3 @@
-
 interface ExpenseValues {
   actual: string;
   deductible: string;
@@ -7,7 +6,13 @@ interface ExpenseValues {
 
 export const handleRdExpenses = (value: string, currentValues: ExpenseValues, isExcludedIndustry: boolean): ExpenseValues => {
   const actualValue = parseFloat(value) || 0;
-  const multiplier = isExcludedIndustry ? 2 : 1; // If can get deduction (isExcludedIndustry=true), multiply by 2; if not, multiply by 1
+  
+  // If company can enjoy the deduction policy (isExcludedIndustry=true), 
+  // then deductible amount = actual * 2 (200%)
+  // If company cannot enjoy the deduction policy (isExcludedIndustry=false),
+  // then deductible amount = actual (100%)
+  const multiplier = isExcludedIndustry ? 2 : 1;
+  
   return {
     actual: value,
     deductible: (actualValue * multiplier).toFixed(2),
