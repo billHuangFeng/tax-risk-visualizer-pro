@@ -7,13 +7,15 @@ interface NumberInputProps {
   onChange: (value: string) => void;
   suffix?: string;
   className?: string;
+  disabled?: boolean;
 }
 
 const NumberInput: React.FC<NumberInputProps> = ({
   value,
   onChange,
   suffix = "万元",
-  className
+  className = "",
+  disabled = false
 }) => {
   return (
     <div className="flex items-center whitespace-nowrap">
@@ -23,6 +25,7 @@ const NumberInput: React.FC<NumberInputProps> = ({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           className={`text-right w-full ${className}`}
+          disabled={disabled}
         />
       </div>
       <span className="ml-2 text-sm whitespace-nowrap">{suffix}</span>
