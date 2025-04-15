@@ -7,7 +7,6 @@ import TaxInfoPanel from '@/components/TaxCalculator/TaxInfoPanel';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
-import ContactForm from '@/components/TaxCalculator/ContactForm';
 
 interface CalculatorLayoutProps {
   children: React.ReactNode;
@@ -47,9 +46,6 @@ const CalculatorLayout: React.FC<CalculatorLayoutProps> = ({ children, selectedI
                 </CardContent>
               </Card>
               {children}
-              
-              {/* Add ContactForm at the bottom */}
-              <ContactForm />
             </div>
           </div>
           
