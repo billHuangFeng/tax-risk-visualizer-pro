@@ -28,8 +28,8 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
 }) => {
   return (
     <TableRow>
-      <TableCell className="font-medium">
-        <div className="flex items-center">
+      <TableCell className="w-[45%] font-medium">
+        <div className="flex items-center whitespace-nowrap">
           {title}
           {onInfoClick && (
             <Tooltip>
@@ -49,7 +49,7 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
           )}
         </div>
       </TableCell>
-      <TableCell>
+      <TableCell className="w-[15%]">
         <div className="w-input-text">
           <Input
             type="number"
@@ -59,7 +59,7 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
           />
         </div>
       </TableCell>
-      <TableCell>
+      <TableCell className="w-[15%]">
         <div className="w-input-text">
           <Input
             type="text"
@@ -69,7 +69,7 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
           />
         </div>
       </TableCell>
-      <TableCell>
+      <TableCell className="w-[15%]">
         <Input
           type="text"
           value={values.adjustment}
@@ -77,9 +77,10 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
           className={`text-right bg-muted w-full ${isNegativeAdjustment ? 'text-tax-red' : ''}`}
         />
       </TableCell>
-      <TableCell className="text-sm">万元</TableCell>
+      <TableCell className="w-[10%] text-sm whitespace-nowrap">万元</TableCell>
     </TableRow>
   );
 };
 
 export default ExpenseRow;
+
