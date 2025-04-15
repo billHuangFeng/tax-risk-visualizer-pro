@@ -42,8 +42,8 @@ const TaxRateSelector: React.FC<TaxRateSelectorProps> = ({
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-center">
-      <div className="md:col-span-1 font-medium flex items-center gap-2">
-        × 适用税率
+      <div className="md:col-span-1 font-medium flex items-center gap-2 whitespace-nowrap">
+        <span className="min-w-[100px]">× 适用税率</span>
         <div className="relative w-20">
           <Input
             type="text"
