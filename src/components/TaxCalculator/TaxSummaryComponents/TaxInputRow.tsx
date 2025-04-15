@@ -29,7 +29,7 @@ const TaxInputRow: React.FC<TaxInputRowProps> = ({
       <div className={`md:col-span-2 font-medium ${className}`}>{label}</div>
       <div className="md:col-span-3"></div>
       <div className="md:col-span-1 flex items-center">
-        <div className="w-[36rem] relative">
+        <div className="w-[72rem] relative">
           <Input
             type={type}
             value={value}
