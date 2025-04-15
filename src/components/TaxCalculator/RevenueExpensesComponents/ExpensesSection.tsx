@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import NumberInput from './NumberInput';
 import GridRow from './GridRow';
-import { CircleInfo } from 'lucide-react';
+import { CircleIcon } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface ExpensesSectionProps {
@@ -71,7 +71,7 @@ const ExpensesSection: React.FC<ExpensesSectionProps> = ({
             />
             <Tooltip>
               <TooltipTrigger asChild>
-                <CircleInfo 
+                <CircleIcon 
                   className="h-4 w-4 text-tax-blue ml-2 cursor-pointer"
                 />
               </TooltipTrigger>
@@ -90,7 +90,7 @@ const ExpensesSection: React.FC<ExpensesSectionProps> = ({
             />
             <Tooltip>
               <TooltipTrigger asChild>
-                <CircleInfo 
+                <CircleIcon 
                   className="h-4 w-4 text-tax-blue ml-2 cursor-pointer"
                 />
               </TooltipTrigger>
