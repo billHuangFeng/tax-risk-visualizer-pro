@@ -63,10 +63,17 @@ const RevenueSection: React.FC<RevenueSectionProps> = ({
               value={nonInvoicedRevenue}
               onChange={setNonInvoicedRevenue}
             />
-            <AlertTriangle 
-              className="h-4 w-4 text-tax-red ml-2 cursor-pointer" 
-              onClick={() => onInfoClick?.('nonInvoicedRevenue')}
-            />
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <AlertTriangle 
+                  className="h-4 w-4 text-tax-red ml-2 cursor-pointer" 
+                  onClick={() => onInfoClick?.('nonInvoicedRevenue')}
+                />
+              </TooltipTrigger>
+              <TooltipContent>
+                <p className="text-xs">点击查看不需要开票的收入详情</p>
+              </TooltipContent>
+            </Tooltip>
           </div>
         </GridRow>
         
