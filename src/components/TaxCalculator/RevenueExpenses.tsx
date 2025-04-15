@@ -59,6 +59,7 @@ const RevenueExpenses: React.FC<RevenueExpensesProps> = (props) => {
         setDepreciation={props.setDepreciation}
         otherExpenses={props.otherExpenses}
         setOtherExpenses={props.setOtherExpenses}
+        onInfoClick={props.onInfoClick}
       />
     </div>
   );

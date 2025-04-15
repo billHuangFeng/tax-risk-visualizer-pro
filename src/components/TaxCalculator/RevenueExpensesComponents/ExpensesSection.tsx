@@ -20,6 +20,7 @@ interface ExpensesSectionProps {
   setDepreciation: (value: string) => void;
   otherExpenses: string;
   setOtherExpenses: (value: string) => void;
+  onInfoClick?: (infoKey: string) => void;
 }
 
 const ExpensesSection: React.FC<ExpensesSectionProps> = ({
@@ -37,6 +38,7 @@ const ExpensesSection: React.FC<ExpensesSectionProps> = ({
   setDepreciation,
   otherExpenses,
   setOtherExpenses,
+  onInfoClick,
 }) => {
   useEffect(() => {
     const total = parseFloat(totalExpenses) || 0;
@@ -74,6 +76,7 @@ const ExpensesSection: React.FC<ExpensesSectionProps> = ({
               <TooltipTrigger asChild>
                 <CircleAlertIcon 
                   className="h-4 w-4 text-tax-blue ml-2 cursor-pointer"
+                  onClick={() => onInfoClick?.('invoicedExpenses')}
                 />
               </TooltipTrigger>
               <TooltipContent>
@@ -93,6 +96,7 @@ const ExpensesSection: React.FC<ExpensesSectionProps> = ({
               <TooltipTrigger asChild>
                 <CircleAlertIcon 
                   className="h-4 w-4 text-tax-blue ml-2 cursor-pointer"
+                  onClick={() => onInfoClick?.('nonInvoicedExpenses')}
                 />
               </TooltipTrigger>
               <TooltipContent>
