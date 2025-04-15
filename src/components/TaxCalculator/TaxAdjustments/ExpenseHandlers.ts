@@ -19,7 +19,7 @@ export const handleRdExpenses = (value: string, currentValues: ExpenseValues, is
   return {
     actual: value,
     deductible: deductibleAmount.toFixed(2),
-    adjustment: ((multiplier - 1) * actualValue).toFixed(2),
+    adjustment: (actualValue - deductibleAmount).toFixed(2), // Corrected calculation
   };
 };
 
@@ -40,7 +40,7 @@ export const handleEntertainmentExpenses = (
   return {
     actual: value,
     deductible: deductibleAmount.toFixed(2),
-    adjustment: (-Math.max(0, actualValue - deductibleAmount)).toFixed(2),
+    adjustment: (actualValue - deductibleAmount).toFixed(2), // Corrected calculation
   };
 };
 
@@ -60,7 +60,7 @@ export const handleAdvertisingExpenses = (
   return {
     actual: value,
     deductible: deductibleAmount.toFixed(2),
-    adjustment: (-Math.max(0, actualValue - deductibleAmount)).toFixed(2),
+    adjustment: (actualValue - deductibleAmount).toFixed(2), // Corrected calculation
   };
 };
 
@@ -80,7 +80,7 @@ export const handleEducationExpenses = (
   return {
     actual: value,
     deductible: deductibleAmount.toFixed(2),
-    adjustment: (-Math.max(0, actualValue - deductibleAmount)).toFixed(2),
+    adjustment: (actualValue - deductibleAmount).toFixed(2), // Corrected calculation
   };
 };
 
@@ -100,7 +100,7 @@ export const handleWelfareExpenses = (
   return {
     actual: value,
     deductible: deductibleAmount.toFixed(2),
-    adjustment: (-Math.max(0, actualValue - deductibleAmount)).toFixed(2),
+    adjustment: (actualValue - deductibleAmount).toFixed(2), // Corrected calculation
   };
 };
 
@@ -120,6 +120,6 @@ export const handleInsuranceExpenses = (
   return {
     actual: value,
     deductible: deductibleAmount.toFixed(2),
-    adjustment: (-Math.max(0, actualValue - deductibleAmount)).toFixed(2),
+    adjustment: (actualValue - deductibleAmount).toFixed(2), // Corrected calculation
   };
 };

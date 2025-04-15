@@ -4,14 +4,14 @@ import { useState } from 'react';
 export const useTaxAdjustments = () => {
   const [rdExpenses, setRdExpenses] = useState({
     actual: '2000',
-    deductible: '2,000.00',
-    adjustment: '0.00',
+    deductible: '4000.00',
+    adjustment: '-2000.00', // Corrected value based on actual - deductible
   });
   
   const [entertainmentExpenses, setEntertainmentExpenses] = useState({
     actual: '30',
     deductible: '15.00',
-    adjustment: '-15.00',
+    adjustment: '15.00', // Corrected value
   });
   
   const [advertisingExpenses, setAdvertisingExpenses] = useState({
@@ -35,10 +35,10 @@ export const useTaxAdjustments = () => {
   const [insuranceExpenses, setInsuranceExpenses] = useState({
     actual: '7',
     deductible: '0.00',
-    adjustment: '-7.00',
+    adjustment: '7.00', // Corrected value
   });
   
-  const [totalAdjustment, setTotalAdjustment] = useState('-22.00');
+  const [totalAdjustment, setTotalAdjustment] = useState('-1978.00'); // Corrected total
 
   return {
     rdExpenses,
