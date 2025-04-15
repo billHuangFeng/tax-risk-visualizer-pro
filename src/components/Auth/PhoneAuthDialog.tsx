@@ -13,7 +13,7 @@ interface PhoneAuthDialogProps {
 }
 
 const PhoneAuthDialog: React.FC<PhoneAuthDialogProps> = ({ isOpen, onClose, onSuccess }) => {
-  const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
@@ -35,7 +35,7 @@ const PhoneAuthDialog: React.FC<PhoneAuthDialogProps> = ({ isOpen, onClose, onSu
 
     try {
       const { data, error } = await supabase.auth.signUp({
-        phone,
+        email,
         password,
       });
 
@@ -43,7 +43,7 @@ const PhoneAuthDialog: React.FC<PhoneAuthDialogProps> = ({ isOpen, onClose, onSu
 
       toast({
         title: "注册成功",
-        description: "账号已创建，请使用手机号和密码登录",
+        description: "账号已创建，请检查您的邮箱完成验证",
       });
 
       onSuccess();
@@ -64,16 +64,16 @@ const PhoneAuthDialog: React.FC<PhoneAuthDialogProps> = ({ isOpen, onClose, onSu
         <DialogHeader>
           <DialogTitle>创建账号</DialogTitle>
           <DialogDescription>
-            请输入手机号和密码创建账号，以便保存您的数据
+            请输入电子邮箱和密码创建账号，以便保存您的数据
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Input
-              type="tel"
-              placeholder="手机号"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
+              type="email"
+              placeholder="电子邮箱"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>

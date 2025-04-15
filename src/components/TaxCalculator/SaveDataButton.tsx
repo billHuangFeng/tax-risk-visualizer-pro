@@ -32,6 +32,7 @@ const SaveDataButton: React.FC<SaveDataButtonProps> = ({ calculatorData }) => {
       
       if (!user) {
         setShowAuthDialog(true);
+        setIsSaving(false);
         return;
       }
 
