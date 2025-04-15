@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import NumberInput from './NumberInput';
 import GridRow from './GridRow';
 import { AlertTriangle } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface RevenueSectionProps {
   totalRevenue: string;
@@ -77,10 +78,17 @@ const RevenueSection: React.FC<RevenueSectionProps> = ({
               className="bg-gray-100 font-bold"
               disabled={true}
             />
-            <AlertTriangle 
-              className="h-4 w-4 text-tax-red ml-2 cursor-pointer" 
-              onClick={() => onInfoClick?.('newInvoicedRevenue')}
-            />
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <AlertTriangle 
+                  className="h-4 w-4 text-tax-red ml-2 cursor-pointer" 
+                  onClick={() => onInfoClick?.('nonInvoicedRevenue')}
+                />
+              </TooltipTrigger>
+              <TooltipContent>
+                <p className="text-xs">点击查看未开票收入详情</p>
+              </TooltipContent>
+            </Tooltip>
           </div>
         </GridRow>
       </div>
