@@ -83,10 +83,22 @@ const ExpensesSection: React.FC<ExpensesSectionProps> = ({
         </GridRow>
         
         <GridRow label="没有发票的">
-          <NumberInput
-            value={nonInvoicedExpenses}
-            onChange={setNonInvoicedExpenses}
-          />
+          <div className="flex items-center">
+            <NumberInput
+              value={nonInvoicedExpenses}
+              onChange={setNonInvoicedExpenses}
+            />
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <AlertTriangle 
+                  className="h-4 w-4 text-tax-red ml-2 cursor-pointer"
+                />
+              </TooltipTrigger>
+              <TooltipContent>
+                <p className="text-xs max-w-xs">无发票支出需要谨慎处理。建议保留内部凭证、合同、付款单据等证明支出的真实性和必要性。无发票支出可能增加税务风险。</p>
+              </TooltipContent>
+            </Tooltip>
+          </div>
         </GridRow>
         
         <GridRow label="已申报个税的薪资">
