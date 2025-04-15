@@ -16,18 +16,19 @@ const RiskIndicator: React.FC<RiskIndicatorProps> = ({ riskPercentage }) => {
   const getRiskColor = (percentage: number): string => {
     // Define base colors for each risk level
     const lowRiskColor = '#000000';      // Black
-    const mediumRiskColor = '#F97316';   // Orange/Yellow
+    const mediumRiskColor = '#F0A500';   // Yellow
     const highRiskColor = '#ea384c';     // Red
 
     // Calculate opacity based on percentage (from 30% to 100%)
     const opacity = Math.max(0.3, percentage / 100);
+    const opacityHex = Math.round(opacity * 255).toString(16).padStart(2, '0');
 
     if (percentage < 30) {
-      return `${lowRiskColor}${Math.round(opacity * 255).toString(16).padStart(2, '0')}`;
+      return `${lowRiskColor}`;
     } else if (percentage < 70) {
-      return `${mediumRiskColor}${Math.round(opacity * 255).toString(16).padStart(2, '0')}`;
+      return `${mediumRiskColor}`;
     } else {
-      return `${highRiskColor}${Math.round(opacity * 255).toString(16).padStart(2, '0')}`;
+      return `${highRiskColor}`;
     }
   };
 
@@ -42,7 +43,8 @@ const RiskIndicator: React.FC<RiskIndicatorProps> = ({ riskPercentage }) => {
           className="h-full transition-all duration-300"
           style={{ 
             width: `${riskPercentage}%`,
-            backgroundColor: getRiskColor(riskPercentage)
+            backgroundColor: getRiskColor(riskPercentage),
+            opacity: Math.max(0.3, riskPercentage / 100)
           }}
         />
       </Progress>
