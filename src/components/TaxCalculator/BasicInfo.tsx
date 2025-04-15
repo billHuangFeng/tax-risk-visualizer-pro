@@ -85,7 +85,7 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
           <Label htmlFor="totalAssets" className="md:col-span-1 font-medium">资产总额：</Label>
           <div className="flex items-center">
-            <div className="w-input-text">
+            <div className="w-[20rem]">
               <Input
                 id="totalAssets"
                 type="number"
@@ -94,7 +94,7 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
                 className="text-right w-full"
               />
             </div>
-            <span className="ml-2 text-sm">万元</span>
+            <span className="ml-2 text-sm whitespace-nowrap">万元</span>
           </div>
         </div>
 
