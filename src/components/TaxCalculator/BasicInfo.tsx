@@ -1,10 +1,23 @@
-
 import React from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { CircleIcon } from 'lucide-react';
+import { CircleAlertIcon } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+
+interface BasicInfoProps {
+  companyName: string;
+  setCompanyName: (value: string) => void;
+  isExcludedIndustry: boolean;
+  setIsExcludedIndustry: (value: boolean) => void;
+  isHighTechEnterprise: boolean;
+  setIsHighTechEnterprise: (value: boolean) => void;
+  totalAssets: string;
+  setTotalAssets: (value: string) => void;
+  employeeCount: string;
+  setEmployeeCount: (value: string) => void;
+  onInfoClick: (infoKey: string) => void;
+}
 
 const BasicInfo: React.FC<BasicInfoProps> = ({
   companyName,
@@ -83,7 +96,7 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
                   title="小微企业资产总额标准"
                   onClick={() => onInfoClick('totalAssets')}
                 >
-                  <CircleIcon size={16} />
+                  <CircleAlertIcon size={16} />
                 </button>
               </TooltipTrigger>
               <TooltipContent>
@@ -115,7 +128,7 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
                   title="小微企业员工人数标准"
                   onClick={() => onInfoClick('employeeCount')}
                 >
-                  <CircleIcon size={16} />
+                  <CircleAlertIcon size={16} />
                 </button>
               </TooltipTrigger>
               <TooltipContent>
