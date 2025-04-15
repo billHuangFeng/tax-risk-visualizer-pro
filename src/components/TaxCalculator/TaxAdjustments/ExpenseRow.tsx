@@ -21,17 +21,16 @@ interface ExpenseRowProps {
 const ExpenseRow: React.FC<ExpenseRowProps> = ({
   title,
   infoKey,
-  values = { actual: '0', deductible: '0.00', adjustment: '0.00' }, // Default value to prevent undefined errors
+  values = { actual: '0', deductible: '0.00', adjustment: '0.00' },
   onChange,
   onInfoClick,
   isNegativeAdjustment,
 }) => {
-  // Ensure values is always defined
   const safeValues = values || { actual: '0', deductible: '0.00', adjustment: '0.00' };
   
   return (
     <TableRow>
-      <TableCell className="w-[17%] font-medium">
+      <TableCell className="w-[35%] font-medium">
         <div className="flex items-center whitespace-nowrap">
           {title}
           {onInfoClick && (
@@ -52,8 +51,8 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
           )}
         </div>
       </TableCell>
-      <TableCell className="w-[8%]">
-        <div className="w-input-sm">
+      <TableCell className="w-[15%]">
+        <div className="w-full">
           <Input
             type="number"
             value={safeValues.actual}
@@ -62,8 +61,8 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
           />
         </div>
       </TableCell>
-      <TableCell className="w-[8%]">
-        <div className="w-input-sm">
+      <TableCell className="w-[20%]">
+        <div className="w-full">
           <Input
             type="text"
             value={safeValues.deductible}
@@ -72,7 +71,7 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
           />
         </div>
       </TableCell>
-      <TableCell className="w-[57%]">
+      <TableCell className="w-[20%]">
         <Input
           type="text"
           value={safeValues.adjustment}
