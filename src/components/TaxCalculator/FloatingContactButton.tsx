@@ -4,7 +4,10 @@ import { Phone } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const FloatingContactButton = () => {
-  const [position, setPosition] = useState({ x: window.innerWidth - 100, y: window.innerHeight - 100 });
+  const [position, setPosition] = useState({ 
+    x: window.innerWidth - 100 - 8, 
+    y: window.innerHeight - 100 - 8 
+  });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
 
