@@ -1,13 +1,14 @@
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1rem;
   text-align: center;
 }
 
-@media (max-width: 768px) {
+@media (min-width: 768px) {
   #root {
-    padding: 1rem;
+    padding: 2rem;
   }
 }
 
@@ -40,7 +41,13 @@
 }
 
 .card {
-  padding: 2em;
+  padding: 1em;
+}
+
+@media (min-width: 768px) {
+  .card {
+    padding: 2em;
+  }
 }
 
 .read-the-docs {
@@ -48,18 +55,35 @@
 }
 
 @media (max-width: 768px) {
-  .card {
-    padding: 1em;
-  }
-  
   input[type="number"],
   input[type="text"] {
     width: 100%;
     max-width: 100%;
+    font-size: 16px; /* Prevents iOS zoom on focus */
   }
   
   .w-input-text,
   .w-input-sm {
     width: 100%;
+  }
+
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+/* Improve touch targets on mobile */
+@media (max-width: 768px) {
+  button,
+  [role="button"],
+  input,
+  select {
+    min-height: 44px;
+  }
+
+  .text-sm {
+    font-size: 0.875rem;
+    line-height: 1.5rem;
   }
 }
