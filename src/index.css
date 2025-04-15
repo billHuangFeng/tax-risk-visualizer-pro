@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -100,9 +99,9 @@
     @apply bg-background text-foreground;
   }
   
-  /* Custom width for number inputs to fit numbers with thousand separators - now 1.5x wider */
+  /* Custom width for number inputs to prevent text wrapping */
   .w-36 {
-    width: 13.5rem; /* Increased from 9rem to 13.5rem (1.5x) */
+    width: 15rem; /* Increased from 13.5rem to 15rem */
   }
   
   /* Remove spinner buttons from number inputs */
