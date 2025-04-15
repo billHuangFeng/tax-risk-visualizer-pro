@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Check, X } from 'lucide-react';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
@@ -15,6 +15,11 @@ const RiskIndicator: React.FC<RiskIndicatorProps> = ({
   riskValue = '0'
 }) => {
   const [showRiskDetails, setShowRiskDetails] = useState(false);
+
+  // Reset the showRiskDetails when risk values change
+  useEffect(() => {
+    setShowRiskDetails(false);
+  }, [riskValue, riskPercentage]);
 
   const getRiskLevel = (percentage: number) => {
     if (percentage < 30) return '低风险';
@@ -39,6 +44,15 @@ const RiskIndicator: React.FC<RiskIndicatorProps> = ({
 
   const showRiskAlert = riskPercentage >= 30;
   const riskDetails = calculateRiskDetails();
+
+  // Update global state through custom event when showRiskDetails changes
+  useEffect(() => {
+    // Create and dispatch a custom event when showRiskDetails changes
+    const event = new CustomEvent('riskDetailsVisibilityChange', {
+      detail: { showRiskDetails }
+    });
+    document.dispatchEvent(event);
+  }, [showRiskDetails]);
 
   return (
     <div className="space-y-4 pt-4 border-t">

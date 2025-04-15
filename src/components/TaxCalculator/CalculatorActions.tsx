@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { PhoneCall } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -7,7 +7,6 @@ import ContactForm from './ContactForm';
 
 interface CalculatorActionsProps {
   riskPercentage: number;
-  showRiskDetails?: boolean;
   onCalculate?: () => void;
   onReset?: () => void;
   onExport?: () => void;
@@ -15,11 +14,33 @@ interface CalculatorActionsProps {
 
 const CalculatorActions = ({ 
   riskPercentage, 
-  showRiskDetails = false, 
   onCalculate, 
   onReset, 
   onExport 
 }: CalculatorActionsProps) => {
+  const [showRiskDetails, setShowRiskDetails] = useState(false);
+  
+  // Listen for the custom event from RiskIndicator component
+  useEffect(() => {
+    const handleRiskDetailsVisibilityChange = (event: CustomEvent<{ showRiskDetails: boolean }>) => {
+      setShowRiskDetails(event.detail.showRiskDetails);
+    };
+    
+    // Add event listener
+    document.addEventListener(
+      'riskDetailsVisibilityChange', 
+      handleRiskDetailsVisibilityChange as EventListener
+    );
+    
+    // Clean up
+    return () => {
+      document.removeEventListener(
+        'riskDetailsVisibilityChange', 
+        handleRiskDetailsVisibilityChange as EventListener
+      );
+    };
+  }, []);
+
   if (riskPercentage < 30 || !showRiskDetails) return null;
 
   return (
