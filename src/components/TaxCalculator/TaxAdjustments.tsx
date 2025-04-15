@@ -1,46 +1,30 @@
+
 import React from 'react';
 import { Input } from '@/components/ui/input';
-import { Table, TableBody, TableCell, TableHeader, TableHead, TableRow } from '@/components/ui/table';
+import { Table, TableBody, TableHeader, TableHead, TableRow } from '@/components/ui/table';
 import { Info } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import ExpenseRow from './TaxAdjustments/ExpenseRow';
+import { 
+  handleRdExpenses, 
+  handleEntertainmentExpenses, 
+  handleGeneralExpenses, 
+  handleInsuranceExpenses 
+} from './TaxAdjustments/ExpenseHandlers';
 
 interface TaxAdjustmentsProps {
-  rdExpenses: {
-    actual: string;
-    deductible: string;
-    adjustment: string;
-  };
-  setRdExpenses: (value: { actual: string; deductible: string; adjustment: string }) => void;
-  entertainmentExpenses: {
-    actual: string;
-    deductible: string;
-    adjustment: string;
-  };
-  setEntertainmentExpenses: (value: { actual: string; deductible: string; adjustment: string }) => void;
-  advertisingExpenses: {
-    actual: string;
-    deductible: string;
-    adjustment: string;
-  };
-  setAdvertisingExpenses: (value: { actual: string; deductible: string; adjustment: string }) => void;
-  educationExpenses: {
-    actual: string;
-    deductible: string;
-    adjustment: string;
-  };
-  setEducationExpenses: (value: { actual: string; deductible: string; adjustment: string }) => void;
-  welfareExpenses: {
-    actual: string;
-    deductible: string;
-    adjustment: string;
-  };
-  setWelfareExpenses: (value: { actual: string; deductible: string; adjustment: string }) => void;
-  insuranceExpenses: {
-    actual: string;
-    deductible: string;
-    adjustment: string;
-  };
-  setInsuranceExpenses: (value: { actual: string; deductible: string; adjustment: string }) => void;
+  rdExpenses: { actual: string; deductible: string; adjustment: string; };
+  setRdExpenses: (value: { actual: string; deductible: string; adjustment: string; }) => void;
+  entertainmentExpenses: { actual: string; deductible: string; adjustment: string; };
+  setEntertainmentExpenses: (value: { actual: string; deductible: string; adjustment: string; }) => void;
+  advertisingExpenses: { actual: string; deductible: string; adjustment: string; };
+  setAdvertisingExpenses: (value: { actual: string; deductible: string; adjustment: string; }) => void;
+  educationExpenses: { actual: string; deductible: string; adjustment: string; };
+  setEducationExpenses: (value: { actual: string; deductible: string; adjustment: string; }) => void;
+  welfareExpenses: { actual: string; deductible: string; adjustment: string; };
+  setWelfareExpenses: (value: { actual: string; deductible: string; adjustment: string; }) => void;
+  insuranceExpenses: { actual: string; deductible: string; adjustment: string; };
+  setInsuranceExpenses: (value: { actual: string; deductible: string; adjustment: string; }) => void;
   totalAdjustment: string;
   onInfoClick?: (infoKey: string) => void;
   infoData?: Record<string, any>;
@@ -63,83 +47,12 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
   onInfoClick,
   infoData,
 }) => {
-  const handleRdExpensesChange = (field: string, value: string) => {
-    const newRdExpenses = { ...rdExpenses, [field]: value };
-    
-    if (field === 'actual') {
-      const actualValue = parseFloat(value) || 0;
-      newRdExpenses.deductible = (actualValue * 2).toFixed(2);
-      newRdExpenses.adjustment = '0.00';
-    }
-    
-    setRdExpenses(newRdExpenses);
-  };
-
-  const handleEntertainmentExpensesChange = (field: string, value: string) => {
-    const newEntertainmentExpenses = { ...entertainmentExpenses, [field]: value };
-    
-    if (field === 'actual') {
-      const actualValue = parseFloat(value) || 0;
-      const limit = 15.00;
-      newEntertainmentExpenses.deductible = limit.toFixed(2);
-      
-      if (actualValue > limit) {
-        newEntertainmentExpenses.adjustment = `-${(actualValue - limit).toFixed(2)}`;
-      } else {
-        newEntertainmentExpenses.adjustment = '0.00';
+  const handleChange = (handler: typeof handleRdExpenses, setter: typeof setRdExpenses) => 
+    (field: string, value: string) => {
+      if (field === 'actual') {
+        setter(handler(value, { actual: value, deductible: '', adjustment: '' }));
       }
-    }
-    
-    setEntertainmentExpenses(newEntertainmentExpenses);
-  };
-
-  const handleAdvertisingExpensesChange = (field: string, value: string) => {
-    const newAdvertisingExpenses = { ...advertisingExpenses, [field]: value };
-    
-    if (field === 'actual') {
-      const actualValue = parseFloat(value) || 0;
-      newAdvertisingExpenses.deductible = actualValue.toFixed(2);
-      newAdvertisingExpenses.adjustment = '0.00';
-    }
-    
-    setAdvertisingExpenses(newAdvertisingExpenses);
-  };
-
-  const handleEducationExpensesChange = (field: string, value: string) => {
-    const newEducationExpenses = { ...educationExpenses, [field]: value };
-    
-    if (field === 'actual') {
-      const actualValue = parseFloat(value) || 0;
-      newEducationExpenses.deductible = actualValue.toFixed(2);
-      newEducationExpenses.adjustment = '0.00';
-    }
-    
-    setEducationExpenses(newEducationExpenses);
-  };
-
-  const handleWelfareExpensesChange = (field: string, value: string) => {
-    const newWelfareExpenses = { ...welfareExpenses, [field]: value };
-    
-    if (field === 'actual') {
-      const actualValue = parseFloat(value) || 0;
-      newWelfareExpenses.deductible = actualValue.toFixed(2);
-      newWelfareExpenses.adjustment = '0.00';
-    }
-    
-    setWelfareExpenses(newWelfareExpenses);
-  };
-
-  const handleInsuranceExpensesChange = (field: string, value: string) => {
-    const newInsuranceExpenses = { ...insuranceExpenses, [field]: value };
-    
-    if (field === 'actual') {
-      const actualValue = parseFloat(value) || 0;
-      newInsuranceExpenses.deductible = '0.00';
-      newInsuranceExpenses.adjustment = `-${actualValue.toFixed(2)}`;
-    }
-    
-    setInsuranceExpenses(newInsuranceExpenses);
-  };
+    };
 
   return (
     <div className="space-y-6 border rounded-lg p-6 bg-white">
@@ -192,323 +105,50 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
               </TableRow>
             </TableHeader>
             <TableBody>
-              <TableRow>
-                <TableCell className="font-medium">
-                  <div className="flex items-center">
-                    可加计扣除的研发费用
-                    {infoData && onInfoClick && (
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <button 
-                            onClick={() => onInfoClick('rdExpenses')} 
-                            className="ml-1 text-tax-blue hover:text-tax-light-blue focus:outline-none"
-                            aria-label="研发费用说明"
-                          >
-                            <Info className="h-4 w-4" />
-                          </button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <span className="text-xs">点击查看详情</span>
-                        </TooltipContent>
-                      </Tooltip>
-                    )}
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="w-input-text">
-                    <Input
-                      type="number"
-                      value={rdExpenses.actual}
-                      onChange={(e) => handleRdExpensesChange('actual', e.target.value)}
-                      className="text-right w-full"
-                    />
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="w-input-text">
-                    <Input
-                      type="text"
-                      value={rdExpenses.deductible}
-                      readOnly
-                      className="text-right bg-muted w-full"
-                    />
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <Input
-                    type="text"
-                    value={rdExpenses.adjustment}
-                    readOnly
-                    className="text-right bg-muted w-full"
-                  />
-                </TableCell>
-                <TableCell className="text-sm">万元</TableCell>
-              </TableRow>
-              
-              <TableRow>
-                <TableCell className="font-medium">
-                  <div className="flex items-center">
-                    超标准的业务招待费
-                    {infoData && onInfoClick && (
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <button 
-                            onClick={() => onInfoClick('entertainmentExpenses')} 
-                            className="ml-1 text-tax-blue hover:text-tax-light-blue focus:outline-none"
-                            aria-label="业务招待费说明"
-                          >
-                            <Info className="h-4 w-4" />
-                          </button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <span className="text-xs">点击查看详情</span>
-                        </TooltipContent>
-                      </Tooltip>
-                    )}
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="w-input-text">
-                    <Input
-                      type="number"
-                      value={entertainmentExpenses.actual}
-                      onChange={(e) => handleEntertainmentExpensesChange('actual', e.target.value)}
-                      className="text-right w-full"
-                    />
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="w-input-text">
-                    <Input
-                      type="text"
-                      value={entertainmentExpenses.deductible}
-                      readOnly
-                      className="text-right bg-muted w-full"
-                    />
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <Input
-                    type="text"
-                    value={entertainmentExpenses.adjustment}
-                    readOnly
-                    className="text-right bg-muted text-tax-red w-full"
-                  />
-                </TableCell>
-                <TableCell className="text-sm">万元</TableCell>
-              </TableRow>
-              
-              <TableRow>
-                <TableCell className="font-medium">
-                  <div className="flex items-center">
-                    广告费和业务宣传费
-                    {infoData && onInfoClick && (
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <button 
-                            onClick={() => onInfoClick('advertisingExpenses')} 
-                            className="ml-1 text-tax-blue hover:text-tax-light-blue focus:outline-none"
-                            aria-label="广告费说明"
-                          >
-                            <Info className="h-4 w-4" />
-                          </button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <span className="text-xs">点击查看详情</span>
-                        </TooltipContent>
-                      </Tooltip>
-                    )}
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="w-input-text">
-                    <Input
-                      type="number"
-                      value={advertisingExpenses.actual}
-                      onChange={(e) => handleAdvertisingExpensesChange('actual', e.target.value)}
-                      className="text-right w-full"
-                    />
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="w-input-text">
-                    <Input
-                      type="text"
-                      value={advertisingExpenses.deductible}
-                      readOnly
-                      className="text-right bg-muted w-full"
-                    />
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <Input
-                    type="text"
-                    value={advertisingExpenses.adjustment}
-                    readOnly
-                    className="text-right bg-muted w-full"
-                  />
-                </TableCell>
-                <TableCell className="text-sm">万元</TableCell>
-              </TableRow>
-              
-              <TableRow>
-                <TableCell className="font-medium">
-                  <div className="flex items-center">
-                    职工教育经费
-                    {infoData && onInfoClick && (
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <button 
-                            onClick={() => onInfoClick('educationExpenses')} 
-                            className="ml-1 text-tax-blue hover:text-tax-light-blue focus:outline-none"
-                            aria-label="职工教育经费说明"
-                          >
-                            <Info className="h-4 w-4" />
-                          </button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <span className="text-xs">点击查看详情</span>
-                        </TooltipContent>
-                      </Tooltip>
-                    )}
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="w-input-text">
-                    <Input
-                      type="number"
-                      value={educationExpenses.actual}
-                      onChange={(e) => handleEducationExpensesChange('actual', e.target.value)}
-                      className="text-right w-full"
-                    />
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="w-input-text">
-                    <Input
-                      type="text"
-                      value={educationExpenses.deductible}
-                      readOnly
-                      className="text-right bg-muted w-full"
-                    />
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <Input
-                    type="text"
-                    value={educationExpenses.adjustment}
-                    readOnly
-                    className="text-right bg-muted w-full"
-                  />
-                </TableCell>
-                <TableCell className="text-sm">万元</TableCell>
-              </TableRow>
-              
-              <TableRow>
-                <TableCell className="font-medium">
-                  <div className="flex items-center">
-                    职工福利费
-                    {infoData && onInfoClick && (
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <button 
-                            onClick={() => onInfoClick('welfareExpenses')} 
-                            className="ml-1 text-tax-blue hover:text-tax-light-blue focus:outline-none"
-                            aria-label="职工福利费说明"
-                          >
-                            <Info className="h-4 w-4" />
-                          </button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <span className="text-xs">点击查看详情</span>
-                        </TooltipContent>
-                      </Tooltip>
-                    )}
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="w-input-text">
-                    <Input
-                      type="number"
-                      value={welfareExpenses.actual}
-                      onChange={(e) => handleWelfareExpensesChange('actual', e.target.value)}
-                      className="text-right w-full"
-                    />
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="w-input-text">
-                    <Input
-                      type="text"
-                      value={welfareExpenses.deductible}
-                      readOnly
-                      className="text-right bg-muted w-full"
-                    />
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <Input
-                    type="text"
-                    value={welfareExpenses.adjustment}
-                    readOnly
-                    className="text-right bg-muted w-full"
-                  />
-                </TableCell>
-                <TableCell className="text-sm">万元</TableCell>
-              </TableRow>
-              
-              <TableRow>
-                <TableCell className="font-medium">
-                  <div className="flex items-center">
-                    补充养老保险和补充医疗保险支出
-                    {infoData && onInfoClick && (
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <button 
-                            onClick={() => onInfoClick('insuranceExpenses')} 
-                            className="ml-1 text-tax-blue hover:text-tax-light-blue focus:outline-none"
-                            aria-label="补充保险支出说明"
-                          >
-                            <Info className="h-4 w-4" />
-                          </button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <span className="text-xs">点击查看详情</span>
-                        </TooltipContent>
-                      </Tooltip>
-                    )}
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="w-input-text">
-                    <Input
-                      type="number"
-                      value={insuranceExpenses.actual}
-                      onChange={(e) => handleInsuranceExpensesChange('actual', e.target.value)}
-                      className="text-right w-full"
-                    />
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="w-input-text">
-                    <Input
-                      type="text"
-                      value={insuranceExpenses.deductible}
-                      readOnly
-                      className="text-right bg-muted w-full"
-                    />
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <Input
-                    type="text"
-                    value={insuranceExpenses.adjustment}
-                    readOnly
-                    className="text-right bg-muted text-tax-red w-full"
-                  />
-                </TableCell>
-                <TableCell className="text-sm">万元</TableCell>
-              </TableRow>
+              <ExpenseRow
+                title="可加计扣除的研发费用"
+                infoKey="rdExpenses"
+                values={rdExpenses}
+                onChange={handleChange(handleRdExpenses, setRdExpenses)}
+                onInfoClick={onInfoClick}
+              />
+              <ExpenseRow
+                title="超标准的业务招待费"
+                infoKey="entertainmentExpenses"
+                values={entertainmentExpenses}
+                onChange={handleChange(handleEntertainmentExpenses, setEntertainmentExpenses)}
+                onInfoClick={onInfoClick}
+                isNegativeAdjustment
+              />
+              <ExpenseRow
+                title="广告费和业务宣传费"
+                infoKey="advertisingExpenses"
+                values={advertisingExpenses}
+                onChange={handleChange(handleGeneralExpenses, setAdvertisingExpenses)}
+                onInfoClick={onInfoClick}
+              />
+              <ExpenseRow
+                title="职工教育经费"
+                infoKey="educationExpenses"
+                values={educationExpenses}
+                onChange={handleChange(handleGeneralExpenses, setEducationExpenses)}
+                onInfoClick={onInfoClick}
+              />
+              <ExpenseRow
+                title="职工福利费"
+                infoKey="welfareExpenses"
+                values={welfareExpenses}
+                onChange={handleChange(handleGeneralExpenses, setWelfareExpenses)}
+                onInfoClick={onInfoClick}
+              />
+              <ExpenseRow
+                title="补充养老保险和补充医疗保险支出"
+                infoKey="insuranceExpenses"
+                values={insuranceExpenses}
+                onChange={handleChange(handleInsuranceExpenses, setInsuranceExpenses)}
+                onInfoClick={onInfoClick}
+                isNegativeAdjustment
+              />
               
               <TableRow className="bg-muted">
                 <TableCell className="font-medium">小计</TableCell>
