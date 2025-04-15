@@ -59,7 +59,7 @@ const RevenueSection: React.FC<RevenueSectionProps> = ({
         </GridRow>
         
         <GridRow label="不需要开票的" className="group relative">
-          <div className="flex items-center justify-between w-full">
+          <div className="flex items-center">
             <NumberInput
               value={nonInvoicedRevenue}
               onChange={setNonInvoicedRevenue}
@@ -79,7 +79,7 @@ const RevenueSection: React.FC<RevenueSectionProps> = ({
         </GridRow>
         
         <GridRow label="暂时没开票的" className="group relative">
-          <div className="flex items-center justify-between w-full">
+          <div className="flex items-center">
             <NumberInput
               value={newInvoicedRevenue}
               onChange={setNewInvoicedRevenue}
@@ -105,4 +105,3 @@ const RevenueSection: React.FC<RevenueSectionProps> = ({
 };
 
 export default RevenueSection;
-
