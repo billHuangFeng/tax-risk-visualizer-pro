@@ -72,7 +72,7 @@ const RevenueSection: React.FC<RevenueSectionProps> = ({
                 />
               </TooltipTrigger>
               <TooltipContent>
-                <p className="text-xs">点击查看不需要开票的收入详情</p>
+                <p className="text-xs max-w-xs">不需要开票的收入包括按规定无需开具发票的收入，如政府性基金、补贴等。请确保符合税务规定。</p>
               </TooltipContent>
             </Tooltip>
           </div>
@@ -94,7 +94,7 @@ const RevenueSection: React.FC<RevenueSectionProps> = ({
                 />
               </TooltipTrigger>
               <TooltipContent>
-                <p className="text-xs">点击查看未开票收入详情</p>
+                <p className="text-xs max-w-xs">暂时没开票的收入是指尚未开具发票的应税收入。需要在规定时间内补开发票，以确保税务合规。</p>
               </TooltipContent>
             </Tooltip>
           </div>
@@ -105,3 +105,4 @@ const RevenueSection: React.FC<RevenueSectionProps> = ({
 };
 
 export default RevenueSection;
+
