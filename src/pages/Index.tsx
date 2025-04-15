@@ -99,7 +99,7 @@ const Index = () => {
     },
     entertainmentExpenses: {
       title: "业务招待费",
-      description: "企业发生的与经营活动相关的业务招待支出",
+      description: "企业发生���与经营活动相关的业务招待支出",
       analysis: "业务招待费超出税法规定限额的部分不得在税前扣除，需要调增应纳税所得额",
       risk: "业务招待费超标是税务稽查的常见关注点，建议严格控制在收入的0.5%以内"
     },
@@ -215,6 +215,10 @@ const Index = () => {
     });
   };
 
+  const onInfoClick = (infoKey) => {
+    setSelectedInfoItem(infoData[infoKey]);
+  };
+
   const getRiskLevel = (percentage: number) => {
     if (percentage < 30) return '低风险';
     if (percentage < 70) return '中等风险';
@@ -311,8 +315,9 @@ const Index = () => {
                 insuranceExpenses={insuranceExpenses}
                 setInsuranceExpenses={setInsuranceExpenses}
                 totalAdjustment={totalAdjustment}
-                onInfoClick={(infoKey) => setSelectedInfoItem(infoData[infoKey])}
+                onInfoClick={onInfoClick}
                 infoData={infoData}
+                isExcludedIndustry={isExcludedIndustry}
               />
 
               <TaxSummary 

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableHeader, TableHead, TableRow, TableCell } from '@/components/ui/table';
@@ -28,6 +27,7 @@ interface TaxAdjustmentsProps {
   totalAdjustment: string;
   onInfoClick?: (infoKey: string) => void;
   infoData?: Record<string, any>;
+  isExcludedIndustry: boolean;
 }
 
 const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
@@ -46,11 +46,16 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
   totalAdjustment,
   onInfoClick,
   infoData,
+  isExcludedIndustry,
 }) => {
   const handleChange = (handler: typeof handleRdExpenses, setter: typeof setRdExpenses) => 
     (field: string, value: string) => {
       if (field === 'actual') {
-        setter(handler(value, { actual: value, deductible: '', adjustment: '' }));
+        if (handler === handleRdExpenses) {
+          setter(handler(value, { actual: value, deductible: '', adjustment: '' }, isExcludedIndustry));
+        } else {
+          setter(handler(value, { actual: value, deductible: '', adjustment: '' }));
+        }
       }
     };
 

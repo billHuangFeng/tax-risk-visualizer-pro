@@ -1,15 +1,15 @@
-
 interface ExpenseValues {
   actual: string;
   deductible: string;
   adjustment: string;
 }
 
-export const handleRdExpenses = (value: string, currentValues: ExpenseValues): ExpenseValues => {
+export const handleRdExpenses = (value: string, currentValues: ExpenseValues, isExcludedIndustry: boolean): ExpenseValues => {
   const actualValue = parseFloat(value) || 0;
+  const multiplier = isExcludedIndustry ? 1 : 2; // If excluded, multiply by 1; if not excluded, multiply by 2
   return {
     actual: value,
-    deductible: (actualValue * 2).toFixed(2),
+    deductible: (actualValue * multiplier).toFixed(2),
     adjustment: '0.00',
   };
 };
