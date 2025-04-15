@@ -20,6 +20,11 @@ const TaxRateSelector: React.FC<TaxRateSelectorProps> = ({
   isHighTechEnterprise
 }) => {
   useEffect(() => {
+    // Set initial default value to 25
+    if (!taxRate) {
+      setTaxRate("25");
+    }
+
     const assets = parseFloat(totalAssets) || 0;
     const employees = parseInt(employeeCount) || 0;
     const income = parseFloat(taxableIncome) || 0;
@@ -32,7 +37,7 @@ const TaxRateSelector: React.FC<TaxRateSelectorProps> = ({
     } else {
       setTaxRate("25");
     }
-  }, [totalAssets, employeeCount, taxableIncome, isHighTechEnterprise, setTaxRate]);
+  }, [totalAssets, employeeCount, taxableIncome, isHighTechEnterprise, setTaxRate, taxRate]);
 
   const getRateExplanation = () => {
     if (taxRate === "5") return "适用小微企业政策";
