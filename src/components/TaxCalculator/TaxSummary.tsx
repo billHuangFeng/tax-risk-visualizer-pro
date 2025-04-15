@@ -73,7 +73,7 @@ const TaxSummary: React.FC<TaxSummaryProps> = ({
                 <Info size={16} />
               </button>
             </div>
-            <span className="ml-2 text-sm">万元</span>
+            <span className="ml-2 text-sm whitespace-nowrap">万元</span>
           </div>
         </div>
         
@@ -101,7 +101,7 @@ const TaxSummary: React.FC<TaxSummaryProps> = ({
                 className="text-right font-bold w-full"
               />
             </div>
-            <span className="ml-2"></span>
+            <span className="ml-2 whitespace-nowrap"></span>
           </div>
         </div>
         
@@ -124,7 +124,7 @@ const TaxSummary: React.FC<TaxSummaryProps> = ({
                 <Info size={16} />
               </button>
             </div>
-            <span className="ml-2 text-sm">万元</span>
+            <span className="ml-2 text-sm whitespace-nowrap">万元</span>
           </div>
         </div>
         
@@ -147,12 +147,12 @@ const TaxSummary: React.FC<TaxSummaryProps> = ({
                 <Info size={16} />
               </button>
             </div>
-            <span className="ml-2 text-sm">万元</span>
+            <span className="ml-2 text-sm whitespace-nowrap">万元</span>
           </div>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-center">
-          <div className="md:col-span-2 font-medium">风险差值 = |理论应纳税额 - 实际申报税额|</div>
+          <div className="md:col-span-2 font-medium whitespace-nowrap">风险差值 = 理论应纳税额 - 实际申报税额</div>
           <div className="md:col-span-3"></div>
           <div className="md:col-span-1 flex items-center">
             <div className="w-input-text relative">
@@ -170,7 +170,7 @@ const TaxSummary: React.FC<TaxSummaryProps> = ({
                 <Info size={16} />
               </button>
             </div>
-            <span className="ml-2 text-sm">万元</span>
+            <span className="ml-2 text-sm whitespace-nowrap">万元</span>
           </div>
         </div>
         
