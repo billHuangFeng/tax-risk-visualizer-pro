@@ -2,7 +2,6 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { RotateCcw, Download } from 'lucide-react';
-import { useActions } from '@/hooks/calculator/useActions';
 import SaveDataButton from './SaveDataButton';
 import { useCalculator } from '@/hooks/useCalculator';
 
@@ -18,35 +17,28 @@ const CalculatorActions: React.FC<CalculatorActionsProps> = ({
   onExport,
 }) => {
   const calculator = useCalculator();
-  const { handleReset, handleExport } = useActions(calculator.riskValue, riskPercentage);
-
+  
   return (
-    <div className="flex flex-col md:flex-row gap-4 mt-8 justify-center">
-      <SaveDataButton calculatorData={calculator} />
-      
-      <Button 
-        variant="outline" 
-        onClick={() => {
-          onReset();
-          handleReset();
-        }}
+    <div className="w-full px-4 py-4 bg-white border-t border-gray-200 shadow-sm flex flex-col md:flex-row gap-2 justify-end">
+      <Button
+        variant="outline"
+        onClick={onReset}
         className="w-full md:w-auto"
       >
         <RotateCcw className="w-4 h-4 mr-2" />
-        重置数据
+        重置
       </Button>
       
-      <Button 
+      <Button
         variant="outline"
-        onClick={() => {
-          onExport();
-          handleExport();
-        }}
+        onClick={onExport}
         className="w-full md:w-auto"
       >
         <Download className="w-4 h-4 mr-2" />
-        导出数据
+        导出PDF
       </Button>
+      
+      <SaveDataButton calculatorData={calculator} />
     </div>
   );
 };

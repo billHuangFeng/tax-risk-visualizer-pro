@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import CalculatorHeader from '@/components/TaxCalculator/CalculatorHeader';
 import CalculatorActions from '@/components/TaxCalculator/CalculatorActions';
@@ -7,6 +6,7 @@ import RevenueExpenses from '@/components/TaxCalculator/RevenueExpenses';
 import TaxAdjustments from '@/components/TaxCalculator/TaxAdjustments';
 import TaxSummary from '@/components/TaxCalculator/TaxSummary';
 import CalculatorLayout from '@/components/TaxCalculator/CalculatorLayout';
+import SaveButtonWrapper from '@/components/TaxCalculator/SaveButtonWrapper';
 import { useCalculator } from '@/hooks/useCalculator';
 import taxInfoData from '@/constants/taxInfoData';
 import type { TaxInfoPanelItem } from '@/types/calculator';
@@ -102,11 +102,14 @@ const Index = () => {
           isHighTechEnterprise={calculator.isHighTechEnterprise}
         />
 
-        <CalculatorActions
-          riskPercentage={calculator.riskPercentage}
-          onReset={calculator.handleReset}
-          onExport={calculator.handleExport}
-        />
+        <div className="w-full px-4 py-4 bg-white border-t border-gray-200 shadow-sm flex flex-col md:flex-row gap-2 justify-end">
+          <CalculatorActions
+            riskPercentage={calculator.riskPercentage}
+            onReset={calculator.handleReset}
+            onExport={calculator.handleExport}
+          />
+          <SaveButtonWrapper />
+        </div>
       </CalculatorLayout>
     </>
   );
