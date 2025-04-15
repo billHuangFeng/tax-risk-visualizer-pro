@@ -25,7 +25,7 @@ const PhoneAuthDialog: React.FC<PhoneAuthDialogProps> = ({ isOpen, onClose, onSu
     if (!isSupabaseConfigured()) {
       toast({
         title: "配置错误",
-        description: "Supabase 未正确配置。请确保环境变量已设置。",
+        description: "Supabase 未正确配置。请设置 VITE_SUPABASE_URL 和 VITE_SUPABASE_ANON_KEY 环境变量。",
         variant: "destructive",
       });
       return;
