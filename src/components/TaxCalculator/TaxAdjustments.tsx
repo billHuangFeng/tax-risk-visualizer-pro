@@ -154,7 +154,7 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
               type="text"
               value={totalAdjustment}
               readOnly
-              className="text-right font-bold"
+              className="text-right font-bold w-full"
             />
             {infoData && onInfoClick && (
               <Tooltip>
@@ -184,11 +184,11 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
           <Table className="border">
             <TableHeader>
               <TableRow className="bg-muted">
-                <TableHead className="font-medium">项目</TableHead>
-                <TableHead className="text-right font-medium">实际发生</TableHead>
-                <TableHead className="text-right font-medium">可抵除</TableHead>
-                <TableHead className="text-right font-medium">调增/调减</TableHead>
-                <TableHead className="font-medium">单位</TableHead>
+                <TableHead className="font-medium w-1/5">项目</TableHead>
+                <TableHead className="text-right font-medium w-1/5">实际发生</TableHead>
+                <TableHead className="text-right font-medium w-1/5">可抵除</TableHead>
+                <TableHead className="text-right font-medium w-1/5">调增/调减</TableHead>
+                <TableHead className="font-medium w-1/5">单位</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -219,7 +219,7 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
                     type="number"
                     value={rdExpenses.actual}
                     onChange={(e) => handleRdExpensesChange('actual', e.target.value)}
-                    className="text-right"
+                    className="text-right w-full"
                   />
                 </TableCell>
                 <TableCell>
@@ -227,7 +227,7 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
                     type="text"
                     value={rdExpenses.deductible}
                     readOnly
-                    className="text-right bg-muted"
+                    className="text-right bg-muted w-full"
                   />
                 </TableCell>
                 <TableCell>
@@ -235,7 +235,7 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
                     type="text"
                     value={rdExpenses.adjustment}
                     readOnly
-                    className="text-right bg-muted"
+                    className="text-right bg-muted w-full"
                   />
                 </TableCell>
                 <TableCell>万元</TableCell>
@@ -268,7 +268,7 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
                     type="number"
                     value={entertainmentExpenses.actual}
                     onChange={(e) => handleEntertainmentExpensesChange('actual', e.target.value)}
-                    className="text-right"
+                    className="text-right w-full"
                   />
                 </TableCell>
                 <TableCell>
@@ -276,7 +276,7 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
                     type="text"
                     value={entertainmentExpenses.deductible}
                     readOnly
-                    className="text-right bg-muted"
+                    className="text-right bg-muted w-full"
                   />
                 </TableCell>
                 <TableCell>
@@ -284,7 +284,7 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
                     type="text"
                     value={entertainmentExpenses.adjustment}
                     readOnly
-                    className="text-right bg-muted text-tax-red"
+                    className="text-right bg-muted text-tax-red w-full"
                   />
                 </TableCell>
                 <TableCell>万元</TableCell>
@@ -317,7 +317,7 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
                     type="number"
                     value={advertisingExpenses.actual}
                     onChange={(e) => handleAdvertisingExpensesChange('actual', e.target.value)}
-                    className="text-right"
+                    className="text-right w-full"
                   />
                 </TableCell>
                 <TableCell>
@@ -325,7 +325,7 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
                     type="text"
                     value={advertisingExpenses.deductible}
                     readOnly
-                    className="text-right bg-muted"
+                    className="text-right bg-muted w-full"
                   />
                 </TableCell>
                 <TableCell>
@@ -333,7 +333,7 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
                     type="text"
                     value={advertisingExpenses.adjustment}
                     readOnly
-                    className="text-right bg-muted"
+                    className="text-right bg-muted w-full"
                   />
                 </TableCell>
                 <TableCell>万元</TableCell>
@@ -366,7 +366,7 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
                     type="number"
                     value={educationExpenses.actual}
                     onChange={(e) => handleEducationExpensesChange('actual', e.target.value)}
-                    className="text-right"
+                    className="text-right w-full"
                   />
                 </TableCell>
                 <TableCell>
@@ -374,7 +374,7 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
                     type="text"
                     value={educationExpenses.deductible}
                     readOnly
-                    className="text-right bg-muted"
+                    className="text-right bg-muted w-full"
                   />
                 </TableCell>
                 <TableCell>
@@ -382,7 +382,7 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
                     type="text"
                     value={educationExpenses.adjustment}
                     readOnly
-                    className="text-right bg-muted"
+                    className="text-right bg-muted w-full"
                   />
                 </TableCell>
                 <TableCell>万元</TableCell>
@@ -415,7 +415,7 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
                     type="number"
                     value={welfareExpenses.actual}
                     onChange={(e) => handleWelfareExpensesChange('actual', e.target.value)}
-                    className="text-right"
+                    className="text-right w-full"
                   />
                 </TableCell>
                 <TableCell>
@@ -423,7 +423,7 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
                     type="text"
                     value={welfareExpenses.deductible}
                     readOnly
-                    className="text-right bg-muted"
+                    className="text-right bg-muted w-full"
                   />
                 </TableCell>
                 <TableCell>
@@ -431,7 +431,7 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
                     type="text"
                     value={welfareExpenses.adjustment}
                     readOnly
-                    className="text-right bg-muted"
+                    className="text-right bg-muted w-full"
                   />
                 </TableCell>
                 <TableCell>万元</TableCell>
@@ -464,7 +464,7 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
                     type="number"
                     value={insuranceExpenses.actual}
                     onChange={(e) => handleInsuranceExpensesChange('actual', e.target.value)}
-                    className="text-right"
+                    className="text-right w-full"
                   />
                 </TableCell>
                 <TableCell>
@@ -472,7 +472,7 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
                     type="text"
                     value={insuranceExpenses.deductible}
                     readOnly
-                    className="text-right bg-muted"
+                    className="text-right bg-muted w-full"
                   />
                 </TableCell>
                 <TableCell>
@@ -480,7 +480,7 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
                     type="text"
                     value={insuranceExpenses.adjustment}
                     readOnly
-                    className="text-right bg-muted text-tax-red"
+                    className="text-right bg-muted text-tax-red w-full"
                   />
                 </TableCell>
                 <TableCell>万元</TableCell>
@@ -495,7 +495,7 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
                     type="text"
                     value={totalAdjustment}
                     readOnly
-                    className="text-right bg-muted font-bold"
+                    className="text-right bg-muted font-bold w-full"
                   />
                 </TableCell>
                 <TableCell>万元</TableCell>
