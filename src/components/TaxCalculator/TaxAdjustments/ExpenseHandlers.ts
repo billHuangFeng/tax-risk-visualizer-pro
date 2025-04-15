@@ -7,16 +7,15 @@ interface ExpenseValues {
 export const handleRdExpenses = (value: string, currentValues: ExpenseValues, isExcludedIndustry: boolean): ExpenseValues => {
   const actualValue = parseFloat(value) || 0;
   
-  // If company can enjoy the deduction policy (isExcludedIndustry=true), 
-  // then deductible amount = actual * 2 (200%)
-  // If company cannot enjoy the deduction policy (isExcludedIndustry=false),
-  // then deductible amount = actual (100%)
+  // isExcludedIndustry = true means the company CAN enjoy the R&D deduction policy
+  // If the checkbox is checked (isExcludedIndustry = true), deductible should be 200% of actual
+  // If the checkbox is not checked (isExcludedIndustry = false), deductible should be 100% of actual
   const multiplier = isExcludedIndustry ? 2 : 1;
   
   return {
     actual: value,
     deductible: (actualValue * multiplier).toFixed(2),
-    adjustment: '0.00',
+    adjustment: (actualValue * (multiplier - 1)).toFixed(2), // Calculate the adjustment based on the extra deduction
   };
 };
 
