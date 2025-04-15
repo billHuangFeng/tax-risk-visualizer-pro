@@ -1,7 +1,6 @@
 
 import React, { useEffect } from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Input } from '@/components/ui/input';
 
 interface TaxRateSelectorProps {
   taxRate: string;
@@ -78,16 +77,8 @@ const TaxRateSelector: React.FC<TaxRateSelectorProps> = ({
         </Select>
       </div>
       <div className="md:col-span-3"></div>
-      <div className="md:col-span-1 flex items-center gap-2">
-        <div className="w-[16rem]">
-          <Input
-            type="text"
-            value={`${taxRate}%`}
-            readOnly
-            className="text-right font-bold w-full"
-          />
-        </div>
-        <span className="ml-2 text-sm text-tax-blue whitespace-nowrap">
+      <div className="md:col-span-2">
+        <span className="text-sm text-tax-blue whitespace-nowrap">
           {getRateExplanation()}
         </span>
       </div>
