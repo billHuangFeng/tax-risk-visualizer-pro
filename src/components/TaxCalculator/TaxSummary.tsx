@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -59,7 +58,7 @@ const TaxSummary: React.FC<TaxSummaryProps> = ({
           <div className="md:col-span-2 font-medium">应纳税所得额</div>
           <div className="md:col-span-3"></div>
           <div className="md:col-span-1 flex items-center">
-            <div className="w-[32rem] relative"> {/* Doubled width */}
+            <div className="w-[36rem] relative"> {/* Increased width to accommodate larger numbers */}
               <Input
                 type="text"
                 value={taxableIncome}
@@ -110,7 +109,7 @@ const TaxSummary: React.FC<TaxSummaryProps> = ({
           <div className="md:col-span-2 font-medium">理论应纳企业所得税</div>
           <div className="md:col-span-3"></div>
           <div className="md:col-span-1 flex items-center">
-            <div className="w-[32rem] relative"> {/* Doubled width */}
+            <div className="w-[36rem] relative"> {/* Increased width to accommodate larger numbers */}
               <Input
                 type="text"
                 value={theoreticalTax}
@@ -133,7 +132,7 @@ const TaxSummary: React.FC<TaxSummaryProps> = ({
           <div className="md:col-span-2 font-medium">实际申报企业所得税</div>
           <div className="md:col-span-3"></div>
           <div className="md:col-span-1 flex items-center">
-            <div className="w-[32rem] relative"> {/* Doubled width */}
+            <div className="w-[36rem] relative"> {/* Increased width to accommodate larger numbers */}
               <Input
                 type="number"
                 value={actualTax}
@@ -156,7 +155,7 @@ const TaxSummary: React.FC<TaxSummaryProps> = ({
           <div className="md:col-span-2 font-medium whitespace-nowrap">风险差值 = 理论应纳税额 - 实际申报税额</div>
           <div className="md:col-span-3"></div>
           <div className="md:col-span-1 flex items-center">
-            <div className="w-[32rem] relative"> {/* Doubled width */}
+            <div className="w-[36rem] relative"> {/* Increased width to accommodate larger numbers */}
               <Input
                 type="text"
                 value={riskValue}
