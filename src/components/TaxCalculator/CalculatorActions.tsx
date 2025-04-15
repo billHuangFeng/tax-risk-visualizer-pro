@@ -1,55 +1,65 @@
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Button } from '@/components/ui/button';
-import { PhoneCall } from 'lucide-react';
+import { Calculator, RotateCcw, Download } from 'lucide-react';
+import { useActions } from '@/hooks/calculator/useActions';
+import SaveDataButton from './SaveDataButton';
+import { useCalculator } from '@/hooks/useCalculator';
 
 interface CalculatorActionsProps {
   riskPercentage: number;
-  onCalculate?: () => void;
-  onReset?: () => void;
-  onExport?: () => void;
+  onCalculate: () => void;
+  onReset: () => void;
+  onExport: () => void;
 }
 
-const CalculatorActions = ({ 
-  riskPercentage, 
-  onCalculate, 
-  onReset, 
-  onExport 
-}: CalculatorActionsProps) => {
-  const [showRiskDetails, setShowRiskDetails] = useState(false);
-  
-  useEffect(() => {
-    const handleRiskDetailsVisibilityChange = (event: CustomEvent<{ showRiskDetails: boolean }>) => {
-      setShowRiskDetails(event.detail.showRiskDetails);
-    };
-    
-    document.addEventListener(
-      'riskDetailsVisibilityChange', 
-      handleRiskDetailsVisibilityChange as EventListener
-    );
-    
-    return () => {
-      document.removeEventListener(
-        'riskDetailsVisibilityChange', 
-        handleRiskDetailsVisibilityChange as EventListener
-      );
-    };
-  }, []);
-
-  const handleContactAdvisor = () => {
-    window.open('https://work.weixin.qq.com/ca/cawcde03d69f2d37e9', '_blank');
-  };
-
-  if (riskPercentage < 30 || !showRiskDetails) return null;
+const CalculatorActions: React.FC<CalculatorActionsProps> = ({
+  riskPercentage,
+  onCalculate,
+  onReset,
+  onExport,
+}) => {
+  const calculator = useCalculator();
+  const { handleCalculate, handleReset, handleExport } = useActions(calculator.riskValue, riskPercentage);
 
   return (
-    <div className="flex justify-center mt-0 -translate-y-4">
+    <div className="flex flex-col md:flex-row gap-4 mt-8 justify-center">
       <Button 
-        onClick={handleContactAdvisor} 
-        className="bg-tax-blue hover:bg-tax-light-blue text-white"
+        variant="default" 
+        onClick={() => {
+          onCalculate();
+          handleCalculate();
+        }}
+        className="w-full md:w-auto"
       >
-        <PhoneCall className="mr-2 h-4 w-4" />
-        联系税务顾问
+        <Calculator className="w-4 h-4 mr-2" />
+        计算税收风险
+      </Button>
+      
+      <SaveDataButton calculatorData={calculator} />
+      
+      <Button 
+        variant="outline" 
+        onClick={() => {
+          onReset();
+          handleReset();
+        }}
+        className="w-full md:w-auto"
+      >
+        <RotateCcw className="w-4 h-4 mr-2" />
+        重置数据
+      </Button>
+      
+      <Button 
+        variant="outline"
+        onClick={() => {
+          onExport();
+          handleExport();
+        }}
+        className="w-full md:w-auto"
+      >
+        <Download className="w-4 h-4 mr-2" />
+        导出数据
       </Button>
     </div>
   );
