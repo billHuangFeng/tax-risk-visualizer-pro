@@ -12,7 +12,7 @@ interface CalculatorActionsProps {
   onExport?: () => void;
 }
 
-const CalculatorActions = ({ riskPercentage }: CalculatorActionsProps) => {
+const CalculatorActions = ({ riskPercentage, onCalculate, onReset, onExport }: CalculatorActionsProps) => {
   // Only show button for medium (>= 30%) and high risk (>= 70%) scenarios
   if (riskPercentage < 30) return null;
 
