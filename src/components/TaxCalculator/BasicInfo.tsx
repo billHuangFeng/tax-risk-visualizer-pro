@@ -39,8 +39,8 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
       
       <div className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-2 items-center">
-          <Label htmlFor="companyName" className="md:col-span-1 font-medium text-right pr-2">企业名称：</Label>
-          <div className="md:col-span-2 flex items-center">
+          <Label htmlFor="companyName" className="md:col-span-1 font-medium">企业名称：</Label>
+          <div className="md:col-span-2">
             <Input
               id="companyName"
               value={companyName}
