@@ -30,8 +30,10 @@ const FloatingContactButton = () => {
     setIsDragging(false);
   };
 
-  const handleContactAdvisor = () => {
-    window.open('https://work.weixin.qq.com/ca/cawcde03d69f2d37e9', '_blank');
+  const handleContactAdvisor = (e: React.MouseEvent) => {
+    if (!isDragging) {
+      window.open('https://work.weixin.qq.com/ca/cawcde03d69f2d37e9', '_blank');
+    }
   };
 
   return (
@@ -51,12 +53,12 @@ const FloatingContactButton = () => {
       <Button
         onClick={handleContactAdvisor}
         className={cn(
-          "rounded-full w-48 h-48 bg-tax-blue text-white border-4 border-white shadow-lg",
-          "flex flex-col items-center justify-center gap-2 p-0 hover:bg-tax-light-blue"
+          "rounded-full w-24 h-24 bg-tax-blue text-white border-4 border-white shadow-lg",
+          "flex flex-col items-center justify-center gap-1 p-0 hover:bg-tax-light-blue"
         )}
       >
-        <Phone className="w-8 h-8" />
-        <span className="text-base">立即联系税务顾问</span>
+        <Phone className="w-6 h-6" />
+        <span className="text-sm whitespace-pre-line">立即{'\n'}咨询专家</span>
       </Button>
     </div>
   );
