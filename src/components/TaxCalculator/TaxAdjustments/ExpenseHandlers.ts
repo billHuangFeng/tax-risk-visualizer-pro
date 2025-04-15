@@ -12,6 +12,7 @@ interface ExpenseCalculationParams {
 
 export const handleRdExpenses = (value: string, currentValues: ExpenseValues, isExcludedIndustry: boolean): ExpenseValues => {
   const actualValue = parseFloat(value) || 0;
+  // Note: isExcludedIndustry means the company CAN get the R&D deduction policy
   const multiplier = isExcludedIndustry ? 2 : 1;
   const deductibleAmount = actualValue * multiplier;
   

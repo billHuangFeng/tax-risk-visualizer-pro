@@ -18,6 +18,7 @@ export const useCalculator = () => {
     revenueExpenses.totalExpenses,
     taxAdjustments.entertainmentExpenses,
     taxAdjustments.insuranceExpenses,
+    taxAdjustments.rdExpenses,
     taxSummary.taxRate,
     taxSummary.actualTax,
     taxAdjustments.setTotalAdjustment,

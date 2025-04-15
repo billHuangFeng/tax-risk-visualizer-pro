@@ -12,6 +12,7 @@ export const useCalculations = (
   totalExpenses: string,
   entertainmentExpenses: { adjustment: string },
   insuranceExpenses: { adjustment: string },
+  rdExpenses: { adjustment: string },
   taxRate: string,
   actualTax: string,
   setTotalAdjustment: (value: string) => void,
@@ -25,7 +26,8 @@ export const useCalculations = (
       // Calculate total adjustments
       const adjustmentTotal = calculateTotalAdjustments(
         entertainmentExpenses.adjustment,
-        insuranceExpenses.adjustment
+        insuranceExpenses.adjustment,
+        rdExpenses.adjustment
       );
       setTotalAdjustment(adjustmentTotal.toFixed(2));
       
@@ -59,7 +61,8 @@ export const useCalculations = (
     totalRevenue, 
     totalExpenses, 
     entertainmentExpenses.adjustment, 
-    insuranceExpenses.adjustment, 
+    insuranceExpenses.adjustment,
+    rdExpenses.adjustment,
     taxRate, 
     actualTax
   ]);

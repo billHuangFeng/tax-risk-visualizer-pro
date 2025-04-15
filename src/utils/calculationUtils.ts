@@ -1,10 +1,10 @@
-
-// Calculate total adjustments from entertainment and insurance expenses
+// Calculate total adjustments from entertainment, insurance, and R&D expenses
 export const calculateTotalAdjustments = (
   entertainmentAdjustment: string,
-  insuranceAdjustment: string
+  insuranceAdjustment: string,
+  rdAdjustment: string
 ): number => {
-  return parseFloat(entertainmentAdjustment || '0') + parseFloat(insuranceAdjustment || '0');
+  return parseFloat(entertainmentAdjustment || '0') + parseFloat(insuranceAdjustment || '0') + parseFloat(rdAdjustment || '0');
 };
 
 // Calculate taxable income

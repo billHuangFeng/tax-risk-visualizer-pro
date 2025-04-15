@@ -1,4 +1,5 @@
-import React from 'react';
+
+import React, { useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableHeader, TableHead, TableRow, TableCell } from '@/components/ui/table';
 import { Info } from 'lucide-react';
@@ -54,6 +55,13 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
   infoData,
   isExcludedIndustry,
 }) => {
+  // Effect to recalculate R&D expenses when isExcludedIndustry changes
+  useEffect(() => {
+    if (rdExpenses.actual) {
+      setRdExpenses(handleRdExpenses(rdExpenses.actual, { ...rdExpenses }, isExcludedIndustry));
+    }
+  }, [isExcludedIndustry, setRdExpenses, rdExpenses.actual]);
+  
   // Generic function for handlers that need params (revenue, personalTax)
   const handleChangeWithParams = (
     handler: (value: string, currentValues: any, isExcluded: boolean, params: {revenue: string, personalTax: string}) => any, 
