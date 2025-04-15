@@ -25,6 +25,8 @@ interface TaxAdjustmentsProps {
   insuranceExpenses: { actual: string; deductible: string; adjustment: string; };
   setInsuranceExpenses: (value: { actual: string; deductible: string; adjustment: string; }) => void;
   totalAdjustment: string;
+  totalRevenue: string;
+  personalTax: string;
   onInfoClick?: (infoKey: string) => void;
   infoData?: Record<string, any>;
   isExcludedIndustry: boolean;
@@ -44,6 +46,8 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
   insuranceExpenses,
   setInsuranceExpenses,
   totalAdjustment,
+  totalRevenue,
+  personalTax,
   onInfoClick,
   infoData,
   isExcludedIndustry,
@@ -51,7 +55,7 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
   const handleChange = (handler: typeof handleRdExpenses, setter: typeof setRdExpenses) => 
     (field: string, value: string) => {
       if (field === 'actual') {
-        setter(handler(value, { actual: value, deductible: '', adjustment: '' }, isExcludedIndustry));
+        setter(handler(value, { actual: value, deductible: '', adjustment: '' }, isExcludedIndustry, { revenue: totalRevenue, personalTax }));
       }
     };
 
