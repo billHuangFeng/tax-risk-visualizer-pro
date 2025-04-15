@@ -51,12 +51,9 @@ const ExpensesSection: React.FC<ExpensesSectionProps> = ({
 
   return (
     <div className="space-y-6">
-      <h2 className="text-xl font-bold border-l-4 border-tax-blue pl-3">成本费用（不含可抵扣进项税）</h2>
-      
-      <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-center">
-        <div className="md:col-span-2"></div>
-        <div className="md:col-span-3"></div>
-        <div className="md:col-span-1">
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-bold border-l-4 border-tax-blue pl-3">成本费用（不含可抵扣进项税）</h2>
+        <div className="flex items-center">
           <NumberInput
             value={totalExpenses}
             onChange={setTotalExpenses}
@@ -114,3 +111,4 @@ const ExpensesSection: React.FC<ExpensesSectionProps> = ({
 };
 
 export default ExpensesSection;
+
