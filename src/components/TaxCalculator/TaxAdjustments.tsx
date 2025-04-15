@@ -215,20 +215,24 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
                   </div>
                 </TableCell>
                 <TableCell>
-                  <Input
-                    type="number"
-                    value={rdExpenses.actual}
-                    onChange={(e) => handleRdExpensesChange('actual', e.target.value)}
-                    className="text-right w-full"
-                  />
+                  <div className="w-input-text">
+                    <Input
+                      type="number"
+                      value={rdExpenses.actual}
+                      onChange={(e) => handleRdExpensesChange('actual', e.target.value)}
+                      className="text-right w-full"
+                    />
+                  </div>
                 </TableCell>
                 <TableCell>
-                  <Input
-                    type="text"
-                    value={rdExpenses.deductible}
-                    readOnly
-                    className="text-right bg-muted w-full"
-                  />
+                  <div className="w-input-text">
+                    <Input
+                      type="text"
+                      value={rdExpenses.deductible}
+                      readOnly
+                      className="text-right bg-muted w-full"
+                    />
+                  </div>
                 </TableCell>
                 <TableCell>
                   <Input
@@ -238,7 +242,7 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
                     className="text-right bg-muted w-full"
                   />
                 </TableCell>
-                <TableCell>万元</TableCell>
+                <TableCell className="text-sm">万元</TableCell>
               </TableRow>
               
               <TableRow>
@@ -264,20 +268,24 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
                   </div>
                 </TableCell>
                 <TableCell>
-                  <Input
-                    type="number"
-                    value={entertainmentExpenses.actual}
-                    onChange={(e) => handleEntertainmentExpensesChange('actual', e.target.value)}
-                    className="text-right w-full"
-                  />
+                  <div className="w-input-text">
+                    <Input
+                      type="number"
+                      value={entertainmentExpenses.actual}
+                      onChange={(e) => handleEntertainmentExpensesChange('actual', e.target.value)}
+                      className="text-right w-full"
+                    />
+                  </div>
                 </TableCell>
                 <TableCell>
-                  <Input
-                    type="text"
-                    value={entertainmentExpenses.deductible}
-                    readOnly
-                    className="text-right bg-muted w-full"
-                  />
+                  <div className="w-input-text">
+                    <Input
+                      type="text"
+                      value={entertainmentExpenses.deductible}
+                      readOnly
+                      className="text-right bg-muted w-full"
+                    />
+                  </div>
                 </TableCell>
                 <TableCell>
                   <Input
@@ -287,7 +295,7 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
                     className="text-right bg-muted text-tax-red w-full"
                   />
                 </TableCell>
-                <TableCell>万元</TableCell>
+                <TableCell className="text-sm">万元</TableCell>
               </TableRow>
               
               <TableRow>
@@ -313,20 +321,24 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
                   </div>
                 </TableCell>
                 <TableCell>
-                  <Input
-                    type="number"
-                    value={advertisingExpenses.actual}
-                    onChange={(e) => handleAdvertisingExpensesChange('actual', e.target.value)}
-                    className="text-right w-full"
-                  />
+                  <div className="w-input-text">
+                    <Input
+                      type="number"
+                      value={advertisingExpenses.actual}
+                      onChange={(e) => handleAdvertisingExpensesChange('actual', e.target.value)}
+                      className="text-right w-full"
+                    />
+                  </div>
                 </TableCell>
                 <TableCell>
-                  <Input
-                    type="text"
-                    value={advertisingExpenses.deductible}
-                    readOnly
-                    className="text-right bg-muted w-full"
-                  />
+                  <div className="w-input-text">
+                    <Input
+                      type="text"
+                      value={advertisingExpenses.deductible}
+                      readOnly
+                      className="text-right bg-muted w-full"
+                    />
+                  </div>
                 </TableCell>
                 <TableCell>
                   <Input
@@ -336,7 +348,7 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
                     className="text-right bg-muted w-full"
                   />
                 </TableCell>
-                <TableCell>万元</TableCell>
+                <TableCell className="text-sm">万元</TableCell>
               </TableRow>
               
               <TableRow>
@@ -362,20 +374,24 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
                   </div>
                 </TableCell>
                 <TableCell>
-                  <Input
-                    type="number"
-                    value={educationExpenses.actual}
-                    onChange={(e) => handleEducationExpensesChange('actual', e.target.value)}
-                    className="text-right w-full"
-                  />
+                  <div className="w-input-text">
+                    <Input
+                      type="number"
+                      value={educationExpenses.actual}
+                      onChange={(e) => handleEducationExpensesChange('actual', e.target.value)}
+                      className="text-right w-full"
+                    />
+                  </div>
                 </TableCell>
                 <TableCell>
-                  <Input
-                    type="text"
-                    value={educationExpenses.deductible}
-                    readOnly
-                    className="text-right bg-muted w-full"
-                  />
+                  <div className="w-input-text">
+                    <Input
+                      type="text"
+                      value={educationExpenses.deductible}
+                      readOnly
+                      className="text-right bg-muted w-full"
+                    />
+                  </div>
                 </TableCell>
                 <TableCell>
                   <Input
@@ -385,7 +401,7 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
                     className="text-right bg-muted w-full"
                   />
                 </TableCell>
-                <TableCell>万元</TableCell>
+                <TableCell className="text-sm">万元</TableCell>
               </TableRow>
               
               <TableRow>
@@ -411,20 +427,24 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
                   </div>
                 </TableCell>
                 <TableCell>
-                  <Input
-                    type="number"
-                    value={welfareExpenses.actual}
-                    onChange={(e) => handleWelfareExpensesChange('actual', e.target.value)}
-                    className="text-right w-full"
-                  />
+                  <div className="w-input-text">
+                    <Input
+                      type="number"
+                      value={welfareExpenses.actual}
+                      onChange={(e) => handleWelfareExpensesChange('actual', e.target.value)}
+                      className="text-right w-full"
+                    />
+                  </div>
                 </TableCell>
                 <TableCell>
-                  <Input
-                    type="text"
-                    value={welfareExpenses.deductible}
-                    readOnly
-                    className="text-right bg-muted w-full"
-                  />
+                  <div className="w-input-text">
+                    <Input
+                      type="text"
+                      value={welfareExpenses.deductible}
+                      readOnly
+                      className="text-right bg-muted w-full"
+                    />
+                  </div>
                 </TableCell>
                 <TableCell>
                   <Input
@@ -434,7 +454,7 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
                     className="text-right bg-muted w-full"
                   />
                 </TableCell>
-                <TableCell>万元</TableCell>
+                <TableCell className="text-sm">万元</TableCell>
               </TableRow>
               
               <TableRow>
@@ -460,20 +480,24 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
                   </div>
                 </TableCell>
                 <TableCell>
-                  <Input
-                    type="number"
-                    value={insuranceExpenses.actual}
-                    onChange={(e) => handleInsuranceExpensesChange('actual', e.target.value)}
-                    className="text-right w-full"
-                  />
+                  <div className="w-input-text">
+                    <Input
+                      type="number"
+                      value={insuranceExpenses.actual}
+                      onChange={(e) => handleInsuranceExpensesChange('actual', e.target.value)}
+                      className="text-right w-full"
+                    />
+                  </div>
                 </TableCell>
                 <TableCell>
-                  <Input
-                    type="text"
-                    value={insuranceExpenses.deductible}
-                    readOnly
-                    className="text-right bg-muted w-full"
-                  />
+                  <div className="w-input-text">
+                    <Input
+                      type="text"
+                      value={insuranceExpenses.deductible}
+                      readOnly
+                      className="text-right bg-muted w-full"
+                    />
+                  </div>
                 </TableCell>
                 <TableCell>
                   <Input
@@ -483,7 +507,7 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
                     className="text-right bg-muted text-tax-red w-full"
                   />
                 </TableCell>
-                <TableCell>万元</TableCell>
+                <TableCell className="text-sm">万元</TableCell>
               </TableRow>
               
               <TableRow className="bg-muted">
@@ -498,7 +522,7 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
                     className="text-right bg-muted font-bold w-full"
                   />
                 </TableCell>
-                <TableCell>万元</TableCell>
+                <TableCell className="text-sm">万元</TableCell>
               </TableRow>
             </TableBody>
           </Table>

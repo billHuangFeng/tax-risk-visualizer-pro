@@ -1,11 +1,10 @@
-
 import React from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Progress } from '@/components/ui/progress';
 import { Info } from 'lucide-react';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface TaxSummaryProps {
   taxableIncome: string;
@@ -59,7 +58,7 @@ const TaxSummary: React.FC<TaxSummaryProps> = ({
           <div className="md:col-span-2 font-medium">应纳税所得额</div>
           <div className="md:col-span-3"></div>
           <div className="md:col-span-1 flex items-center">
-            <div className="w-36 relative">
+            <div className="w-input-text relative">
               <Input
                 type="text"
                 value={taxableIncome}
@@ -74,7 +73,7 @@ const TaxSummary: React.FC<TaxSummaryProps> = ({
                 <Info size={16} />
               </button>
             </div>
-            <span className="ml-2">万元</span>
+            <span className="ml-2 text-sm">万元</span>
           </div>
         </div>
         
@@ -110,7 +109,7 @@ const TaxSummary: React.FC<TaxSummaryProps> = ({
           <div className="md:col-span-2 font-medium">理论应纳企业所得税</div>
           <div className="md:col-span-3"></div>
           <div className="md:col-span-1 flex items-center">
-            <div className="w-36 relative">
+            <div className="w-input-text relative">
               <Input
                 type="text"
                 value={theoreticalTax}
@@ -125,7 +124,7 @@ const TaxSummary: React.FC<TaxSummaryProps> = ({
                 <Info size={16} />
               </button>
             </div>
-            <span className="ml-2">万元</span>
+            <span className="ml-2 text-sm">万元</span>
           </div>
         </div>
         
@@ -133,7 +132,7 @@ const TaxSummary: React.FC<TaxSummaryProps> = ({
           <div className="md:col-span-2 font-medium">实际申报企业所得税</div>
           <div className="md:col-span-3"></div>
           <div className="md:col-span-1 flex items-center">
-            <div className="w-36 relative">
+            <div className="w-input-text relative">
               <Input
                 type="number"
                 value={actualTax}
@@ -148,7 +147,7 @@ const TaxSummary: React.FC<TaxSummaryProps> = ({
                 <Info size={16} />
               </button>
             </div>
-            <span className="ml-2">万元</span>
+            <span className="ml-2 text-sm">万元</span>
           </div>
         </div>
         
@@ -156,7 +155,7 @@ const TaxSummary: React.FC<TaxSummaryProps> = ({
           <div className="md:col-span-2 font-medium">风险差值 = |理论应纳税额 - 实际申报税额|</div>
           <div className="md:col-span-3"></div>
           <div className="md:col-span-1 flex items-center">
-            <div className="w-36 relative">
+            <div className="w-input-text relative">
               <Input
                 type="text"
                 value={riskValue}
@@ -171,7 +170,7 @@ const TaxSummary: React.FC<TaxSummaryProps> = ({
                 <Info size={16} />
               </button>
             </div>
-            <span className="ml-2">万元</span>
+            <span className="ml-2 text-sm">万元</span>
           </div>
         </div>
         

@@ -17,7 +17,7 @@ const NumberInput: React.FC<NumberInputProps> = ({
 }) => {
   return (
     <div className="flex items-center">
-      <div className="w-36">
+      <div className="w-input-text">
         <Input
           type="number"
           value={value}
@@ -25,7 +25,7 @@ const NumberInput: React.FC<NumberInputProps> = ({
           className={`text-right w-full ${className}`}
         />
       </div>
-      <span className="ml-2">{suffix}</span>
+      <span className="ml-2 text-sm">{suffix}</span>
     </div>
   );
 };

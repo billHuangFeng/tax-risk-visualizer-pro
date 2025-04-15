@@ -99,12 +99,10 @@
     @apply bg-background text-foreground;
   }
   
-  /* Increased width for labels and number inputs */
   .w-36 {
-    width: 18rem; /* Extended from 15rem to 18rem */
+    width: 18rem;
   }
   
-  /* Remove spinner buttons from number inputs */
   input[type=number]::-webkit-inner-spin-button, 
   input[type=number]::-webkit-outer-spin-button { 
     -webkit-appearance: none; 
@@ -113,5 +111,9 @@
   
   input[type=number] {
     -moz-appearance: textfield;
+  }
+
+  .w-input-text {
+    width: 12rem;
   }
 }

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
@@ -86,7 +85,7 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
           <Label htmlFor="totalAssets" className="md:col-span-1 font-medium">资产总额：</Label>
           <div className="flex items-center">
-            <div className="w-36">
+            <div className="w-input-text">
               <Input
                 id="totalAssets"
                 type="number"
@@ -95,14 +94,14 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
                 className="text-right w-full"
               />
             </div>
-            <span className="ml-2">万元</span>
+            <span className="ml-2 text-sm">万元</span>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
           <Label htmlFor="employeeCount" className="md:col-span-1 font-medium">发薪资、劳务费的员工人数：</Label>
           <div className="flex items-center">
-            <div className="w-36">
+            <div className="w-input-text">
               <Input
                 id="employeeCount"
                 type="number"
@@ -111,7 +110,7 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
                 className="text-right w-full"
               />
             </div>
-            <span className="ml-2">人</span>
+            <span className="ml-2 text-sm">人</span>
           </div>
         </div>
       </div>
