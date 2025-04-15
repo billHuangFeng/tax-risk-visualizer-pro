@@ -26,11 +26,11 @@ const TaxInputRow: React.FC<TaxInputRowProps> = ({
 }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-center">
-      <div className={`break-words font-medium ${className}`}>
+      <div className={`md:col-span-3 break-words font-medium ${className}`}>
         {label}
         {showInfo && (
           <button 
-            className="ml-2 text-tax-blue hover:text-tax-light-blue"
+            className="ml-2 text-tax-blue hover:text-tax-light-blue shrink-0 inline-flex"
             onClick={onInfoClick}
             title={`查看${label}说明`}
           >
@@ -38,9 +38,8 @@ const TaxInputRow: React.FC<TaxInputRowProps> = ({
           </button>
         )}
       </div>
-      <div className="hidden md:block md:col-span-2"></div>
-      <div className="flex items-center justify-end">
-        <div className="w-[120px]">
+      <div className="md:col-span-3 flex items-center justify-end w-full">
+        <div className="min-w-[120px] w-[120px]">
           <Input
             type={type}
             value={value}
