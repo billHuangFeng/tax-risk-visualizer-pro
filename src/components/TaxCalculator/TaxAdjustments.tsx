@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableHeader, TableHead, TableRow, TableCell } from '@/components/ui/table';
@@ -55,14 +54,12 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
   infoData,
   isExcludedIndustry,
 }) => {
-  // Effect to recalculate R&D expenses when isExcludedIndustry changes
   useEffect(() => {
     if (rdExpenses.actual) {
       setRdExpenses(handleRdExpenses(rdExpenses.actual, { ...rdExpenses }, isExcludedIndustry));
     }
   }, [isExcludedIndustry, setRdExpenses, rdExpenses.actual]);
   
-  // Generic function for handlers that need params (revenue, personalTax)
   const handleChangeWithParams = (
     handler: (value: string, currentValues: any, isExcluded: boolean, params: {revenue: string, personalTax: string}) => any, 
     setter: typeof setRdExpenses
@@ -73,7 +70,6 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
       }
     };
 
-  // Handler for RD expenses which doesn't need the params
   const handleRdChange = (field: string, value: string) => {
     if (field === 'actual') {
       setRdExpenses(handleRdExpenses(value, { actual: value, deductible: '', adjustment: '' }, isExcludedIndustry));
@@ -170,21 +166,6 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
                 onInfoClick={onInfoClick}
                 isNegativeAdjustment
               />
-              
-              <TableRow className="bg-muted">
-                <TableCell className="font-medium">小计</TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell className="text-right">
-                  <Input
-                    type="text"
-                    value={totalAdjustment}
-                    readOnly
-                    className="text-right bg-muted font-bold w-full"
-                  />
-                </TableCell>
-                <TableCell className="text-sm">万元</TableCell>
-              </TableRow>
             </TableBody>
           </Table>
         </div>
