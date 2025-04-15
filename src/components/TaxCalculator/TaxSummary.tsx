@@ -1,3 +1,4 @@
+
 import React from 'react';
 import RiskIndicator from './TaxSummaryComponents/RiskIndicator';
 import TaxInputRow from './TaxSummaryComponents/TaxInputRow';
@@ -87,7 +88,6 @@ const TaxSummary: React.FC<TaxSummaryProps> = ({
         <RiskIndicator 
           riskPercentage={riskPercentage} 
           riskValue={riskValue}
-          totalRevenue={totalRevenue}
         />
       </div>
     </div>
