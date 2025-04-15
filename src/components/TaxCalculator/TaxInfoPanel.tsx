@@ -16,7 +16,7 @@ interface TaxInfoPanelProps {
 const TaxInfoPanel: React.FC<TaxInfoPanelProps> = ({ selectedItem }) => {
   return (
     <div className="sticky top-8">
-      <Card className="border-l-4 border-l-tax-blue shadow-md h-full max-h-[80vh] flex flex-col">
+      <Card className="border-l-4 border-l-tax-blue shadow-md min-h-[600px] max-h-[80vh] flex flex-col">
         <CardHeader>
           <CardTitle className="flex items-center text-xl text-tax-blue gap-2">
             <Info className="h-5 w-5" />
@@ -24,35 +24,35 @@ const TaxInfoPanel: React.FC<TaxInfoPanelProps> = ({ selectedItem }) => {
           </CardTitle>
         </CardHeader>
         <CardContent className="flex-1 overflow-hidden">
-          <ScrollArea className="h-full pr-4">
+          <ScrollArea className="h-[calc(100vh-250px)] pr-4">
             {selectedItem ? (
-              <div className="space-y-6">
-                <div className="space-y-2">
+              <div className="space-y-8">
+                <div className="space-y-3">
                   <h3 className="font-medium flex items-center gap-2 text-gray-800">
                     <FileText className="h-4 w-4 text-tax-blue" />
                     说明
                   </h3>
-                  <p className="text-sm text-gray-600 pl-6">
+                  <p className="text-sm text-gray-600 pl-6 whitespace-pre-line">
                     {selectedItem.description}
                   </p>
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <h3 className="font-medium flex items-center gap-2 text-gray-800">
                     <BarChart className="h-4 w-4 text-tax-green" />
-                    分析
+                    政策分析
                   </h3>
-                  <p className="text-sm text-gray-600 pl-6">
+                  <p className="text-sm text-gray-600 pl-6 whitespace-pre-line">
                     {selectedItem.analysis}
                   </p>
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <h3 className="font-medium flex items-center gap-2 text-gray-800">
                     <AlertTriangle className="h-4 w-4 text-tax-red" />
                     风险提示
                   </h3>
-                  <p className="text-sm text-gray-600 pl-6">
+                  <p className="text-sm text-gray-600 pl-6 whitespace-pre-line">
                     {selectedItem.risk}
                   </p>
                 </div>
