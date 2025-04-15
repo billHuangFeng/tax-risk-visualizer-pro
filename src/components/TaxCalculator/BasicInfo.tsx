@@ -2,6 +2,7 @@ import React from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Info } from 'lucide-react';
 
 interface BasicInfoProps {
   companyName: string;
@@ -83,7 +84,15 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
-          <Label htmlFor="totalAssets" className="md:col-span-1 font-medium">资产总额：</Label>
+          <Label htmlFor="totalAssets" className="md:col-span-1 font-medium flex items-center">
+            资产总额：
+            <button 
+              className="ml-2 text-tax-blue hover:text-tax-light-blue"
+              title="小微企业资产总额标准"
+            >
+              <Info size={16} />
+            </button>
+          </Label>
           <div className="flex items-center">
             <div className="w-[20rem]">
               <Input
@@ -99,7 +108,15 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
-          <Label htmlFor="employeeCount" className="md:col-span-1 font-medium">发薪资、劳务费的员工人数：</Label>
+          <Label htmlFor="employeeCount" className="md:col-span-1 font-medium flex items-center">
+            发薪资、劳务费的员工人数：
+            <button 
+              className="ml-2 text-tax-blue hover:text-tax-light-blue"
+              title="小微企业员工人数标准"
+            >
+              <Info size={16} />
+            </button>
+          </Label>
           <div className="flex items-center">
             <div className="w-input-text">
               <Input

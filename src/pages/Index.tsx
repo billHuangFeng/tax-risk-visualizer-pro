@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { AlertCircle, Info } from 'lucide-react';
@@ -11,7 +10,6 @@ import TaxSummary from '@/components/TaxCalculator/TaxSummary';
 import TaxInfoPanel from '@/components/TaxCalculator/TaxInfoPanel';
 import { useCalculator } from '@/hooks/useCalculator';
 
-// Information data for tooltips and sidebar
 const infoData = {
   rdExpenses: {
     title: "研发费用",
@@ -48,6 +46,18 @@ const infoData = {
     description: "理论应纳税额与实际申报税额的绝对差值",
     analysis: "差值越大，表示企业税务申报与理论计算的差距越大",
     risk: "差值超过理论税额30%的企业，建议进行税务自查，并确保所有税收优惠政策都有充分的政策依据和完备的资料"
+  },
+  totalAssets: {
+    title: "资产总额",
+    description: "小微企业资产总额标准：资产总额不超过5000万元",
+    analysis: "从事国家非限制和禁止行业，且同时符合年度应纳税所得额不超过300万元、从业人数不超过300人、资产总额不超过5000万元的企业，可以享受小微企业的企业所得税优惠政策。",
+    risk: "资产总额是判断是否享受小微企业税收优惠的重要指标之一，建议准确核算并保留相关财务凭证。"
+  },
+  employeeCount: {
+    title: "员工人数",
+    description: "小微企业员工人数标准：从业人数不超过300人",
+    analysis: "从事国家非限制和禁止行业，且同时符合年度应纳税所得额不超过300万元、从业人数不超过300人、资产总额不超过5000万元的企业，可以享受小微企业的企业所得税优惠政策。",
+    risk: "员工人数是判断是否享受小微企业税收优惠的重要指标之一，建议准确统计并保留相关用工证明。"
   }
 };
 
