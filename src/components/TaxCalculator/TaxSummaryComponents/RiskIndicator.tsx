@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Check } from 'lucide-react';
@@ -16,7 +15,6 @@ const RiskIndicator: React.FC<RiskIndicatorProps> = ({
 }) => {
   const [showRiskDetails, setShowRiskDetails] = useState(false);
 
-  // Reset the showRiskDetails when risk values change
   useEffect(() => {
     setShowRiskDetails(false);
   }, [riskValue, riskPercentage]);
@@ -45,9 +43,7 @@ const RiskIndicator: React.FC<RiskIndicatorProps> = ({
   const showRiskAlert = riskPercentage >= 30;
   const riskDetails = calculateRiskDetails();
 
-  // Update global state through custom event when showRiskDetails changes
   useEffect(() => {
-    // Create and dispatch a custom event when showRiskDetails changes
     const event = new CustomEvent('riskDetailsVisibilityChange', {
       detail: { showRiskDetails }
     });
@@ -82,13 +78,13 @@ const RiskIndicator: React.FC<RiskIndicatorProps> = ({
       </div>
 
       {showRiskAlert && !showRiskDetails && (
-        <div className="flex flex-col items-center space-y-4 mt-4">
-          <p className="text-lg font-semibold">想看看风险到底有多高？</p>
+        <div className="flex flex-col items-center space-y-4 mt-4 bg-blue-50 p-4 rounded-lg border border-blue-200">
+          <p className="text-lg font-semibold text-blue-800">想看看风险到底有多高？</p>
           <div className="flex gap-4">
             <Button 
               variant="default"
               onClick={() => setShowRiskDetails(true)}
-              className="px-8"
+              className="px-8 bg-blue-600 hover:bg-blue-700"
             >
               <Check className="mr-2 h-4 w-4" />
               好的
@@ -98,20 +94,18 @@ const RiskIndicator: React.FC<RiskIndicatorProps> = ({
       )}
 
       {showRiskAlert && showRiskDetails && (
-        <>
-          <Alert variant="destructive" className="mt-4">
-            <AlertTriangle className="h-4 w-4" />
-            <AlertTitle>风险提示</AlertTitle>
-            <AlertDescription className="space-y-2">
-              <p>你面临高达{riskDetails.totalRisk}万元的风险。具体如下：</p>
-              <ol className="list-decimal pl-4">
-                <li>补税{riskDetails.taxAmount}万元；</li>
-                <li>滞纳金{riskDetails.lateFee}万元（每天0.05%，假设3年后暴雷）；</li>
-                <li>罚款{riskDetails.penalty}万元（逃税罚款0.5-5倍，假设被罚款1倍）。</li>
-              </ol>
-            </AlertDescription>
-          </Alert>
-        </>
+        <Alert variant="destructive" className="mt-4 bg-red-50 border-red-200">
+          <AlertTriangle className="h-4 w-4 text-red-600" />
+          <AlertTitle className="text-red-800">风险提示</AlertTitle>
+          <AlertDescription className="space-y-2 text-red-700">
+            <p>你面临高达{riskDetails.totalRisk}万元的风险。具体如下：</p>
+            <ol className="list-decimal pl-4 text-red-700">
+              <li>补税{riskDetails.taxAmount}万元；</li>
+              <li>滞纳金{riskDetails.lateFee}万元（每天0.05%，假设3年后暴雷）；</li>
+              <li>罚款{riskDetails.penalty}万元（逃税罚款0.5-5倍，假设被罚款1倍）。</li>
+            </ol>
+          </AlertDescription>
+        </Alert>
       )}
     </div>
   );
