@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
@@ -15,6 +16,7 @@ interface BasicInfoProps {
   setTotalAssets: (value: string) => void;
   employeeCount: string;
   setEmployeeCount: (value: string) => void;
+  onInfoClick: (infoKey: string) => void;
 }
 
 const BasicInfo: React.FC<BasicInfoProps> = ({
@@ -28,6 +30,7 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
   setTotalAssets,
   employeeCount,
   setEmployeeCount,
+  onInfoClick,
 }) => {
   return (
     <div className="space-y-6 border rounded-lg p-6 bg-white">
@@ -89,6 +92,7 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
             <button 
               className="ml-2 text-tax-blue hover:text-tax-light-blue"
               title="小微企业资产总额标准"
+              onClick={() => onInfoClick('totalAssets')}
             >
               <Info size={16} />
             </button>
@@ -113,6 +117,7 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
             <button 
               className="ml-2 text-tax-blue hover:text-tax-light-blue"
               title="小微企业员工人数标准"
+              onClick={() => onInfoClick('employeeCount')}
             >
               <Info size={16} />
             </button>
@@ -136,3 +141,4 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
 };
 
 export default BasicInfo;
+

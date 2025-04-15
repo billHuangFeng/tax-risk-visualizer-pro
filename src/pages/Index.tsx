@@ -50,13 +50,13 @@ const infoData = {
   totalAssets: {
     title: "资产总额",
     description: "小微企业资产总额标准：资产总额不超过5000万元",
-    analysis: "从事国家非限制和禁止行业，且同时符合年度应纳税所得额不超过300万元、从业人数不超过300人、资产总额不超过5000万元的企业，可以享受小微企业的企业所得税优惠政策。",
+    analysis: "从事国家非限制和禁止行业，且同时符合年度应纳税所得额不超过300万元、从业人数不超过300人、资产总额不超过5000万元的企业，可以享受小微企业的5%企业所得税优惠政策。",
     risk: "资产总额是判断是否享受小微企业税收优惠的重要指标之一，建议准确核算并保留相关财务凭证。"
   },
   employeeCount: {
     title: "员工人数",
     description: "小微企业员工人数标准：从业人数不超过300人",
-    analysis: "从事国家非限制和禁止行业，且同时符合年度应纳税所得额不超过300万元、从业人数不超过300人、资产总额不超过5000万元的企业，可以享受小微企业的企业所得税优惠政策。",
+    analysis: "从事国家非限制和禁止行业，且同时符合年度应纳税所得额不超过300万元、从业人数不超过300人、资产总额不超过5000万元的企业，可以享受小微企业的5%企业所得税优惠政策。",
     risk: "员工人数是判断是否享受小微企业税收优惠的重要指标之一，建议准确统计并保留相关用工证明。"
   }
 };
@@ -70,7 +70,7 @@ const Index = () => {
     risk: string;
   } | null>(null);
 
-  const onInfoClick = (infoKey) => {
+  const onInfoClick = (infoKey: string) => {
     setSelectedInfoItem(infoData[infoKey]);
   };
 
@@ -113,6 +113,7 @@ const Index = () => {
                 setTotalAssets={calculator.setTotalAssets}
                 employeeCount={calculator.employeeCount}
                 setEmployeeCount={calculator.setEmployeeCount}
+                onInfoClick={onInfoClick}
               />
 
               <RevenueExpenses 
