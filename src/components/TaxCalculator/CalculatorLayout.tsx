@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { AlertCircle, Info } from 'lucide-react';
+import { AlertCircle, Info, Phone } from 'lucide-react';
 import { TaxInfoPanelItem } from '@/types/calculator';
 import TaxInfoPanel from '@/components/TaxCalculator/TaxInfoPanel';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -15,6 +15,10 @@ interface CalculatorLayoutProps {
 
 const CalculatorLayout: React.FC<CalculatorLayoutProps> = ({ children, selectedInfoItem }) => {
   const isMobile = useIsMobile();
+
+  const handleContactAdvisor = () => {
+    window.open('https://work.weixin.qq.com/ca/cawcde03d69f2d37e9', '_blank');
+  };
 
   const InfoPanelContent = () => (
     <TaxInfoPanel selectedItem={selectedInfoItem} />
@@ -37,11 +41,18 @@ const CalculatorLayout: React.FC<CalculatorLayoutProps> = ({ children, selectedI
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-sm text-gray-600">
+                  <div className="text-sm text-gray-600 space-y-2">
                     <p>1. 填写基本信息和财务数据</p>
                     <p>2. 系统将自动计算税务调整及风险值</p>
                     <p>3. 风险指数越高，表示与理论应纳税额差异越大，需要更多关注</p>
                     <p>4. 点击数据后方的<Info className="h-3 w-3 inline-block text-tax-blue mx-1" />图标查看详细分析</p>
+                    <Button 
+                      onClick={handleContactAdvisor}
+                      className="w-full mt-4 bg-vivid-purple hover:bg-secondary-purple text-white"
+                    >
+                      <Phone className="w-4 h-4 mr-2" />
+                      立即联系税务顾问
+                    </Button>
                   </div>
                 </CardContent>
               </Card>

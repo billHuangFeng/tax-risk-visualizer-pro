@@ -41,7 +41,7 @@ const CalculatorActions: React.FC<CalculatorActionsProps> = ({
         <Download className="w-4 h-4 mr-2" />
         导出PDF
       </Button>
-      
+
       <Button 
         onClick={handleContactAdvisor} 
         className="w-full md:w-auto bg-vivid-purple hover:bg-secondary-purple text-white"
