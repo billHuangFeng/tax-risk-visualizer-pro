@@ -1,29 +1,32 @@
 import React from 'react';
-import TaxInputRow from './TaxSummaryComponents/TaxInputRow';
-import { InfoData } from '@/types/tax';
-
-interface ExpenseValues {
-  actual: string;
-  deductible: string;
-  adjustment: string;
-}
+import { Input } from '@/components/ui/input';
+import { Table, TableBody, TableHeader, TableHead, TableRow, TableCell } from '@/components/ui/table';
+import { Info } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import ExpenseRow from './TaxAdjustments/ExpenseRow';
+import { 
+  handleRdExpenses, 
+  handleEntertainmentExpenses, 
+  handleGeneralExpenses, 
+  handleInsuranceExpenses 
+} from './TaxAdjustments/ExpenseHandlers';
 
 interface TaxAdjustmentsProps {
-  rdExpenses: ExpenseValues;
-  setRdExpenses: (value: ExpenseValues) => void;
-  entertainmentExpenses: ExpenseValues;
-  setEntertainmentExpenses: (value: ExpenseValues) => void;
-  advertisingExpenses: ExpenseValues;
-  setAdvertisingExpenses: (value: ExpenseValues) => void;
-  educationExpenses: ExpenseValues;
-  setEducationExpenses: (value: ExpenseValues) => void;
-  welfareExpenses: ExpenseValues;
-  setWelfareExpenses: (value: ExpenseValues) => void;
-  insuranceExpenses: ExpenseValues;
-  setInsuranceExpenses: (value: ExpenseValues) => void;
+  rdExpenses: { actual: string; deductible: string; adjustment: string; };
+  setRdExpenses: (value: { actual: string; deductible: string; adjustment: string; }) => void;
+  entertainmentExpenses: { actual: string; deductible: string; adjustment: string; };
+  setEntertainmentExpenses: (value: { actual: string; deductible: string; adjustment: string; }) => void;
+  advertisingExpenses: { actual: string; deductible: string; adjustment: string; };
+  setAdvertisingExpenses: (value: { actual: string; deductible: string; adjustment: string; }) => void;
+  educationExpenses: { actual: string; deductible: string; adjustment: string; };
+  setEducationExpenses: (value: { actual: string; deductible: string; adjustment: string; }) => void;
+  welfareExpenses: { actual: string; deductible: string; adjustment: string; };
+  setWelfareExpenses: (value: { actual: string; deductible: string; adjustment: string; }) => void;
+  insuranceExpenses: { actual: string; deductible: string; adjustment: string; };
+  setInsuranceExpenses: (value: { actual: string; deductible: string; adjustment: string; }) => void;
   totalAdjustment: string;
   onInfoClick?: (infoKey: string) => void;
-  infoData?: InfoData;
+  infoData?: Record<string, any>;
   isExcludedIndustry: boolean;
 }
 
@@ -45,136 +48,130 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
   infoData,
   isExcludedIndustry,
 }) => {
-  const formatNumber = (value: string): string => {
-    const num = parseFloat(value);
-    return isNaN(num) ? '0.00' : num.toFixed(2);
-  };
-
-  const calculateAdjustment = (actual: string, deductible: string): string => {
-    const actualNum = parseFloat(actual);
-    const deductibleNum = parseFloat(deductible);
-    const adjustment = deductibleNum - actualNum;
-    return adjustment.toFixed(2);
-  };
-
-  const handleChange = (value: string, type: keyof ExpenseValues, isExcludedIndustry: boolean = false) => {
-    const formattedValue = value === '' ? '0' : value;
-
-    const updateExpense = (expense: ExpenseValues, setExpense: (value: ExpenseValues) => void) => {
-      const newExpense = { ...expense, [type]: formattedValue };
-      let deductibleValue = newExpense.actual;
-
-      if (type === 'actual') {
-        if (type === 'actual' && type === 'actual' && infoData && infoData.entertainmentExpenses && !isExcludedIndustry) {
-          const revenue = 3000; // 假设收入为3000
-          const limit = revenue * 0.005;
-          deductibleValue = Math.min(parseFloat(newExpense.actual), limit).toString();
+  const handleChange = (handler: typeof handleRdExpenses, setter: typeof setRdExpenses) => 
+    (field: string, value: string) => {
+      if (field === 'actual') {
+        if (handler === handleRdExpenses) {
+          setter(handler(value, { actual: value, deductible: '', adjustment: '' }, isExcludedIndustry));
+        } else {
+          setter(handler(value, { actual: value, deductible: '', adjustment: '' }));
         }
-        newExpense.deductible = formatNumber(deductibleValue);
-        newExpense.adjustment = calculateAdjustment(newExpense.actual, newExpense.deductible);
       }
-
-      setExpense(newExpense);
     };
-
-    switch (type) {
-      case 'actual':
-        updateExpense(rdExpenses, setRdExpenses);
-        updateExpense(entertainmentExpenses, setEntertainmentExpenses);
-        updateExpense(advertisingExpenses, setAdvertisingExpenses);
-        updateExpense(educationExpenses, setEducationExpenses);
-        updateExpense(welfareExpenses, setWelfareExpenses);
-        updateExpense(insuranceExpenses, setInsuranceExpenses);
-        break;
-      default:
-        break;
-    }
-  };
 
   return (
     <div className="space-y-6 border rounded-lg p-6 bg-white">
-      <h2 className="text-xl font-bold border-l-4 border-tax-blue pl-3">纳税调整项目</h2>
+      <h2 className="text-xl font-bold border-l-4 border-tax-blue pl-3">企业所得税前调增/调减</h2>
       
-      <div className="space-y-4">
-        <TaxInputRow
-          label="1. 研发费用加计扣除"
-          value={rdExpenses.actual}
-          onChange={(value) => {
-            handleChange(value, 'actual')
-            setRdExpenses({...rdExpenses, actual: value})
-          }}
-          type="number"
-          showInfo
-          onInfoClick={() => onInfoClick?.('rdExpenses')}
-        />
+      <div className="grid grid-cols-1 md:grid-cols-8 gap-4 items-center">
+        <div className="md:col-span-2"></div>
+        <div className="md:col-span-5"></div>
+        <div className="md:col-span-1">
+          <div className="flex items-center">
+            <Input
+              type="text"
+              value={totalAdjustment}
+              readOnly
+              className="text-right font-bold w-full"
+            />
+            {infoData && onInfoClick && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button 
+                    onClick={() => onInfoClick('riskValue')} 
+                    className="ml-1 text-tax-blue hover:text-tax-light-blue focus:outline-none"
+                    aria-label="调整总额说明"
+                  >
+                    <Info className="h-4 w-4" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <span className="text-xs">点击查看详情</span>
+                </TooltipContent>
+              </Tooltip>
+            )}
+          </div>
+        </div>
+        <span>万元</span>
+      </div>
+      
+      <div className="pl-4 space-y-4">
+        <div className="text-right font-medium">其中：</div>
         
-        <TaxInputRow
-          label="2. 超标业务招待费调整"
-          value={entertainmentExpenses.actual}
-          onChange={(value) => {
-            handleChange(value, 'actual', isExcludedIndustry)
-            setEntertainmentExpenses({...entertainmentExpenses, actual: value})
-          }}
-          type="number"
-          showInfo
-          onInfoClick={() => onInfoClick?.('entertainmentExpenses')}
-        />
-        
-        <TaxInputRow
-          label="3. 超标广告费和业务宣传费调整"
-          value={advertisingExpenses.actual}
-          onChange={(value) => {
-            handleChange(value, 'actual')
-            setAdvertisingExpenses({...advertisingExpenses, actual: value})
-          }}
-          type="number"
-          showInfo
-          onInfoClick={() => onInfoClick?.('entertainmentExpenses')}
-        />
-        
-        <TaxInputRow
-          label="4. 职工教育经费调整"
-          value={educationExpenses.actual}
-          onChange={(value) => {
-            handleChange(value, 'actual')
-            setEducationExpenses({...educationExpenses, actual: value})
-          }}
-          type="number"
-          showInfo
-          onInfoClick={() => onInfoClick?.('entertainmentExpenses')}
-        />
-        
-        <TaxInputRow
-          label="5. 职工福利费调整"
-          value={welfareExpenses.actual}
-          onChange={(value) => {
-            handleChange(value, 'actual')
-            setWelfareExpenses({...welfareExpenses, actual: value})
-          }}
-          type="number"
-          showInfo
-          onInfoClick={() => onInfoClick?.('entertainmentExpenses')}
-        />
-        
-        <TaxInputRow
-          label="6. 社保费调整"
-          value={insuranceExpenses.actual}
-          onChange={(value) => {
-            handleChange(value, 'actual')
-            setInsuranceExpenses({...insuranceExpenses, actual: value})
-          }}
-          type="number"
-          showInfo
-          onInfoClick={() => onInfoClick?.('entertainmentExpenses')}
-        />
-        
-        <TaxInputRow
-          label="纳税调整总额"
-          value={totalAdjustment}
-          readOnly
-          showInfo
-          onInfoClick={() => onInfoClick?.('entertainmentExpenses')}
-        />
+        <div className="overflow-x-auto">
+          <Table className="border">
+            <TableHeader>
+              <TableRow className="bg-muted">
+                <TableHead className="font-medium w-[40%]">项目</TableHead>
+                <TableHead className="text-right font-medium w-[15%]">实际发生</TableHead>
+                <TableHead className="text-right font-medium w-[15%]">可抵除</TableHead>
+                <TableHead className="text-right font-medium w-[15%]">调增/调减</TableHead>
+                <TableHead className="font-medium w-[15%] whitespace-nowrap">单位</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <ExpenseRow
+                title="可加计扣除的研发费用"
+                infoKey="rdExpenses"
+                values={rdExpenses}
+                onChange={handleChange(handleRdExpenses, setRdExpenses)}
+                onInfoClick={onInfoClick}
+              />
+              <ExpenseRow
+                title="超标准的业务招待费"
+                infoKey="entertainmentExpenses"
+                values={entertainmentExpenses}
+                onChange={handleChange(handleEntertainmentExpenses, setEntertainmentExpenses)}
+                onInfoClick={onInfoClick}
+                isNegativeAdjustment
+              />
+              <ExpenseRow
+                title="广告费和业务宣传费"
+                infoKey="advertisingExpenses"
+                values={advertisingExpenses}
+                onChange={handleChange(handleGeneralExpenses, setAdvertisingExpenses)}
+                onInfoClick={onInfoClick}
+              />
+              <ExpenseRow
+                title="职工教育经费"
+                infoKey="educationExpenses"
+                values={educationExpenses}
+                onChange={handleChange(handleGeneralExpenses, setEducationExpenses)}
+                onInfoClick={onInfoClick}
+              />
+              <ExpenseRow
+                title="职工福利费"
+                infoKey="welfareExpenses"
+                values={welfareExpenses}
+                onChange={handleChange(handleGeneralExpenses, setWelfareExpenses)}
+                onInfoClick={onInfoClick}
+              />
+              <ExpenseRow
+                title="补充养老保险和补充医疗保险支出"
+                infoKey="insuranceExpenses"
+                values={insuranceExpenses}
+                onChange={handleChange(handleInsuranceExpenses, setInsuranceExpenses)}
+                onInfoClick={onInfoClick}
+                isNegativeAdjustment
+              />
+              
+              <TableRow className="bg-muted">
+                <TableCell className="font-medium">小计</TableCell>
+                <TableCell></TableCell>
+                <TableCell></TableCell>
+                <TableCell>
+                  <Input
+                    type="text"
+                    value={totalAdjustment}
+                    readOnly
+                    className="text-right bg-muted font-bold w-full"
+                  />
+                </TableCell>
+                <TableCell className="text-sm">万元</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </div>
       </div>
     </div>
   );
