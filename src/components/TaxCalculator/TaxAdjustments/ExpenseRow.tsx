@@ -28,7 +28,7 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
 }) => {
   return (
     <TableRow>
-      <TableCell className="w-[45%] font-medium">
+      <TableCell className="w-[35%] font-medium">
         <div className="flex items-center whitespace-nowrap">
           {title}
           {onInfoClick && (
@@ -49,8 +49,8 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
           )}
         </div>
       </TableCell>
-      <TableCell className="w-[15%]">
-        <div className="w-input-text">
+      <TableCell className="w-[12%]">
+        <div className="w-input-sm">
           <Input
             type="number"
             value={values.actual}
@@ -59,8 +59,8 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
           />
         </div>
       </TableCell>
-      <TableCell className="w-[15%]">
-        <div className="w-input-text">
+      <TableCell className="w-[12%]">
+        <div className="w-input-sm">
           <Input
             type="text"
             value={values.deductible}
@@ -69,7 +69,7 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
           />
         </div>
       </TableCell>
-      <TableCell className="w-[15%]">
+      <TableCell className="w-[31%]">
         <Input
           type="text"
           value={values.adjustment}
