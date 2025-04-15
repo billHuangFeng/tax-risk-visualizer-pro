@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react';
 import NumberInput from './NumberInput';
 import GridRow from './GridRow';
@@ -58,7 +59,7 @@ const RevenueSection: React.FC<RevenueSectionProps> = ({
         </GridRow>
         
         <GridRow label="不需要开票的" className="group relative">
-          <div className="flex items-center">
+          <div className="flex items-center justify-between w-full">
             <NumberInput
               value={nonInvoicedRevenue}
               onChange={setNonInvoicedRevenue}
@@ -78,7 +79,7 @@ const RevenueSection: React.FC<RevenueSectionProps> = ({
         </GridRow>
         
         <GridRow label="暂时没开票的" className="group relative">
-          <div className="flex items-center">
+          <div className="flex items-center justify-between w-full">
             <NumberInput
               value={newInvoicedRevenue}
               onChange={setNewInvoicedRevenue}
@@ -89,7 +90,7 @@ const RevenueSection: React.FC<RevenueSectionProps> = ({
               <TooltipTrigger asChild>
                 <AlertTriangle 
                   className="h-4 w-4 text-tax-red ml-2 cursor-pointer" 
-                  onClick={() => onInfoClick?.('nonInvoicedRevenue')}
+                  onClick={() => onInfoClick?.('newInvoicedRevenue')}
                 />
               </TooltipTrigger>
               <TooltipContent>
@@ -104,3 +105,4 @@ const RevenueSection: React.FC<RevenueSectionProps> = ({
 };
 
 export default RevenueSection;
+
