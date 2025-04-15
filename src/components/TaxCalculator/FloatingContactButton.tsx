@@ -1,16 +1,34 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Phone } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const FloatingContactButton = () => {
+  const isMobile = useIsMobile();
   const [position, setPosition] = useState({ 
     x: window.innerWidth - 200,
     y: window.innerHeight - 148
   });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const updatePosition = () => {
+      if (isMobile) {
+        const characterWidth = 16; // Approximate width of a Chinese character
+        const padding = characterWidth * 2;
+        setPosition({
+          x: window.innerWidth - 80 - padding, // Button width + padding
+          y: window.innerHeight - 120 - padding // Button height + padding
+        });
+      }
+    };
+
+    updatePosition();
+    window.addEventListener('resize', updatePosition);
+    return () => window.removeEventListener('resize', updatePosition);
+  }, [isMobile]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     setIsDragging(true);
@@ -43,10 +61,11 @@ const FloatingContactButton = () => {
     <div
       style={{
         position: 'fixed',
-        left: position.x,
-        top: position.y,
+        left: isMobile ? position.x : position.x,
+        top: isMobile ? position.y : position.y,
         zIndex: 50,
         cursor: isDragging ? 'grabbing' : 'grab',
+        display: isMobile ? 'block' : 'block',
       }}
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
@@ -57,7 +76,7 @@ const FloatingContactButton = () => {
         onClick={handleContactAdvisor}
         className={cn(
           "rounded-full w-24 h-24 bg-blue-600 text-white border-4 border-white",
-          "flex flex-col items-center justify-center gap-2 p-0", // Increased gap for more space between icon and text
+          "flex flex-col items-center justify-center gap-2 p-0",
           "hover:bg-blue-700 transition-all duration-200",
           "shadow-[0_6px_12px_rgba(0,0,0,0.2)]",
           "active:shadow-[0_3px_6px_rgba(0,0,0,0.2)]",
