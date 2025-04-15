@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import NumberInput from './NumberInput';
 import GridRow from './GridRow';
-import { Info } from 'lucide-react';
+import { Info, AlertTriangle } from 'lucide-react';
 
 interface RevenueSectionProps {
   totalRevenue: string;
@@ -63,14 +63,20 @@ const RevenueSection: React.FC<RevenueSectionProps> = ({
               value={nonInvoicedRevenue}
               onChange={setNonInvoicedRevenue}
             />
-            <Info 
-              className="h-4 w-4 ml-2 text-tax-blue cursor-pointer" 
-              onClick={() => onInfoClick?.('nonInvoicedRevenue')}
-            />
+            <div className="flex space-x-1 ml-2">
+              <Info 
+                className="h-4 w-4 text-tax-blue cursor-pointer" 
+                onClick={() => onInfoClick?.('nonInvoicedRevenue')}
+              />
+              <AlertTriangle 
+                className="h-4 w-4 text-tax-red cursor-pointer" 
+                onClick={() => onInfoClick?.('nonInvoicedRevenue')}
+              />
+            </div>
           </div>
         </GridRow>
         
-        <GridRow label="暂时没开票的">
+        <GridRow label="暂时没开票的" className="group relative">
           <div className="flex items-center">
             <NumberInput
               value={newInvoicedRevenue}
@@ -78,10 +84,16 @@ const RevenueSection: React.FC<RevenueSectionProps> = ({
               className="bg-gray-100 font-bold"
               disabled={true}
             />
-            <Info 
-              className="h-4 w-4 ml-2 text-tax-blue cursor-pointer" 
-              onClick={() => onInfoClick?.('newInvoicedRevenue')}
-            />
+            <div className="flex space-x-1 ml-2">
+              <Info 
+                className="h-4 w-4 text-tax-blue cursor-pointer" 
+                onClick={() => onInfoClick?.('newInvoicedRevenue')}
+              />
+              <AlertTriangle 
+                className="h-4 w-4 text-tax-red cursor-pointer" 
+                onClick={() => onInfoClick?.('newInvoicedRevenue')}
+              />
+            </div>
           </div>
         </GridRow>
       </div>
