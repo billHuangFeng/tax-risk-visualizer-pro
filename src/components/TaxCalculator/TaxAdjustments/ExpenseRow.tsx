@@ -31,14 +31,14 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
   return (
     <TableRow>
       <TableCell className="w-[35%] font-medium">
-        <div className="flex items-center whitespace-nowrap">
+        <div className="flex items-center break-words">
           {title}
           {onInfoClick && (
             <Tooltip>
               <TooltipTrigger asChild>
                 <button 
                   onClick={() => onInfoClick(infoKey)} 
-                  className="ml-1 text-tax-blue hover:text-tax-light-blue focus:outline-none"
+                  className="ml-1 text-tax-blue hover:text-tax-light-blue focus:outline-none shrink-0"
                   aria-label={`${title}说明`}
                 >
                   <Info className="h-4 w-4" />
@@ -51,7 +51,7 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
           )}
         </div>
       </TableCell>
-      <TableCell className="w-[15%]">
+      <TableCell className="w-[15%] min-w-[80px]">
         <div className="w-full">
           <Input
             type="number"
@@ -61,7 +61,7 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
           />
         </div>
       </TableCell>
-      <TableCell className="w-[20%]">
+      <TableCell className="w-[20%] min-w-[80px]">
         <div className="w-full">
           <Input
             type="text"
@@ -71,7 +71,7 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
           />
         </div>
       </TableCell>
-      <TableCell className="w-[20%]">
+      <TableCell className="w-[20%] min-w-[80px]">
         <Input
           type="text"
           value={safeValues.adjustment}
