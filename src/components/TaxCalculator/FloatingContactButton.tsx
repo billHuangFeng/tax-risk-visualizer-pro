@@ -5,8 +5,8 @@ import { cn } from '@/lib/utils';
 
 const FloatingContactButton = () => {
   const [position, setPosition] = useState({ 
-    x: window.innerWidth - 200, // Adjusted x position 
-    y: window.innerHeight - 100 // Adjusted y position to match the image
+    x: window.innerWidth - 200,
+    y: window.innerHeight - 148
   });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
@@ -33,7 +33,7 @@ const FloatingContactButton = () => {
   };
 
   const handleContactAdvisor = (e: React.MouseEvent) => {
-    if (e.detail === 2 && !isDragging) { // Check for double click
+    if (e.detail === 2 && !isDragging) {
       window.open('https://work.weixin.qq.com/ca/cawcde03d69f2d37e9', '_blank');
     }
   };
@@ -56,7 +56,11 @@ const FloatingContactButton = () => {
         onClick={handleContactAdvisor}
         className={cn(
           "rounded-full w-24 h-24 bg-tax-blue text-white border-4 border-white shadow-lg",
-          "flex flex-col items-center justify-center gap-1 p-0 hover:bg-tax-light-blue"
+          "flex flex-col items-center justify-center gap-1 p-0",
+          "hover:bg-tax-light-blue transition-all duration-200",
+          "transform hover:-translate-y-1",
+          "shadow-[0_8px_0_0_#1e3a8a]",
+          "active:translate-y-1 active:shadow-[0_4px_0_0_#1e3a8a]"
         )}
       >
         <Phone className="w-6 h-6" />
