@@ -13,41 +13,26 @@ const RiskIndicator: React.FC<RiskIndicatorProps> = ({ riskPercentage }) => {
     return '高风险';
   };
 
-  const getRiskColor = (percentage: number): string => {
-    // Define base colors for each risk level
-    const lowRiskColor = '#000000';      // Black
-    const mediumRiskColor = '#F0A500';   // Yellow
-    const highRiskColor = '#ea384c';     // Red
-
-    // Calculate opacity based on percentage (from 30% to 100%)
-    const opacity = Math.max(0.3, percentage / 100);
-    const opacityHex = Math.round(opacity * 255).toString(16).padStart(2, '0');
-
-    if (percentage < 30) {
-      return `${lowRiskColor}`;
-    } else if (percentage < 70) {
-      return `${mediumRiskColor}`;
-    } else {
-      return `${highRiskColor}`;
-    }
-  };
-
+  // We need to modify the progress indicator styling to match the expected behavior
   return (
     <div className="pt-4 border-t">
       <div className="mb-2 flex justify-between">
         <span className="font-bold">税务风险评估</span>
         <span className="font-bold">{getRiskLevel(riskPercentage)}</span>
       </div>
-      <Progress value={riskPercentage} className="h-4" style={{ backgroundColor: '#e5e7eb' }}>
+      <div className="relative h-4 w-full overflow-hidden rounded-full bg-gray-200">
         <div 
-          className="h-full transition-all duration-300"
+          className="absolute top-0 left-0 h-full transition-all duration-300"
           style={{ 
             width: `${riskPercentage}%`,
-            backgroundColor: getRiskColor(riskPercentage),
-            opacity: Math.max(0.3, riskPercentage / 100)
+            backgroundColor: riskPercentage < 30 
+              ? '#000000' // Black for low risk
+              : riskPercentage < 70 
+                ? '#F0A500' // Yellow for medium risk
+                : '#ea384c', // Red for high risk
           }}
         />
-      </Progress>
+      </div>
       <div className="mt-2 flex justify-between text-sm">
         <span>低风险</span>
         <span>中等风险</span>
