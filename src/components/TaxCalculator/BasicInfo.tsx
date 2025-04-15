@@ -38,14 +38,14 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
       <h2 className="text-xl font-bold border-l-4 border-tax-blue pl-3">基本信息</h2>
       
       <div className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
-          <Label htmlFor="companyName" className="md:col-span-1 font-medium">企业名称：</Label>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-2 items-center">
+          <Label htmlFor="companyName" className="md:col-span-1 font-medium text-right pr-2">企业名称：</Label>
           <div className="md:col-span-2 flex items-center">
             <Input
               id="companyName"
               value={companyName}
               onChange={(e) => setCompanyName(e.target.value)}
-              className="w-full text-left" // Changed to text-left
+              className="w-full text-left" 
             />
           </div>
         </div>
