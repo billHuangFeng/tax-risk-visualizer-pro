@@ -23,14 +23,18 @@ const TaxRateSelector: React.FC<TaxRateSelectorProps> = ({
   useEffect(() => {
     const assets = parseFloat(totalAssets) || 0;
     const employees = parseInt(employeeCount) || 0;
-    const income = parseFloat(taxableIncome) || 0;
+    const income = parseFloat(taxableIncome.replace(/,/g, '')) || 0;
 
-    // Check conditions for tax rates
-    if (assets <= 5000 && employees <= 300 && income <= 300) {
+    // Check conditions for small business tax rate (5%)
+    if (assets <= 5000 && employees <= 300 && income < 300) {
       setTaxRate("5");
-    } else if (isHighTechEnterprise) {
+    }
+    // Check conditions for high-tech enterprise tax rate (15%)
+    else if (isHighTechEnterprise) {
       setTaxRate("15");
-    } else {
+    }
+    // Default tax rate (25%)
+    else {
       setTaxRate("25");
     }
   }, [totalAssets, employeeCount, taxableIncome, isHighTechEnterprise, setTaxRate]);
