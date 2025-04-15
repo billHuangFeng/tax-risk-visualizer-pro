@@ -4,6 +4,9 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/com
 import { AlertCircle, Info } from 'lucide-react';
 import { TaxInfoPanelItem } from '@/types/calculator';
 import TaxInfoPanel from '@/components/TaxCalculator/TaxInfoPanel';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Button } from '@/components/ui/button';
 
 interface CalculatorLayoutProps {
   children: React.ReactNode;
@@ -11,12 +14,18 @@ interface CalculatorLayoutProps {
 }
 
 const CalculatorLayout: React.FC<CalculatorLayoutProps> = ({ children, selectedInfoItem }) => {
+  const isMobile = useIsMobile();
+
+  const InfoPanelContent = () => (
+    <TaxInfoPanel selectedItem={selectedInfoItem} />
+  );
+
   return (
     <div className="min-h-screen bg-gray-50 pb-10">
-      <div className="container">
+      <div className="container max-w-[100vw] px-4 md:px-8">
         <div className="flex flex-col md:flex-row gap-8">
-          <div className="w-full md:w-2/3">
-            <div className="grid gap-8 mb-8">
+          <div className="w-full">
+            <div className="grid gap-4 md:gap-8 mb-8">
               <Card>
                 <CardHeader>
                   <CardTitle className="text-tax-blue flex items-center gap-2">
@@ -40,9 +49,27 @@ const CalculatorLayout: React.FC<CalculatorLayoutProps> = ({ children, selectedI
             </div>
           </div>
           
-          <div className="w-full md:w-1/3 mt-8 md:mt-0">
-            <TaxInfoPanel selectedItem={selectedInfoItem} />
-          </div>
+          {isMobile ? (
+            selectedInfoItem && (
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button 
+                    variant="outline" 
+                    className="fixed bottom-4 right-4 z-50 rounded-full shadow-lg bg-white"
+                  >
+                    <Info className="h-5 w-5" />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="bottom" className="h-[80vh]">
+                  <InfoPanelContent />
+                </SheetContent>
+              </Sheet>
+            )
+          ) : (
+            <div className="w-full md:w-1/3 mt-8 md:mt-0">
+              <InfoPanelContent />
+            </div>
+          )}
         </div>
       </div>
     </div>
