@@ -1,6 +1,5 @@
 
 import React, { useEffect } from 'react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 
 interface TaxRateSelectorProps {
@@ -43,33 +42,21 @@ const TaxRateSelector: React.FC<TaxRateSelectorProps> = ({
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-center">
-      <div className="md:col-span-1 font-medium">× 适用税率</div>
-      <div className="md:col-span-1">
-        <Select value={taxRate} onValueChange={setTaxRate}>
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="选择税率" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="25">25%</SelectItem>
-            <SelectItem value="15">15%</SelectItem>
-            <SelectItem value="5">5%</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-      <div className="md:col-span-3"></div>
-      <div className="md:col-span-1 flex items-center gap-2">
-        <div className="w-[16rem]">
+      <div className="md:col-span-1 font-medium flex items-center gap-2">
+        × 适用税率
+        <div className="relative w-20">
           <Input
             type="text"
             value={`${taxRate}%`}
             readOnly
-            className="text-right font-bold w-full"
+            className="text-center font-bold"
           />
         </div>
-        <span className="ml-2 text-sm text-tax-blue whitespace-nowrap">
+        <span className="text-sm text-tax-blue whitespace-nowrap">
           {getRateExplanation()}
         </span>
       </div>
+      <div className="md:col-span-5"></div>
     </div>
   );
 };
