@@ -42,6 +42,7 @@ const RevenueSection: React.FC<RevenueSectionProps> = ({
           <NumberInput
             value={totalRevenue}
             onChange={setTotalRevenue}
+            className="font-bold"  // Added font-bold here
           />
         </div>
       </div>
@@ -65,7 +66,7 @@ const RevenueSection: React.FC<RevenueSectionProps> = ({
           <NumberInput
             value={newInvoicedRevenue}
             onChange={setNewInvoicedRevenue}
-            className="bg-gray-100"
+            className="bg-gray-100 font-bold"  // Added font-bold here
             disabled={true}
           />
         </GridRow>

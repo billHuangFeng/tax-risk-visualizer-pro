@@ -57,6 +57,7 @@ const ExpensesSection: React.FC<ExpensesSectionProps> = ({
           <NumberInput
             value={totalExpenses}
             onChange={setTotalExpenses}
+            className="font-bold"  // Added font-bold here
           />
         </div>
       </div>
@@ -101,7 +102,7 @@ const ExpensesSection: React.FC<ExpensesSectionProps> = ({
           <NumberInput
             value={otherExpenses}
             onChange={setOtherExpenses}
-            className="bg-gray-100"
+            className="bg-gray-100 font-bold"  // Added font-bold here
             disabled={true}
           />
         </GridRow>
