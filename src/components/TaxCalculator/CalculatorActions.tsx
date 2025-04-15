@@ -44,7 +44,7 @@ const CalculatorActions = ({
   if (riskPercentage < 30 || !showRiskDetails) return null;
 
   return (
-    <div className="flex justify-center mt-6">
+    <div className="flex justify-center mt-0 -translate-y-4">
       <Dialog>
         <DialogTrigger asChild>
           <Button className="bg-tax-blue hover:bg-tax-light-blue text-white">
@@ -64,3 +64,4 @@ const CalculatorActions = ({
 };
 
 export default CalculatorActions;
+
