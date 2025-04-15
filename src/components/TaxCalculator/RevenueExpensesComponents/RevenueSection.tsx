@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import NumberInput from './NumberInput';
 import GridRow from './GridRow';
@@ -24,7 +23,6 @@ const RevenueSection: React.FC<RevenueSectionProps> = ({
   newInvoicedRevenue,
   setNewInvoicedRevenue,
 }) => {
-  // Calculate uninvoiced sales amount
   useEffect(() => {
     const total = parseFloat(totalRevenue) || 0;
     const invoiced = parseFloat(invoicedRevenue) || 0;
@@ -42,7 +40,7 @@ const RevenueSection: React.FC<RevenueSectionProps> = ({
           <NumberInput
             value={totalRevenue}
             onChange={setTotalRevenue}
-            className="font-bold"  // Added font-bold here
+            className="font-bold"
           />
         </div>
       </div>
@@ -55,18 +53,18 @@ const RevenueSection: React.FC<RevenueSectionProps> = ({
           />
         </GridRow>
         
-        <GridRow label="不需要的开票">
+        <GridRow label="不需要开票的">
           <NumberInput
             value={nonInvoicedRevenue}
             onChange={setNonInvoicedRevenue}
           />
         </GridRow>
         
-        <GridRow label="暂未开票的销售额">
+        <GridRow label="暂时没开票的">
           <NumberInput
             value={newInvoicedRevenue}
             onChange={setNewInvoicedRevenue}
-            className="bg-gray-100 font-bold"  // Added font-bold here
+            className="bg-gray-100 font-bold"
             disabled={true}
           />
         </GridRow>
@@ -76,4 +74,3 @@ const RevenueSection: React.FC<RevenueSectionProps> = ({
 };
 
 export default RevenueSection;
-
