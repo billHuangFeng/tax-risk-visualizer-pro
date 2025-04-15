@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Progress } from '@/components/ui/progress';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
@@ -7,7 +6,6 @@ import { AlertTriangle } from 'lucide-react';
 interface RiskIndicatorProps {
   riskPercentage: number;
   riskValue?: string;
-  totalRevenue?: string;
 }
 
 const RiskIndicator: React.FC<RiskIndicatorProps> = ({ 
@@ -32,10 +30,10 @@ const RiskIndicator: React.FC<RiskIndicatorProps> = ({
     const totalRisk = taxAmount + lateFee + penalty;
 
     return {
-      taxAmount: (taxAmount / 10000).toFixed(2),
-      lateFee: (lateFee / 10000).toFixed(2),
-      penalty: (penalty / 10000).toFixed(2),
-      totalRisk: (totalRisk / 10000).toFixed(2)
+      taxAmount: taxAmount.toFixed(2),
+      lateFee: lateFee.toFixed(2),
+      penalty: penalty.toFixed(2),
+      totalRisk: totalRisk.toFixed(2)
     };
   };
 
