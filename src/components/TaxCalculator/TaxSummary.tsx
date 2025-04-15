@@ -1,3 +1,4 @@
+
 import React from 'react';
 import RiskIndicator from './TaxSummaryComponents/RiskIndicator';
 import TaxInputRow from './TaxSummaryComponents/TaxInputRow';
