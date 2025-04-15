@@ -184,11 +184,11 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
           <Table className="border">
             <TableHeader>
               <TableRow className="bg-muted">
-                <TableHead className="font-medium w-1/5">项目</TableHead>
-                <TableHead className="text-right font-medium w-1/5">实际发生</TableHead>
-                <TableHead className="text-right font-medium w-1/5">可抵除</TableHead>
-                <TableHead className="text-right font-medium w-1/5">调增/调减</TableHead>
-                <TableHead className="font-medium w-1/5">单位</TableHead>
+                <TableHead className="font-medium w-1/3">项目</TableHead>
+                <TableHead className="text-right font-medium w-[18%]">实际发生</TableHead>
+                <TableHead className="text-right font-medium w-[18%]">可抵除</TableHead>
+                <TableHead className="text-right font-medium w-[18%]">调增/调减</TableHead>
+                <TableHead className="font-medium w-[13%] whitespace-nowrap">单位</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
