@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -114,10 +115,11 @@
   }
 
   .w-input-text {
-    width: 32rem;
+    width: 16rem;
   }
 
   .w-input-sm {
-    width: 16rem;
+    width: 8rem;
   }
 }
+
