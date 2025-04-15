@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableHeader, TableHead, TableRow, TableCell } from '@/components/ui/table';
@@ -27,11 +28,11 @@ interface TaxAdjustmentsProps {
   setWelfareExpenses: (value: { actual: string; deductible: string; adjustment: string; }) => void;
   insuranceExpenses: { actual: string; deductible: string; adjustment: string; };
   setInsuranceExpenses: (value: { actual: string; deductible: string; adjustment: string; }) => void;
+  nonDeductibleExpenses: { actual: string; deductible: string; adjustment: string; };
+  setNonDeductibleExpenses: (value: { actual: string; deductible: string; adjustment: string; }) => void;
   totalAdjustment: string;
   totalRevenue: string;
   personalTax: string;
-  nonDeductibleExpenses: { actual: string; deductible: string; adjustment: string; };
-  setNonDeductibleExpenses: (value: { actual: string; deductible: string; adjustment: string; }) => void;
   onInfoClick?: (infoKey: string) => void;
   infoData?: Record<string, any>;
   isExcludedIndustry: boolean;
@@ -50,11 +51,11 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
   setWelfareExpenses,
   insuranceExpenses,
   setInsuranceExpenses,
+  nonDeductibleExpenses,
+  setNonDeductibleExpenses,
   totalAdjustment,
   totalRevenue,
   personalTax,
-  nonDeductibleExpenses,
-  setNonDeductibleExpenses,
   onInfoClick,
   infoData,
   isExcludedIndustry,
@@ -127,6 +128,12 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
   const handleRdChange = (field: string, value: string) => {
     if (field === 'actual') {
       setRdExpenses(handleRdExpenses(value, { actual: value, deductible: '', adjustment: '' }, isExcludedIndustry));
+    }
+  };
+
+  const handleNonDeductibleChange = (field: string, value: string) => {
+    if (field === 'actual') {
+      setNonDeductibleExpenses(handleNonDeductibleExpenses(value, { actual: value, deductible: '', adjustment: '' }));
     }
   };
 
@@ -224,7 +231,7 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
                 title="没有发票不能税前扣除的费用"
                 infoKey="nonDeductibleExpenses"
                 values={nonDeductibleExpenses}
-                onChange={(field, value) => field === 'actual' && setNonDeductibleExpenses(handleNonDeductibleExpenses(value, { actual: value, deductible: '', adjustment: '' }))}
+                onChange={handleNonDeductibleChange}
                 onInfoClick={onInfoClick}
               />
             </TableBody>

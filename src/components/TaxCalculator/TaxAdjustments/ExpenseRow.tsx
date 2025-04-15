@@ -21,11 +21,14 @@ interface ExpenseRowProps {
 const ExpenseRow: React.FC<ExpenseRowProps> = ({
   title,
   infoKey,
-  values,
+  values = { actual: '0', deductible: '0.00', adjustment: '0.00' }, // Default value to prevent undefined errors
   onChange,
   onInfoClick,
   isNegativeAdjustment,
 }) => {
+  // Ensure values is always defined
+  const safeValues = values || { actual: '0', deductible: '0.00', adjustment: '0.00' };
+  
   return (
     <TableRow>
       <TableCell className="w-[17%] font-medium">
@@ -53,7 +56,7 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
         <div className="w-input-sm">
           <Input
             type="number"
-            value={values.actual}
+            value={safeValues.actual}
             onChange={(e) => onChange('actual', e.target.value)}
             className="text-right w-full"
           />
@@ -63,7 +66,7 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
         <div className="w-input-sm">
           <Input
             type="text"
-            value={values.deductible}
+            value={safeValues.deductible}
             readOnly
             className="text-right bg-muted w-full"
           />
@@ -72,10 +75,10 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
       <TableCell className="w-[57%]">
         <Input
           type="text"
-          value={values.adjustment}
+          value={safeValues.adjustment}
           readOnly
           className={`text-right bg-muted w-full font-bold ${
-            parseFloat(values.adjustment) !== 0
+            parseFloat(safeValues.adjustment) !== 0
               ? 'text-tax-red' 
               : 'text-foreground'
           }`}
