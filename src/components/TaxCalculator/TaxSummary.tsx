@@ -1,4 +1,3 @@
-
 import React from 'react';
 import RiskIndicator from './TaxSummaryComponents/RiskIndicator';
 import TaxInputRow from './TaxSummaryComponents/TaxInputRow';
@@ -19,6 +18,7 @@ interface TaxSummaryProps {
   totalAssets: string;
   employeeCount: string;
   isHighTechEnterprise: boolean;
+  totalRevenue?: string;
 }
 
 const TaxSummary: React.FC<TaxSummaryProps> = ({
@@ -34,6 +34,7 @@ const TaxSummary: React.FC<TaxSummaryProps> = ({
   totalAssets,
   employeeCount,
   isHighTechEnterprise,
+  totalRevenue = '0',
 }) => {
   return (
     <div className="space-y-6 border rounded-lg p-6 bg-white">
@@ -83,7 +84,11 @@ const TaxSummary: React.FC<TaxSummaryProps> = ({
           className="whitespace-nowrap"
         />
         
-        <RiskIndicator riskPercentage={riskPercentage} />
+        <RiskIndicator 
+          riskPercentage={riskPercentage} 
+          riskValue={riskValue}
+          totalRevenue={totalRevenue}
+        />
       </div>
     </div>
   );
