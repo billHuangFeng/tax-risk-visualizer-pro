@@ -2,6 +2,7 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { DialogClose } from "@/components/ui/dialog";
+import { Phone } from 'lucide-react';
 
 const ContactForm = () => {
   const handleContactAdvisor = () => {
@@ -14,8 +15,9 @@ const ContactForm = () => {
       <div className="flex justify-center pt-4">
         <Button 
           onClick={handleContactAdvisor} 
-          className="bg-tax-blue hover:bg-tax-light-blue text-white w-full"
+          className="bg-vivid-purple hover:bg-secondary-purple text-white w-full"
         >
+          <Phone className="mr-2 h-5 w-5" />
           立即联系税务顾问
         </Button>
       </div>
