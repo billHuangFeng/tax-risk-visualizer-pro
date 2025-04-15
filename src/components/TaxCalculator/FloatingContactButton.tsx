@@ -31,7 +31,7 @@ const FloatingContactButton = () => {
   };
 
   const handleContactAdvisor = (e: React.MouseEvent) => {
-    if (!isDragging) {
+    if (e.detail === 2 && !isDragging) { // Check for double click
       window.open('https://work.weixin.qq.com/ca/cawcde03d69f2d37e9', '_blank');
     }
   };
