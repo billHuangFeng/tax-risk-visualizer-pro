@@ -20,13 +20,17 @@ const ContactForm = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Here you would typically send the data to your backend
+    // Log form submission
     console.log('Form submitted:', formData);
     
+    // Show success toast
     toast({
       title: "提交成功",
       description: "我们的税务顾问将尽快与您联系",
     });
+
+    // Open WeChat link in new tab
+    window.open('https://work.weixin.qq.com/ca/cawcde03d69f2d37e9', '_blank');
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
