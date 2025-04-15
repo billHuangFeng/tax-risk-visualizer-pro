@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableHeader, TableHead, TableRow, TableCell } from '@/components/ui/table';
@@ -7,7 +8,9 @@ import ExpenseRow from './TaxAdjustments/ExpenseRow';
 import { 
   handleRdExpenses, 
   handleEntertainmentExpenses, 
-  handleGeneralExpenses, 
+  handleAdvertisingExpenses,
+  handleEducationExpenses,
+  handleWelfareExpenses,
   handleInsuranceExpenses 
 } from './TaxAdjustments/ExpenseHandlers';
 
@@ -52,12 +55,23 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
   infoData,
   isExcludedIndustry,
 }) => {
-  const handleChange = (handler: typeof handleRdExpenses, setter: typeof setRdExpenses) => 
+  // Generic function for handlers that need params (revenue, personalTax)
+  const handleChangeWithParams = (
+    handler: (value: string, currentValues: any, isExcluded: boolean, params: {revenue: string, personalTax: string}) => any, 
+    setter: typeof setRdExpenses
+  ) => 
     (field: string, value: string) => {
       if (field === 'actual') {
         setter(handler(value, { actual: value, deductible: '', adjustment: '' }, isExcludedIndustry, { revenue: totalRevenue, personalTax }));
       }
     };
+
+  // Handler for RD expenses which doesn't need the params
+  const handleRdChange = (field: string, value: string) => {
+    if (field === 'actual') {
+      setRdExpenses(handleRdExpenses(value, { actual: value, deductible: '', adjustment: '' }, isExcludedIndustry));
+    }
+  };
 
   return (
     <div className="space-y-6 border rounded-lg p-6 bg-white">
@@ -109,14 +123,14 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
                 title="可加计扣除的研发费用"
                 infoKey="rdExpenses"
                 values={rdExpenses}
-                onChange={handleChange(handleRdExpenses, setRdExpenses)}
+                onChange={handleRdChange}
                 onInfoClick={onInfoClick}
               />
               <ExpenseRow
                 title="超标准的业务招待费"
                 infoKey="entertainmentExpenses"
                 values={entertainmentExpenses}
-                onChange={handleChange(handleEntertainmentExpenses, setEntertainmentExpenses)}
+                onChange={handleChangeWithParams(handleEntertainmentExpenses, setEntertainmentExpenses)}
                 onInfoClick={onInfoClick}
                 isNegativeAdjustment
               />
@@ -124,28 +138,28 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
                 title="广告费和业务宣传费"
                 infoKey="advertisingExpenses"
                 values={advertisingExpenses}
-                onChange={handleChange(handleGeneralExpenses, setAdvertisingExpenses)}
+                onChange={handleChangeWithParams(handleAdvertisingExpenses, setAdvertisingExpenses)}
                 onInfoClick={onInfoClick}
               />
               <ExpenseRow
                 title="职工教育经费"
                 infoKey="educationExpenses"
                 values={educationExpenses}
-                onChange={handleChange(handleGeneralExpenses, setEducationExpenses)}
+                onChange={handleChangeWithParams(handleEducationExpenses, setEducationExpenses)}
                 onInfoClick={onInfoClick}
               />
               <ExpenseRow
                 title="职工福利费"
                 infoKey="welfareExpenses"
                 values={welfareExpenses}
-                onChange={handleChange(handleGeneralExpenses, setWelfareExpenses)}
+                onChange={handleChangeWithParams(handleWelfareExpenses, setWelfareExpenses)}
                 onInfoClick={onInfoClick}
               />
               <ExpenseRow
                 title="补充养老保险和补充医疗保险支出"
                 infoKey="insuranceExpenses"
                 values={insuranceExpenses}
-                onChange={handleChange(handleInsuranceExpenses, setInsuranceExpenses)}
+                onChange={handleChangeWithParams(handleInsuranceExpenses, setInsuranceExpenses)}
                 onInfoClick={onInfoClick}
                 isNegativeAdjustment
               />

@@ -144,6 +144,8 @@ const Index = () => {
                 insuranceExpenses={calculator.insuranceExpenses}
                 setInsuranceExpenses={calculator.setInsuranceExpenses}
                 totalAdjustment={calculator.totalAdjustment}
+                totalRevenue={calculator.totalRevenue}
+                personalTax={calculator.personalTax}
                 onInfoClick={onInfoClick}
                 infoData={infoData}
                 isExcludedIndustry={calculator.isExcludedIndustry}
