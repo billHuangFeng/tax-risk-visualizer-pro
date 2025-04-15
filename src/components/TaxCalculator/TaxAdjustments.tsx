@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableHeader, TableHead, TableRow, TableCell } from '@/components/ui/table';
@@ -54,12 +55,69 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
   infoData,
   isExcludedIndustry,
 }) => {
+  // Recalculate R&D expenses when industry status changes
   useEffect(() => {
     if (rdExpenses.actual) {
       setRdExpenses(handleRdExpenses(rdExpenses.actual, { ...rdExpenses }, isExcludedIndustry));
     }
   }, [isExcludedIndustry, setRdExpenses, rdExpenses.actual]);
   
+  // Recalculate all expense values when revenue or personalTax changes
+  useEffect(() => {
+    // Update entertainment expenses
+    if (entertainmentExpenses.actual) {
+      setEntertainmentExpenses(handleEntertainmentExpenses(
+        entertainmentExpenses.actual, 
+        { ...entertainmentExpenses }, 
+        isExcludedIndustry,
+        { revenue: totalRevenue, personalTax }
+      ));
+    }
+    
+    // Update advertising expenses
+    if (advertisingExpenses.actual) {
+      setAdvertisingExpenses(handleAdvertisingExpenses(
+        advertisingExpenses.actual, 
+        { ...advertisingExpenses }, 
+        isExcludedIndustry,
+        { revenue: totalRevenue, personalTax }
+      ));
+    }
+  }, [totalRevenue, setEntertainmentExpenses, setAdvertisingExpenses, entertainmentExpenses.actual, advertisingExpenses.actual, isExcludedIndustry]);
+  
+  // Recalculate education, welfare and insurance expenses when personalTax changes
+  useEffect(() => {
+    // Update education expenses
+    if (educationExpenses.actual) {
+      setEducationExpenses(handleEducationExpenses(
+        educationExpenses.actual, 
+        { ...educationExpenses }, 
+        isExcludedIndustry,
+        { revenue: totalRevenue, personalTax }
+      ));
+    }
+    
+    // Update welfare expenses
+    if (welfareExpenses.actual) {
+      setWelfareExpenses(handleWelfareExpenses(
+        welfareExpenses.actual, 
+        { ...welfareExpenses }, 
+        isExcludedIndustry,
+        { revenue: totalRevenue, personalTax }
+      ));
+    }
+    
+    // Update insurance expenses
+    if (insuranceExpenses.actual) {
+      setInsuranceExpenses(handleInsuranceExpenses(
+        insuranceExpenses.actual, 
+        { ...insuranceExpenses }, 
+        isExcludedIndustry,
+        { revenue: totalRevenue, personalTax }
+      ));
+    }
+  }, [personalTax, setEducationExpenses, setWelfareExpenses, setInsuranceExpenses, educationExpenses.actual, welfareExpenses.actual, insuranceExpenses.actual, isExcludedIndustry, totalRevenue]);
+
   const handleChangeWithParams = (
     handler: (value: string, currentValues: any, isExcluded: boolean, params: {revenue: string, personalTax: string}) => any, 
     setter: typeof setRdExpenses
