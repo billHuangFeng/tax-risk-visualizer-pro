@@ -7,16 +7,28 @@ interface RiskIndicatorProps {
 }
 
 const RiskIndicator: React.FC<RiskIndicatorProps> = ({ riskPercentage }) => {
-  const getRiskColor = (percentage: number) => {
-    if (percentage < 30) return 'bg-green-500';
-    if (percentage < 70) return 'bg-yellow-500';
-    return 'bg-red-500';
-  };
-
   const getRiskLevel = (percentage: number) => {
     if (percentage < 30) return '低风险';
     if (percentage < 70) return '中等风险';
     return '高风险';
+  };
+
+  const getRiskColor = (percentage: number): string => {
+    // Define base colors for each risk level
+    const lowRiskColor = '#000000';      // Black
+    const mediumRiskColor = '#F97316';   // Orange/Yellow
+    const highRiskColor = '#ea384c';     // Red
+
+    // Calculate opacity based on percentage (from 30% to 100%)
+    const opacity = Math.max(0.3, percentage / 100);
+
+    if (percentage < 30) {
+      return `${lowRiskColor}${Math.round(opacity * 255).toString(16).padStart(2, '0')}`;
+    } else if (percentage < 70) {
+      return `${mediumRiskColor}${Math.round(opacity * 255).toString(16).padStart(2, '0')}`;
+    } else {
+      return `${highRiskColor}${Math.round(opacity * 255).toString(16).padStart(2, '0')}`;
+    }
   };
 
   return (
@@ -27,8 +39,11 @@ const RiskIndicator: React.FC<RiskIndicatorProps> = ({ riskPercentage }) => {
       </div>
       <Progress value={riskPercentage} className="h-4" style={{ backgroundColor: '#e5e7eb' }}>
         <div 
-          className={`h-full ${getRiskColor(riskPercentage)}`} 
-          style={{ width: `${riskPercentage}%` }}
+          className="h-full transition-all duration-300"
+          style={{ 
+            width: `${riskPercentage}%`,
+            backgroundColor: getRiskColor(riskPercentage)
+          }}
         />
       </Progress>
       <div className="mt-2 flex justify-between text-sm">
