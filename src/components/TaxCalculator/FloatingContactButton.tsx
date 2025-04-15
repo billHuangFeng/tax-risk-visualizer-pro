@@ -51,11 +51,12 @@ const FloatingContactButton = () => {
       <Button
         onClick={handleContactAdvisor}
         className={cn(
-          "rounded-full w-16 h-16 bg-tax-blue text-white border-4 border-white shadow-lg",
-          "flex items-center justify-center p-0 hover:bg-tax-light-blue"
+          "rounded-full w-48 h-48 bg-tax-blue text-white border-4 border-white shadow-lg",
+          "flex flex-col items-center justify-center gap-2 p-0 hover:bg-tax-light-blue"
         )}
       >
-        <Phone className="w-6 h-6" />
+        <Phone className="w-8 h-8" />
+        <span className="text-base">立即联系税务顾问</span>
       </Button>
     </div>
   );
