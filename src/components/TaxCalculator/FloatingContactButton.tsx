@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Phone } from 'lucide-react';
@@ -53,16 +52,15 @@ const FloatingContactButton = () => {
       <Button
         onClick={handleContactAdvisor}
         className={cn(
-          "rounded-full w-12 h-12 bg-tax-blue text-white border-4 border-white shadow-lg",
+          "rounded-full w-24 h-24 bg-tax-blue text-white border-4 border-white shadow-lg",
           "flex flex-col items-center justify-center gap-1 p-0 hover:bg-tax-light-blue"
         )}
       >
-        <Phone className="w-4 h-4" />
-        <span className="text-xs whitespace-pre-line">立即{'\n'}咨询专家</span>
+        <Phone className="w-6 h-6" />
+        <span className="text-sm whitespace-pre-line">立即{'\n'}咨询专家</span>
       </Button>
     </div>
   );
 };
 
 export default FloatingContactButton;
-
