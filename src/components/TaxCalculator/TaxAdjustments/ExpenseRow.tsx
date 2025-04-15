@@ -74,7 +74,13 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
           type="text"
           value={values.adjustment}
           readOnly
-          className={`text-right bg-muted w-full ${isNegativeAdjustment ? 'text-tax-red' : ''}`}
+          className={`text-right bg-muted w-full ${
+            parseFloat(values.adjustment) < 0 || 
+            (title === '超标准的业务招待费' && values.adjustment !== '0.00') || 
+            (title === '补充养老保险和补充医疗保险支出' && values.adjustment !== '0.00') 
+              ? 'text-tax-red' 
+              : ''
+          }`}
         />
       </TableCell>
       <TableCell className="w-[10%] text-sm whitespace-nowrap">万元</TableCell>
