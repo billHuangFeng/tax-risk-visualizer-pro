@@ -3,48 +3,48 @@ import { useState, useEffect } from 'react';
 
 export const useTaxAdjustments = () => {
   const [rdExpenses, setRdExpenses] = useState({
-    actual: '2000',
-    deductible: '2000.00',
-    adjustment: '0.00',
+    actual: '',
+    deductible: '',
+    adjustment: '',
   });
   
   const [entertainmentExpenses, setEntertainmentExpenses] = useState({
-    actual: '30',
-    deductible: '15.00',
-    adjustment: '15.00',
+    actual: '',
+    deductible: '',
+    adjustment: '',
   });
   
   const [advertisingExpenses, setAdvertisingExpenses] = useState({
-    actual: '840',
-    deductible: '450.00',
-    adjustment: '390.00',
+    actual: '',
+    deductible: '',
+    adjustment: '',
   });
   
   const [educationExpenses, setEducationExpenses] = useState({
-    actual: '126',
-    deductible: '16.00',
-    adjustment: '110.00',
+    actual: '',
+    deductible: '',
+    adjustment: '',
   });
   
   const [welfareExpenses, setWelfareExpenses] = useState({
-    actual: '1220',
-    deductible: '28.00',
-    adjustment: '1192.00',
+    actual: '',
+    deductible: '',
+    adjustment: '',
   });
   
   const [insuranceExpenses, setInsuranceExpenses] = useState({
-    actual: '1227',
-    deductible: '10.00',
-    adjustment: '1217.00',
+    actual: '',
+    deductible: '',
+    adjustment: '',
   });
   
   const [nonDeductibleExpenses, setNonDeductibleExpenses] = useState({
-    actual: '0',
-    deductible: '0.00',
-    adjustment: '0.00',
+    actual: '',
+    deductible: '',
+    adjustment: '',
   });
   
-  const [totalAdjustment, setTotalAdjustment] = useState('2924.00');
+  const [totalAdjustment, setTotalAdjustment] = useState('');
 
   // Calculate total adjustment whenever any individual adjustment changes
   useEffect(() => {

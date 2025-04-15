@@ -2,12 +2,12 @@
 import { useState } from 'react';
 
 export const useTaxSummary = () => {
-  const [taxableIncome, setTaxableIncome] = useState('2,022.00');
-  const [taxRate, setTaxRate] = useState('25');
-  const [theoreticalTax, setTheoreticalTax] = useState('505.50');
-  const [actualTax, setActualTax] = useState('300.00');
-  const [riskValue, setRiskValue] = useState('205.50');
-  const [riskPercentage, setRiskPercentage] = useState(40);
+  const [taxableIncome, setTaxableIncome] = useState('');
+  const [taxRate, setTaxRate] = useState('');
+  const [theoreticalTax, setTheoreticalTax] = useState('');
+  const [actualTax, setActualTax] = useState('');
+  const [riskValue, setRiskValue] = useState('');
+  const [riskPercentage, setRiskPercentage] = useState(0);
 
   return {
     taxableIncome,

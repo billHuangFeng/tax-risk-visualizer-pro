@@ -2,18 +2,18 @@
 import { useState } from 'react';
 
 export const useRevenueExpenses = () => {
-  const [totalRevenue, setTotalRevenue] = useState('3000');
+  const [totalRevenue, setTotalRevenue] = useState('');
   const [invoicedRevenue, setInvoicedRevenue] = useState('');
-  const [nonInvoicedRevenue, setNonInvoicedRevenue] = useState('0');
-  const [newInvoicedRevenue, setNewInvoicedRevenue] = useState('3000');
+  const [nonInvoicedRevenue, setNonInvoicedRevenue] = useState('');
+  const [newInvoicedRevenue, setNewInvoicedRevenue] = useState('');
   
-  const [totalExpenses, setTotalExpenses] = useState('1000');
+  const [totalExpenses, setTotalExpenses] = useState('');
   const [invoicedExpenses, setInvoicedExpenses] = useState('');
   const [nonInvoicedExpenses, setNonInvoicedExpenses] = useState('');
-  const [personalTax, setPersonalTax] = useState('200');
+  const [personalTax, setPersonalTax] = useState('');
   const [socialSecurity, setSocialSecurity] = useState('');
   const [depreciation, setDepreciation] = useState('');
-  const [otherExpenses, setOtherExpenses] = useState('800');
+  const [otherExpenses, setOtherExpenses] = useState('');
 
   return {
     totalRevenue,
