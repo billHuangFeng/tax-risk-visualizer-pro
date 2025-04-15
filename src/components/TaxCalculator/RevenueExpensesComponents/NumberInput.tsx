@@ -19,16 +19,16 @@ const NumberInput: React.FC<NumberInputProps> = ({
 }) => {
   return (
     <div className="flex items-center whitespace-nowrap">
-      <div className="w-input-text">
+      <div className="flex items-center">
         <Input
           type="number"
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className={`text-right w-full ${className}`}
+          className={`text-right w-[120px] ${className}`}
           disabled={disabled}
         />
+        <span className="ml-2 text-sm whitespace-nowrap">{suffix}</span>
       </div>
-      <span className="ml-2 text-sm whitespace-nowrap">{suffix}</span>
     </div>
   );
 };

@@ -1,8 +1,7 @@
-
 import React, { useEffect } from 'react';
 import NumberInput from './NumberInput';
 import GridRow from './GridRow';
-import { Info, AlertTriangle } from 'lucide-react';
+import { AlertTriangle } from 'lucide-react';
 
 interface RevenueSectionProps {
   totalRevenue: string;
@@ -63,16 +62,10 @@ const RevenueSection: React.FC<RevenueSectionProps> = ({
               value={nonInvoicedRevenue}
               onChange={setNonInvoicedRevenue}
             />
-            <div className="flex space-x-1 ml-2">
-              <Info 
-                className="h-4 w-4 text-tax-blue cursor-pointer" 
-                onClick={() => onInfoClick?.('nonInvoicedRevenue')}
-              />
-              <AlertTriangle 
-                className="h-4 w-4 text-tax-red cursor-pointer" 
-                onClick={() => onInfoClick?.('nonInvoicedRevenue')}
-              />
-            </div>
+            <AlertTriangle 
+              className="h-4 w-4 text-tax-red ml-2 cursor-pointer" 
+              onClick={() => onInfoClick?.('nonInvoicedRevenue')}
+            />
           </div>
         </GridRow>
         
@@ -84,16 +77,10 @@ const RevenueSection: React.FC<RevenueSectionProps> = ({
               className="bg-gray-100 font-bold"
               disabled={true}
             />
-            <div className="flex space-x-1 ml-2">
-              <Info 
-                className="h-4 w-4 text-tax-blue cursor-pointer" 
-                onClick={() => onInfoClick?.('newInvoicedRevenue')}
-              />
-              <AlertTriangle 
-                className="h-4 w-4 text-tax-red cursor-pointer" 
-                onClick={() => onInfoClick?.('newInvoicedRevenue')}
-              />
-            </div>
+            <AlertTriangle 
+              className="h-4 w-4 text-tax-red ml-2 cursor-pointer" 
+              onClick={() => onInfoClick?.('newInvoicedRevenue')}
+            />
           </div>
         </GridRow>
       </div>
