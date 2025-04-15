@@ -20,7 +20,7 @@ const TaxInfoPanel: React.FC<TaxInfoPanelProps> = ({ selectedItem }) => {
         <CardHeader>
           <CardTitle className="flex items-center text-xl text-tax-blue gap-2">
             <Info className="h-5 w-5" />
-            {selectedItem ? selectedItem.title : '税务分析与风险提示'}
+            {selectedItem ? selectedItem.title : '税务分析与风险提示信息'}
           </CardTitle>
         </CardHeader>
         <CardContent className="flex-1 overflow-hidden">
@@ -71,4 +71,3 @@ const TaxInfoPanel: React.FC<TaxInfoPanelProps> = ({ selectedItem }) => {
 };
 
 export default TaxInfoPanel;
-
