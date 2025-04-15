@@ -3,21 +3,8 @@ import React from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Info } from 'lucide-react';
-
-interface BasicInfoProps {
-  companyName: string;
-  setCompanyName: (value: string) => void;
-  isExcludedIndustry: boolean;
-  setIsExcludedIndustry: (value: boolean) => void;
-  isHighTechEnterprise: boolean;
-  setIsHighTechEnterprise: (value: boolean) => void;
-  totalAssets: string;
-  setTotalAssets: (value: string) => void;
-  employeeCount: string;
-  setEmployeeCount: (value: string) => void;
-  onInfoClick: (infoKey: string) => void;
-}
+import { CircleIcon } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 const BasicInfo: React.FC<BasicInfoProps> = ({
   companyName,
@@ -89,13 +76,20 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
           <Label htmlFor="totalAssets" className="md:col-span-1 font-medium flex items-center">
             资产总额：
-            <button 
-              className="ml-2 text-tax-blue hover:text-tax-light-blue"
-              title="小微企业资产总额标准"
-              onClick={() => onInfoClick('totalAssets')}
-            >
-              <Info size={16} />
-            </button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button 
+                  className="ml-2 text-tax-blue hover:text-tax-light-blue"
+                  title="小微企业资产总额标准"
+                  onClick={() => onInfoClick('totalAssets')}
+                >
+                  <CircleIcon size={16} />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p className="text-xs max-w-xs">点击查看小微企业资产总额标准详情</p>
+              </TooltipContent>
+            </Tooltip>
           </Label>
           <div className="flex items-center">
             <div className="w-[20rem]">
@@ -114,13 +108,20 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
           <Label htmlFor="employeeCount" className="md:col-span-1 font-medium flex items-center">
             发薪资、劳务费的员工人数：
-            <button 
-              className="ml-2 text-tax-blue hover:text-tax-light-blue"
-              title="小微企业员工人数标准"
-              onClick={() => onInfoClick('employeeCount')}
-            >
-              <Info size={16} />
-            </button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button 
+                  className="ml-2 text-tax-blue hover:text-tax-light-blue"
+                  title="小微企业员工人数标准"
+                  onClick={() => onInfoClick('employeeCount')}
+                >
+                  <CircleIcon size={16} />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p className="text-xs max-w-xs">点击查看小微企业员工人数标准详情</p>
+              </TooltipContent>
+            </Tooltip>
           </Label>
           <div className="flex items-center">
             <div className="w-input-text">
@@ -141,4 +142,3 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
 };
 
 export default BasicInfo;
-
