@@ -99,9 +99,9 @@
     @apply bg-background text-foreground;
   }
   
-  /* Custom width for number inputs to prevent text wrapping */
+  /* Increased width for labels and number inputs */
   .w-36 {
-    width: 15rem; /* Increased from 13.5rem to 15rem */
+    width: 18rem; /* Extended from 15rem to 18rem */
   }
   
   /* Remove spinner buttons from number inputs */
