@@ -23,11 +23,12 @@ const TaxRateSelector: React.FC<TaxRateSelectorProps> = ({
     // Set initial default value to 25
     if (!taxRate) {
       setTaxRate("25");
+      return;
     }
 
     const assets = parseFloat(totalAssets) || 0;
     const employees = parseInt(employeeCount) || 0;
-    const income = parseFloat(taxableIncome) || 0;
+    const income = parseFloat(taxableIncome.replace(/,/g, '')) || 0;
 
     // Check conditions for tax rates
     if (assets <= 5000 && employees <= 300 && income <= 300) {
