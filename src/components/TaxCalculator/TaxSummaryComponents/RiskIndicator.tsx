@@ -1,5 +1,7 @@
-import React from 'react';
-import { Progress } from '@/components/ui/progress';
+
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Check, X } from 'lucide-react';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { AlertTriangle } from 'lucide-react';
 
@@ -12,6 +14,8 @@ const RiskIndicator: React.FC<RiskIndicatorProps> = ({
   riskPercentage, 
   riskValue = '0'
 }) => {
+  const [showRiskDetails, setShowRiskDetails] = useState(false);
+
   const getRiskLevel = (percentage: number) => {
     if (percentage < 30) return '低风险';
     if (percentage < 70) return '中等风险';
@@ -19,14 +23,10 @@ const RiskIndicator: React.FC<RiskIndicatorProps> = ({
   };
 
   const calculateRiskDetails = () => {
-    const baseRisk = parseFloat(riskValue) || 0;
-    // 补税金额
+    const baseRisk = parseFloat(riskValue);
     const taxAmount = baseRisk;
-    // 滞纳金 = 风险差值 * 0.05% * 365 * 3
     const lateFee = baseRisk * 0.0005 * 365 * 3;
-    // 罚款 = 风险差值（假设1倍）
     const penalty = baseRisk;
-    // 总风险金额
     const totalRisk = taxAmount + lateFee + penalty;
 
     return {
@@ -53,10 +53,10 @@ const RiskIndicator: React.FC<RiskIndicatorProps> = ({
           style={{ 
             width: `${riskPercentage}%`,
             backgroundColor: riskPercentage < 30 
-              ? '#000000' // Black for low risk
+              ? '#000000'
               : riskPercentage < 70 
-                ? '#F0A500' // Yellow for medium risk
-                : '#ea384c', // Red for high risk
+                ? '#F0A500'
+                : '#ea384c',
           }}
         />
       </div>
@@ -67,19 +67,45 @@ const RiskIndicator: React.FC<RiskIndicatorProps> = ({
         <span>高风险</span>
       </div>
 
-      {showRiskAlert && (
-        <Alert variant="destructive" className="mt-4">
-          <AlertTriangle className="h-4 w-4" />
-          <AlertTitle>风险提示</AlertTitle>
-          <AlertDescription className="space-y-2">
-            <p>你面临高达{riskDetails.totalRisk}万元的风险。具体如下：</p>
-            <ol className="list-decimal pl-4">
-              <li>补税{riskDetails.taxAmount}万元；</li>
-              <li>滞纳金{riskDetails.lateFee}万元（每天0.05%，假设3年后暴雷）；</li>
-              <li>罚款{riskDetails.penalty}万元（逃税罚款0.5-5倍，假设被罚款1倍）。</li>
-            </ol>
-          </AlertDescription>
-        </Alert>
+      {showRiskAlert && !showRiskDetails && (
+        <div className="flex flex-col items-center space-y-4 mt-4">
+          <p className="text-lg font-semibold">想看看风险到底有多高？</p>
+          <div className="flex gap-4">
+            <Button 
+              variant="default"
+              onClick={() => setShowRiskDetails(true)}
+              className="px-8"
+            >
+              <Check className="mr-2 h-4 w-4" />
+              好的
+            </Button>
+            <Button 
+              variant="outline"
+              onClick={() => setShowRiskDetails(false)}
+              className="px-8"
+            >
+              <X className="mr-2 h-4 w-4" />
+              算了
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {showRiskAlert && showRiskDetails && (
+        <>
+          <Alert variant="destructive" className="mt-4">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertTitle>风险提示</AlertTitle>
+            <AlertDescription className="space-y-2">
+              <p>你面临高达{riskDetails.totalRisk}万元的风险。具体如下：</p>
+              <ol className="list-decimal pl-4">
+                <li>补税{riskDetails.taxAmount}万元；</li>
+                <li>滞纳金{riskDetails.lateFee}万元（每天0.05%，假设3年后暴雷）；</li>
+                <li>罚款{riskDetails.penalty}万元（逃税罚款0.5-5倍，假设被罚款1倍）。</li>
+              </ol>
+            </AlertDescription>
+          </Alert>
+        </>
       )}
     </div>
   );

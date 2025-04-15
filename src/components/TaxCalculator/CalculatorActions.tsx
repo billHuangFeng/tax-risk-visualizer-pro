@@ -7,14 +7,20 @@ import ContactForm from './ContactForm';
 
 interface CalculatorActionsProps {
   riskPercentage: number;
+  showRiskDetails?: boolean;
   onCalculate?: () => void;
   onReset?: () => void;
   onExport?: () => void;
 }
 
-const CalculatorActions = ({ riskPercentage, onCalculate, onReset, onExport }: CalculatorActionsProps) => {
-  // Only show button for medium (>= 30%) and high risk (>= 70%) scenarios
-  if (riskPercentage < 30) return null;
+const CalculatorActions = ({ 
+  riskPercentage, 
+  showRiskDetails = false, 
+  onCalculate, 
+  onReset, 
+  onExport 
+}: CalculatorActionsProps) => {
+  if (riskPercentage < 30 || !showRiskDetails) return null;
 
   return (
     <div className="flex justify-center mt-6">
