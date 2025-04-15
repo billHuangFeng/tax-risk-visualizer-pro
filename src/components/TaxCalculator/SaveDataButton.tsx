@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Save } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/lib/supabase';
+import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 import PhoneAuthDialog from '../Auth/PhoneAuthDialog';
 
 interface SaveDataButtonProps {
@@ -16,6 +16,16 @@ const SaveDataButton: React.FC<SaveDataButtonProps> = ({ calculatorData }) => {
   const { toast } = useToast();
 
   const saveData = async () => {
+    // Check if Supabase is configured
+    if (!isSupabaseConfigured()) {
+      toast({
+        title: "配置错误",
+        description: "Supabase 未正确配置。请确保环境变量已设置。",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsSaving(true);
     try {
       const { data: { user } } = await supabase.auth.getUser();
