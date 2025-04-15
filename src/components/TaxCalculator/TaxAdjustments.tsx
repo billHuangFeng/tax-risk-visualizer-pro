@@ -65,38 +65,33 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
 
   return (
     <div className="space-y-6 border rounded-lg p-6 bg-white">
-      <h2 className="text-xl font-bold border-l-4 border-tax-blue pl-3">企业所得税前调增/调减</h2>
-      
-      <div className="grid grid-cols-1 md:grid-cols-8 gap-4 items-center">
-        <div className="md:col-span-2"></div>
-        <div className="md:col-span-5"></div>
-        <div className="md:col-span-1">
-          <div className="flex items-center">
-            <Input
-              type="text"
-              value={totalAdjustment}
-              readOnly
-              className="text-right font-bold w-full"
-            />
-            {infoData && onInfoClick && (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button 
-                    onClick={() => onInfoClick('riskValue')} 
-                    className="ml-1 text-tax-blue hover:text-tax-light-blue focus:outline-none"
-                    aria-label="调整总额说明"
-                  >
-                    <Info className="h-4 w-4" />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <span className="text-xs">点击查看详情</span>
-                </TooltipContent>
-              </Tooltip>
-            )}
-          </div>
+      <div className="flex justify-between items-center">
+        <h2 className="text-xl font-bold border-l-4 border-tax-blue pl-3">企业所得税前调增/调减</h2>
+        <div className="flex items-center space-x-2">
+          <Input
+            type="text"
+            value={totalAdjustment}
+            readOnly
+            className="text-right font-bold w-24"
+          />
+          <span>万元</span>
+          {infoData && onInfoClick && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button 
+                  onClick={() => onInfoClick('riskValue')} 
+                  className="text-tax-blue hover:text-tax-light-blue focus:outline-none"
+                  aria-label="调整总额说明"
+                >
+                  <Info className="h-4 w-4" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <span className="text-xs">点击查看详情</span>
+              </TooltipContent>
+            </Tooltip>
+          )}
         </div>
-        <span>万元</span>
       </div>
       
       <div className="pl-4 space-y-4">
@@ -163,7 +158,7 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
                 <TableCell className="font-medium">小计</TableCell>
                 <TableCell></TableCell>
                 <TableCell></TableCell>
-                <TableCell>
+                <TableCell className="text-right">
                   <Input
                     type="text"
                     value={totalAdjustment}
