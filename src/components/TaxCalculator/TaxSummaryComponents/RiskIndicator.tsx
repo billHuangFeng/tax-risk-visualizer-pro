@@ -24,6 +24,9 @@ const RiskIndicator: React.FC<RiskIndicatorProps> = ({
   const calculateProfitRiskPercentage = () => {
     const riskValueNum = parseFloat(riskValue) || 0;
     const revenueNum = parseFloat(totalRevenue) || 1; // Use 1 to avoid division by zero
+    
+    // Corrected formula: (风险差值*18.25%*3+风险差值)/销售收入
+    // Which simplifies to: riskValue * (1 + 0.1825 * 3) / revenue * 100
     return ((riskValueNum * 0.1825 * 3 + riskValueNum) / revenueNum * 100).toFixed(2);
   };
 
