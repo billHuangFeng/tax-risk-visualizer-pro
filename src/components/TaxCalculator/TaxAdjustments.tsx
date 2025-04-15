@@ -54,11 +54,11 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
         if (handler === handleRdExpenses) {
           setter(handler(value, { actual: value, deductible: '', adjustment: '' }, isExcludedIndustry));
         } else if (handler === handleEntertainmentExpenses) {
-          setter(handler(value, { actual: value, deductible: '', adjustment: '' }));
+          setter(handler(value, { actual: value, deductible: '', adjustment: '' }, isExcludedIndustry));
         } else if (handler === handleGeneralExpenses) {
-          setter(handler(value, { actual: value, deductible: '', adjustment: '' }));
+          setter(handler(value, { actual: value, deductible: '', adjustment: '' }, isExcludedIndustry));
         } else if (handler === handleInsuranceExpenses) {
-          setter(handler(value, { actual: value, deductible: '', adjustment: '' }));
+          setter(handler(value, { actual: value, deductible: '', adjustment: '' }, isExcludedIndustry));
         }
       }
     };

@@ -1,3 +1,4 @@
+
 interface ExpenseValues {
   actual: string;
   deductible: string;
@@ -14,7 +15,7 @@ export const handleRdExpenses = (value: string, currentValues: ExpenseValues, is
   };
 };
 
-export const handleEntertainmentExpenses = (value: string, currentValues: ExpenseValues): ExpenseValues => {
+export const handleEntertainmentExpenses = (value: string, currentValues: ExpenseValues, isExcludedIndustry: boolean): ExpenseValues => {
   const actualValue = parseFloat(value) || 0;
   const limit = 15.00;
   return {
@@ -24,7 +25,7 @@ export const handleEntertainmentExpenses = (value: string, currentValues: Expens
   };
 };
 
-export const handleGeneralExpenses = (value: string, currentValues: ExpenseValues): ExpenseValues => {
+export const handleGeneralExpenses = (value: string, currentValues: ExpenseValues, isExcludedIndustry: boolean): ExpenseValues => {
   const actualValue = parseFloat(value) || 0;
   return {
     actual: value,
@@ -33,7 +34,7 @@ export const handleGeneralExpenses = (value: string, currentValues: ExpenseValue
   };
 };
 
-export const handleInsuranceExpenses = (value: string, currentValues: ExpenseValues): ExpenseValues => {
+export const handleInsuranceExpenses = (value: string, currentValues: ExpenseValues, isExcludedIndustry: boolean): ExpenseValues => {
   const actualValue = parseFloat(value) || 0;
   return {
     actual: value,
