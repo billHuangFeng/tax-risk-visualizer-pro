@@ -1,37 +1,34 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Calculator, FileSpreadsheet } from 'lucide-react';
+import { PhoneCall } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import ContactForm from './ContactForm';
 
 interface CalculatorActionsProps {
-  onCalculate: () => void;
-  onReset: () => void;
-  onExport: () => void;
+  riskPercentage: number;
 }
 
-const CalculatorActions = ({ onCalculate, onReset, onExport }: CalculatorActionsProps) => {
+const CalculatorActions = ({ riskPercentage }: CalculatorActionsProps) => {
+  // Only show button for medium (>= 30%) and high risk (>= 70%) scenarios
+  if (riskPercentage < 30) return null;
+
   return (
-    <div className="flex justify-center gap-4 mt-6">
-      <Button
-        className="bg-tax-blue hover:bg-tax-light-blue text-white px-8"
-        onClick={onCalculate}
-      >
-        <Calculator className="mr-2 h-4 w-4" />
-        计算风险值
-      </Button>
-      <Button
-        variant="outline"
-        onClick={onReset}
-      >
-        重置
-      </Button>
-      <Button
-        variant="secondary"
-        onClick={onExport}
-      >
-        <FileSpreadsheet className="mr-2 h-4 w-4" />
-        导出数据
-      </Button>
+    <div className="flex justify-center mt-6">
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button className="bg-tax-blue hover:bg-tax-light-blue text-white">
+            <PhoneCall className="mr-2 h-4 w-4" />
+            联系税务顾问
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>联系税务顾问</DialogTitle>
+          </DialogHeader>
+          <ContactForm />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

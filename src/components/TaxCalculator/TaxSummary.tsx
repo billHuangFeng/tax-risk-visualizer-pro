@@ -1,8 +1,8 @@
-
 import React from 'react';
 import RiskIndicator from './TaxSummaryComponents/RiskIndicator';
 import TaxInputRow from './TaxSummaryComponents/TaxInputRow';
 import TaxRateSelector from './TaxSummaryComponents/TaxRateSelector';
+import CalculatorActions from './CalculatorActions';
 
 interface TaxSummaryProps {
   taxableIncome: string;
@@ -83,7 +83,8 @@ const TaxSummary: React.FC<TaxSummaryProps> = ({
         />
         
         <RiskIndicator riskPercentage={riskPercentage} />
-      </div>
+      
+      <CalculatorActions riskPercentage={riskPercentage} />
     </div>
   );
 };
