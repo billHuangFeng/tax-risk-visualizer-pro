@@ -1,6 +1,8 @@
+
 import React, { useEffect } from 'react';
 import NumberInput from './NumberInput';
 import GridRow from './GridRow';
+import { Info } from 'lucide-react';
 
 interface RevenueSectionProps {
   totalRevenue: string;
@@ -11,6 +13,7 @@ interface RevenueSectionProps {
   setNonInvoicedRevenue: (value: string) => void;
   newInvoicedRevenue: string;
   setNewInvoicedRevenue: (value: string) => void;
+  onInfoClick?: (infoKey: string) => void;
 }
 
 const RevenueSection: React.FC<RevenueSectionProps> = ({
@@ -22,6 +25,7 @@ const RevenueSection: React.FC<RevenueSectionProps> = ({
   setNonInvoicedRevenue,
   newInvoicedRevenue,
   setNewInvoicedRevenue,
+  onInfoClick,
 }) => {
   useEffect(() => {
     const total = parseFloat(totalRevenue) || 0;
@@ -53,20 +57,32 @@ const RevenueSection: React.FC<RevenueSectionProps> = ({
           />
         </GridRow>
         
-        <GridRow label="不需要开票的">
-          <NumberInput
-            value={nonInvoicedRevenue}
-            onChange={setNonInvoicedRevenue}
-          />
+        <GridRow label="不需要开票的" className="group relative">
+          <div className="flex items-center">
+            <NumberInput
+              value={nonInvoicedRevenue}
+              onChange={setNonInvoicedRevenue}
+            />
+            <Info 
+              className="h-4 w-4 ml-2 text-tax-blue cursor-pointer" 
+              onClick={() => onInfoClick?.('nonInvoicedRevenue')}
+            />
+          </div>
         </GridRow>
         
         <GridRow label="暂时没开票的">
-          <NumberInput
-            value={newInvoicedRevenue}
-            onChange={setNewInvoicedRevenue}
-            className="bg-gray-100 font-bold"
-            disabled={true}
-          />
+          <div className="flex items-center">
+            <NumberInput
+              value={newInvoicedRevenue}
+              onChange={setNewInvoicedRevenue}
+              className="bg-gray-100 font-bold"
+              disabled={true}
+            />
+            <Info 
+              className="h-4 w-4 ml-2 text-tax-blue cursor-pointer" 
+              onClick={() => onInfoClick?.('newInvoicedRevenue')}
+            />
+          </div>
         </GridRow>
       </div>
     </div>

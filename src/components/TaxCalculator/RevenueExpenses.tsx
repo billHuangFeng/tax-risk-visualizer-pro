@@ -25,6 +25,7 @@ interface RevenueExpensesProps {
   setDepreciation: (value: string) => void;
   otherExpenses: string;
   setOtherExpenses: (value: string) => void;
+  onInfoClick?: (infoKey: string) => void;
 }
 
 const RevenueExpenses: React.FC<RevenueExpensesProps> = (props) => {
@@ -39,6 +40,7 @@ const RevenueExpenses: React.FC<RevenueExpensesProps> = (props) => {
         setNonInvoicedRevenue={props.setNonInvoicedRevenue}
         newInvoicedRevenue={props.newInvoicedRevenue}
         setNewInvoicedRevenue={props.setNewInvoicedRevenue}
+        onInfoClick={props.onInfoClick}
       />
 
       <ExpensesSection
