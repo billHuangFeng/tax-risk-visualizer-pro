@@ -1,4 +1,3 @@
-
 import React from 'react';
 import RiskIndicator from './TaxSummaryComponents/RiskIndicator';
 import TaxInputRow from './TaxSummaryComponents/TaxInputRow';
@@ -15,6 +14,9 @@ interface TaxSummaryProps {
   riskPercentage: number;
   onInfoClick?: (infoKey: string) => void;
   infoData?: Record<string, any>;
+  totalAssets: string;
+  employeeCount: string;
+  isHighTechEnterprise: boolean;
 }
 
 const TaxSummary: React.FC<TaxSummaryProps> = ({
@@ -27,6 +29,9 @@ const TaxSummary: React.FC<TaxSummaryProps> = ({
   riskValue,
   riskPercentage,
   onInfoClick,
+  totalAssets,
+  employeeCount,
+  isHighTechEnterprise,
 }) => {
   return (
     <div className="space-y-6 border rounded-lg p-6 bg-white">
@@ -41,7 +46,14 @@ const TaxSummary: React.FC<TaxSummaryProps> = ({
           onInfoClick={() => onInfoClick?.('taxableIncome')}
         />
         
-        <TaxRateSelector taxRate={taxRate} setTaxRate={setTaxRate} />
+        <TaxRateSelector 
+          taxRate={taxRate} 
+          setTaxRate={setTaxRate}
+          totalAssets={totalAssets}
+          employeeCount={employeeCount}
+          taxableIncome={taxableIncome}
+          isHighTechEnterprise={isHighTechEnterprise}
+        />
         
         <TaxInputRow
           label="理论应纳企业所得税"
