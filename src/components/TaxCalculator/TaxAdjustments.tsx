@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableHeader, TableHead, TableRow, TableCell } from '@/components/ui/table';
@@ -94,8 +95,8 @@ const TaxAdjustments: React.FC<TaxAdjustmentsProps> = ({
         </div>
       </div>
       
-      <div className="pl-4 space-y-4">
-        <div className="text-right font-medium">其中：</div>
+      <div className="space-y-4">
+        <div className="text-left font-medium ml-0">其中：</div>
         
         <div className="overflow-x-auto">
           <Table className="border">
