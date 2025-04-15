@@ -23,15 +23,14 @@ export const useCalculations = (
 ) => {
   useEffect(() => {
     try {
-      // Calculate total adjustments
-      const adjustmentTotal = calculateTotalAdjustments(
-        entertainmentExpenses.adjustment,
-        insuranceExpenses.adjustment,
-        rdExpenses.adjustment
-      );
-      setTotalAdjustment(adjustmentTotal.toFixed(2));
+      // Use the totalAdjustment directly from the useTaxAdjustments hook
+      // This is already calculated there by summing all individual adjustments
       
       // Calculate taxable income
+      const adjustmentTotal = parseFloat(entertainmentExpenses.adjustment || '0') +
+                             parseFloat(insuranceExpenses.adjustment || '0') +
+                             parseFloat(rdExpenses.adjustment || '0');
+                             
       const calculatedTaxableIncome = calculateTaxableIncome(
         totalRevenue,
         totalExpenses,

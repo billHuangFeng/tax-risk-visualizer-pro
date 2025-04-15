@@ -38,7 +38,7 @@ export const useTaxAdjustments = () => {
     adjustment: '1217.00',
   });
   
-  const [totalAdjustment, setTotalAdjustment] = useState('1232.00');
+  const [totalAdjustment, setTotalAdjustment] = useState('2924.00');
 
   // Calculate total adjustment whenever any individual adjustment changes
   useEffect(() => {
