@@ -7,6 +7,9 @@ import ContactForm from './ContactForm';
 
 interface CalculatorActionsProps {
   riskPercentage: number;
+  onCalculate?: () => void;
+  onReset?: () => void;
+  onExport?: () => void;
 }
 
 const CalculatorActions = ({ riskPercentage }: CalculatorActionsProps) => {
