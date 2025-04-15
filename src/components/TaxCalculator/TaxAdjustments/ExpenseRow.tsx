@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Input } from '@/components/ui/input';
 import { TableCell, TableRow } from '@/components/ui/table';
@@ -27,7 +28,7 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
 }) => {
   return (
     <TableRow>
-      <TableCell className="w-[35%] font-medium">
+      <TableCell className="w-[17%] font-medium">
         <div className="flex items-center whitespace-nowrap">
           {title}
           {onInfoClick && (
@@ -68,7 +69,7 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
           />
         </div>
       </TableCell>
-      <TableCell className="w-[39%]">
+      <TableCell className="w-[57%]">
         <Input
           type="text"
           value={values.adjustment}
