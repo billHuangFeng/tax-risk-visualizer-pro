@@ -76,6 +76,8 @@ const Index = () => {
           setWelfareExpenses={calculator.setWelfareExpenses}
           insuranceExpenses={calculator.insuranceExpenses}
           setInsuranceExpenses={calculator.setInsuranceExpenses}
+          nonDeductibleExpenses={calculator.nonDeductibleExpenses}
+          setNonDeductibleExpenses={calculator.setNonDeductibleExpenses}
           totalAdjustment={calculator.totalAdjustment}
           totalRevenue={calculator.totalRevenue}
           personalTax={calculator.personalTax}
