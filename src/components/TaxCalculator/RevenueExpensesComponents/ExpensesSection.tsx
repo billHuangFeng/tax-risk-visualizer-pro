@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import NumberInput from './NumberInput';
 import GridRow from './GridRow';
 
@@ -36,6 +36,19 @@ const ExpensesSection: React.FC<ExpensesSectionProps> = ({
   otherExpenses,
   setOtherExpenses,
 }) => {
+  // Calculate other expenses automatically
+  useEffect(() => {
+    const total = parseFloat(totalExpenses) || 0;
+    const invoiced = parseFloat(invoicedExpenses) || 0;
+    const nonInvoiced = parseFloat(nonInvoicedExpenses) || 0;
+    const personal = parseFloat(personalTax) || 0;
+    const social = parseFloat(socialSecurity) || 0;
+    const deprec = parseFloat(depreciation) || 0;
+    
+    const calculatedOther = total - invoiced - nonInvoiced - personal - social - deprec;
+    setOtherExpenses(calculatedOther.toString());
+  }, [totalExpenses, invoicedExpenses, nonInvoicedExpenses, personalTax, socialSecurity, depreciation, setOtherExpenses]);
+
   return (
     <div className="space-y-6">
       <h2 className="text-xl font-bold border-l-4 border-tax-blue pl-3">成本费用（不含可抵扣进项税）</h2>
@@ -91,6 +104,8 @@ const ExpensesSection: React.FC<ExpensesSectionProps> = ({
           <NumberInput
             value={otherExpenses}
             onChange={setOtherExpenses}
+            className="bg-gray-100"
+            disabled={true}
           />
         </GridRow>
       </div>
