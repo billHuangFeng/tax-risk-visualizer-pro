@@ -1,44 +1,70 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export const useTaxAdjustments = () => {
   const [rdExpenses, setRdExpenses] = useState({
     actual: '2000',
-    deductible: '4000.00',
-    adjustment: '-2000.00', // Corrected value based on actual - deductible
+    deductible: '2000.00',
+    adjustment: '0.00',
   });
   
   const [entertainmentExpenses, setEntertainmentExpenses] = useState({
     actual: '30',
     deductible: '15.00',
-    adjustment: '15.00', // Corrected value
+    adjustment: '15.00',
   });
   
   const [advertisingExpenses, setAdvertisingExpenses] = useState({
-    actual: '340',
-    deductible: '340.00',
-    adjustment: '0.00',
+    actual: '840',
+    deductible: '450.00',
+    adjustment: '390.00',
   });
   
   const [educationExpenses, setEducationExpenses] = useState({
-    actual: '6',
-    deductible: '6.00',
-    adjustment: '0.00',
+    actual: '126',
+    deductible: '16.00',
+    adjustment: '110.00',
   });
   
   const [welfareExpenses, setWelfareExpenses] = useState({
-    actual: '20',
-    deductible: '20.00',
-    adjustment: '0.00',
+    actual: '1220',
+    deductible: '28.00',
+    adjustment: '1192.00',
   });
   
   const [insuranceExpenses, setInsuranceExpenses] = useState({
-    actual: '7',
-    deductible: '0.00',
-    adjustment: '7.00', // Corrected value
+    actual: '1227',
+    deductible: '10.00',
+    adjustment: '1217.00',
   });
   
-  const [totalAdjustment, setTotalAdjustment] = useState('-1978.00'); // Corrected total
+  const [totalAdjustment, setTotalAdjustment] = useState('1232.00');
+
+  // Calculate total adjustment whenever any individual adjustment changes
+  useEffect(() => {
+    const calculateTotal = () => {
+      const adjustments = [
+        parseFloat(rdExpenses.adjustment) || 0,
+        parseFloat(entertainmentExpenses.adjustment) || 0,
+        parseFloat(advertisingExpenses.adjustment) || 0,
+        parseFloat(educationExpenses.adjustment) || 0,
+        parseFloat(welfareExpenses.adjustment) || 0,
+        parseFloat(insuranceExpenses.adjustment) || 0
+      ];
+      
+      const total = adjustments.reduce((sum, curr) => sum + curr, 0);
+      setTotalAdjustment(total.toFixed(2));
+    };
+
+    calculateTotal();
+  }, [
+    rdExpenses.adjustment,
+    entertainmentExpenses.adjustment,
+    advertisingExpenses.adjustment,
+    educationExpenses.adjustment,
+    welfareExpenses.adjustment,
+    insuranceExpenses.adjustment
+  ]);
 
   return {
     rdExpenses,
