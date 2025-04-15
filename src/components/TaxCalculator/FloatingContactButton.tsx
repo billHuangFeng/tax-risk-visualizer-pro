@@ -5,8 +5,8 @@ import { cn } from '@/lib/utils';
 
 const FloatingContactButton = () => {
   const [position, setPosition] = useState({ 
-    x: window.innerWidth - 100 - 8, 
-    y: window.innerHeight - 100 - 8 
+    x: window.innerWidth - 200, // Adjusted x position 
+    y: window.innerHeight - 100 // Adjusted y position to match the image
   });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
