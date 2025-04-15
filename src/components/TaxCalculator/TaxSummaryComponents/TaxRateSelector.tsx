@@ -24,7 +24,6 @@ const TaxRateSelector: React.FC<TaxRateSelectorProps> = ({
     // Parse input values with proper Number conversion
     const assets = parseFloat(totalAssets.replace(/,/g, '')) || 0;
     const employees = parseInt(employeeCount) || 0;
-    // Remove commas from taxableIncome for proper number conversion
     const income = parseFloat(taxableIncome.replace(/,/g, '')) || 0;
 
     console.log("Tax rate calculation values:", { 
@@ -34,24 +33,25 @@ const TaxRateSelector: React.FC<TaxRateSelectorProps> = ({
       isHighTech: isHighTechEnterprise 
     });
 
-    // Check conditions for small business tax rate (5%)
-    if (
+    // First check if company qualifies for small business rate (5%)
+    const qualifiesForSmallBusiness = 
       assets <= 5000 && 
       employees <= 300 && 
-      income < 300 && 
-      !isHighTechEnterprise
-    ) {
-      console.log("Setting small business tax rate (5%)");
+      income < 300;
+
+    // If company qualifies for small business rate, always use 5% regardless of high-tech status
+    if (qualifiesForSmallBusiness) {
+      console.log("Setting small business tax rate (5%) - qualifies for small business benefits");
       setTaxRate("5");
     }
-    // Check conditions for high-tech enterprise tax rate (15%)
+    // If doesn't qualify for small business but is high-tech, use 15%
     else if (isHighTechEnterprise) {
-      console.log("Setting high-tech enterprise tax rate (15%)");
+      console.log("Setting high-tech enterprise tax rate (15%) - doesn't qualify for small business");
       setTaxRate("15");
     }
     // Default tax rate (25%)
     else {
-      console.log("Setting default tax rate (25%)");
+      console.log("Setting default tax rate (25%) - no special qualifications");
       setTaxRate("25");
     }
   }, [totalAssets, employeeCount, taxableIncome, isHighTechEnterprise, setTaxRate]);
