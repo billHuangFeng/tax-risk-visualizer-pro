@@ -1,7 +1,6 @@
 
 import { useEffect } from 'react';
 import {
-  calculateTotalAdjustments,
   calculateTaxableIncome,
   calculateTheoreticalTax,
   calculateRiskValues
@@ -13,6 +12,10 @@ export const useCalculations = (
   entertainmentExpenses: { adjustment: string },
   insuranceExpenses: { adjustment: string },
   rdExpenses: { adjustment: string },
+  advertisingExpenses: { adjustment: string },
+  educationExpenses: { adjustment: string },
+  welfareExpenses: { adjustment: string },
+  nonDeductibleExpenses: { adjustment: string },
   taxRate: string,
   actualTax: string,
   setTotalAdjustment: (value: string) => void,
@@ -23,11 +26,18 @@ export const useCalculations = (
 ) => {
   useEffect(() => {
     try {
-      // Calculate taxable income including all adjustment values
-      const adjustmentTotal = parseFloat(entertainmentExpenses.adjustment || '0') +
-                             parseFloat(insuranceExpenses.adjustment || '0') +
-                             parseFloat(rdExpenses.adjustment || '0');
-                             
+      // Calculate total adjustment by including all adjustment values
+      const adjustmentTotal = 
+        parseFloat(rdExpenses.adjustment || '0') +
+        parseFloat(entertainmentExpenses.adjustment || '0') +
+        parseFloat(advertisingExpenses.adjustment || '0') +
+        parseFloat(educationExpenses.adjustment || '0') +
+        parseFloat(welfareExpenses.adjustment || '0') +
+        parseFloat(insuranceExpenses.adjustment || '0') +
+        parseFloat(nonDeductibleExpenses.adjustment || '0');
+      
+      // Calculate taxable income based on the formula:
+      // 应纳税所得额 = 销售收入 - 成本费用 + 企业所得税前调增/调减
       const calculatedTaxableIncome = calculateTaxableIncome(
         totalRevenue,
         totalExpenses,
@@ -56,9 +66,13 @@ export const useCalculations = (
   }, [
     totalRevenue, 
     totalExpenses, 
-    entertainmentExpenses.adjustment, 
-    insuranceExpenses.adjustment,
     rdExpenses.adjustment,
+    entertainmentExpenses.adjustment, 
+    advertisingExpenses.adjustment,
+    educationExpenses.adjustment,
+    welfareExpenses.adjustment,
+    insuranceExpenses.adjustment,
+    nonDeductibleExpenses.adjustment,
     taxRate, 
     actualTax
   ]);

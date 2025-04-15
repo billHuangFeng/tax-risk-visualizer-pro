@@ -1,3 +1,4 @@
+
 // Calculate total adjustments from entertainment, insurance, and R&D expenses
 export const calculateTotalAdjustments = (
   entertainmentAdjustment: string,
@@ -7,7 +8,8 @@ export const calculateTotalAdjustments = (
   return parseFloat(entertainmentAdjustment || '0') + parseFloat(insuranceAdjustment || '0') + parseFloat(rdAdjustment || '0');
 };
 
-// Calculate taxable income
+// Calculate taxable income using the formula:
+// 应纳税所得额 = 销售收入 - 成本费用 + 企业所得税前调增/调减
 export const calculateTaxableIncome = (
   totalRevenue: string,
   totalExpenses: string,
