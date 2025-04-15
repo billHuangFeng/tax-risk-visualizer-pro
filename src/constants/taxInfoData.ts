@@ -123,7 +123,7 @@ const taxInfoData = {
     title: "教育经费",
     description: "企业发生的职工教育和培训相关支出",
     analysis: "职工教育经费支出不得超过工资薪金总额的8%，超过部分准予结转下一年度扣除",
-    risk: "education支出构成不合理或缺乏真实性，可能引起税务检查"
+    risk: "教育e支出构成不合理或缺乏真实性，可能引起税务检查"
   },
   insuranceExpenses: {
     title: "保险费",
