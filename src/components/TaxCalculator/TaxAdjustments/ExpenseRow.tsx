@@ -24,6 +24,7 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
   values,
   onChange,
   onInfoClick,
+  isNegativeAdjustment,
 }) => {
   return (
     <TableRow>
