@@ -1,7 +1,8 @@
 
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
-import { processTextElements, processInputFields } from './elementStyles';
+import { processTextElements } from './styles/textStyles';
+import { processInputFields } from './styles/inputStyles';
 import { processCheckboxes, enhanceTables } from './formElements';
 import { enhanceLayout } from './enhancer';
 
