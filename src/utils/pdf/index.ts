@@ -24,31 +24,29 @@ export const exportToPDF = async (calculator: any, template?: PdfTemplate) => {
       }
     ];
     
-    // 确保我们有一个有效的模板结构
-    let pdfTemplate: Template;
+    // 基于模板构建PDFME能接受的正确结构
+    const pdfmeTemplate: Template = {
+      basePdf: selectedTemplate.baseTemplate instanceof Uint8Array 
+        ? selectedTemplate.baseTemplate 
+        : new Uint8Array(),
+      schemas: selectedTemplate.schemas && Array.isArray(selectedTemplate.schemas) 
+        ? selectedTemplate.schemas 
+        : [[{}]]
+    };
     
-    // 创建一个保证类型安全的模板对象
-    if (selectedTemplate.baseTemplate || selectedTemplate.schemas) {
-      pdfTemplate = {
-        basePdf: selectedTemplate.baseTemplate instanceof Uint8Array ? 
-          selectedTemplate.baseTemplate : 
-          new Uint8Array(),
-        schemas: Array.isArray(selectedTemplate.schemas) ? 
-          selectedTemplate.schemas : 
-          [[{}]] // 确保至少有一个空对象的嵌套数组
-      };
-    } else {
-      // 如果没有模板或架构，创建一个简单的空白模板
-      pdfTemplate = {
-        basePdf: new Uint8Array(),
-        schemas: [[{}]]
-      };
-    }
+    // 记录最终使用的模板结构以便调试
+    console.log("Generating PDF with template structure:", 
+      JSON.stringify({
+        hasBasePdf: !!pdfmeTemplate.basePdf, 
+        schemasStructure: Array.isArray(pdfmeTemplate.schemas) 
+          ? `Array[${pdfmeTemplate.schemas.length}][${pdfmeTemplate.schemas[0]?.length || 0}]` 
+          : 'Invalid schema'
+      })
+    );
     
     // 使用PDFME生成PDF
-    console.log("Generating PDF with template:", pdfTemplate);
     const pdf = await generate({
-      template: pdfTemplate,
+      template: pdfmeTemplate,
       inputs: inputs,
     });
     
