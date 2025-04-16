@@ -1,4 +1,3 @@
-
 import { TaxInfoData } from '@/types/calculator';
 
 const vatInfoData: TaxInfoData = {
@@ -55,6 +54,12 @@ const vatInfoData: TaxInfoData = {
     description: "扣除已知差异因素后仍无法解释的税款差异",
     analysis: "未解释差异越小，表明对税款差异的理解越充分",
     risk: "大额未解释差异将显著增加税务风险，需要重点关注"
+  },
+  salesCollectionDifference: {
+    title: "销售与收款差异",
+    description: "销售额(含税)与银行实际收款金额的差异",
+    analysis: "差异金额 = 销售额(不含税) + 销项税 - 银行收款金额",
+    risk: "较大差异可能表明存在销售收入未入账或收款未开具发票等风险"
   }
 };
 

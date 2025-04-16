@@ -33,6 +33,8 @@ const VatSalesSection: React.FC<VatSalesSectionProps> = ({
   setBankSalesAmount,
   onInfoClick
 }) => {
+  const salesCollectionDifference = salesTotal.amount + salesTotal.tax - bankSalesAmount;
+
   return (
     <Card className="mb-6">
       <CardHeader className="pb-3">
@@ -151,6 +153,24 @@ const VatSalesSection: React.FC<VatSalesSectionProps> = ({
               value={bankSalesAmount}
               onChange={(e) => setBankSalesAmount(parseFloat(e.target.value) || 0)}
               className="w-full text-right"
+            />
+          </div>
+          
+          <div className="col-span-3 font-medium flex items-center">
+            销售与收款差异
+            <button 
+              className="ml-2 text-tax-blue hover:text-tax-light-blue"
+              onClick={() => onInfoClick?.('salesCollectionDifference')}
+            >
+              <Info size={16} />
+            </button>
+          </div>
+          <div className="col-span-3 text-right">
+            <Input
+              type="number"
+              value={salesCollectionDifference}
+              className="w-full text-right bg-gray-100"
+              disabled
             />
           </div>
         </div>
