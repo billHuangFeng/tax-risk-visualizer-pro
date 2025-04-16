@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -119,7 +118,7 @@ const VatSummary: React.FC<VatSummaryProps> = ({
             <div className="flex justify-between items-center">
               <div className="font-medium">差异幅度</div>
               <div className="flex items-center gap-2">
-                <span className={`text-lg font-bold text-black ${taxDifferencePercentage > 20 ? 'text-red-500' : ''}`}>
+                <span className={`text-lg font-bold text-black ${Math.abs(taxDifferencePercentage) > 20 ? 'text-red-500' : ''}`}>
                   {taxDifferencePercentage.toFixed(2)}%
                 </span>
               </div>
@@ -210,7 +209,7 @@ const VatSummary: React.FC<VatSummaryProps> = ({
             <div className="flex justify-between items-center pt-2 border-t">
               <div className="font-medium">风险评估</div>
               <div className={`px-3 py-1 rounded-full font-medium ${getRiskColor()}`}>
-                {riskLevel} ({taxDifferencePercentage.toFixed(2)}%)
+                {riskLevel} ({Math.abs(taxDifferencePercentage).toFixed(2)}%)
               </div>
             </div>
           </div>
@@ -221,4 +220,3 @@ const VatSummary: React.FC<VatSummaryProps> = ({
 };
 
 export default VatSummary;
-
