@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -6,6 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Input } from '@/components/ui/input';
 import { Trash2, Plus, Info } from 'lucide-react';
 import { VatPurchaseItem } from '@/hooks/useVatCalculator';
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 
 interface VatPurchasesSectionProps {
   purchasesData: VatPurchaseItem[];
@@ -18,6 +18,8 @@ interface VatPurchasesSectionProps {
   };
   onInfoClick?: (infoKey: string) => void;
 }
+
+const VAT_RATES = ['13', '9', '6', '5', '3', '1'];
 
 const VatPurchasesSection: React.FC<VatPurchasesSectionProps> = ({
   purchasesData,
@@ -73,12 +75,19 @@ const VatPurchasesSection: React.FC<VatPurchasesSectionProps> = ({
                 </TableCell>
                 <TableCell className="text-right">
                   <div className="flex items-center justify-end gap-2">
-                    <Input
-                      type="number"
-                      value={item.vatRate}
-                      onChange={(e) => updatePurchaseItem(item.id, 'vatRate', parseFloat(e.target.value) || 0)}
-                      className="text-right w-20"
-                    />
+                    <Select
+                      value={item.vatRate.toString()}
+                      onValueChange={(value) => updatePurchaseItem(item.id, 'vatRate', parseFloat(value))}
+                    >
+                      <SelectTrigger className="w-20">
+                        <SelectValue placeholder="税率" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {VAT_RATES.map((rate) => (
+                          <SelectItem key={rate} value={rate}>{rate}%</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                     <span>%</span>
                   </div>
                 </TableCell>
