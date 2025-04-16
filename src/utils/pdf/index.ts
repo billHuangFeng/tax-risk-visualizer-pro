@@ -1,5 +1,6 @@
 
 import { generate } from '@pdfme/generator';
+import { Template } from '@pdfme/common';
 import { DEFAULT_TEMPLATES } from '@/constants/pdfTemplates';
 import { PdfTemplate } from '@/types/pdfTemplates';
 
@@ -27,9 +28,9 @@ export const exportToPDF = async (calculator: any, template?: PdfTemplate) => {
     // 使用PDFME生成PDF
     const pdf = await generate({
       template: {
-        basePdf: selectedTemplate.baseTemplate || undefined,
+        basePdf: selectedTemplate.baseTemplate || new Uint8Array(),
         schemas: selectedTemplate.schemas || [],
-      },
+      } as Template,
       inputs: inputs,
     });
     
