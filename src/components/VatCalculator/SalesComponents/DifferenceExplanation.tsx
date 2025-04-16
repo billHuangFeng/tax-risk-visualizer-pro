@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -37,17 +36,17 @@ const DifferenceExplanation: React.FC<DifferenceExplanationProps> = ({
   };
 
   return (
-    <div className="mt-4 p-4 border rounded-lg bg-amber-50/70 w-2/3 ml-auto mr-0">
-      <div className="mb-2 font-medium text-yellow-800">
+    <div className="mt-4 p-4 border rounded-lg bg-gray-100/70 w-2/3 ml-auto mr-0">
+      <div className="mb-2 font-medium text-gray-800">
         差异说明
-        <span className="ml-2 text-sm text-yellow-600">
+        <span className="ml-2 text-sm text-gray-600">
           (销售与收款差异超过10%)
         </span>
       </div>
       
       <Table>
         <TableHeader>
-          <TableRow className="bg-yellow-100/50">
+          <TableRow className="bg-gray-100/50">
             <TableHead className="w-2/3">差异原因</TableHead>
             <TableHead className="text-right w-1/3">
               差异金额
@@ -102,13 +101,13 @@ const DifferenceExplanation: React.FC<DifferenceExplanationProps> = ({
             </TableCell>
           </TableRow>
 
-          <TableRow className="bg-yellow-100/50 font-medium">
+          <TableRow className="bg-gray-100/50 font-medium">
             <TableCell>总计</TableCell>
             <TableCell className="text-right">{explainedDifferenceTotal.toFixed(2)}</TableCell>
             <TableCell></TableCell>
           </TableRow>
 
-          <TableRow className="bg-yellow-100/50 font-medium">
+          <TableRow className="bg-gray-100/50 font-medium">
             <TableCell>未解释差异</TableCell>
             <TableCell className="text-right flex items-center justify-end gap-2">
               <div className="flex items-center gap-2">
