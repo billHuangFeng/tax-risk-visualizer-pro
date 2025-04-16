@@ -1,7 +1,7 @@
-
 import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import CalculatorHeader from '@/components/TaxCalculator/CalculatorHeader';
+import TaxNavbar from '@/components/TaxNavbar';
 import CalculatorLayout from '@/components/TaxCalculator/CalculatorLayout';
 import VatSalesSection from '@/components/VatCalculator/VatSalesSection';
 import VatPurchasesSection from '@/components/VatCalculator/VatPurchasesSection';
@@ -23,6 +23,7 @@ const VatCalculator = () => {
   return (
     <>
       <CalculatorHeader title="增值税风险评测计算器" description="评估增值税风险，优化财税决策" />
+      <TaxNavbar />
       <CalculatorLayout selectedInfoItem={selectedInfoItem}>
         <VatSalesSection 
           salesData={vatCalculator.salesData}
