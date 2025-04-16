@@ -73,8 +73,24 @@ const RiskSummary: React.FC<RiskSummaryProps> = ({
                   <AlertCircle size={16} />
                 </button>
               </TooltipTrigger>
-              <TooltipContent>
-                <p>点击查看详细的风险评估信息</p>
+              <TooltipContent className="max-w-[350px]">
+                <div className="space-y-2">
+                  <h4 className="font-bold">风险评估方式</h4>
+                  <p className="text-sm">
+                    风险百分比 = 未解释差异 ÷ 基数 × 100%
+                  </p>
+                  <h5 className="font-semibold mt-1">基数计算：</h5>
+                  <p className="text-sm">
+                    基数 = Max(应交增值税, 销项税额×10%)
+                  </p>
+                  <h5 className="font-semibold mt-1">风险等级：</h5>
+                  <ul className="list-disc list-inside text-sm">
+                    <li>风险百分比 &gt; 50%：风险非常高</li>
+                    <li>风险百分比 &gt; 20%：风险比较高</li>
+                    <li>风险百分比 &gt; 10%：存在风险</li>
+                    <li>风险百分比 ≤ 10%：基本安全</li>
+                  </ul>
+                </div>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
