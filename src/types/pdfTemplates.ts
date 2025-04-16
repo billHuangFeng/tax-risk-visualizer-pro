@@ -9,7 +9,7 @@ export interface PdfTemplate {
   styles: PdfTemplateStyles;
   layout: PdfTemplateLayout;
   baseTemplate?: ArrayBuffer | Uint8Array;
-  schemas?: any[][];  // Changed to match PDFME's expected type
+  schemas?: any[][];  // Using any[][] to match PDFME's schema structure
 }
 
 export interface PdfTemplateStyles {

@@ -11,10 +11,9 @@ export const exportToPDF = async (calculator: any, template?: PdfTemplate) => {
     // 选择模板或使用默认模板
     const selectedTemplate = template || DEFAULT_TEMPLATES[0];
     
-    // 准备PDF数据
+    // 准备PDF数据 - 从计算器中收集所有相关数据
     const inputs = [
       {
-        // 从计算器中收集所有相关数据
         companyName: calculator.companyName || '税务计算',
         totalRevenue: calculator.totalRevenue?.toString() || '0',
         invoicedRevenue: calculator.invoicedRevenue?.toString() || '0',
@@ -25,16 +24,29 @@ export const exportToPDF = async (calculator: any, template?: PdfTemplate) => {
       }
     ];
     
-    // Create a proper empty schema if needed
-    const emptySchema = [[{}]];
+    // 确保我们有一个有效的模板结构
+    let pdfTemplate: Template;
     
-    // 创建一个符合PDFME Template类型要求的模板
-    const pdfTemplate = {
-      basePdf: selectedTemplate.baseTemplate || new Uint8Array(),
-      schemas: selectedTemplate.schemas || emptySchema
-    } as Template;
+    // 创建一个保证类型安全的模板对象
+    if (selectedTemplate.baseTemplate || selectedTemplate.schemas) {
+      pdfTemplate = {
+        basePdf: selectedTemplate.baseTemplate instanceof Uint8Array ? 
+          selectedTemplate.baseTemplate : 
+          new Uint8Array(),
+        schemas: Array.isArray(selectedTemplate.schemas) ? 
+          selectedTemplate.schemas : 
+          [[{}]] // 确保至少有一个空对象的嵌套数组
+      };
+    } else {
+      // 如果没有模板或架构，创建一个简单的空白模板
+      pdfTemplate = {
+        basePdf: new Uint8Array(),
+        schemas: [[{}]]
+      };
+    }
     
     // 使用PDFME生成PDF
+    console.log("Generating PDF with template:", pdfTemplate);
     const pdf = await generate({
       template: pdfTemplate,
       inputs: inputs,
