@@ -1,7 +1,9 @@
+
 import React from 'react';
 import RiskIndicator from './TaxSummaryComponents/RiskIndicator';
 import TaxInputRow from './TaxSummaryComponents/TaxInputRow';
 import TaxRateSelector from './TaxSummaryComponents/TaxRateSelector';
+import DifferenceFactors from './TaxSummaryComponents/DifferenceFactors';
 import CalculatorActions from './CalculatorActions';
 
 interface TaxSummaryProps {
@@ -19,6 +21,11 @@ interface TaxSummaryProps {
   employeeCount: string;
   isHighTechEnterprise: boolean;
   totalRevenue?: string;
+  taxDifferenceFactors: any[];
+  addTaxDifferenceFactor: () => void;
+  updateTaxDifferenceFactor: (id: string, field: string, value: any) => void;
+  removeTaxDifferenceFactor: (id: string) => void;
+  unexplainedDifference: string;
 }
 
 const TaxSummary: React.FC<TaxSummaryProps> = ({
@@ -35,6 +42,11 @@ const TaxSummary: React.FC<TaxSummaryProps> = ({
   employeeCount,
   isHighTechEnterprise,
   totalRevenue = '0',
+  taxDifferenceFactors,
+  addTaxDifferenceFactor,
+  updateTaxDifferenceFactor,
+  removeTaxDifferenceFactor,
+  unexplainedDifference,
 }) => {
   return (
     <div className="space-y-6 border rounded-lg p-6 bg-white">
@@ -83,6 +95,23 @@ const TaxSummary: React.FC<TaxSummaryProps> = ({
           onInfoClick={() => onInfoClick?.('riskValue')}
           className="whitespace-nowrap"
         />
+        
+        <DifferenceFactors
+          taxDifferenceFactors={taxDifferenceFactors}
+          addTaxDifferenceFactor={addTaxDifferenceFactor}
+          updateTaxDifferenceFactor={updateTaxDifferenceFactor}
+          removeTaxDifferenceFactor={removeTaxDifferenceFactor}
+          onInfoClick={onInfoClick}
+        />
+        
+        {parseFloat(unexplainedDifference) !== 0 && (
+          <div className="pt-4 border-t">
+            <div className="flex justify-between items-center">
+              <span className="font-medium">未解释差异</span>
+              <span className="text-red-600 font-bold">{unexplainedDifference}</span>
+            </div>
+          </div>
+        )}
         
         <RiskIndicator 
           riskPercentage={riskPercentage} 

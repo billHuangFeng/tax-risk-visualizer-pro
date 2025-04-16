@@ -102,6 +102,11 @@ const Index = () => {
           totalAssets={calculator.totalAssets}
           employeeCount={calculator.employeeCount}
           isHighTechEnterprise={calculator.isHighTechEnterprise}
+          taxDifferenceFactors={calculator.taxDifferenceFactors}
+          addTaxDifferenceFactor={calculator.addTaxDifferenceFactor}
+          updateTaxDifferenceFactor={calculator.updateTaxDifferenceFactor}
+          removeTaxDifferenceFactor={calculator.removeTaxDifferenceFactor}
+          unexplainedDifference={calculator.unexplainedDifference}
         />
 
         <div className="w-full px-4 py-4 bg-white border-t border-gray-200 shadow-sm flex flex-col md:flex-row gap-2 justify-end">
