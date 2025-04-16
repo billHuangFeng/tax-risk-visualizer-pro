@@ -10,6 +10,7 @@ interface FormFieldRowProps {
   align?: 'left' | 'right';
   unit?: string;
   bold?: boolean;
+  isPercentage?: boolean;
 }
 
 export const FormFieldRow: React.FC<FormFieldRowProps> = ({
@@ -19,8 +20,22 @@ export const FormFieldRow: React.FC<FormFieldRowProps> = ({
   width = "auto",
   align = "right",
   unit,
-  bold = false
+  bold = false,
+  isPercentage = false
 }) => {
+  const formattedValue = (() => {
+    if (isPercentage) {
+      return `${value}%`;
+    }
+    if (typeof value === 'number') {
+      return value.toLocaleString('zh-CN', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+    }
+    return value;
+  })();
+
   return (
     <div className="flex items-baseline justify-between mb-2">
       <span 
@@ -42,9 +57,9 @@ export const FormFieldRow: React.FC<FormFieldRowProps> = ({
             fontWeight: bold ? 'bold' : 'normal'
           }}
         >
-          {value}
+          {formattedValue}
         </span>
-        {unit && <span className="ml-1">{unit}</span>}
+        {unit && <span className="ml-1" style={{ fontSize: '14px' }}>{unit}</span>}
       </div>
     </div>
   );

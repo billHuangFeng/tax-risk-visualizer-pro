@@ -9,6 +9,7 @@ interface NumberInputProps {
   className?: string;
   disabled?: boolean;
   id?: string;
+  isPercentage?: boolean;
 }
 
 const NumberInput: React.FC<NumberInputProps> = ({
@@ -17,16 +18,17 @@ const NumberInput: React.FC<NumberInputProps> = ({
   suffix = "万元",
   className = "",
   disabled = false,
-  id
+  id,
+  isPercentage = false
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   
-  // Add a data attribute with the value for PDF export
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.setAttribute('data-value', value);
+      inputRef.current.setAttribute('data-unit', isPercentage ? '%' : suffix);
     }
-  }, [value]);
+  }, [value, suffix, isPercentage]);
 
   return (
     <div className="flex items-center min-w-[220px] max-w-full justify-end relative">
@@ -38,12 +40,13 @@ const NumberInput: React.FC<NumberInputProps> = ({
         onChange={(e) => onChange(e.target.value)}
         className={`text-right w-full min-w-[180px] pr-8 ${className}`}
         disabled={disabled}
-        data-value={value} /* Add data attribute for PDF export */
+        data-value={value}
+        data-unit={isPercentage ? '%' : suffix}
       />
       <div className="pdf-value absolute right-3 top-0 bottom-0 flex items-center justify-center h-full pointer-events-none opacity-0 hidden print:block">
-        {value || '0'}
+        {value}
       </div>
-      <span className="ml-2 text-sm whitespace-nowrap">{suffix}</span>
+      <span className="ml-2 text-sm whitespace-nowrap">{isPercentage ? '%' : suffix}</span>
     </div>
   );
 };
