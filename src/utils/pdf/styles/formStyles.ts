@@ -8,15 +8,20 @@ export const formatLabelValue = (container: HTMLElement, template?: PdfTemplate)
     const labelColor = template?.styles.formFieldStyle.labelColor || '#000';
     
     // 查找包含表单字段的所有网格布局
-    const formRows = container.querySelectorAll('[class*="grid"]');
+    const formRows = container.querySelectorAll('[class*="grid"], .flex');
     formRows.forEach((row) => {
       if (row instanceof HTMLElement && !row.classList.contains('grid-cols-1')) {
         // 设置网格布局样式
-        row.style.display = 'grid';
-        row.style.gridTemplateColumns = '1fr 1fr';
-        row.style.gap = '16px';
+        if (row.classList.contains('grid')) {
+          row.style.display = 'grid';
+          row.style.gridTemplateColumns = '1fr 1fr';
+          row.style.gap = '16px';
+        } else {
+          row.style.display = 'flex';
+          row.style.justifyContent = 'space-between';
+        }
         row.style.alignItems = 'center';
-        row.style.marginBottom = '8px';
+        row.style.marginBottom = '12px';
         
         // 获取直接子元素（应该是标签和值）
         const children = Array.from(row.children);
@@ -96,13 +101,13 @@ export const enhanceCheckboxes = (container: HTMLElement, template?: PdfTemplate
   try {
     const borderColor = template?.styles.formFieldStyle.borderColor || '#000';
     
-    // 增强复选框样式
-    const checkboxes = container.querySelectorAll('[role="checkbox"]');
+    // 增强复选框样式，使其更符合图片中的样式
+    const checkboxes = container.querySelectorAll('[role="checkbox"], .checkbox, input[type="checkbox"]');
     checkboxes.forEach((checkbox) => {
       if (checkbox instanceof HTMLElement) {
-        // 基本复选框样式
-        checkbox.style.width = '16px';
-        checkbox.style.height = '16px';
+        // 确保复选框容器是正方形
+        checkbox.style.width = '14px';
+        checkbox.style.height = '14px';
         checkbox.style.border = `1px solid ${borderColor}`;
         checkbox.style.display = 'inline-block';
         checkbox.style.verticalAlign = 'middle';
@@ -110,28 +115,28 @@ export const enhanceCheckboxes = (container: HTMLElement, template?: PdfTemplate
         checkbox.style.position = 'relative';
         checkbox.style.backgroundColor = 'white';
         
+        // 检查是否已选中
+        const isChecked = checkbox.getAttribute('data-state') === 'checked' || 
+                          checkbox.classList.contains('checked') || 
+                          (checkbox instanceof HTMLInputElement && checkbox.checked);
+        
         // 为选中状态添加对勾
-        if (checkbox.getAttribute('data-state') === 'checked') {
-          let checkmark = checkbox.querySelector('.checkmark');
+        if (isChecked) {
+          // 移除现有的对勾（如果有）
+          const existingCheckmarks = checkbox.querySelectorAll('.checkmark');
+          existingCheckmarks.forEach(mark => mark.remove());
           
-          // 如果不存在，创建对勾
-          if (!checkmark) {
-            checkmark = document.createElement('span');
-            checkmark.className = 'checkmark';
-            checkmark.textContent = '✓';
-            if (checkmark instanceof HTMLElement) {
-              checkmark.style.position = 'absolute';
-              checkmark.style.top = '-2px';
-              checkmark.style.left = '2px';
-              checkmark.style.fontSize = '14px';
-              checkbox.appendChild(checkmark);
-            }
-          }
-          
-          if (checkmark instanceof HTMLElement) {
-            checkmark.style.color = 'black';
-            checkmark.style.fontWeight = 'bold';
-          }
+          // 创建新的对勾
+          const checkmark = document.createElement('span');
+          checkmark.className = 'checkmark';
+          checkmark.textContent = '✓';
+          checkmark.style.position = 'absolute';
+          checkmark.style.top = '-4px';
+          checkmark.style.left = '1px';
+          checkmark.style.fontSize = '16px';
+          checkmark.style.color = 'black';
+          checkmark.style.fontWeight = 'bold';
+          checkbox.appendChild(checkmark);
         }
         
         // 设置跟随复选框的标签的样式
@@ -151,7 +156,8 @@ export const enhanceCheckboxes = (container: HTMLElement, template?: PdfTemplate
       if (container instanceof HTMLElement) {
         container.style.display = 'flex';
         container.style.alignItems = 'center';
-        container.style.marginBottom = '8px';
+        container.style.marginBottom = '12px';
+        container.style.marginTop = '8px';
       }
     });
   } catch (error) {

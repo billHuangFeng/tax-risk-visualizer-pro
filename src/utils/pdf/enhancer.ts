@@ -1,4 +1,3 @@
-
 import { removeRedundantTextElements } from './textProcessing';
 import { enhanceLayoutStructure } from './layoutStructure';
 import { createCompanyHeader, enhanceHeadings } from './styles/headerStyles';
@@ -8,6 +7,7 @@ import { processTextElements } from './styles/textStyles';
 import { processInputFields } from './styles/inputStyles';
 import { enhanceSpecificSections } from './styles/sectionStyles';
 import { PdfTemplate } from '@/types/pdfTemplates';
+import { ensureElementsVisibility } from './styles/visibilityStyles';
 
 export const enhanceLayout = (container: HTMLElement, template?: PdfTemplate) => {
   try {
@@ -39,15 +39,71 @@ export const enhanceLayout = (container: HTMLElement, template?: PdfTemplate) =>
     enhanceLayoutStructure(container);
     enhanceSpecificSections(container);
     
+    // 添加分隔线，类似于图片中的样式
+    addSectionSeparators(container);
+    
+    // 在标题前添加黑色方块标识符
+    addSectionMarkers(container);
+    
     // 移除冗余元素以获得更清晰的输出
     removeRedundantTextElements(container);
     
     // 强制为可能遗漏样式的特定元素应用样式
     forceApplyStyles(container, template);
     
+    // 确保所有元素可见
+    ensureElementsVisibility(container);
+    
     console.log("PDF layout enhancement completed");
   } catch (error) {
     console.error('Error in layout enhancement:', error);
+  }
+};
+
+const addSectionSeparators = (container: HTMLElement) => {
+  try {
+    const sections = container.querySelectorAll('h2, .section-title');
+    sections.forEach(section => {
+      if (section instanceof HTMLElement) {
+        // 创建分隔线
+        const separator = document.createElement('div');
+        separator.style.height = '1px';
+        separator.style.backgroundColor = '#000';
+        separator.style.width = '100%';
+        separator.style.marginTop = '8px';
+        separator.style.marginBottom = '16px';
+        
+        // 如果section后面没有分隔线，添加一个
+        if (!section.nextElementSibling || !section.nextElementSibling.classList.contains('pdf-separator')) {
+          separator.className = 'pdf-separator';
+          section.after(separator);
+        }
+      }
+    });
+  } catch (error) {
+    console.error('Error adding section separators:', error);
+  }
+};
+
+const addSectionMarkers = (container: HTMLElement) => {
+  try {
+    const mainSections = container.querySelectorAll('h2');
+    mainSections.forEach(section => {
+      if (section instanceof HTMLElement && !section.classList.contains('with-marker')) {
+        section.classList.add('with-marker');
+        
+        // 创建黑色方块标识符
+        const marker = document.createElement('span');
+        marker.innerHTML = '&#9632; '; // 黑色方块 Unicode 字符
+        marker.style.marginRight = '8px';
+        marker.style.fontSize = '12px';
+        
+        // 添加标识符到标题前
+        section.insertBefore(marker, section.firstChild);
+      }
+    });
+  } catch (error) {
+    console.error('Error adding section markers:', error);
   }
 };
 

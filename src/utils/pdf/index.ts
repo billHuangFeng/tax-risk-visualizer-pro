@@ -1,6 +1,9 @@
 
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
+import { enhanceLayout } from './enhancer';
+import { PdfTemplate } from '@/types/pdfTemplates';
+import { applyTemplateStyles } from './templateService';
 
 /**
  * Export calculator data to PDF
@@ -15,13 +18,24 @@ export const exportToPDF = async (calculatorData: any): Promise<boolean> => {
       throw new Error("Calculator content element not found");
     }
     
+    // Clone the content to avoid modifying the original DOM
+    const contentClone = content.cloneNode(true) as HTMLElement;
+    
     // Add PDF export styling class
-    content.classList.add('for-pdf-export');
+    contentClone.classList.add('for-pdf-export');
+    
+    // Apply the template styles if provided
+    if (calculatorData.template) {
+      applyTemplateStyles(contentClone, calculatorData.template);
+    }
+    
+    // Apply enhanced styling for PDF output
+    enhanceLayout(contentClone, calculatorData.template);
     
     // Replace info icons with numbered annotations
     let annotationIndex = 1;
     const annotations: string[] = [];
-    const infoIcons = content.querySelectorAll('.text-tax-blue');
+    const infoIcons = contentClone.querySelectorAll('.text-tax-blue');
     
     infoIcons.forEach((icon) => {
       if (icon instanceof HTMLElement) {
@@ -44,13 +58,24 @@ export const exportToPDF = async (calculatorData: any): Promise<boolean> => {
       }
     });
     
+    // Add temporary container to document body
+    const tempContainer = document.createElement('div');
+    tempContainer.style.position = 'absolute';
+    tempContainer.style.left = '-9999px';
+    tempContainer.style.width = '210mm'; // A4 width
+    tempContainer.appendChild(contentClone);
+    document.body.appendChild(tempContainer);
+    
     // Create canvas
-    const canvas = await html2canvas(content, {
+    const canvas = await html2canvas(contentClone, {
       scale: 2,
       useCORS: true,
       logging: true,
       backgroundColor: '#ffffff'
     });
+    
+    // Remove temp container
+    document.body.removeChild(tempContainer);
     
     // Create PDF document (A4 size)
     const pdf = new jsPDF('p', 'mm', 'a4');
@@ -95,9 +120,6 @@ export const exportToPDF = async (calculatorData: any): Promise<boolean> => {
     
     // Save PDF with company name from data or default
     pdf.save(`${calculatorData.companyName || '税务计算'}_${new Date().toISOString().slice(0, 10)}.pdf`);
-    
-    // Cleanup
-    content.classList.remove('for-pdf-export');
     
     console.log("PDF generated successfully");
     return true;
