@@ -1,7 +1,7 @@
 
 import { useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { exportToPDF } from '@/utils/pdfExport';
+import { exportToPDF } from '@/utils/pdf';
 
 export const useActions = (riskValue: string, riskPercentage: number) => {
   const { toast } = useToast();
