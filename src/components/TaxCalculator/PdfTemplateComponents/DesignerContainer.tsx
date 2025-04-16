@@ -17,7 +17,7 @@ export const DesignerContainer = ({ containerRef, onReady }: DesignerContainerPr
   }, [containerRef, onReady]);
   
   return (
-    <ScrollArea className="h-[calc(100vh-200px)] border border-gray-200 rounded-md bg-white">
+    <ScrollArea className="h-[calc(100vh-200px)] w-full border border-gray-200 rounded-md bg-white">
       <div 
         ref={containerRef}
         className="w-full min-h-full p-6"

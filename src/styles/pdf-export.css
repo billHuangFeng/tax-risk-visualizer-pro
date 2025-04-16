@@ -13,6 +13,7 @@
     width: 100% !important;
     min-height: 100vh !important;
     position: relative !important;
+    overflow: visible !important;
   }
   
   .for-pdf-export * {
@@ -20,6 +21,7 @@
     background-color: white !important;
     text-shadow: none !important;
     box-shadow: none !important;
+    overflow: visible !important;
   }
   
   .for-pdf-export .company-header {
