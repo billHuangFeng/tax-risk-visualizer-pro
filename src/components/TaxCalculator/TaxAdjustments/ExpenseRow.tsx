@@ -51,7 +51,7 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
           )}
         </div>
       </TableCell>
-      <TableCell className="w-[15%] min-w-[80px]">
+      <TableCell className="w-[15%] min-w-[120px]">
         <div className="w-full">
           <Input
             type="number"
@@ -61,7 +61,7 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
           />
         </div>
       </TableCell>
-      <TableCell className="w-[20%] min-w-[80px]">
+      <TableCell className="w-[20%] min-w-[120px]">
         <div className="w-full">
           <Input
             type="text"
@@ -71,7 +71,7 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
           />
         </div>
       </TableCell>
-      <TableCell className="w-[20%] min-w-[80px]">
+      <TableCell className="w-[20%] min-w-[120px]">
         <Input
           type="text"
           value={safeValues.adjustment}

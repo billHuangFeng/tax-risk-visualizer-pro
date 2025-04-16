@@ -121,5 +121,12 @@
   .w-input-sm {
     width: 8rem;
   }
+  
+  /* Ensure text in inputs is fully visible */
+  input[type="text"],
+  input[type="number"] {
+    text-overflow: ellipsis;
+    padding-right: 8px;
+  }
 }
 

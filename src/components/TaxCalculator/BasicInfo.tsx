@@ -106,7 +106,7 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
             </Tooltip>
           </Label>
           <div className="flex items-center">
-            <div className="w-[20rem]">
+            <div className="min-w-[160px] w-full max-w-[200px]">
               <Input
                 id="totalAssets"
                 type="number"
@@ -138,7 +138,7 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
             </Tooltip>
           </Label>
           <div className="flex items-center">
-            <div className="w-input-text">
+            <div className="min-w-[160px] w-full max-w-[200px]">
               <Input
                 id="employeeCount"
                 type="number"

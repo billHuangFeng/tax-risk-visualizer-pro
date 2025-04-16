@@ -39,7 +39,7 @@ const TaxInputRow: React.FC<TaxInputRowProps> = ({
         )}
       </div>
       <div className="md:col-span-3 flex items-center justify-end w-full">
-        <div className="min-w-[120px] w-[120px]">
+        <div className="min-w-[160px] w-full max-w-[200px]">
           <Input
             type={type}
             value={value}
