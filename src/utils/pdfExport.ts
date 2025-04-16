@@ -144,26 +144,26 @@ const processCheckboxes = (container: HTMLElement) => {
   try {
     const checkboxes = container.querySelectorAll('[role="checkbox"]');
     checkboxes.forEach((checkbox: Element) => {
-      const checkboxElement = checkbox as HTMLElement;
-      
-      // Make checkbox visible in PDF
-      checkboxElement.style.visibility = 'visible';
-      checkboxElement.style.display = 'inline-block';
-      
-      if (checkboxElement.getAttribute('data-state') === 'checked') {
-        checkboxElement.style.border = '2px solid #000';
-        checkboxElement.style.backgroundColor = '#000';
+      if (checkbox instanceof HTMLElement) {
+        // Make checkbox visible in PDF
+        checkbox.style.visibility = 'visible';
+        checkbox.style.display = 'inline-block';
         
-        const checkIcon = checkboxElement.querySelector('svg');
-        if (checkIcon && checkIcon instanceof SVGElement) {
-          checkIcon.style.color = '#fff';
-          checkIcon.style.visibility = 'visible';
-          checkIcon.style.display = 'block';
-          checkIcon.setAttribute('data-keep-in-pdf', 'true');
+        if (checkbox.getAttribute('data-state') === 'checked') {
+          checkbox.style.border = '2px solid #000';
+          checkbox.style.backgroundColor = '#000';
+          
+          const checkIcon = checkbox.querySelector('svg');
+          if (checkIcon && checkIcon instanceof SVGElement) {
+            checkIcon.style.color = '#fff';
+            checkIcon.style.visibility = 'visible';
+            checkIcon.style.display = 'block';
+            checkIcon.setAttribute('data-keep-in-pdf', 'true');
+          }
+        } else {
+          checkbox.style.border = '2px solid #000';
+          checkbox.style.backgroundColor = 'transparent';
         }
-      } else {
-        checkboxElement.style.border = '2px solid #000';
-        checkboxElement.style.backgroundColor = 'transparent';
       }
     });
   } catch (error) {
@@ -289,7 +289,7 @@ const enhanceLayout = (container: HTMLElement) => {
 const createCanvas = async (content: HTMLElement): Promise<HTMLCanvasElement> => {
   console.log("Starting HTML to canvas conversion");
   // Give the DOM time to process all styling changes
-  await new Promise(resolve => setTimeout(resolve, 800));
+  await new Promise(resolve => setTimeout(resolve, 1200));
   
   try {
     const canvas = await html2canvas(content, {
