@@ -31,38 +31,28 @@ export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({
   const [view, setView] = useState<ViewState>('select');
   const [reportDefinition, setReportDefinition] = useState<any>(null);
   const [designerLoaded, setDesignerLoaded] = useState(false);
-  const [isPreloading, setIsPreloading] = useState(true);
+  const [isPreloading, setIsPreloading] = useState(false);
   const { toast } = useToast();
   
-  // 对话框打开时立即开始预加载
+  // 对话框打开时开始预加载库
   useEffect(() => {
-    if (open) {
-      setIsPreloading(true);
-      
-      // 启动预加载过程
-      const preloadDesigner = async () => {
-        try {
-          await loadReportBroLibraries();
+    if (open && !designerLoaded) {
+      console.log("开始预加载PDF设计器库");
+      loadReportBroLibraries()
+        .then(() => {
           console.log("PDF设计器库预加载成功");
           setDesignerLoaded(true);
-        } catch (error) {
+        })
+        .catch(error => {
           console.error("PDF设计器库预加载失败:", error);
-          toast({
-            title: "加载错误",
-            description: "无法加载PDF设计器，请刷新页面后重试",
-            variant: "destructive",
-          });
-        } finally {
-          setIsPreloading(false);
-        }
-      };
-      
-      preloadDesigner();
-    } else {
-      // 对话框关闭时重置视图到选择模式
+        });
+    }
+    
+    // 对话框关闭时重置视图到选择模式
+    if (!open && view !== 'select') {
       setView('select');
     }
-  }, [open, toast]);
+  }, [open, designerLoaded, view]);
   
   const handleSelectTemplate = (template: PdfTemplate) => {
     setSelectedTemplate(template);
@@ -84,17 +74,24 @@ export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({
   };
 
   const handleViewChange = (newView: string) => {
+    // 处理从设计器视图切换出去的情况
+    if (view === 'designer' && newView !== 'designer' && reportDefinition) {
+      const updatedTemplate = {
+        ...selectedTemplate,
+        reportDefinition: reportDefinition
+      };
+      setSelectedTemplate(updatedTemplate);
+    }
+    
+    // 处理切换到设计器视图的情况
     if (newView === 'designer') {
       if (!designerLoaded) {
-        // 如果设计器未加载完成，通知用户并开始加载
         toast({
           title: "正在加载",
-          description: "PDF设计器正在加载中，请稍候",
+          description: "PDF设计器正在准备中，请稍候",
         });
         
-        // 先设置预加载状态，然后切换视图
         setIsPreloading(true);
-        setView(newView as ViewState);
         
         // 确保库加载
         loadReportBroLibraries()
@@ -102,6 +99,7 @@ export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({
             console.log("PDF设计器库加载成功");
             setDesignerLoaded(true);
             setIsPreloading(false);
+            setView('designer' as ViewState);
           })
           .catch(error => {
             console.error("PDF设计器库加载失败:", error);
@@ -110,24 +108,13 @@ export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({
               description: "无法加载PDF设计器，请刷新页面后重试",
               variant: "destructive",
             });
-            // 加载失败，返回到选择视图
-            setView('select');
             setIsPreloading(false);
           });
       } else {
         // 设计器已加载，直接切换视图
-        setView(newView as ViewState);
+        setView('designer' as ViewState);
       }
     } else {
-      // 如果从设计器视图切换出去，保存当前设计
-      if (view === 'designer' && reportDefinition) {
-        const updatedTemplate = {
-          ...selectedTemplate,
-          reportDefinition: reportDefinition
-        };
-        setSelectedTemplate(updatedTemplate);
-      }
-      
       // 切换到其他视图
       setView(newView as ViewState);
     }

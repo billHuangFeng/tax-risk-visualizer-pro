@@ -22,119 +22,102 @@ export const ReportBroDesigner: React.FC<ReportBroDesignerProps> = ({
   const designerInitializedRef = useRef(false);
   const initAttemptsRef = useRef(0);
   const maxInitAttempts = 5;
-  const isFirstRender = useRef(true);
 
-  // 确保设计器库已加载
+  // 加载设计器库并初始化设计器
   useEffect(() => {
     let mounted = true;
+    let initTimer: NodeJS.Timeout;
     
-    const loadLibraries = async () => {
-      try {
-        await loadReportBroLibraries();
-        if (mounted) {
-          console.log("PDF设计器库加载成功");
-          // 库加载成功后，给DOM有时间完全渲染
-          setTimeout(() => {
-            if (mounted) initializeDesigner();
-          }, 300);
-        }
-      } catch (error) {
-        console.error("PDF设计器库加载失败:", error);
-        if (mounted) {
-          setIsLoading(false);
-          toast({
-            title: "加载失败",
-            description: "无法加载PDF设计器库，请刷新页面重试",
-            variant: "destructive",
-          });
-        }
-      }
-    };
-
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      loadLibraries();
-    }
-    
-    return () => {
-      mounted = false;
-    };
-  }, [toast]);
-  
-  // 初始化设计器实例
-  const initializeDesigner = () => {
-    if (designerInitializedRef.current) {
-      console.log("设计器已初始化，跳过");
-      setIsLoading(false);
-      return;
-    }
-
-    initAttemptsRef.current += 1;
-    
-    if (!containerRef.current || !document.body.contains(containerRef.current)) {
-      console.log(`容器元素未就绪，尝试 ${initAttemptsRef.current}/${maxInitAttempts}`);
+    const initializeDesigner = async () => {
+      if (designerInitializedRef.current || !mounted) return;
       
-      if (initAttemptsRef.current >= maxInitAttempts) {
-        console.error("初始化尝试次数过多，放弃");
+      try {
+        console.log("开始初始化设计器");
+        
+        // 确保库已加载
+        await loadReportBroLibraries();
+        
+        if (!mounted) return;
+        
+        // 验证DOM容器是否有效
+        if (!containerRef.current || !document.body.contains(containerRef.current)) {
+          initAttemptsRef.current += 1;
+          if (initAttemptsRef.current < maxInitAttempts) {
+            console.log(`容器元素未就绪，尝试 ${initAttemptsRef.current}/${maxInitAttempts}`);
+            // 稍后重试
+            initTimer = setTimeout(initializeDesigner, 300);
+            return;
+          } else {
+            throw new Error("容器元素未就绪，初始化失败");
+          }
+        }
+        
+        // 确保ReportBro库已加载并可用
+        if (!window.ReportBroDesigner) {
+          throw new Error("ReportBro设计器库未加载");
+        }
+        
+        // 创建设计器实例
+        const container = containerRef.current;
+        console.log("设计器容器就绪", container, {
+          width: container.offsetWidth,
+          height: container.offsetHeight,
+          display: getComputedStyle(container).display,
+          visibility: getComputedStyle(container).visibility
+        });
+        
+        // 使用简单的空报表定义来初始化
+        const reportDef = initialReport || { 
+          docElements: [], 
+          parameters: [], 
+          styles: [],
+          version: "1.0"
+        };
+        
+        // 延迟一点再初始化，确保DOM已经完全渲染
+        setTimeout(() => {
+          if (!mounted) return;
+          
+          try {
+            const rbDesigner = new window.ReportBroDesigner(container, {}, reportDef);
+            
+            designerInitializedRef.current = true;
+            console.log("设计器实例创建成功");
+            
+            setDesigner(rbDesigner);
+            setIsLoading(false);
+          } catch (error) {
+            console.error("设计器实例创建失败:", error);
+            setIsLoading(false);
+            toast({
+              title: "初始化错误",
+              description: "无法创建设计器实例，请刷新页面重试",
+              variant: "destructive",
+            });
+          }
+        }, 500);
+        
+      } catch (error) {
+        if (!mounted) return;
+        
+        console.error("设计器初始化过程出错:", error);
         setIsLoading(false);
         toast({
-          title: "加载失败",
-          description: "无法初始化设计器，请刷新页面重试",
+          title: "初始化错误",
+          description: "PDF设计器初始化失败：" + (error instanceof Error ? error.message : "未知错误"),
           variant: "destructive",
         });
-        return;
       }
-      
-      // 稍后重试
-      setTimeout(initializeDesigner, 500);
-      return;
-    }
+    };
     
-    try {
-      console.log("开始初始化设计器，容器:", containerRef.current);
-      
-      if (!window.ReportBroDesigner) {
-        throw new Error("ReportBro设计器库未加载");
-      }
-      
-      // 确保容器是可见的
-      if (containerRef.current) {
-        containerRef.current.style.display = 'block';
-        containerRef.current.style.visibility = 'visible';
-      }
-      
-      // 使用简单的空报表定义来初始化
-      const emptyReport = initialReport || { 
-        docElements: [], 
-        parameters: [], 
-        styles: [],
-        version: "1.0"
-      };
-      
-      const rbDesigner = new window.ReportBroDesigner(
-        containerRef.current, 
-        {}, // 空选项
-        emptyReport
-      );
-      
-      designerInitializedRef.current = true;
-      setDesigner(rbDesigner);
-      setIsLoading(false);
-      console.log("设计器实例创建成功");
-    } catch (error) {
-      console.error("设计器初始化失败:", error);
-      setIsLoading(false);
-      toast({
-        title: "初始化错误",
-        description: "PDF设计器初始化失败：" + (error instanceof Error ? error.message : "未知错误"),
-        variant: "destructive",
-      });
-    }
-  };
-
-  // 在组件卸载时清理
-  useEffect(() => {
+    // 开始初始化流程
+    initializeDesigner();
+    
+    // 清理函数
     return () => {
+      mounted = false;
+      clearTimeout(initTimer);
+      
       if (designer) {
         try {
           designer.destroy();
@@ -143,7 +126,7 @@ export const ReportBroDesigner: React.FC<ReportBroDesignerProps> = ({
         }
       }
     };
-  }, [designer]);
+  }, [initialReport, toast]);
 
   const handleSave = () => {
     if (designer) {
