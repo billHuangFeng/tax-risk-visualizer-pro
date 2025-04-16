@@ -42,7 +42,7 @@ const VatPurchasesSection: React.FC<VatPurchasesSectionProps> = ({
             <TableRow className="bg-gray-100">
               <TableHead className="w-1/3">产品类别</TableHead>
               <TableHead className="text-right">采购额<br/>(不含增值税)</TableHead>
-              <TableHead className="text-right">增值税率</TableHead>
+              <TableHead className="text-right">增值税率（征收率）</TableHead>
               <TableHead className="text-right">
                 进项税
                 <button 
