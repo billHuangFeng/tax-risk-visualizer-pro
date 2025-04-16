@@ -2,7 +2,7 @@
 #root {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 1rem;
+  padding: 0.5rem;
   text-align: center;
 }
 
@@ -41,7 +41,7 @@
 }
 
 .card {
-  padding: 1em;
+  padding: 0.75em;
 }
 
 @media (min-width: 768px) {
@@ -68,8 +68,19 @@
   }
 
   .container {
-    padding-left: 1rem;
-    padding-right: 1rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+  
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  
+  /* Make table cells padding smaller on mobile */
+  th, td {
+    padding: 0.5rem 0.75rem;
   }
 }
 
@@ -85,5 +96,41 @@
   .text-sm {
     font-size: 0.875rem;
     line-height: 1.5rem;
+  }
+  
+  /* Prevent double-tap zoom on iOS */
+  * {
+    touch-action: manipulation;
+  }
+}
+
+/* Add landscape mode notification */
+.landscape-notification {
+  display: none;
+}
+
+@media (max-width: 768px) and (orientation: portrait) {
+  .landscape-notification {
+    display: block;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #fef3c7;
+    color: #92400e;
+    padding: 0.5rem;
+    text-align: center;
+    z-index: 50;
+    font-size: 0.875rem;
+  }
+}
+
+/* Add responsive table styles */
+@media (max-width: 768px) {
+  /* Make sure tables don't overflow on mobile */
+  .responsive-table-container {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 }

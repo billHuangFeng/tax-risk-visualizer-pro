@@ -1,7 +1,9 @@
 
 import React from 'react';
-import { AlertCircle } from 'lucide-react';
-import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
+import { Info } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { Progress } from '@/components/ui/progress';
 
 interface RiskSummaryProps {
   unexplainedDifference: number;
@@ -16,87 +18,66 @@ const RiskSummary: React.FC<RiskSummaryProps> = ({
   riskPercentage,
   onInfoClick
 }) => {
+  const isMobile = useIsMobile();
+
+  // Determine risk color
   const getRiskColor = () => {
-    switch (riskLevel) {
-      case '风险非常高':
-        return 'text-red-600 bg-red-50';
-      case '风险比较高':
-        return 'text-orange-600 bg-orange-50';
-      case '存在风险':
-        return 'text-yellow-600 bg-yellow-50';
-      default:
-        return 'text-green-600 bg-green-50';
-    }
+    if (riskPercentage > 50) return 'bg-red-600';
+    if (riskPercentage > 20) return 'bg-orange-500';
+    if (riskPercentage > 10) return 'bg-yellow-500';
+    return 'bg-green-500';
+  };
+
+  // Determine risk badge color
+  const getRiskBadgeColor = () => {
+    if (riskPercentage > 50) return 'bg-red-100 text-red-800 border-red-200';
+    if (riskPercentage > 20) return 'bg-orange-100 text-orange-800 border-orange-200';
+    if (riskPercentage > 10) return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+    return 'bg-green-100 text-green-800 border-green-200';
   };
 
   return (
-    <div className="mt-6 p-4 border rounded-md space-y-3">
-      <div className="flex justify-between items-center">
-        <div className="font-medium flex items-center">
-          未解释差异
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button 
-                  className="ml-2 text-tax-blue hover:text-tax-light-blue"
-                  onClick={() => onInfoClick?.('unexplainedDifference')}
-                >
-                  <AlertCircle size={16} />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>扣除已知差异后的未解释金额</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="text-lg font-bold text-red-600">
-            {unexplainedDifference.toFixed(2)}
-          </span>
-          <span className="text-sm text-red-600">
-            ({riskPercentage.toFixed(2)}%)
-          </span>
-        </div>
+    <div className="mt-6">
+      <div className="flex items-center mb-4">
+        <h3 className="text-lg font-semibold">风险评估结果</h3>
+        <button 
+          className="ml-2 text-tax-blue hover:text-tax-light-blue"
+          onClick={() => onInfoClick?.('riskAssessment')}
+        >
+          <Info size={16} />
+        </button>
       </div>
-      
-      <div className="flex justify-between items-center pt-2 border-t">
-        <div className="font-medium flex items-center gap-2">
-          风险评估
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button 
-                  className="text-tax-blue hover:text-tax-light-blue"
-                  onClick={() => onInfoClick?.('riskAssessment')}
-                >
-                  <AlertCircle size={16} />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent className="max-w-[350px]">
-                <div className="space-y-2">
-                  <h4 className="font-bold">风险评估方式</h4>
-                  <p className="text-sm">
-                    风险百分比 = 未解释差异 ÷ 基数 × 100%
-                  </p>
-                  <h5 className="font-semibold mt-1">基数计算：</h5>
-                  <p className="text-sm">
-                    基数 = Max(应交增值税, 销项税额×10%)
-                  </p>
-                  <h5 className="font-semibold mt-1">风险等级：</h5>
-                  <ul className="list-disc list-inside text-sm">
-                    <li>风险百分比 &gt; 50%：风险非常高</li>
-                    <li>风险百分比 &gt; 20%：风险比较高</li>
-                    <li>风险百分比 &gt; 10%：存在风险</li>
-                    <li>风险百分比 ≤ 10%：基本安全</li>
-                  </ul>
-                </div>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+
+      <div className={`grid ${isMobile ? 'grid-cols-1 gap-6' : 'grid-cols-2 gap-8'} mb-6`}>
+        <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+          <div className="flex justify-between items-center mb-2">
+            <span className="text-gray-600">未解释差异</span>
+            <span className={`font-semibold ${unexplainedDifference < 0 ? 'text-red-600' : unexplainedDifference > 0 ? 'text-blue-600' : 'text-gray-600'}`}>
+              {unexplainedDifference.toFixed(2)}
+            </span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-gray-600">风险百分比</span>
+            <span className="font-semibold">{riskPercentage.toFixed(2)}%</span>
+          </div>
         </div>
-        <div className={`px-3 py-1 rounded-full font-medium ${getRiskColor()}`}>
-          {riskLevel} (风险百分比: {riskPercentage.toFixed(2)}%)
+
+        <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+          <div className="flex flex-col">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-gray-600">风险等级</span>
+              <Badge className={`${getRiskBadgeColor()} font-medium px-3 py-1`}>
+                {riskLevel}
+              </Badge>
+            </div>
+            <div className="mt-2">
+              <div className="mb-1.5 flex justify-between text-xs">
+                <span>低风险</span>
+                <span>高风险</span>
+              </div>
+              <Progress value={riskPercentage > 100 ? 100 : riskPercentage} className="h-2.5" indicatorClassName={getRiskColor()} />
+            </div>
+          </div>
         </div>
       </div>
     </div>

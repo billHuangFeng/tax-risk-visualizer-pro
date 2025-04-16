@@ -5,6 +5,7 @@ import type { DifferenceFactor } from '@/hooks/useVatCalculator';
 import TaxAmounts from './SummaryComponents/TaxAmounts';
 import DifferenceFactors from './SummaryComponents/DifferenceFactors';
 import RiskSummary from './SummaryComponents/RiskSummary';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface VatSummaryProps {
   payableTax: number;
@@ -23,14 +24,16 @@ interface VatSummaryProps {
 }
 
 const VatSummary: React.FC<VatSummaryProps> = (props) => {
+  const isMobile = useIsMobile();
+  
   return (
     <Card className="mb-6">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-xl font-bold border-l-4 border-tax-blue pl-3">
+      <CardHeader className={`${isMobile ? 'pb-2 pt-4' : 'pb-3'}`}>
+        <CardTitle className={`${isMobile ? 'text-lg' : 'text-xl'} font-bold border-l-4 border-tax-blue pl-3`}>
           增值税汇总
         </CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className={isMobile ? 'p-3' : undefined}>
         <TaxAmounts
           payableTax={props.payableTax}
           actualTax={props.actualTax}
@@ -40,7 +43,7 @@ const VatSummary: React.FC<VatSummaryProps> = (props) => {
           onInfoClick={props.onInfoClick}
         />
 
-        <div className="border-t pt-6 space-y-6">
+        <div className={`border-t ${isMobile ? 'pt-4 mt-4' : 'pt-6'} space-y-6`}>
           <DifferenceFactors
             taxDifferenceFactors={props.taxDifferenceFactors}
             addTaxDifferenceFactor={props.addTaxDifferenceFactor}

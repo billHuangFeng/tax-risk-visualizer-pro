@@ -5,8 +5,9 @@ import TaxInfoPanel from '@/components/TaxCalculator/TaxInfoPanel';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
-import { CircleAlert } from 'lucide-react';
+import { CircleAlert, Info } from 'lucide-react';
 import TopSection from './TopSection';
+import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
 
 interface CalculatorLayoutProps {
   children: React.ReactNode;
@@ -34,19 +35,41 @@ const CalculatorLayout: React.FC<CalculatorLayoutProps> = ({
           
           {isMobile ? (
             selectedInfoItem && (
-              <Sheet>
-                <SheetTrigger asChild>
-                  <Button 
-                    variant="outline" 
-                    className="fixed bottom-4 right-4 z-50 rounded-full shadow-lg bg-white"
-                  >
-                    <CircleAlert className="h-4 w-4" />
-                  </Button>
-                </SheetTrigger>
-                <SheetContent side="bottom" className="h-[80vh]">
-                  <InfoPanelContent />
-                </SheetContent>
-              </Sheet>
+              isMobile ? (
+                <Drawer>
+                  <DrawerTrigger asChild>
+                    <Button 
+                      variant="outline" 
+                      className="fixed bottom-4 right-4 z-50 rounded-full shadow-lg bg-white"
+                      aria-label="查看详情"
+                    >
+                      <Info className="h-5 w-5 text-blue-600" />
+                    </Button>
+                  </DrawerTrigger>
+                  <DrawerContent className="px-4 pb-8 pt-2">
+                    <div className="mt-2 mb-6">
+                      <h3 className="text-lg font-semibold text-center">详细信息</h3>
+                    </div>
+                    <div className="max-h-[70vh] overflow-y-auto px-1">
+                      <InfoPanelContent />
+                    </div>
+                  </DrawerContent>
+                </Drawer>
+              ) : (
+                <Sheet>
+                  <SheetTrigger asChild>
+                    <Button 
+                      variant="outline" 
+                      className="fixed bottom-4 right-4 z-50 rounded-full shadow-lg bg-white"
+                    >
+                      <CircleAlert className="h-4 w-4" />
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent side="bottom" className="h-[80vh]">
+                    <InfoPanelContent />
+                  </SheetContent>
+                </Sheet>
+              )
             )
           ) : (
             <div className="w-full md:w-1/3 mt-8 md:mt-0">

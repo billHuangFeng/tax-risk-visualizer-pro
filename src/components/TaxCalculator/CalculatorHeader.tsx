@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Calculator, Smartphone } from 'lucide-react';
+import { Calculator, Smartphone, RotateCw } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 interface CalculatorHeaderProps {
@@ -15,19 +15,19 @@ const CalculatorHeader: React.FC<CalculatorHeaderProps> = ({
   const isMobile = useIsMobile();
 
   return (
-    <header className="bg-tax-blue text-white py-6 mb-8 relative">
+    <header className="bg-tax-blue text-white py-4 md:py-6 mb-4 md:mb-8 relative">
       <div className="container">
-        <h1 className="text-3xl font-bold flex items-center gap-2">
-          <Calculator className="h-8 w-8" />
+        <h1 className="text-xl md:text-3xl font-bold flex items-center gap-2">
+          <Calculator className="h-6 w-6 md:h-8 md:w-8" />
           {title}
         </h1>
-        <p className="mt-2 text-blue-100">
+        <p className="mt-2 text-sm md:text-base text-blue-100">
           {description}
         </p>
         {isMobile && (
-          <div className="absolute top-full left-0 w-full bg-yellow-500 text-black text-sm text-center py-1 flex items-center justify-center">
-            <Smartphone className="h-4 w-4 mr-2" />
-            手机横屏显示更方便查看
+          <div className="absolute top-full left-0 w-full bg-yellow-500 text-black text-xs md:text-sm text-center py-1 flex items-center justify-center">
+            <RotateCw className="h-3 w-3 mr-1 md:h-4 md:w-4 md:mr-2" />
+            手机横屏显示更方便查看表格数据
           </div>
         )}
       </div>
