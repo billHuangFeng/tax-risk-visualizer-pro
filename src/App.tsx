@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import FloatingContactButton from "./components/TaxCalculator/FloatingContactButton";
-import { Toaster } from "@/hooks/use-toast";
+import { Toaster } from "@/components/ui/toaster";
 import { Toaster as SonnerToaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
 

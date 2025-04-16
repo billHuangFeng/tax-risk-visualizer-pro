@@ -5,7 +5,7 @@ const defaultLayout = {
   sections: [
     {
       id: "basic-info",
-      type: "basic-info",
+      type: "basic-info" as const,
       title: "基本信息",
       visible: true,
       order: 1,
@@ -17,7 +17,7 @@ const defaultLayout = {
     },
     {
       id: "revenue-expenses",
-      type: "revenue-expenses",
+      type: "revenue-expenses" as const,
       title: "收入支出",
       visible: true,
       order: 2,
@@ -28,7 +28,7 @@ const defaultLayout = {
     },
     {
       id: "tax-summary",
-      type: "tax-summary",
+      type: "tax-summary" as const,
       title: "税务总结",
       visible: true,
       order: 3,
