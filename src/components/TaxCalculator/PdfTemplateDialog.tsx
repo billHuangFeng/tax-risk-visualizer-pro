@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { DEFAULT_TEMPLATES } from "@/constants/pdfTemplates";
@@ -10,6 +10,8 @@ import { PageFormatSettings } from './PdfTemplateComponents/PageFormatSettings';
 import { PdfToolbar } from './PdfTemplateComponents/PdfToolbar';
 import { PdfTemplatePreview } from './PdfTemplatePreview';
 import { ReportBroDesigner } from './PdfTemplateComponents/ReportBroDesigner';
+import { loadReportBroLibraries } from '@/utils/reportbro-loader';
+import { useToast } from '@/hooks/use-toast';
 
 interface PdfTemplateDialogProps {
   open: boolean;
@@ -27,6 +29,29 @@ export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({
   const [selectedTemplate, setSelectedTemplate] = useState<PdfTemplate>(DEFAULT_TEMPLATES[0]);
   const [view, setView] = useState<ViewState>('select');
   const [reportDefinition, setReportDefinition] = useState<any>(null);
+  const [isLibraryLoading, setIsLibraryLoading] = useState(false);
+  const { toast } = useToast();
+  
+  // 预加载 ReportBro 库
+  useEffect(() => {
+    if (open) {
+      setIsLibraryLoading(true);
+      loadReportBroLibraries()
+        .then(() => {
+          console.log("ReportBro libraries loaded in PdfTemplateDialog");
+          setIsLibraryLoading(false);
+        })
+        .catch(error => {
+          console.error("Failed to load ReportBro libraries:", error);
+          setIsLibraryLoading(false);
+          toast({
+            title: "加载错误",
+            description: "无法加载 ReportBro 设计器，请刷新页面重试",
+            variant: "destructive",
+          });
+        });
+    }
+  }, [open, toast]);
   
   const handleSelectTemplate = (template: PdfTemplate) => {
     setSelectedTemplate(template);
@@ -40,6 +65,22 @@ export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({
       reportDefinition: definition
     };
     setSelectedTemplate(updatedTemplate);
+    
+    toast({
+      title: "保存成功",
+      description: "PDF模板定义已保存",
+    });
+  };
+
+  const handleViewChange = (newView: string) => {
+    if (newView === 'designer' && isLibraryLoading) {
+      toast({
+        title: "请稍候",
+        description: "ReportBro 设计器正在加载中...",
+      });
+      return;
+    }
+    setView(newView as ViewState);
   };
 
   return (
@@ -55,7 +96,7 @@ export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({
         <div className="space-y-4">
           <PdfToolbar
             activeView={view}
-            onViewChange={(newView) => setView(newView as ViewState)}
+            onViewChange={handleViewChange}
           />
           
           {view === 'select' && (

@@ -21,11 +21,11 @@ export default defineConfig(({ mode }) => ({
     },
   },
   optimizeDeps: {
-    exclude: ['reportbro-lib', 'reportbro-designer']
+    exclude: []
   },
   build: {
     commonjsOptions: {
-      include: [/reportbro-lib/, /reportbro-designer/, /node_modules/]
+      include: [/node_modules/]
     }
   }
 }));
