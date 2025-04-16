@@ -9,19 +9,21 @@ interface DesignerLoadingProps {
 }
 
 export const DesignerLoading: React.FC<DesignerLoadingProps> = ({ 
-  timeout = 5, // 更短的超时时间，提高用户体验
+  timeout = 3, // 更短的超时时间
   onRetry 
 }) => {
   const [seconds, setSeconds] = useState(0);
   const [showRetry, setShowRetry] = useState(false);
   
   useEffect(() => {
+    console.log("DesignerLoading: 开始计时", { timeout });
     const timer = setInterval(() => {
       setSeconds(prev => {
         const newValue = prev + 1;
         if (newValue >= timeout) {
+          console.log("DesignerLoading: 达到超时时间，显示重试按钮");
           setShowRetry(true);
-          clearInterval(timer); // 到达超时时停止计时
+          clearInterval(timer);
         }
         return newValue;
       });
@@ -31,13 +33,14 @@ export const DesignerLoading: React.FC<DesignerLoadingProps> = ({
   }, [timeout]);
   
   const handleRetry = () => {
+    console.log("DesignerLoading: 用户点击重试");
     setSeconds(0);
     setShowRetry(false);
     
     if (onRetry) {
       onRetry();
     } else {
-      // 刷新页面是次要备用方案
+      // 备用重试方法
       window.location.reload();
     }
   };
@@ -59,20 +62,16 @@ export const DesignerLoading: React.FC<DesignerLoadingProps> = ({
           </p>
         )}
         
-        {seconds >= 2 && !showRetry && (
-          <p className="text-sm text-amber-600">
-            加载时间超过预期，请检查网络或浏览器兼容性...
-          </p>
-        )}
-        
         {showRetry && (
           <div className="space-y-3 border border-amber-200 bg-amber-50 p-4 rounded-md mt-2">
             <p className="text-sm text-amber-700 font-medium">
-              加载时间过长，设计器可能遇到了问题
+              PDF设计器加载失败，可能原因：
             </p>
-            <p className="text-xs text-gray-600">
-              这可能是由于浏览器兼容性问题或网络连接问题导致的。您可以尝试刷新重试，或切换到简化模式。
-            </p>
+            <ul className="text-xs text-gray-600 list-disc pl-5 text-left space-y-1">
+              <li>浏览器兼容性问题</li>
+              <li>网络连接问题</li>
+              <li>设计器库加载错误</li>
+            </ul>
             <Button 
               variant="outline" 
               size="sm" 
