@@ -5,73 +5,73 @@ import { createCompanyHeader, enhanceHeadings } from './styles/headerStyles';
 import { enhanceTableLayout } from './styles/tableStyles';
 import { formatLabelValue, enhanceCheckboxes } from './styles/formStyles';
 
-// Main function to enhance layout for PDF export
 export const enhanceLayout = (container: HTMLElement) => {
   try {
     console.log("Starting PDF layout enhancement");
     
-    // Add a class to the container for PDF-specific styling
+    // Add PDF export class
     container.classList.add('for-pdf-export');
     
-    // Remove redundant elements first
+    // Remove redundant elements
     removeRedundantTextElements(container);
     
     // Enhance layout structure
     enhanceLayoutStructure(container);
     
-    // Apply styles to match the template image
+    // Apply template styling
     createCompanyHeader(container);
     enhanceHeadings(container);
     enhanceTableLayout(container);
     formatLabelValue(container);
     enhanceCheckboxes(container);
     
-    // Apply additional styling for PDF template appearance
+    // Apply additional template-specific styling
     applyTemplateStyling(container);
     
     console.log("PDF layout enhancement completed");
   } catch (error) {
-    console.warn('Error in layout enhancement:', error);
+    console.error('Error in layout enhancement:', error);
   }
 };
 
-// Additional function to apply template-specific styling
 const applyTemplateStyling = (container: HTMLElement) => {
   try {
-    // Set global font to match the template
+    // Set global font and styles
     container.style.fontFamily = "SimSun, serif";
     container.style.fontSize = "14px";
+    container.style.padding = "40px 60px";
+    container.style.lineHeight = "1.5";
     
-    // Set appropriate margins
-    container.style.padding = "20px";
+    // Add spacing between sections
+    const sections = container.querySelectorAll('section');
+    sections.forEach((section) => {
+      if (section instanceof HTMLElement) {
+        section.style.marginBottom = '24px';
+      }
+    });
     
     // Style basic info section
-    const basicInfoHeading = Array.from(container.querySelectorAll('h2')).find(
-      h => h.textContent?.includes('基本信息')
-    );
-    
-    if (basicInfoHeading && basicInfoHeading.parentElement) {
-      basicInfoHeading.style.borderLeft = '4px solid #000';
-      basicInfoHeading.style.paddingLeft = '8px';
+    const basicInfoSection = container.querySelector('.basic-info-section');
+    if (basicInfoSection instanceof HTMLElement) {
+      basicInfoSection.style.marginBottom = '32px';
     }
     
-    // Add unit labels where appropriate
-    const assetInput = container.querySelector('#totalAssets');
-    if (assetInput && assetInput.parentElement) {
-      const unitLabel = document.createElement('span');
-      unitLabel.className = 'unit-label';
-      unitLabel.textContent = '万元';
-      unitLabel.style.marginLeft = '4px';
-      assetInput.parentElement.appendChild(unitLabel);
-    }
+    // Style revenue and expenses sections
+    const gridSections = container.querySelectorAll('.grid-section');
+    gridSections.forEach((section) => {
+      if (section instanceof HTMLElement) {
+        section.style.marginBottom = '24px';
+      }
+    });
     
-    // Fix checkbox display for special fields
-    const highTechCheckbox = container.querySelector('#highTechEnterprise');
-    if (highTechCheckbox && highTechCheckbox instanceof HTMLElement) {
-      highTechCheckbox.style.display = 'inline-block';
-      highTechCheckbox.style.verticalAlign = 'middle';
-    }
+    // Ensure proper page breaks
+    const mainSections = container.querySelectorAll('section[class*="main-section"]');
+    mainSections.forEach((section) => {
+      if (section instanceof HTMLElement) {
+        section.style.pageBreakInside = 'avoid';
+      }
+    });
   } catch (error) {
-    console.warn('Error applying template styling:', error);
+    console.error('Error applying template styling:', error);
   }
 };

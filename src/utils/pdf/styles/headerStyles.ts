@@ -1,4 +1,3 @@
-
 export const createCompanyHeader = (container: HTMLElement) => {
   const companyNameInput = container.querySelector('input#companyName') as HTMLInputElement;
   if (companyNameInput) {
@@ -36,15 +35,22 @@ export const enhanceHeadings = (container: HTMLElement) => {
     if (heading instanceof HTMLElement) {
       heading.style.fontSize = '16px';
       heading.style.fontWeight = 'bold';
-      heading.style.marginTop = '24px';
+      heading.style.marginTop = '20px';
       heading.style.marginBottom = '16px';
-      heading.style.paddingLeft = '8px';
-      heading.style.borderLeft = '4px solid #000';
-      heading.style.borderBottom = '1px solid #000';
-      heading.style.display = 'block';
-      heading.style.width = '100%';
-      heading.style.paddingBottom = '4px';
+      heading.style.paddingBottom = '8px';
+      heading.style.borderBottom = '2px solid #000';
       heading.style.pageBreakAfter = 'avoid';
+    }
+  });
+  
+  // Style subheadings
+  const subheadings = container.querySelectorAll('.subheader');
+  subheadings.forEach((subheading) => {
+    if (subheading instanceof HTMLElement) {
+      subheading.style.fontSize = '14px';
+      subheading.style.fontWeight = 'normal';
+      subheading.style.marginLeft = '16px';
+      subheading.style.color = '#000';
     }
   });
 };

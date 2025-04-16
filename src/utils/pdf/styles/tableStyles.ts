@@ -5,18 +5,19 @@ export const enhanceTableLayout = (container: HTMLElement) => {
     if (table instanceof HTMLElement) {
       table.style.width = '100%';
       table.style.borderCollapse = 'collapse';
-      table.style.marginBottom = '16px';
+      table.style.marginBottom = '24px';
       table.style.pageBreakInside = 'avoid';
-      table.style.border = '1px solid #000';
       
       const cells = table.querySelectorAll('td, th');
       cells.forEach((cell) => {
         if (cell instanceof HTMLElement) {
-          cell.style.border = '1px solid #000';
-          cell.style.padding = '8px';
+          cell.style.border = 'none';
+          cell.style.borderBottom = '1px solid #000';
+          cell.style.padding = '8px 4px';
+          cell.style.fontSize = '14px';
           cell.style.textAlign = cell.classList.contains('label-cell') ? 'left' : 'right';
           
-          // Format numbers with commas and fixed decimal places
+          // Format numbers
           const numValue = cell.textContent?.trim();
           if (numValue && !isNaN(Number(numValue)) && !numValue.includes('¥')) {
             cell.textContent = Number(numValue).toLocaleString('zh-CN', {
@@ -26,18 +27,16 @@ export const enhanceTableLayout = (container: HTMLElement) => {
           }
         }
       });
-      
-      // Style the header row
-      const headerRow = table.querySelector('tr:first-child');
-      if (headerRow) {
-        const headerCells = headerRow.querySelectorAll('th');
-        headerCells.forEach((cell) => {
-          if (cell instanceof HTMLElement) {
-            cell.style.backgroundColor = '#f8f9fa';
-            cell.style.fontWeight = 'bold';
-          }
-        });
-      }
+
+      // Style header cells differently
+      const headerCells = table.querySelectorAll('th');
+      headerCells.forEach((cell) => {
+        if (cell instanceof HTMLElement) {
+          cell.style.backgroundColor = '#ffffff';
+          cell.style.fontWeight = 'normal';
+          cell.style.borderBottom = '1px solid #000';
+        }
+      });
     }
   });
 };
