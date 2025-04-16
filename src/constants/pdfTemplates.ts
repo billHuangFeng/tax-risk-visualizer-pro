@@ -1,10 +1,11 @@
-import { Template } from '@pdfme/generator';
+
 import { PdfTemplate } from '@/types/pdfTemplates';
 
 export const DEFAULT_TEMPLATES: PdfTemplate[] = [
   {
     id: 'default-tax-report',
     name: '默认税务报告模板',
+    description: '标准税务计算报告模板',
     baseTemplate: undefined, // 可以添加基础PDF模板路径
     schemas: [
       {
@@ -54,12 +55,14 @@ export const DEFAULT_TEMPLATES: PdfTemplate[] = [
           type: 'basic-info',
           title: '基本信息',
           visible: true,
+          order: 1,
           fields: [
             {
               id: 'company-name',
               sourceField: 'companyName',
               type: 'text',
-              visible: true
+              visible: true,
+              label: '公司名称'
             },
             {
               id: 'total-assets',
@@ -67,6 +70,7 @@ export const DEFAULT_TEMPLATES: PdfTemplate[] = [
               type: 'number',
               visible: true,
               prefix: '¥',
+              label: '总资产',
               style: {
                 alignment: 'right'
               }
@@ -78,6 +82,7 @@ export const DEFAULT_TEMPLATES: PdfTemplate[] = [
           type: 'revenue-expenses',
           title: '收入与支出',
           visible: true,
+          order: 2,
           fields: []
         },
         {
@@ -85,6 +90,7 @@ export const DEFAULT_TEMPLATES: PdfTemplate[] = [
           type: 'tax-adjustments',
           title: '税务调整',
           visible: true,
+          order: 3,
           fields: []
         },
         {
@@ -92,6 +98,7 @@ export const DEFAULT_TEMPLATES: PdfTemplate[] = [
           type: 'tax-summary',
           title: '税务总结',
           visible: true,
+          order: 4,
           fields: [
             {
               id: 'risk-percentage',
@@ -99,6 +106,7 @@ export const DEFAULT_TEMPLATES: PdfTemplate[] = [
               type: 'number',
               visible: true,
               suffix: '%',
+              label: '风险百分比',
               style: {
                 fontWeight: 'bold',
                 color: '#ff0000'

@@ -28,7 +28,6 @@ export const exportToPDF = async (calculator: any, template?: PdfTemplate) => {
     const pdf = await generate({
       template: {
         basePdf: selectedTemplate.baseTemplate || undefined,
-        // 如果需要，可以在这里定义更复杂的模板
         schemas: selectedTemplate.schemas || [],
       },
       inputs: inputs,

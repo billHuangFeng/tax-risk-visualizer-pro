@@ -1,12 +1,14 @@
+import { Template } from '@pdfme/common';
 
 export interface PdfTemplate {
   id: string;
   name: string;
-  description: string;
+  description?: string;
   previewImage?: string;
   styles: PdfTemplateStyles;
   layout: PdfTemplateLayout;
-  reportDefinition?: any; // ReportBro报表定义
+  baseTemplate?: ArrayBuffer;
+  schemas?: Template['schemas'];
 }
 
 export interface PdfTemplateStyles {
@@ -40,7 +42,7 @@ export interface PdfTemplateLayout {
 
 export interface PdfSection {
   id: string;
-  type: 'basic-info' | 'revenue-expenses' | 'tax-summary' | 'custom';
+  type: 'basic-info' | 'revenue-expenses' | 'tax-summary' | 'tax-adjustments' | 'custom';
   title: string;
   visible: boolean;
   order: number;
