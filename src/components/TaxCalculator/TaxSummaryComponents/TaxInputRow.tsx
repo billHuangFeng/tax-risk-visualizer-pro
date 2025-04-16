@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Info } from 'lucide-react';
 
@@ -12,6 +12,7 @@ interface TaxInputRowProps {
   onInfoClick?: () => void;
   type?: "text" | "number";
   className?: string;
+  id?: string;
 }
 
 const TaxInputRow: React.FC<TaxInputRowProps> = ({
@@ -22,8 +23,18 @@ const TaxInputRow: React.FC<TaxInputRowProps> = ({
   showInfo = false,
   onInfoClick,
   type = "text",
-  className = ""
+  className = "",
+  id
 }) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+  
+  // Add a data attribute with the value for PDF export
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.setAttribute('data-value', value);
+    }
+  }, [value]);
+  
   return (
     <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-center">
       <div className={`md:col-span-3 break-words font-medium ${className}`}>
@@ -38,14 +49,17 @@ const TaxInputRow: React.FC<TaxInputRowProps> = ({
           </button>
         )}
       </div>
-      <div className="md:col-span-3 flex items-center justify-end w-full">
-        <div className="min-w-[200px] w-full max-w-[280px]">
+      <div className="md:col-span-3 flex items-center justify-end w-full pdf-text-visible">
+        <div className="min-w-[220px] w-full max-w-[300px] relative">
           <Input
+            id={id}
+            ref={inputRef}
             type={type}
             value={value}
             onChange={onChange ? (e) => onChange(e.target.value) : undefined}
             readOnly={readOnly}
-            className="text-right font-bold pr-8 w-full overflow-visible"
+            className="text-right font-bold pr-8 w-full overflow-visible letter-spacing-normal"
+            data-value={value} /* Add data attribute for PDF export */
           />
         </div>
         <span className="ml-2 text-sm whitespace-nowrap">万元</span>

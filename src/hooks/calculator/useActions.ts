@@ -22,16 +22,21 @@ export const useActions = (riskValue: string, riskPercentage: number) => {
 
   const handleExport = useCallback(async () => {
     try {
-      toast({
-        title: "正在生成PDF",
-        description: "正在处理，请稍候...",
-      });
-      
       // Get calculator content element to see if it exists
       const calculatorContent = document.querySelector('#calculator-content');
       if (!calculatorContent) {
         throw new Error('计算器内容未找到');
       }
+      
+      // Collect all the calculator data
+      const inputs = document.querySelectorAll('input') as NodeListOf<HTMLInputElement>;
+      const formData: Record<string, string> = {};
+      
+      inputs.forEach(input => {
+        if (input.id) {
+          formData[input.id] = input.value;
+        }
+      });
       
       // Properly type the input element before accessing its value
       const companyNameInput = document.querySelector('input#companyName') as HTMLInputElement | null;
@@ -42,21 +47,14 @@ export const useActions = (riskValue: string, riskPercentage: number) => {
         riskValue,
         riskPercentage,
         companyName,
+        ...formData
       });
       
-      toast({
-        title: "导出成功",
-        description: "PDF文件已生成并下载",
-      });
     } catch (error) {
       console.error("PDF export error:", error);
-      toast({
-        title: "导出失败",
-        description: "无法生成PDF，请稍后重试",
-        variant: "destructive",
-      });
+      throw error;
     }
-  }, [riskValue, riskPercentage, toast]);
+  }, [riskValue, riskPercentage]);
 
   return {
     handleReset,

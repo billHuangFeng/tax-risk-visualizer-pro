@@ -34,7 +34,30 @@ const CalculatorActions: React.FC<CalculatorActionsProps> = ({
         title: "PDF生成中",
         description: "正在处理所有页面，可能需要几秒钟...",
       });
-      await onExport();
+      
+      // Trigger a short delay to allow the toast to render before processing the DOM
+      setTimeout(async () => {
+        try {
+          await onExport();
+          toast({
+            title: "导出成功",
+            description: "PDF文件已生成并下载",
+          });
+        } catch (error) {
+          console.error("Export error:", error);
+          toast({
+            title: "导出失败",
+            description: "PDF生成过程中发生错误",
+            variant: "destructive",
+          });
+        } finally {
+          // Set exporting to false with a delay
+          setTimeout(() => {
+            setExporting(false);
+          }, 2000);
+        }
+      }, 500);
+      
     } catch (error) {
       console.error("Export error:", error);
       toast({
@@ -42,11 +65,7 @@ const CalculatorActions: React.FC<CalculatorActionsProps> = ({
         description: "PDF生成过程中发生错误",
         variant: "destructive",
       });
-    } finally {
-      // Set exporting to false after a longer delay for larger documents
-      setTimeout(() => {
-        setExporting(false);
-      }, 3000);
+      setExporting(false);
     }
   };
   

@@ -29,23 +29,42 @@ export const exportToPDF = async (calculator: any) => {
     tempContainer.style.position = 'absolute';
     tempContainer.style.left = '-9999px';
     tempContainer.style.top = '0';
+    tempContainer.style.width = '100%';
+    tempContainer.style.maxWidth = '1200px';
     
     // Set specific CSS for PDF rendering
     // Make sure input values are fully visible
     const inputElements = clonedContent.querySelectorAll('input');
     inputElements.forEach((input: HTMLInputElement) => {
-      input.style.width = '100%';
-      input.style.textOverflow = 'visible';
-      input.style.borderColor = 'transparent';
-      input.style.paddingRight = '0';
-      input.style.letterSpacing = 'normal';
-      input.style.fontSize = '14px';
+      // Create a visible text node to show the input value
+      const textSpan = document.createElement('span');
+      textSpan.textContent = input.value;
+      textSpan.style.position = 'absolute';
+      textSpan.style.left = '0';
+      textSpan.style.top = '0';
+      textSpan.style.width = '100%';
+      textSpan.style.height = '100%';
+      textSpan.style.display = 'flex';
+      textSpan.style.alignItems = 'center';
+      textSpan.style.justifyContent = input.classList.contains('text-right') ? 'flex-end' : 'flex-start';
+      textSpan.style.paddingRight = input.classList.contains('text-right') ? '8px' : '0';
+      textSpan.style.paddingLeft = !input.classList.contains('text-right') ? '8px' : '0';
+      textSpan.style.fontWeight = 'bold';
+      textSpan.style.overflow = 'visible';
+      textSpan.style.whiteSpace = 'nowrap';
+      textSpan.style.fontSize = '14px';
+      textSpan.style.color = '#000';
+      textSpan.style.backgroundColor = '#fff';
+      
+      // Add the text span and hide the original input
+      input.parentNode?.appendChild(textSpan);
+      input.style.opacity = '0';
     });
     
     // Ensure number containers are wide enough
-    const numberContainers = clonedContent.querySelectorAll('.min-w-\\[180px\\]');
+    const numberContainers = clonedContent.querySelectorAll('.min-w-\\[200px\\]');
     numberContainers.forEach((container: HTMLElement) => {
-      container.style.minWidth = '200px';
+      container.style.minWidth = '220px';
       container.style.width = 'auto';
     });
     
@@ -59,7 +78,13 @@ export const exportToPDF = async (calculator: any) => {
     // Increase column widths in responsive grids
     const gridCells = clonedContent.querySelectorAll('.md\\:col-span-3');
     gridCells.forEach((cell: HTMLElement) => {
-      cell.style.minWidth = '200px';
+      cell.style.minWidth = '220px';
+    });
+    
+    // Add PDF-specific class to all input containers
+    const inputContainers = clonedContent.querySelectorAll('.flex.items-center');
+    inputContainers.forEach((container: HTMLElement) => {
+      container.classList.add('pdf-text-visible');
     });
     
     // Convert the content to canvas with higher quality settings
@@ -70,29 +95,8 @@ export const exportToPDF = async (calculator: any) => {
       logging: false,
       backgroundColor: '#ffffff',
       allowTaint: true,
-      onclone: (clonedDoc) => {
-        // Further modifications to the cloned document if needed
-        const inputs = clonedDoc.querySelectorAll('input');
-        inputs.forEach((input: HTMLInputElement) => {
-          // Create a visible text node to show the value
-          const textSpan = clonedDoc.createElement('span');
-          textSpan.textContent = input.value;
-          textSpan.style.position = 'absolute';
-          textSpan.style.left = '0';
-          textSpan.style.top = '0';
-          textSpan.style.width = '100%';
-          textSpan.style.height = '100%';
-          textSpan.style.display = 'flex';
-          textSpan.style.alignItems = 'center';
-          textSpan.style.paddingRight = '8px';
-          textSpan.style.textAlign = input.style.textAlign || 'right';
-          textSpan.style.fontWeight = 'bold';
-          textSpan.style.overflow = 'visible';
-          textSpan.style.whiteSpace = 'nowrap';
-          input.parentNode?.appendChild(textSpan);
-          input.style.opacity = '0'; // Hide the input but keep its layout
-        });
-      }
+      width: 1200, // Fixed width for better layout
+      windowWidth: 1200
     });
     
     console.log("Canvas created successfully", canvas.width, canvas.height);
