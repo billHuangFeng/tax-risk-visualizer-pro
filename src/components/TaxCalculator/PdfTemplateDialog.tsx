@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Button } from "@/components/ui/button";
 import { DEFAULT_TEMPLATES } from "@/constants/pdfTemplates";
 import { PdfTemplate } from "@/types/pdfTemplates";
-import { Download } from "lucide-react";
+import { Download, Loader2 } from "lucide-react";
 import { TemplateGrid } from './PdfTemplateComponents/TemplateGrid';
 import { PageFormatSettings } from './PdfTemplateComponents/PageFormatSettings';
 import { PdfToolbar } from './PdfTemplateComponents/PdfToolbar';
@@ -30,28 +30,46 @@ export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({
   const [view, setView] = useState<ViewState>('select');
   const [reportDefinition, setReportDefinition] = useState<any>(null);
   const [isLibraryLoading, setIsLibraryLoading] = useState(false);
+  const [libraryLoaded, setLibraryLoaded] = useState(false);
   const { toast } = useToast();
   
   // 预加载 ReportBro 库
   useEffect(() => {
     if (open) {
-      setIsLibraryLoading(true);
-      loadReportBroLibraries()
-        .then(() => {
-          console.log("ReportBro libraries loaded in PdfTemplateDialog");
-          setIsLibraryLoading(false);
-        })
-        .catch(error => {
-          console.error("Failed to load ReportBro libraries:", error);
+      // 只有当用户想要设计器视图时才加载
+      if (view === 'designer' && !libraryLoaded) {
+        setIsLibraryLoading(true);
+        
+        // 设置加载超时
+        const loadTimeout = setTimeout(() => {
           setIsLibraryLoading(false);
           toast({
-            title: "加载错误",
-            description: "无法加载 ReportBro 设计器，请刷新页面重试",
+            title: "加载超时",
+            description: "ReportBro设计器加载超时，请尝试刷新页面",
             variant: "destructive",
           });
-        });
+        }, 15000);
+        
+        loadReportBroLibraries()
+          .then(() => {
+            console.log("ReportBro libraries loaded in PdfTemplateDialog");
+            setIsLibraryLoading(false);
+            setLibraryLoaded(true);
+            clearTimeout(loadTimeout);
+          })
+          .catch(error => {
+            console.error("Failed to load ReportBro libraries:", error);
+            setIsLibraryLoading(false);
+            clearTimeout(loadTimeout);
+            toast({
+              title: "加载错误",
+              description: "无法加载 ReportBro 设计器，将使用简易模式",
+              variant: "destructive",
+            });
+          });
+      }
     }
-  }, [open, toast]);
+  }, [open, view, libraryLoaded, toast]);
   
   const handleSelectTemplate = (template: PdfTemplate) => {
     setSelectedTemplate(template);
@@ -73,14 +91,38 @@ export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({
   };
 
   const handleViewChange = (newView: string) => {
-    if (newView === 'designer' && isLibraryLoading) {
-      toast({
-        title: "请稍候",
-        description: "ReportBro 设计器正在加载中...",
-      });
-      return;
+    // 如果当前视图是设计器，并且用户选择了另一个视图，则提示保存
+    if (view === 'designer' && reportDefinition && newView !== 'designer') {
+      const updatedTemplate = {
+        ...selectedTemplate,
+        reportDefinition: reportDefinition
+      };
+      setSelectedTemplate(updatedTemplate);
     }
-    setView(newView as ViewState);
+    
+    if (newView === 'designer' && !libraryLoaded) {
+      setIsLibraryLoading(true);
+      // 开始加载库
+      loadReportBroLibraries()
+        .then(() => {
+          setIsLibraryLoading(false);
+          setLibraryLoaded(true);
+          setView(newView as ViewState);
+        })
+        .catch(error => {
+          console.error("Failed to load ReportBro libraries:", error);
+          setIsLibraryLoading(false);
+          toast({
+            title: "加载错误",
+            description: "无法加载 ReportBro 设计器，将使用简易模式",
+            variant: "destructive",
+          });
+          // 尽管出错，但仍然切换到设计器视图，因为有回退模式
+          setView(newView as ViewState);
+        });
+    } else {
+      setView(newView as ViewState);
+    }
   };
 
   return (
@@ -107,7 +149,17 @@ export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({
             />
           )}
           
-          {view === 'designer' && (
+          {view === 'designer' && isLibraryLoading && (
+            <div className="flex flex-col items-center justify-center h-64 p-8">
+              <Loader2 className="w-8 h-8 animate-spin text-primary mb-4" />
+              <p className="text-center">正在加载设计器库，请稍候...</p>
+              <p className="text-center text-sm text-muted-foreground mt-2">
+                首次加载可能需要一些时间，请耐心等待
+              </p>
+            </div>
+          )}
+          
+          {view === 'designer' && !isLibraryLoading && (
             <ReportBroDesigner
               onSave={handleSaveReport}
               initialReport={selectedTemplate.reportDefinition}

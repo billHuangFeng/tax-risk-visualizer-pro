@@ -17,230 +17,162 @@ export const loadReportBroLibraries = (): Promise<void> => {
       window.ReportBro = window.ReportBro || {};
       window.ReportBroDesigner = window.ReportBroDesigner || {};
       
-      // 设置一个超时，以防加载时间过长
+      // 设置一个更短的超时，以防加载时间过长
       const timeout = setTimeout(() => {
         reject(new Error('加载ReportBro库超时，请检查网络连接'));
-      }, 20000);
+      }, 10000);
       
-      // 创建和添加脚本元素到DOM
-      const inlineJquery = document.createElement('script');
-      inlineJquery.id = 'reportbro-jquery';
-      inlineJquery.type = 'text/javascript';
-      inlineJquery.text = `
-        // jQuery Slim 3.6.0 (简化版)
-        (function(global, factory) {
-          "use strict";
-          if (typeof module === "object" && typeof module.exports === "object") {
-            module.exports = global.document ? factory(global, true) : function(w) {
-              if (!w.document) {
-                throw new Error("jQuery requires a window with a document");
-              }
-              return factory(w);
-            };
-          } else {
-            factory(global);
-          }
-        })(typeof window !== "undefined" ? window : this, function(window, noGlobal) {
-          "use strict";
-          var arr = [];
-          var getProto = Object.getPrototypeOf;
-          var slice = arr.slice;
-          var flat = arr.flat ? function(array) {
-            return arr.flat.call(array);
-          } : function(array) {
-            return arr.concat.apply([], array);
-          };
-          var push = arr.push;
-          var indexOf = arr.indexOf;
-          var class2type = {};
-          var toString = class2type.toString;
-          var hasOwn = class2type.hasOwnProperty;
-          var fnToString = hasOwn.toString;
-          var ObjectFunctionString = fnToString.call(Object);
-          var support = {};
-          
-          var $ = function(selector, context) {
-            return new $.fn.init(selector, context);
-          };
-          
-          $.fn = $.prototype = {
-            jquery: "3.6.0-slim",
-            constructor: $,
-            length: 0
-          };
-          
-          window.jQuery = window.$ = $;
-          console.log("jQuery loaded successfully");
-          return $;
-        });
-      `;
+      console.log("Starting ReportBro libraries initialization");
       
-      const inlineReportBro = document.createElement('script');
-      inlineReportBro.id = 'reportbro-core';
-      inlineReportBro.type = 'text/javascript';
-      inlineReportBro.text = `
-        // ReportBro基础库 (简化版)
-        window.ReportBro = function() {
-          function ReportBro(reportDefinition) {
-            this.docElements = {};
-            this.parameters = {};
-            this.styles = {};
-            this.data = null;
-            
-            if (reportDefinition) {
-              this.load(reportDefinition);
-            }
-          }
-          
-          ReportBro.prototype = {
-            load: function(reportDefinition) {
-              console.log("Loading report definition");
-              if (!reportDefinition) return;
-              
-              this.docElements = {};
-              this.parameters = {};
-              this.styles = {};
-              
-              // 处理文档元素
-              if (reportDefinition.docElements) {
-                for (var i = 0; i < reportDefinition.docElements.length; i++) {
-                  var element = reportDefinition.docElements[i];
-                  this.docElements[element.id] = element;
-                }
-              }
-              
-              // 处理参数
-              if (reportDefinition.parameters) {
-                for (var i = 0; i < reportDefinition.parameters.length; i++) {
-                  var parameter = reportDefinition.parameters[i];
-                  this.parameters[parameter.id] = parameter;
-                }
-              }
-              
-              // 处理样式
-              if (reportDefinition.styles) {
-                for (var i = 0; i < reportDefinition.styles.length; i++) {
-                  var style = reportDefinition.styles[i];
-                  this.styles[style.id] = style;
-                }
-              }
-              
-              this.version = reportDefinition.version;
-            },
-            
-            getReport: function() {
-              var report = {};
-              
-              var docElements = [];
-              for (var id in this.docElements) {
-                docElements.push(this.docElements[id]);
-              }
-              report.docElements = docElements;
-              
-              var parameters = [];
-              for (var id in this.parameters) {
-                parameters.push(this.parameters[id]);
-              }
-              report.parameters = parameters;
-              
-              var styles = [];
-              for (var id in this.styles) {
-                styles.push(this.styles[id]);
-              }
-              report.styles = styles;
-              
-              report.version = this.version || "1.0";
-              
-              return report;
-            },
-            
-            generatePdf: function(data) {
-              return new Promise(function(resolve) {
-                console.log("Generating PDF with data", data);
-                // 创建一个简单的PDF Blob (模拟)
-                var pdfContent = "%PDF-1.4\\nSimulated ReportBro PDF\\n%%EOF";
-                var pdfBlob = new Blob([pdfContent], {type: "application/pdf"});
-                setTimeout(function() {
-                  resolve(pdfBlob);
-                }, 500);
-              });
-            }
-          };
-          
-          return ReportBro;
-        }();
+      // 直接初始化简化版的库，不依赖外部资源
+      // 简化的jQuery
+      window.jQuery = window.$ = function() {
+        return {
+          width: () => 800,
+          height: () => 600,
+          outerWidth: () => 800,
+          outerHeight: () => 600,
+          offset: () => ({ top: 0, left: 0 }),
+          position: () => ({ top: 0, left: 0 }),
+          css: () => this,
+          attr: () => this,
+          append: () => this,
+          addClass: () => this,
+          removeClass: () => this,
+          empty: () => this,
+          remove: () => this
+        };
+      };
+      
+      // 简化的ReportBro
+      window.ReportBro = function() {
+        function ReportBro(reportDefinition: any) {
+          this.reportDefinition = reportDefinition || { docElements: [], parameters: [], styles: [] };
+        }
         
-        // ReportBro设计器 (简化版)
-        window.ReportBroDesigner = function() {
-          function ReportBroDesigner(element, options, reportDefinition) {
-            console.log("Initializing ReportBro Designer", element);
-            this.element = element;
-            this.options = options || {};
-            this.reportDefinition = reportDefinition;
-            this.report = new window.ReportBro(reportDefinition);
-            
-            // 设置设计器
-            this.setupDesigner();
+        ReportBro.prototype.load = function(reportDefinition: any) {
+          this.reportDefinition = reportDefinition;
+          console.log("Report definition loaded");
+          return true;
+        };
+        
+        ReportBro.prototype.getReport = function() {
+          return this.reportDefinition;
+        };
+        
+        ReportBro.prototype.generatePdf = function() {
+          return Promise.resolve(new Blob(['PDF content'], { type: 'application/pdf' }));
+        };
+        
+        return ReportBro;
+      }();
+      
+      // 简化的ReportBroDesigner
+      window.ReportBroDesigner = function() {
+        function ReportBroDesigner(element: HTMLElement, options: any, reportDefinition: any) {
+          console.log("Initializing simplified ReportBro Designer");
+          this.element = element;
+          this.options = options || {};
+          this.reportDefinition = reportDefinition || { docElements: [], parameters: [], styles: [] };
+          this.report = new window.ReportBro(reportDefinition);
+          
+          // 创建简易设计器UI
+          this.setupDesigner();
+        }
+        
+        ReportBroDesigner.prototype.setupDesigner = function() {
+          if (!this.element) return;
+          
+          // 清空容器
+          while (this.element.firstChild) {
+            this.element.removeChild(this.element.firstChild);
           }
           
-          ReportBroDesigner.prototype = {
-            setupDesigner: function() {
-              console.log("Setting up designer in element", this.element);
-              if (!this.element) {
-                console.error("Designer element not found");
-                return;
-              }
-              
-              // 创建一个示例设计器界面
-              var container = document.createElement("div");
-              container.className = "rb-designer-container";
-              container.innerHTML = "<div style='padding:10px;'>ReportBro Designer (模拟) - 可以在这里设计报表</div>";
-              
-              // 清除容器内容
-              while (this.element.firstChild) {
-                this.element.removeChild(this.element.firstChild);
-              }
-              
-              // 添加设计器界面
-              this.element.appendChild(container);
-            },
-            
-            getReport: function() {
-              return this.report.getReport();
-            },
-            
-            destroy: function() {
-              console.log("Destroying ReportBro Designer");
-              // 清除容器内容
-              while (this.element.firstChild) {
-                this.element.removeChild(this.element.firstChild);
-              }
-            }
-          };
+          // 创建基本设计器UI
+          const designerUI = document.createElement('div');
+          designerUI.className = 'rb-designer';
+          designerUI.style.height = '100%';
+          designerUI.style.display = 'flex';
+          designerUI.style.flexDirection = 'column';
           
-          return ReportBroDesigner;
-        }();
+          // 工具栏
+          const toolbar = document.createElement('div');
+          toolbar.className = 'rb-toolbar';
+          toolbar.style.padding = '10px';
+          toolbar.style.borderBottom = '1px solid #e0e0e0';
+          toolbar.style.display = 'flex';
+          toolbar.style.gap = '8px';
+          toolbar.innerHTML = `
+            <button style="padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px;">添加文本</button>
+            <button style="padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px;">添加表格</button>
+            <button style="padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px;">添加图片</button>
+          `;
+          
+          // 设计区域
+          const designArea = document.createElement('div');
+          designArea.className = 'rb-design-area';
+          designArea.style.flex = '1';
+          designArea.style.padding = '20px';
+          designArea.style.backgroundColor = '#f9f9f9';
+          designArea.style.position = 'relative';
+          designArea.style.overflowY = 'auto';
+          
+          // 添加A4页面
+          const page = document.createElement('div');
+          page.className = 'rb-page';
+          page.style.width = '210mm';
+          page.style.minHeight = '297mm';
+          page.style.backgroundColor = 'white';
+          page.style.boxShadow = '0 0 5px rgba(0,0,0,0.1)';
+          page.style.margin = '0 auto';
+          page.style.position = 'relative';
+          
+          // 如果有已有内容，添加到页面
+          if (this.reportDefinition && this.reportDefinition.docElements) {
+            this.reportDefinition.docElements.forEach((element: any) => {
+              if (element.type === 'text') {
+                const textElement = document.createElement('div');
+                textElement.style.position = 'absolute';
+                textElement.style.left = (element.x || 0) + 'px';
+                textElement.style.top = (element.y || 0) + 'px';
+                textElement.style.width = (element.width || 100) + 'px';
+                textElement.style.height = (element.height || 20) + 'px';
+                textElement.style.border = '1px dashed #aaa';
+                textElement.style.padding = '2px';
+                textElement.textContent = element.content || 'Text';
+                page.appendChild(textElement);
+              }
+            });
+          }
+          
+          designArea.appendChild(page);
+          
+          // 将组件添加到设计器
+          designerUI.appendChild(toolbar);
+          designerUI.appendChild(designArea);
+          this.element.appendChild(designerUI);
+        };
         
-        console.log("ReportBro libraries initialized");
-      `;
+        ReportBroDesigner.prototype.getReport = function() {
+          return this.report.getReport();
+        };
+        
+        ReportBroDesigner.prototype.destroy = function() {
+          if (this.element) {
+            while (this.element.firstChild) {
+              this.element.removeChild(this.element.firstChild);
+            }
+          }
+        };
+        
+        return ReportBroDesigner;
+      }();
       
-      // 先添加 jQuery
-      document.head.appendChild(inlineJquery);
-      
-      // 然后添加 ReportBro
-      document.head.appendChild(inlineReportBro);
-      
-      console.log("ReportBro libraries loaded inline");
-      
-      // 清除超时并返回成功
+      console.log("ReportBro libraries initialized successfully");
       clearTimeout(timeout);
-      
-      // 延迟一下以确保脚本执行完成
-      setTimeout(() => {
-        resolve();
-      }, 300);
+      resolve();
     } catch (error) {
-      console.error('Error loading ReportBro libraries:', error);
+      console.error('Error initializing ReportBro libraries:', error);
       reject(error);
     }
   });
@@ -252,5 +184,6 @@ declare global {
     ReportBro: any;
     ReportBroDesigner: any;
     $: any;
+    jQuery: any;
   }
 }

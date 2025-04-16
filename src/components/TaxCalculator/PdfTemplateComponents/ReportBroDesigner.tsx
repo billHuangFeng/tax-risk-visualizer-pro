@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { loadReportBroLibraries } from '@/utils/reportbro-loader';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface ReportBroDesignerProps {
   onSave: (reportDefinition: any) => void;
@@ -19,13 +20,80 @@ export const ReportBroDesigner: React.FC<ReportBroDesignerProps> = ({
   const [designer, setDesigner] = useState<any>(null);
   const [retryCount, setRetryCount] = useState(0);
   const [containerReady, setContainerReady] = useState(false);
+  const [fallbackMode, setFallbackMode] = useState(false);
 
-  // First ensure the container is mounted and ready
+  // 立即检查容器是否准备好
   useEffect(() => {
     if (containerRef.current) {
       setContainerReady(true);
+      
+      // 预先设置容器样式，确保可见性
+      const container = containerRef.current;
+      container.style.display = 'block';
+      container.style.height = '600px';
+      container.style.minHeight = '600px';
+      container.style.width = '100%';
+      container.style.position = 'relative';
+      container.style.visibility = 'visible';
+      container.style.border = '1px solid #e5e7eb';
+      container.style.borderRadius = '0.375rem';
+      container.style.padding = '1rem';
     }
   }, []);
+
+  // 创建简易设计器界面（回退模式）
+  const createFallbackDesigner = () => {
+    if (!containerRef.current) return;
+    
+    const container = containerRef.current;
+    while (container.firstChild) {
+      container.removeChild(container.firstChild);
+    }
+    
+    // 创建简易设计器界面
+    const fallbackUI = document.createElement('div');
+    fallbackUI.className = 'p-4 space-y-4';
+    fallbackUI.innerHTML = `
+      <div class="text-lg font-semibold">简易PDF模板设计器</div>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="border p-2 rounded">
+          <div class="font-medium mb-2">页面设置</div>
+          <div class="flex flex-col gap-2">
+            <label class="text-sm">
+              页面大小
+              <select class="w-full p-1 border rounded text-sm">
+                <option>A4</option>
+                <option>Letter</option>
+              </select>
+            </label>
+            <label class="text-sm">
+              方向
+              <select class="w-full p-1 border rounded text-sm">
+                <option>纵向</option>
+                <option>横向</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        <div class="border p-2 rounded">
+          <div class="font-medium mb-2">内容元素</div>
+          <div class="flex flex-col gap-2">
+            <button class="p-1 border rounded text-sm bg-gray-50">添加文本</button>
+            <button class="p-1 border rounded text-sm bg-gray-50">添加表格</button>
+            <button class="p-1 border rounded text-sm bg-gray-50">添加图片</button>
+          </div>
+        </div>
+      </div>
+      <div class="border rounded p-2">
+        <div class="font-medium mb-2">预览区域</div>
+        <div class="h-40 bg-gray-50 flex items-center justify-center">
+          <span class="text-gray-400">PDF模板预览</span>
+        </div>
+      </div>
+    `;
+    
+    container.appendChild(fallbackUI);
+  };
 
   useEffect(() => {
     let isMounted = true;
@@ -41,8 +109,21 @@ export const ReportBroDesigner: React.FC<ReportBroDesignerProps> = ({
         setIsLoading(true);
         setLoadError(null);
         
+        // 设置加载超时
+        const loadTimeout = setTimeout(() => {
+          if (isMounted) {
+            console.log("ReportBro loading timeout, switching to fallback mode");
+            setFallbackMode(true);
+            setIsLoading(false);
+            createFallbackDesigner();
+          }
+        }, 8000); // 8秒后切换到回退模式
+        
         // 加载ReportBro相关库
         await loadReportBroLibraries();
+        
+        // 清除加载超时
+        clearTimeout(loadTimeout);
         
         if (!isMounted) return;
         
@@ -109,6 +190,7 @@ export const ReportBroDesigner: React.FC<ReportBroDesignerProps> = ({
             
             setDesigner(rbDesigner);
             setIsLoading(false);
+            setFallbackMode(false);
             
             // 暴露到全局便于调试
             (window as any).reportBroDesigner = rbDesigner;
@@ -121,12 +203,17 @@ export const ReportBroDesigner: React.FC<ReportBroDesignerProps> = ({
               setIsLoading(false);
               
               // 如果尝试次数小于3次，则重试
-              if (retryCount < 3) {
+              if (retryCount < 2) {
                 setRetryCount(prev => prev + 1);
                 // 延迟重试，给DOM更多时间准备
                 setTimeout(() => {
                   if (isMounted) initReportBro();
                 }, 2000); // 增加延迟时间
+              } else {
+                // 尝试3次后切换到回退模式
+                console.log("Max retries reached, switching to fallback mode");
+                setFallbackMode(true);
+                createFallbackDesigner();
               }
             }
           }
@@ -136,6 +223,9 @@ export const ReportBroDesigner: React.FC<ReportBroDesignerProps> = ({
         if (isMounted) {
           setLoadError(`ReportBro 加载失败: ${error instanceof Error ? error.message : String(error)}`);
           setIsLoading(false);
+          // 出错时切换到回退模式
+          setFallbackMode(true);
+          createFallbackDesigner();
         }
       }
     };
@@ -171,12 +261,38 @@ export const ReportBroDesigner: React.FC<ReportBroDesignerProps> = ({
       } catch (error) {
         console.error("Error saving report:", error);
       }
+    } else if (fallbackMode) {
+      // 在回退模式下使用简单的报表定义
+      const fallbackReport = {
+        version: "1.0",
+        styles: [],
+        parameters: [],
+        docElements: [
+          {
+            id: "text1", 
+            type: "text",
+            x: 0, 
+            y: 0,
+            width: 100,
+            height: 20,
+            content: "示例PDF模板"
+          }
+        ]
+      };
+      onSave(fallbackReport);
     }
   };
 
   // 手动重试加载
   const handleRetry = () => {
-    setRetryCount(prev => prev + 1);
+    setFallbackMode(false);
+    setRetryCount(0);
+    setIsLoading(true);
+    
+    // 短暂延迟后重试
+    setTimeout(() => {
+      setRetryCount(prev => prev + 1);
+    }, 500);
   };
 
   return (
@@ -190,7 +306,7 @@ export const ReportBroDesigner: React.FC<ReportBroDesignerProps> = ({
         </div>
       )}
       
-      {loadError && (
+      {loadError && !fallbackMode && (
         <div className="flex items-center justify-center h-64 border border-red-300 bg-red-50 rounded p-4">
           <div className="flex flex-col items-center space-y-4">
             <p className="text-red-600 text-center">{loadError}</p>
@@ -204,17 +320,20 @@ export const ReportBroDesigner: React.FC<ReportBroDesignerProps> = ({
               </Button>
               <Button 
                 variant="outline" 
-                onClick={() => window.location.reload()}
+                onClick={() => {
+                  setFallbackMode(true);
+                  createFallbackDesigner();
+                }}
                 className="mt-2"
               >
-                重新加载页面
+                使用简易设计器
               </Button>
             </div>
           </div>
         </div>
       )}
       
-      {!isLoading && !loadError && (
+      {!isLoading && (
         <>
           <div className="flex justify-end mb-4">
             <Button 
