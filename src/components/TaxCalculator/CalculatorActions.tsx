@@ -20,6 +20,12 @@ const CalculatorActions: React.FC<CalculatorActionsProps> = ({
     window.open('https://work.weixin.qq.com/ca/cawcde03d69f2d37e9', '_blank');
   };
 
+  // Create a dummy calculator data object to pass to SaveDataButton
+  const calculatorData = {
+    riskPercentage,
+    timestamp: new Date().toISOString()
+  };
+
   return (
     <div className="w-full px-4 py-4 bg-white border-t border-gray-200 shadow-sm flex flex-col md:flex-row gap-2 justify-end">
       <Button
@@ -39,7 +45,7 @@ const CalculatorActions: React.FC<CalculatorActionsProps> = ({
         立即联系税务顾问
       </Button>
       
-      <SaveDataButton />
+      <SaveDataButton calculatorData={calculatorData} />
     </div>
   );
 };
