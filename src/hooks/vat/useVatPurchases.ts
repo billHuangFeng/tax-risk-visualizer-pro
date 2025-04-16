@@ -1,13 +1,9 @@
-
 import { useState, useCallback } from 'react';
 import type { VatPurchaseItem } from '../types';
 
 export const useVatPurchases = () => {
   const [purchasesData, setPurchasesData] = useState<VatPurchaseItem[]>([
-    { id: '1', productName: '采购物料或服务1', purchaseAmount: 2400, vatRate: 13, inputTax: 312 },
-    { id: '2', productName: '采购物料或服务2', purchaseAmount: 3000, vatRate: 6, inputTax: 180 },
-    { id: '3', productName: '采购物料或服务3', purchaseAmount: 4000, vatRate: 13, inputTax: 520 },
-    { id: '4', productName: '采购物料或服务4', purchaseAmount: 100, vatRate: 1, inputTax: 1 }
+    { id: '1', productName: '采购物料或服务1', purchaseAmount: 0, vatRate: 13, inputTax: 0 }
   ]);
 
   const [purchasesTotal, setPurchasesTotal] = useState({
@@ -15,7 +11,7 @@ export const useVatPurchases = () => {
     tax: 0
   });
 
-  const [bankPurchasesAmount, setBankPurchasesAmount] = useState<number>(6000);
+  const [bankPurchasesAmount, setBankPurchasesAmount] = useState<number>(0);
 
   const addPurchaseItem = useCallback(() => {
     const newId = (purchasesData.length + 1).toString();

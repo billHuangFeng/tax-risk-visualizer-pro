@@ -1,13 +1,13 @@
 import { useState } from 'react';
 
 export const useVatTax = () => {
-  const [actualTax, setActualTax] = useState<number>(200);
+  const [actualTax, setActualTax] = useState<number>(0);
   const [payableTax, setPayableTax] = useState<number>(0);
   const [taxDifference, setTaxDifference] = useState<number>(0);
   const [taxDifferencePercentage, setTaxDifferencePercentage] = useState<number>(0);
   const [riskPercentage, setRiskPercentage] = useState<number>(0);
   const [unexplainedDifference, setUnexplainedDifference] = useState<number>(0);
-  const [riskLevel, setRiskLevel] = useState<string>('');
+  const [riskLevel, setRiskLevel] = useState<string>('基本安全');
 
   // Calculate tax difference percentage (差异幅度)
   const calculateTaxDifferencePercentage = (actualTax: number, payableTax: number) => {

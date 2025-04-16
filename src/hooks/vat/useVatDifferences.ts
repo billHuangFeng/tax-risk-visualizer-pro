@@ -1,9 +1,10 @@
+
 import { useState, useCallback, useMemo } from 'react';
 import type { DifferenceFactor, DifferenceExplanation } from '../types';
 
 export const useVatDifferences = () => {
   const [taxDifferenceFactors, setTaxDifferenceFactors] = useState<DifferenceFactor[]>([
-    { id: '1', description: '差异原因1', amount: 0 }
+    { id: '1', description: '', amount: 0 }
   ]);
 
   const [salesDifferenceExplanations, setSalesDifferenceExplanations] = useState<DifferenceExplanation[]>([
