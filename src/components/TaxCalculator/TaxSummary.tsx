@@ -108,38 +108,37 @@ const TaxSummary: React.FC<TaxSummaryProps> = ({
           onInfoClick={onInfoClick}
         />
         
-        {parseFloat(unexplainedDifference) !== 0 && (
-          <div className="pt-4 border-t">
-            <div className="flex justify-between items-center">
-              <div className="font-medium flex items-center">
-                未解释差异
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <button 
-                        className="ml-2 text-tax-blue hover:text-tax-light-blue"
-                        onClick={() => onInfoClick?.('unexplainedDifference')}
-                      >
-                        <AlertCircle size={16} />
-                      </button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>扣除已知差异后的未解释金额</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-lg font-bold text-red-600">
-                  {unexplainedDifference}
-                </span>
-                <span className="text-sm text-red-600">
-                  ({unexplainedDifferencePercentage.toFixed(2)}%)
-                </span>
-              </div>
+        {/* Always show the unexplained difference section, even if the value is 0 */}
+        <div className="pt-4 border-t">
+          <div className="flex justify-between items-center">
+            <div className="font-medium flex items-center">
+              未解释差异
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button 
+                      className="ml-2 text-tax-blue hover:text-tax-light-blue"
+                      onClick={() => onInfoClick?.('unexplainedDifference')}
+                    >
+                      <AlertCircle size={16} />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>扣除已知差异后的未解释金额</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-lg font-bold text-red-600">
+                {unexplainedDifference}
+              </span>
+              <span className="text-sm text-red-600">
+                ({unexplainedDifferencePercentage.toFixed(2)}%)
+              </span>
             </div>
           </div>
-        )}
+        </div>
         
         <RiskIndicator 
           riskPercentage={riskPercentage} 

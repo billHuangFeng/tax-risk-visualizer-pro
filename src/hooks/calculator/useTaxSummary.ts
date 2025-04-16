@@ -78,6 +78,19 @@ export const useTaxSummary = () => {
     setUnexplainedDifferencePercentage(percentage);
   }, [unexplainedDifference, theoreticalTax]);
 
+  // Update unexplained difference whenever risk value changes
+  useEffect(() => {
+    // Calculate explained amount
+    const explainedAmount = taxDifferenceFactors.reduce(
+      (sum, factor) => sum + factor.amount, 
+      0
+    );
+    
+    const riskValueNumber = parseFloat(riskValue) || 0;
+    const newUnexplainedDifference = riskValueNumber - explainedAmount;
+    setUnexplainedDifference(newUnexplainedDifference.toFixed(2));
+  }, [riskValue, taxDifferenceFactors]);
+
   return {
     taxableIncome,
     setTaxableIncome,
