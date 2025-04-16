@@ -40,9 +40,29 @@
   .pdf-export-container * {
     color: #000 !important;
     background-color: white !important;
+    visibility: visible !important;
+    opacity: 1 !important;
   }
 
   .pdf-export-container input {
     border: 1px solid #000 !important;
+  }
+  
+  /* Force all text to be visible in PDF export mode */
+  .for-pdf-export input,
+  .for-pdf-export span,
+  .for-pdf-export p,
+  .for-pdf-export div,
+  .for-pdf-export h1,
+  .for-pdf-export h2,
+  .for-pdf-export h3,
+  .for-pdf-export label,
+  .for-pdf-export td {
+    color: #000 !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    text-shadow: none !important;
+    background-color: white !important;
+    position: relative !important;
   }
 }

@@ -28,12 +28,23 @@ export const useActions = (riskValue: string, riskPercentage: number) => {
         throw new Error('计算器内容未找到');
       }
       
-      // Prepare inputs for PDF export
-      const inputs = calculatorContent.querySelectorAll('input') as NodeListOf<HTMLInputElement>;
+      // Pre-process all inputs for better visibility in PDF
+      const inputs = document.querySelectorAll('input') as NodeListOf<HTMLInputElement>;
       inputs.forEach(input => {
         // Make sure the data-value attribute is set (backup)
-        if (input.value && !input.hasAttribute('data-value')) {
+        if (input.value) {
           input.setAttribute('data-value', input.value);
+        }
+      });
+      
+      // Make sure all PDF values are visible
+      const pdfValues = document.querySelectorAll('.pdf-value') as NodeListOf<HTMLElement>;
+      pdfValues.forEach(element => {
+        if (element.parentElement) {
+          const input = element.parentElement.querySelector('input') as HTMLInputElement;
+          if (input) {
+            element.textContent = input.value || '0';
+          }
         }
       });
       

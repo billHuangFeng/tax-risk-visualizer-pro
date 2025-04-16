@@ -41,6 +41,14 @@ const CalculatorActions: React.FC<CalculatorActionsProps> = ({
         calculatorContent.classList.add('for-pdf-export', 'pdf-export-container');
       }
       
+      // Make all input values visible before export
+      const allInputs = document.querySelectorAll('input') as NodeListOf<HTMLInputElement>;
+      allInputs.forEach(input => {
+        if (input.value) {
+          input.setAttribute('data-value', input.value);
+        }
+      });
+      
       // Trigger a short delay to allow the toast to render and CSS to apply
       setTimeout(async () => {
         try {
@@ -74,7 +82,7 @@ const CalculatorActions: React.FC<CalculatorActionsProps> = ({
             setExporting(false);
           }, 2000);
         }
-      }, 500);
+      }, 1000); // Increased delay to allow CSS changes to take effect
       
     } catch (error) {
       console.error("Export error:", error);

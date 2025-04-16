@@ -15,6 +15,7 @@ const prepareContentForExport = (content: HTMLElement): HTMLElement => {
   tempContainer.style.top = '0';
   tempContainer.style.width = '1200px';
   tempContainer.style.backgroundColor = '#ffffff';
+  tempContainer.classList.add('pdf-export-container');
   
   return tempContainer;
 };
@@ -23,6 +24,7 @@ const prepareContentForExport = (content: HTMLElement): HTMLElement => {
 const processInputFields = (container: HTMLElement) => {
   const inputs = container.querySelectorAll('input');
   inputs.forEach((input: HTMLInputElement) => {
+    // Create a visible span to show the input value
     const valueDisplay = document.createElement('div');
     valueDisplay.textContent = input.value || '0';
     valueDisplay.style.position = 'absolute';
@@ -53,7 +55,6 @@ const processInputFields = (container: HTMLElement) => {
 const processCheckboxes = (container: HTMLElement) => {
   const checkboxes = container.querySelectorAll('[role="checkbox"]');
   checkboxes.forEach((checkbox: Element) => {
-    // Type assertion to HTMLElement
     const checkboxElement = checkbox as HTMLElement;
     
     if (checkboxElement.getAttribute('data-state') === 'checked') {
@@ -74,28 +75,94 @@ const processCheckboxes = (container: HTMLElement) => {
 
 // Enhance visual elements for PDF
 const enhanceVisualElements = (container: HTMLElement) => {
-  // Improve table cell visibility
+  // Make all text elements visible with proper styling
+  const allElements = container.querySelectorAll('*');
+  allElements.forEach((el: Element) => {
+    const element = el as HTMLElement;
+    if (element.style) {
+      element.style.color = '#000';
+      element.style.textShadow = 'none';
+      element.style.boxShadow = 'none';
+    }
+  });
+  
+  // Ensure table elements are visible
   const tableCells = container.querySelectorAll('td');
   tableCells.forEach((cell: Element) => {
     const cellElement = cell as HTMLElement;
     cellElement.style.border = '1px solid #ddd';
     cellElement.style.padding = '8px';
+    cellElement.style.color = '#000';
+    cellElement.style.backgroundColor = '#fff';
   });
 
-  // Scale up text elements
-  const textElements = container.querySelectorAll('p, h1, h2, h3, h4, h5, h6, span, label');
+  // Make text elements visible
+  const textElements = container.querySelectorAll('p, h1, h2, h3, h4, h5, h6, span, label, div');
   textElements.forEach((el: Element) => {
     const textElement = el as HTMLElement;
-    textElement.style.color = '#000';
-    textElement.style.fontWeight = textElement.tagName.startsWith('H') ? 'bold' : 'normal';
+    if (textElement.textContent && textElement.textContent.trim() !== '') {
+      textElement.style.color = '#000';
+      textElement.style.fontWeight = textElement.tagName.startsWith('H') ? 'bold' : 'normal';
+      textElement.style.visibility = 'visible';
+      textElement.style.opacity = '1';
+    }
+  });
+  
+  // Fix specific PDF value visibility
+  const pdfValues = container.querySelectorAll('.pdf-value');
+  pdfValues.forEach((el: Element) => {
+    const valueElement = el as HTMLElement;
+    valueElement.style.opacity = '1';
+    valueElement.style.visibility = 'visible';
+    valueElement.style.color = '#000';
+    valueElement.style.backgroundColor = '#fff';
+  });
+};
+
+// Force all input values to be visible
+const forceInputValuesVisible = (container: HTMLElement) => {
+  // Find all input elements and get their parent div container
+  const inputContainers = container.querySelectorAll('.pdf-text-visible');
+  inputContainers.forEach((container: Element) => {
+    const containerElement = container as HTMLElement;
+    containerElement.style.position = 'relative';
+    
+    // Get the input within this container
+    const input = containerElement.querySelector('input');
+    if (input && input instanceof HTMLInputElement) {
+      // Get or create the value display div
+      let valueDisplay = containerElement.querySelector('.pdf-value');
+      if (!valueDisplay) {
+        valueDisplay = document.createElement('div');
+        valueDisplay.className = 'pdf-value';
+        containerElement.appendChild(valueDisplay);
+      }
+      
+      // Make sure value display is visible and has the input value
+      const valueDisplayElement = valueDisplay as HTMLElement;
+      valueDisplayElement.textContent = input.value || '0';
+      valueDisplayElement.style.position = 'absolute';
+      valueDisplayElement.style.right = '10px';
+      valueDisplayElement.style.top = '50%';
+      valueDisplayElement.style.transform = 'translateY(-50%)';
+      valueDisplayElement.style.opacity = '1';
+      valueDisplayElement.style.visibility = 'visible';
+      valueDisplayElement.style.color = '#000';
+      valueDisplayElement.style.backgroundColor = '#fff';
+      valueDisplayElement.style.zIndex = '100';
+      valueDisplayElement.style.fontWeight = 'bold';
+    }
   });
 };
 
 // Create canvas from prepared content
 const createCanvas = async (content: HTMLElement): Promise<HTMLCanvasElement> => {
   console.log("Starting HTML to canvas conversion");
+  // Give the DOM time to process all styling changes
+  await new Promise(resolve => setTimeout(resolve, 500));
+  
   const canvas = await html2canvas(content, {
-    scale: 3,
+    scale: 2,
     useCORS: true,
     logging: true,
     backgroundColor: '#ffffff',
@@ -103,6 +170,30 @@ const createCanvas = async (content: HTMLElement): Promise<HTMLCanvasElement> =>
     width: 1200,
     onclone: (document, element) => {
       console.log("Cloned document prepared for rendering");
+      // Additional processing in the cloned document
+      const allInputs = element.querySelectorAll('input');
+      allInputs.forEach((input: HTMLInputElement) => {
+        if (input.parentElement) {
+          const value = input.value || '0';
+          const textNode = document.createTextNode(value);
+          const span = document.createElement('span');
+          span.style.position = 'absolute';
+          span.style.top = '0';
+          span.style.left = '0';
+          span.style.right = '0';
+          span.style.bottom = '0';
+          span.style.display = 'flex';
+          span.style.alignItems = 'center';
+          span.style.justifyContent = 'flex-end';
+          span.style.paddingRight = '10px';
+          span.style.color = '#000';
+          span.style.backgroundColor = '#fff';
+          span.style.zIndex = '50';
+          span.appendChild(textNode);
+          input.parentElement.style.position = 'relative';
+          input.parentElement.appendChild(span);
+        }
+      });
     }
   });
   console.log("Canvas created successfully", canvas.width, canvas.height);
@@ -168,6 +259,7 @@ export const exportToPDF = async (calculator: any) => {
     processInputFields(clonedContent);
     processCheckboxes(clonedContent);
     enhanceVisualElements(clonedContent);
+    forceInputValuesVisible(clonedContent);
     
     // Create canvas
     const canvas = await createCanvas(clonedContent);
