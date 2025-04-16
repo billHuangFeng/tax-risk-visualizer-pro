@@ -9,6 +9,7 @@ import { TemplateGrid } from './PdfTemplateComponents/TemplateGrid';
 import { PageFormatSettings } from './PdfTemplateComponents/PageFormatSettings';
 import { PdfToolbar } from './PdfTemplateComponents/PdfToolbar';
 import { PdfTemplatePreview } from './PdfTemplatePreview';
+import { ReportBroDesigner } from './PdfTemplateComponents/ReportBroDesigner';
 
 interface PdfTemplateDialogProps {
   open: boolean;
@@ -16,7 +17,7 @@ interface PdfTemplateDialogProps {
   onExport: (template: PdfTemplate) => void;
 }
 
-type ViewState = 'select' | 'preview' | 'format';
+type ViewState = 'select' | 'preview' | 'format' | 'designer';
 
 export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({ 
   open, 
@@ -25,9 +26,20 @@ export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({
 }) => {
   const [selectedTemplate, setSelectedTemplate] = useState<PdfTemplate>(DEFAULT_TEMPLATES[0]);
   const [view, setView] = useState<ViewState>('select');
+  const [reportDefinition, setReportDefinition] = useState<any>(null);
   
   const handleSelectTemplate = (template: PdfTemplate) => {
     setSelectedTemplate(template);
+  };
+
+  const handleSaveReport = (definition: any) => {
+    setReportDefinition(definition);
+    // 可以在这里将报表定义保存到模板中
+    const updatedTemplate = {
+      ...selectedTemplate,
+      reportDefinition: definition
+    };
+    setSelectedTemplate(updatedTemplate);
   };
 
   return (
@@ -51,6 +63,13 @@ export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({
               templates={DEFAULT_TEMPLATES}
               selectedTemplate={selectedTemplate}
               onSelectTemplate={handleSelectTemplate}
+            />
+          )}
+          
+          {view === 'designer' && (
+            <ReportBroDesigner
+              onSave={handleSaveReport}
+              initialReport={selectedTemplate.reportDefinition}
             />
           )}
           

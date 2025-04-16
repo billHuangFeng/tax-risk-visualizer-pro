@@ -7,12 +7,72 @@ import { PdfTemplate } from '@/types/pdfTemplates';
 import { DEFAULT_TEMPLATES } from '@/constants/pdfTemplates';
 import { applyTemplateStyles } from './templateService';
 
+// 用于检查ReportBro是否可用
+const isReportBroAvailable = () => {
+  return typeof window !== 'undefined' && window.ReportBro && window.ReportBroDesigner;
+};
+
+// 使用ReportBro生成PDF
+const generatePdfWithReportBro = async (
+  data: any,
+  reportDefinition: any
+): Promise<Blob> => {
+  return new Promise((resolve, reject) => {
+    try {
+      if (!window.ReportBro) {
+        throw new Error('ReportBro is not available');
+      }
+
+      // 创建报表对象
+      const rb = new window.ReportBro(reportDefinition);
+      
+      // 生成PDF
+      rb.generatePdf(data, {}, {})
+        .then((pdfData: Blob) => {
+          resolve(pdfData);
+        })
+        .catch((error: any) => {
+          console.error('ReportBro PDF generation error:', error);
+          reject(error);
+        });
+    } catch (error) {
+      console.error('Error generating PDF with ReportBro:', error);
+      reject(error);
+    }
+  });
+};
+
 // 主导出函数
 export const exportToPDF = async (calculator: any, template?: PdfTemplate) => {
   try {
     console.log("Starting PDF export process");
     
-    // 获取计算器内容
+    // 如果有模板并且包含ReportBro定义，尝试使用ReportBro
+    if (template?.reportDefinition && isReportBroAvailable()) {
+      try {
+        console.log("Using ReportBro for PDF generation");
+        
+        // 准备数据
+        const pdfData = await generatePdfWithReportBro(calculator, template.reportDefinition);
+        
+        // 创建URL并下载
+        const url = URL.createObjectURL(pdfData);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${generateFilename(calculator)}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        return true;
+      } catch (rbError) {
+        console.error("ReportBro PDF generation failed, falling back to default method:", rbError);
+        // 出错时回退到默认方法
+      }
+    }
+    
+    // 默认导出方法（HTML转Canvas转PDF）
     const content = safeGetElement('#calculator-content');
     if (!content) {
       throw new Error('计算器内容未找到');

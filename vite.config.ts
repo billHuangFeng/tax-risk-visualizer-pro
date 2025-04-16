@@ -20,4 +20,12 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  optimizeDeps: {
+    exclude: ['reportbro-lib', 'reportbro-designer']
+  },
+  build: {
+    commonjsOptions: {
+      include: [/reportbro-lib/, /reportbro-designer/, /node_modules/]
+    }
+  }
 }));

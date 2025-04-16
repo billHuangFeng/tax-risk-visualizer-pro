@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Toggle } from "@/components/ui/toggle";
-import { Eye, Settings, FileText } from "lucide-react";
+import { Eye, Settings, FileText, Edit } from "lucide-react";
 
 interface PdfToolbarProps {
   activeView: string;
@@ -21,6 +21,14 @@ export const PdfToolbar: React.FC<PdfToolbarProps> = ({
       >
         <FileText className="h-4 w-4 mr-2" />
         模板
+      </Toggle>
+      <Toggle 
+        pressed={activeView === 'designer'}
+        onPressedChange={() => onViewChange('designer')}
+        aria-label="设计器"
+      >
+        <Edit className="h-4 w-4 mr-2" />
+        设计器
       </Toggle>
       <Toggle 
         pressed={activeView === 'preview'}

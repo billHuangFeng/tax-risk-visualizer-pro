@@ -6,6 +6,7 @@ export interface PdfTemplate {
   previewImage?: string;
   styles: PdfTemplateStyles;
   layout: PdfTemplateLayout;
+  reportDefinition?: any; // ReportBro报表定义
 }
 
 export interface PdfTemplateStyles {
