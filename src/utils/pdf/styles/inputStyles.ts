@@ -71,9 +71,6 @@ export const processInputFields = (container: HTMLElement) => {
               }
             }
           }
-          
-          // 隐藏原始输入框 (仅在PDF导出时)
-          // input.style.display = 'none'; // 注意：现在我们在PDF导出函数中处理这个
         }
       }
     });
@@ -84,7 +81,7 @@ export const processInputFields = (container: HTMLElement) => {
       const value = companyNameField.value || '';
       const parentElement = companyNameField.parentElement;
       
-      if (parentElement) {
+      if (parentElement instanceof HTMLElement) {
         let valueDisplay = parentElement.querySelector('.pdf-value');
         
         if (!valueDisplay) {
@@ -104,9 +101,6 @@ export const processInputFields = (container: HTMLElement) => {
           valueDisplay.style.minWidth = '200px';
           valueDisplay.style.textAlign = 'center';
         }
-        
-        // 注意：现在我们在PDF导出函数中处理这个
-        // companyNameField.style.display = 'none';
       }
     }
   } catch (error) {
