@@ -14,7 +14,7 @@ export const ReportBroDesigner: React.FC<ReportBroDesignerProps> = ({
   onSave,
   initialReport
 }) => {
-  const { containerRef, error, retryCount } = useDesignerSetup(initialReport);
+  const { containerRef, error } = useDesignerSetup(initialReport);
   const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
