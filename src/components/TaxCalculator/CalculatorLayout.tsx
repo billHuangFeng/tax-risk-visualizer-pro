@@ -1,5 +1,6 @@
+
 import React from 'react';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { CircleAlert, ListOrdered } from 'lucide-react';
 import { TaxInfoPanelItem } from '@/types/calculator';
 import TaxInfoPanel from '@/components/TaxCalculator/TaxInfoPanel';
@@ -30,34 +31,34 @@ const CalculatorLayout: React.FC<CalculatorLayoutProps> = ({ children, selectedI
           <div className="w-full">
             <div className="grid gap-4 md:gap-8 mb-8">
               <Card>
-                <CardHeader className="pb-3">
-                  <CardTitle className="flex items-center text-tax-blue gap-2">
-                    <CircleAlert className="h-5 w-5" />
+                <CardHeader className="pb-2">
+                  <CardTitle className="flex items-center text-tax-blue gap-2 text-base">
+                    <CircleAlert className="h-4 w-4" />
                     使用说明
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="py-2">
-                  <div className="text-sm text-gray-600 space-y-1">
+                  <div className="text-xs text-gray-600 space-y-1">
                     <div className="flex items-start gap-2">
-                      <ListOrdered className="h-4 w-4 mt-1 flex-shrink-0" />
+                      <ListOrdered className="h-3 w-3 mt-1 flex-shrink-0" />
                       <span>填写基本信息和财务数据</span>
                     </div>
                     <div className="flex items-start gap-2">
-                      <ListOrdered className="h-4 w-4 mt-1 flex-shrink-0" />
+                      <ListOrdered className="h-3 w-3 mt-1 flex-shrink-0" />
                       <span>系统将自动计算税务调整及风险值</span>
                     </div>
                     <div className="flex items-start gap-2">
-                      <ListOrdered className="h-4 w-4 mt-1 flex-shrink-0" />
+                      <ListOrdered className="h-3 w-3 mt-1 flex-shrink-0" />
                       <span>风险指数越高，表示理论应纳税额差异越大</span>
                     </div>
                     <div className="flex items-start gap-2">
-                      <ListOrdered className="h-4 w-4 mt-1 flex-shrink-0" />
+                      <ListOrdered className="h-3 w-3 mt-1 flex-shrink-0" />
                       <span>点击数据后方的信息图标查看详细分析</span>
                     </div>
                   </div>
                   <Button 
                     onClick={handleContactAdvisor}
-                    className="w-full mt-2 bg-vivid-purple hover:bg-secondary-purple text-white"
+                    className="w-full mt-1 bg-vivid-purple hover:bg-secondary-purple text-white text-xs py-1"
                   >
                     立即联系税务顾问
                   </Button>
@@ -75,7 +76,7 @@ const CalculatorLayout: React.FC<CalculatorLayoutProps> = ({ children, selectedI
                     variant="outline" 
                     className="fixed bottom-4 right-4 z-50 rounded-full shadow-lg bg-white"
                   >
-                    <CircleAlert className="h-5 w-5" />
+                    <CircleAlert className="h-4 w-4" />
                   </Button>
                 </SheetTrigger>
                 <SheetContent side="bottom" className="h-[80vh]">
