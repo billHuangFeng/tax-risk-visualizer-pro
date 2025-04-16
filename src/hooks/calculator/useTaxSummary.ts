@@ -16,19 +16,6 @@ export const useTaxSummary = () => {
     { id: '1', description: '差异原因1', amount: 0 }
   ]);
 
-  // Calculate unexplained difference percentage whenever the unexplained difference or theoretical tax changes
-  useEffect(() => {
-    const unexplainedDiff = parseFloat(unexplainedDifference) || 0;
-    const theoretical = parseFloat(theoreticalTax) || 0;
-    
-    // Calculate as: 未解释差异/理论应纳企业所得税的绝对值
-    const percentage = theoretical !== 0 
-      ? (unexplainedDiff / Math.abs(theoretical)) * 100 
-      : 0;
-    
-    setUnexplainedDifferencePercentage(percentage);
-  }, [unexplainedDifference, theoreticalTax]);
-
   const addTaxDifferenceFactor = useCallback(() => {
     const newId = (taxDifferenceFactors.length + 1).toString();
     setTaxDifferenceFactors([
@@ -77,6 +64,19 @@ export const useTaxSummary = () => {
       return updatedFactors;
     });
   }, [riskValue]);
+
+  // Calculate unexplained difference percentage whenever the unexplained difference or theoretical tax changes
+  useEffect(() => {
+    const unexplainedDiff = parseFloat(unexplainedDifference) || 0;
+    const theoretical = parseFloat(theoreticalTax) || 0;
+    
+    // Calculate as: 未解释差异/理论应纳企业所得税的绝对值
+    const percentage = theoretical !== 0 
+      ? (unexplainedDiff / Math.abs(theoretical)) * 100 
+      : 0;
+    
+    setUnexplainedDifferencePercentage(percentage);
+  }, [unexplainedDifference, theoreticalTax]);
 
   return {
     taxableIncome,
