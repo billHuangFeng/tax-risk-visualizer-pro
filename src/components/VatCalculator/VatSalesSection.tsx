@@ -80,7 +80,6 @@ const VatSalesSection: React.FC<VatSalesSectionProps> = ({
             explainedDifferenceTotal={explainedDifferenceTotal}
             unexplainedDifference={unexplainedDifference}
             unexplainedDifferencePercentage={unexplainedDifferencePercentage}
-            onInfoClick={onInfoClick}
           />
         )}
       </CardContent>

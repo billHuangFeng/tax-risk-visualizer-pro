@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { VatPurchaseItem, DifferenceExplanation } from '@/hooks/types';
@@ -79,7 +78,6 @@ const VatPurchasesSection: React.FC<VatPurchasesSectionProps> = ({
             explainedDifferenceTotal={explainedDifferenceTotal}
             unexplainedDifference={unexplainedDifference}
             unexplainedDifferencePercentage={unexplainedDifferencePercentage}
-            onInfoClick={onInfoClick}
           />
         )}
       </CardContent>
