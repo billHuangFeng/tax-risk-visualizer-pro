@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -132,41 +131,12 @@
     font-size: 14px !important;
   }
   
-  /* For PDF export, ensure inputs display values properly */
-  .for-pdf-export input,
-  .pdf-text-visible input {
-    overflow: visible !important;
-    text-overflow: clip !important;
-    white-space: normal !important;
-  }
-  
   /* Hidden value for PDF export */
-  .pdf-value {
-    opacity: 0 !important;
-    transition: opacity 0.1s ease;
-    z-index: 5;
-    font-weight: bold;
-    padding-right: 4px;
-  }
-  
-  /* When PDF exporting, make values visible */
-  .for-pdf-export .pdf-value {
-    opacity: 1 !important;
-    color: #000 !important;
-    background-color: white !important;
-  }
   
   /* Special styling for table cells in PDF export */
-  .for-pdf-export td input {
-    position: relative !important;
-  }
   
   /* Special styling for PDF export */
-  .pdf-text-visible {
-    overflow: visible !important;
-    white-space: nowrap !important;
-    text-overflow: clip !important;
-  }
+  
 }
 
 @media (max-width: 768px) {
@@ -209,12 +179,6 @@
 }
 
 /* Special PDF export class */
-.pdf-export-container * {
-  color: #000 !important;
-  background-color: white !important;
-}
 
 /* Make inputs more visible in PDF */
-.pdf-export-container input {
-  border: 1px solid #000 !important;
-}
+

@@ -1,0 +1,44 @@
+
+/* PDF Export Specific Styles */
+@layer base {
+  /* Specific PDF export classes for input fields and value visibility */
+  .for-pdf-export input,
+  .pdf-text-visible input {
+    overflow: visible !important;
+    text-overflow: clip !important;
+    white-space: normal !important;
+  }
+
+  .pdf-value {
+    opacity: 0 !important;
+    transition: opacity 0.1s ease;
+    z-index: 5;
+    font-weight: bold;
+    padding-right: 4px;
+  }
+
+  .for-pdf-export .pdf-value {
+    opacity: 1 !important;
+    color: #000 !important;
+    background-color: white !important;
+  }
+
+  .for-pdf-export td input {
+    position: relative !important;
+  }
+
+  .pdf-text-visible {
+    overflow: visible !important;
+    white-space: nowrap !important;
+    text-overflow: clip !important;
+  }
+
+  .pdf-export-container * {
+    color: #000 !important;
+    background-color: white !important;
+  }
+
+  .pdf-export-container input {
+    border: 1px solid #000 !important;
+  }
+}
