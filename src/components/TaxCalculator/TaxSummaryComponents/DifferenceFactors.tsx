@@ -41,8 +41,22 @@ const DifferenceFactors: React.FC<DifferenceFactorsProps> = ({
                 <Info size={16} />
               </button>
             </TooltipTrigger>
-            <TooltipContent>
-              <p>列出理论税额与实际税额的差异原因，如税收优惠、允许抵扣项目等</p>
+            <TooltipContent className="max-w-[300px]">
+              <div className="space-y-2">
+                <h4 className="font-bold">差异原因分析</h4>
+                <p className="text-sm">
+                  差异原因分析是指对企业所得税理论税额与实际申报税额之间的差异进行详细解释和分类。
+                </p>
+                <h5 className="font-semibold mt-2">分析目的：</h5>
+                <ul className="list-disc list-inside text-sm">
+                  <li>识别税额差异的具体来源</li>
+                  <li>评估税收筹划的合理性</li>
+                  <li>降低税务风险</li>
+                </ul>
+                <p className="text-xs text-gray-500 mt-2">
+                  提示：详细准确地记录差异原因是降低税务审计风险的关键。
+                </p>
+              </div>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>

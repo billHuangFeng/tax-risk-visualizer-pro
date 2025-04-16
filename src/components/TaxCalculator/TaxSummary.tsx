@@ -1,4 +1,3 @@
-
 import React from 'react';
 import RiskIndicator from './TaxSummaryComponents/RiskIndicator';
 import TaxInputRow from './TaxSummaryComponents/TaxInputRow';
@@ -108,7 +107,6 @@ const TaxSummary: React.FC<TaxSummaryProps> = ({
           onInfoClick={onInfoClick}
         />
         
-        {/* Always show the unexplained difference section, even if the value is 0 */}
         <div className="pt-4 border-t">
           <div className="flex justify-between items-center">
             <div className="font-medium flex items-center">
@@ -123,8 +121,22 @@ const TaxSummary: React.FC<TaxSummaryProps> = ({
                       <AlertCircle size={16} />
                     </button>
                   </TooltipTrigger>
-                  <TooltipContent>
-                    <p className="text-sm max-w-[300px]">未解释差异金额是指企业所得税差异扣除已知差异因素后的剩余部分，代表存在税务风险的金额。百分比越高风险越大。</p>
+                  <TooltipContent className="max-w-[350px]">
+                    <div className="space-y-2">
+                      <h4 className="font-bold">未解释差异概念</h4>
+                      <p className="text-sm">
+                        未解释差异是指企业所得税中，扣除已知差异因素后的剩余税额差异金额。
+                      </p>
+                      <h5 className="font-semibold mt-2">风险评估：</h5>
+                      <ul className="list-disc list-inside text-sm">
+                        <li>差异金额越大，潜在税务风险越高</li>
+                        <li>未解释差异百分比是衡量税务风险的关键指标</li>
+                        <li>超过30%的未解释差异需要高度重视</li>
+                      </ul>
+                      <p className="text-xs text-gray-500 mt-2">
+                        建议：全面梳理财务数据，寻找未解释差异的来源，必要时咨询税务专业人士。
+                      </p>
+                    </div>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
