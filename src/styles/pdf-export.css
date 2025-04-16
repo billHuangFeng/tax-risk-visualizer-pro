@@ -23,36 +23,31 @@
   }
   
   .for-pdf-export .company-header {
-    font-size: 18px !important;
-    font-weight: bold !important;
-    text-align: center !important;
+    font-size: 16px !important;
+    font-weight: normal !important;
+    text-align: left !important;
     margin-bottom: 24px !important;
-    border-bottom: 1px solid #000 !important;
-    padding-bottom: 12px !important;
   }
   
   .for-pdf-export h2 {
     font-size: 16px !important;
-    font-weight: bold !important;
+    font-weight: normal !important;
     margin-top: 24px !important;
     margin-bottom: 16px !important;
-    border-bottom: 1px solid #000 !important;
-    border-left: 4px solid #000 !important;
-    padding-left: 8px !important;
-    padding-bottom: 4px !important;
   }
   
   .for-pdf-export [class*="grid"] {
     display: grid !important;
     grid-template-columns: auto 1fr !important;
     gap: 16px !important;
-    align-items: center !important;
+    align-items: baseline !important;
     margin-bottom: 8px !important;
   }
   
   .for-pdf-export input {
-    border: 1px solid #ccc !important;
-    padding: 4px 8px !important;
+    border: none !important;
+    border-bottom: 1px solid #000 !important;
+    padding: 4px 0 !important;
     text-align: right !important;
   }
   
@@ -86,29 +81,52 @@
   }
   
   .for-pdf-export table th {
-    background-color: #f0f0f0 !important;
-    font-weight: bold !important;
+    background-color: #fff !important;
+    font-weight: normal !important;
   }
   
-  .for-pdf-export .risk-indicator {
-    border: 1px solid #000 !important;
-    padding: 16px !important;
+  .for-pdf-export .tax-adjustments-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
     margin-top: 16px !important;
   }
   
-  .for-pdf-export .risk-indicator-bar {
-    height: 20px !important;
+  .for-pdf-export .tax-adjustments-table th,
+  .for-pdf-export .tax-adjustments-table td {
     border: 1px solid #000 !important;
-    position: relative !important;
+    padding: 8px !important;
+    text-align: right !important;
   }
   
-  .for-pdf-export .risk-indicator-progress {
-    background-color: #f0f0f0 !important;
-    border-right: 1px solid #000 !important;
+  .for-pdf-export .tax-adjustments-table th:first-child,
+  .for-pdf-export .tax-adjustments-table td:first-child {
+    text-align: left !important;
+  }
+
+  .for-pdf-export .risk-evaluation {
+    margin-top: 24px !important;
   }
   
-  .for-pdf-export button,
-  .for-pdf-export .actions-section {
-    display: none !important;
+  .for-pdf-export .risk-evaluation h3 {
+    font-size: 16px !important;
+    font-weight: normal !important;
+    margin-bottom: 16px !important;
+  }
+  
+  .for-pdf-export .risk-box {
+    border: 1px solid #000 !important;
+    min-height: 80px !important;
+    padding: 16px !important;
+  }
+  
+  .for-pdf-export .excluded-business {
+    margin-top: 8px !important;
+    margin-left: 24px !important;
+    font-size: 14px !important;
+  }
+
+  .for-pdf-export .unit-suffix {
+    margin-left: 4px !important;
+    font-size: 14px !important;
   }
 }
