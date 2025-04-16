@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 
 export const useVatTax = () => {
@@ -18,12 +17,11 @@ export const useVatTax = () => {
   };
 
   // Calculate risk percentage based on updated formula (风险百分比)
-  // 新公式：风险百分比 = 未解释差异 ÷ 基数 × 100%
   const calculateRiskPercentage = (unexplainedDifference: number, payableTax: number, outputTax: number) => {
     // 基数 = Max(应交增值税, 销项税额×10%)
     const baseAmount = Math.max(
-      Math.abs(payableTax),  // 应交增值税
-      outputTax * 0.1        // 销项税的10%
+      payableTax,  // 应交增值税的原始数值
+      outputTax * 0.1  // 销项税的10%
     );
     
     if (baseAmount === 0) return 0;
