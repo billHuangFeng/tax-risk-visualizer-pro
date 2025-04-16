@@ -1,3 +1,4 @@
+
 import { Template } from '@pdfme/common';
 
 export interface PdfTemplate {
@@ -9,8 +10,8 @@ export interface PdfTemplate {
   layout: PdfTemplateLayout;
   // Base PDF template file as binary data
   baseTemplate?: ArrayBuffer | Uint8Array;
-  // PDFME schema definition
-  schemas?: any[][];  // Using any[][] type to match PDFME expected schema format
+  // PDFME schema definition - using a more specific type that matches pdfme requirements
+  schemas?: any[][]; // This needs to be any[][] to match PDFME's expected schema format
 }
 
 export interface PdfTemplateStyles {

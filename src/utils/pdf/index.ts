@@ -5,9 +5,9 @@ import { DEFAULT_TEMPLATES } from '@/constants/pdfTemplates';
 import { PdfTemplate } from '@/types/pdfTemplates';
 
 /**
- * Creates a minimal valid schema structure for PDFME
+ * Creates a base schema structure that is guaranteed to be valid
  */
-const createMinimalSchema = (): any[][] => {
+const createBaseSchema = (): any[][] => {
   return [[{
     emptyField: {
       type: 'text',
@@ -16,6 +16,55 @@ const createMinimalSchema = (): any[][] => {
       height: 0
     }
   }]];
+};
+
+/**
+ * Safely validates and processes schemas
+ */
+const processSchemas = (template: PdfTemplate): any[][] => {
+  // Start with a valid base schema
+  let finalSchemas: any[][] = createBaseSchema();
+  
+  try {
+    // Only process if template has schemas and they appear to be valid
+    if (template.schemas && 
+        Array.isArray(template.schemas) && 
+        template.schemas.length > 0 && 
+        Array.isArray(template.schemas[0])) {
+      
+      // Create a deep copy to avoid reference issues
+      finalSchemas = JSON.parse(JSON.stringify(template.schemas));
+      
+      console.log("Using template schemas:", {
+        schemasCount: finalSchemas.length,
+        firstSchemaLength: finalSchemas[0].length
+      });
+    }
+  } catch (error) {
+    console.error("Error processing schemas, using base schema:", error);
+  }
+  
+  return finalSchemas;
+};
+
+/**
+ * Creates a properly typed PDF template object
+ */
+const createPdfTemplate = (template: PdfTemplate): Template => {
+  // Process the base PDF
+  let basePdf: ArrayBuffer | Uint8Array = new Uint8Array();
+  if (template.baseTemplate instanceof ArrayBuffer || template.baseTemplate instanceof Uint8Array) {
+    basePdf = template.baseTemplate;
+  }
+  
+  // Process schemas with our safe function
+  const schemas = processSchemas(template);
+  
+  // Return a properly constructed Template object
+  return {
+    basePdf,
+    schemas: schemas
+  };
 };
 
 /**
@@ -28,7 +77,7 @@ export const exportToPDF = async (calculator: any, template?: PdfTemplate) => {
     // Get template or use default
     const selectedTemplate = template || DEFAULT_TEMPLATES[0];
     
-    // Prepare PDF data
+    // Prepare PDF input data
     const inputs = [
       {
         companyName: calculator.companyName || '税务计算',
@@ -42,34 +91,14 @@ export const exportToPDF = async (calculator: any, template?: PdfTemplate) => {
     
     console.log("Preparing template for PDF generation");
     
-    // Create a PDFME template object with proper type definition
-    const pdfTemplate: Template = {
-      basePdf: selectedTemplate.baseTemplate instanceof Uint8Array 
-               ? selectedTemplate.baseTemplate 
-               : new Uint8Array(),
-      schemas: createMinimalSchema() // Start with a valid default schema
-    };
+    // Create a properly typed template object
+    const pdfTemplate = createPdfTemplate(selectedTemplate);
     
-    // Safely handle schemas assignment
-    if (selectedTemplate.schemas && Array.isArray(selectedTemplate.schemas)) {
-      if (selectedTemplate.schemas.length > 0 && Array.isArray(selectedTemplate.schemas[0])) {
-        try {
-          // Deep copy the schemas to avoid reference issues
-          const schemasCopy: any[][] = JSON.parse(JSON.stringify(selectedTemplate.schemas));
-          pdfTemplate.schemas = schemasCopy;
-        } catch (err) {
-          console.error("Error parsing schemas, using default schema:", err);
-        }
-      }
-    }
-    
-    // Log template information for debugging
-    console.log("Template prepared:", {
-      hasSchemasArray: Array.isArray(pdfTemplate.schemas),
-      schemasLength: Array.isArray(pdfTemplate.schemas) ? pdfTemplate.schemas.length : 0,
-      hasInnerArray: Array.isArray(pdfTemplate.schemas) && 
-                    pdfTemplate.schemas.length > 0 && 
-                    Array.isArray(pdfTemplate.schemas[0])
+    // Log for debugging
+    console.log("Template constructed:", {
+      hasBasePdf: !!pdfTemplate.basePdf,
+      hasSchemas: Array.isArray(pdfTemplate.schemas),
+      schemasLength: Array.isArray(pdfTemplate.schemas) ? pdfTemplate.schemas.length : 0
     });
     
     // Generate PDF with PDFME
