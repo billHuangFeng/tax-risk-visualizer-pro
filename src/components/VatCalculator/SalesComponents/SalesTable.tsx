@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -6,6 +5,18 @@ import { Input } from '@/components/ui/input';
 import { Trash2, Plus, Info } from 'lucide-react';
 import { VatSalesItem } from '@/hooks/useVatCalculator';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
+
+interface SalesTableProps {
+  salesData: VatSalesItem[];
+  addSalesItem: () => void;
+  updateSalesItem: (id: string, field: keyof VatSalesItem, value: any) => void;
+  removeSalesItem: (id: string) => void;
+  salesTotal: {
+    amount: number;
+    tax: number;
+  };
+  onInfoClick?: (infoKey: string) => void;
+}
 
 const VAT_RATES = ['13', '9', '6', '5', '3', '1'];
 

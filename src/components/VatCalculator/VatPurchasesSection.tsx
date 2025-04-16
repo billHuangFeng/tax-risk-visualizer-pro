@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,6 +7,20 @@ import { Trash2, Plus, Info } from 'lucide-react';
 import { VatPurchaseItem } from '@/hooks/useVatCalculator';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 
+interface VatPurchasesSectionProps {
+  purchasesData: VatPurchaseItem[];
+  addPurchaseItem: () => void;
+  updatePurchaseItem: (id: string, field: keyof VatPurchaseItem, value: any) => void;
+  removePurchaseItem: (id: string) => void;
+  purchasesTotal: {
+    amount: number;
+    tax: number;
+  };
+  bankPurchasesAmount: number;
+  setBankPurchasesAmount: (value: number) => void;
+  onInfoClick?: (infoKey: string) => void;
+}
+
 const VAT_RATES = ['13', '10', '9', '6', '5', '3', '1'];
 
 const VatPurchasesSection: React.FC<VatPurchasesSectionProps> = ({
@@ -16,6 +29,8 @@ const VatPurchasesSection: React.FC<VatPurchasesSectionProps> = ({
   updatePurchaseItem,
   removePurchaseItem,
   purchasesTotal,
+  bankPurchasesAmount,
+  setBankPurchasesAmount,
   onInfoClick
 }) => {
   return (
@@ -106,15 +121,32 @@ const VatPurchasesSection: React.FC<VatPurchasesSectionProps> = ({
           </TableBody>
         </Table>
         
-        <Button
-          variant="outline"
-          size="sm"
-          className="mt-4"
-          onClick={addPurchaseItem}
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          添加采购项目
-        </Button>
+        <div className="mt-4 flex justify-between items-center">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={addPurchaseItem}
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            添加采购项目
+          </Button>
+
+          <div className="flex items-center gap-2">
+            <span className="font-medium">银行采购款</span>
+            <button 
+              className="text-tax-blue hover:text-tax-light-blue"
+              onClick={() => onInfoClick?.('bankPurchasesAmount')}
+            >
+              <Info size={16} />
+            </button>
+            <Input
+              type="number"
+              value={bankPurchasesAmount}
+              onChange={(e) => setBankPurchasesAmount(parseFloat(e.target.value) || 0)}
+              className="w-32 text-right"
+            />
+          </div>
+        </div>
       </CardContent>
     </Card>
   );

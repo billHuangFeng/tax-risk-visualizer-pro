@@ -9,8 +9,6 @@ interface VatSummaryProps {
   setActualTax: (value: number) => void;
   taxDifference: number;
   taxDifferencePercentage: number;
-  bankPurchasesAmount: number;
-  setBankPurchasesAmount: (value: number) => void;
   onInfoClick?: (infoKey: string) => void;
 }
 
@@ -20,8 +18,6 @@ const VatSummary: React.FC<VatSummaryProps> = ({
   setActualTax,
   taxDifference,
   taxDifferencePercentage,
-  bankPurchasesAmount,
-  setBankPurchasesAmount,
   onInfoClick
 }) => {
   return (
@@ -96,37 +92,6 @@ const VatSummary: React.FC<VatSummaryProps> = ({
                   {taxDifferencePercentage.toFixed(2)}%
                 </span>
               </div>
-            </div>
-          </div>
-          
-          <div className="space-y-4 border-l pl-6">
-            <div className="flex justify-between items-center">
-              <div className="font-medium flex items-center">
-                银行采购款
-                <button 
-                  className="ml-2 text-tax-blue hover:text-tax-light-blue"
-                  onClick={() => onInfoClick?.('bankPurchasesAmount')}
-                >
-                  <Info size={16} />
-                </button>
-              </div>
-              <div className="flex items-center gap-2">
-                <Input
-                  type="number"
-                  value={bankPurchasesAmount}
-                  onChange={(e) => setBankPurchasesAmount(parseFloat(e.target.value) || 0)}
-                  className="w-32 text-right"
-                />
-              </div>
-            </div>
-            
-            <div className="p-4 bg-yellow-50 rounded-md mt-4 text-sm">
-              <p className="text-yellow-800">请确认资金支出与申报增值税的采购是否一致？</p>
-              <p className="text-yellow-600 mt-1">
-                {bankPurchasesAmount > 0 
-                  ? `银行采购支出与申报额差异: ${Math.abs(bankPurchasesAmount - payableTax).toFixed(2)}`
-                  : "请输入银行采购支出金额以进行比对"}
-              </p>
             </div>
           </div>
         </div>
