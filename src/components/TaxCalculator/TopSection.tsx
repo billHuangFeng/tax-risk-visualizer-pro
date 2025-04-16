@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { CircleAlert, ListMinus } from 'lucide-react';
@@ -33,41 +32,41 @@ const TopSection: React.FC<TopSectionProps> = ({
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 mb-8">
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 w-full">
         <div className="flex items-center gap-4">
-          <Label htmlFor="companyName" className="font-medium text-base whitespace-nowrap min-w-24">企业名称：</Label>
+          <Label htmlFor="companyName" className="font-medium text-base whitespace-nowrap min-w-[6rem]">企业名称：</Label>
           <Input
             id="companyName"
             value={companyName}
             onChange={(e) => setCompanyName(e.target.value)}
-            className="flex-1"
+            className="flex-1 text-right pl-2 text-left"
           />
         </div>
         <div className="flex items-center gap-4">
-          <Label htmlFor="creditCode" className="font-medium text-base whitespace-nowrap min-w-24">统一社会信用代码：</Label>
+          <Label htmlFor="creditCode" className="font-medium text-base whitespace-nowrap min-w-[6rem]">统一社会信用代码：</Label>
           <Input
             id="creditCode"
             value={creditCode}
             onChange={(e) => setCreditCode(e.target.value)}
-            className="flex-1"
+            className="flex-1 text-right pl-2 text-left"
           />
         </div>
         <div className="flex items-center gap-4">
-          <Label htmlFor="contactPerson" className="font-medium text-base whitespace-nowrap min-w-24">联系人：</Label>
+          <Label htmlFor="contactPerson" className="font-medium text-base whitespace-nowrap min-w-[6rem]">联系人：</Label>
           <Input
             id="contactPerson"
             value={contactPerson}
             onChange={(e) => setContactPerson(e.target.value)}
-            className="flex-1"
+            className="flex-1 text-right pl-2 text-left"
           />
         </div>
         <div className="flex items-center gap-4">
-          <Label htmlFor="contactPhone" className="font-medium text-base whitespace-nowrap min-w-24">联系电话：</Label>
+          <Label htmlFor="contactPhone" className="font-medium text-base whitespace-nowrap min-w-[6rem]">联系电话：</Label>
           <Input
             id="contactPhone"
             value={contactPhone}
             onChange={(e) => setContactPhone(e.target.value)}
-            className="flex-1"
+            className="flex-1 text-right pl-2 text-left"
           />
         </div>
       </div>
