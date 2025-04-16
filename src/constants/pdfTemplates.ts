@@ -10,9 +10,9 @@ const defaultLayout = {
       visible: true,
       order: 1,
       fields: [
-        { id: "companyName", type: "text", label: "公司名称", visible: true, sourceField: "companyName" },
-        { id: "employeeCount", type: "number", label: "员工数量", visible: true, sourceField: "employeeCount" },
-        { id: "highTechEnterprise", type: "checkbox", label: "高新技术企业", visible: true, sourceField: "isHighTech" }
+        { id: "companyName", type: "text" as const, label: "公司名称", visible: true, sourceField: "companyName" },
+        { id: "employeeCount", type: "number" as const, label: "员工数量", visible: true, sourceField: "employeeCount" },
+        { id: "highTechEnterprise", type: "checkbox" as const, label: "高新技术企业", visible: true, sourceField: "isHighTech" }
       ]
     },
     {
@@ -22,8 +22,8 @@ const defaultLayout = {
       visible: true,
       order: 2,
       fields: [
-        { id: "totalRevenue", type: "number", label: "总收入", visible: true, sourceField: "totalRevenue" },
-        { id: "totalExpenses", type: "number", label: "总支出", visible: true, sourceField: "totalExpenses" }
+        { id: "totalRevenue", type: "number" as const, label: "总收入", visible: true, sourceField: "totalRevenue" },
+        { id: "totalExpenses", type: "number" as const, label: "总支出", visible: true, sourceField: "totalExpenses" }
       ]
     },
     {
@@ -33,8 +33,8 @@ const defaultLayout = {
       visible: true,
       order: 3,
       fields: [
-        { id: "taxRate", type: "number", label: "适用税率", visible: true, sourceField: "taxRate" },
-        { id: "taxAmount", type: "number", label: "应纳税额", visible: true, sourceField: "taxAmount" }
+        { id: "taxRate", type: "number" as const, label: "适用税率", visible: true, sourceField: "taxRate" },
+        { id: "taxAmount", type: "number" as const, label: "应纳税额", visible: true, sourceField: "taxAmount" }
       ]
     }
   ]
