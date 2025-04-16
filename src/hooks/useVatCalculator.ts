@@ -43,10 +43,10 @@ export const useVatCalculator = () => {
     const difference = tax.payableTax - tax.actualTax;
     tax.setTaxDifference(difference);
     
-    // 取销项税的10%与应交增值税中绝对值的较大值作为基数
+    // 取销项税的10%与应交增值税中的较大值作为基数
     const baseAmount = Math.max(
-      Math.abs(tax.payableTax), 
-      Math.abs(sales.salesTotal.tax * 0.1)
+      tax.payableTax, 
+      sales.salesTotal.tax * 0.1
     );
     
     // 计算风险百分比：(应交增值税 - 实缴增值税) / 基数 * 100
