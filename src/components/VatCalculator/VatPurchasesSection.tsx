@@ -49,6 +49,7 @@ const VatPurchasesSection: React.FC<VatPurchasesSectionProps> = ({
         <PurchasesPaymentSection
           bankPurchasesAmount={bankPurchasesAmount}
           setBankPurchasesAmount={setBankPurchasesAmount}
+          purchasesTotal={purchasesTotal}
           onInfoClick={onInfoClick}
         />
       </CardContent>
