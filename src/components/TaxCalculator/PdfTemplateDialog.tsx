@@ -4,13 +4,11 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Button } from "@/components/ui/button";
 import { DEFAULT_TEMPLATES } from "@/constants/pdfTemplates";
 import { PdfTemplate } from "@/types/pdfTemplates";
-import { Download, ArrowLeft } from "lucide-react";
+import { Download } from "lucide-react";
 import { TemplateGrid } from './PdfTemplateComponents/TemplateGrid';
-import { ViewToggleButtons } from './PdfTemplateComponents/ViewToggleButtons';
-import { PdfTemplateEditor } from './PdfTemplateEditor';
+import { PageFormatSettings } from './PdfTemplateComponents/PageFormatSettings';
+import { PdfToolbar } from './PdfTemplateComponents/PdfToolbar';
 import { PdfTemplatePreview } from './PdfTemplatePreview';
-import { PdfCanvasEditor } from './PdfCanvasEditor';
-import { PdfDesigner } from './PdfDesigner';
 
 interface PdfTemplateDialogProps {
   open: boolean;
@@ -18,7 +16,7 @@ interface PdfTemplateDialogProps {
   onExport: (template: PdfTemplate) => void;
 }
 
-type ViewState = 'select' | 'edit' | 'preview' | 'layout' | 'designer';
+type ViewState = 'select' | 'preview' | 'format';
 
 export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({ 
   open, 
@@ -31,102 +29,51 @@ export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({
   const handleSelectTemplate = (template: PdfTemplate) => {
     setSelectedTemplate(template);
   };
-  
-  const handleSaveTemplate = (template: PdfTemplate) => {
-    setSelectedTemplate(template);
-    setView('select');
-  };
-  
-  const handleExport = () => {
-    onExport(selectedTemplate);
-    onClose();
-  };
-
-  const handleBack = () => {
-    setView('select');
-  };
-
-  const handleViewChange = (newView: 'preview' | 'edit' | 'layout' | 'designer') => {
-    setView(newView);
-  };
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[900px] max-h-[90vh] overflow-y-auto">
-        <DialogHeader className="relative">
-          {view !== 'select' && (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute left-0 top-0"
-              onClick={handleBack}
-            >
-              <ArrowLeft className="h-4 w-4" />
-            </Button>
-          )}
+        <DialogHeader>
           <DialogTitle>PDF模板设计器</DialogTitle>
           <DialogDescription>
-            {view === 'select' 
-              ? '选择导出PDF的模板样式或自定义设计' 
-              : view === 'designer'
-                ? '设计模板布局和字段'
-                : view === 'edit' 
-                  ? '自定义模板样式' 
-                  : view === 'layout'
-                    ? '设计页面布局'
-                    : '预览模板效果'}
+            选择导出PDF的模板样式或自定义设计
           </DialogDescription>
         </DialogHeader>
-        
-        {view === 'select' && (
-          <>
-            <ViewToggleButtons
-              activeView={view === 'select' ? 'preview' : view}
-              onViewChange={handleViewChange}
-            />
-            
+
+        <div className="space-y-4">
+          <PdfToolbar
+            activeView={view}
+            onViewChange={(newView) => setView(newView as ViewState)}
+          />
+          
+          {view === 'select' && (
             <TemplateGrid
               templates={DEFAULT_TEMPLATES}
               selectedTemplate={selectedTemplate}
               onSelectTemplate={handleSelectTemplate}
             />
-          </>
-        )}
-        
-        {view === 'edit' && (
-          <PdfTemplateEditor 
-            template={selectedTemplate} 
-            onSave={handleSaveTemplate}
-            onCancel={() => setView('select')}
-          />
-        )}
-        
-        {view === 'preview' && (
-          <PdfTemplatePreview 
-            template={selectedTemplate}
-            onBack={() => setView('select')}
-          />
-        )}
-        
-        {view === 'layout' && (
-          <PdfCanvasEditor
-            template={selectedTemplate}
-            onUpdate={handleSaveTemplate}
-          />
-        )}
-        
-        {view === 'designer' && (
-          <PdfDesigner
-            template={selectedTemplate}
-            onUpdate={handleSaveTemplate}
-          />
-        )}
-        
+          )}
+          
+          {view === 'preview' && (
+            <PdfTemplatePreview 
+              template={selectedTemplate}
+              onBack={() => setView('select')}
+            />
+          )}
+          
+          {view === 'format' && (
+            <PageFormatSettings
+              template={selectedTemplate}
+              onUpdate={(updated) => setSelectedTemplate(updated)}
+            />
+          )}
+        </div>
+
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>
             取消
           </Button>
-          <Button variant="default" onClick={handleExport} className="gap-2">
+          <Button variant="default" onClick={() => onExport(selectedTemplate)} className="gap-2">
             <Download className="h-4 w-4" />
             使用此模板导出
           </Button>
