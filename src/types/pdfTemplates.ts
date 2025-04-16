@@ -8,7 +8,7 @@ export interface PdfTemplate {
   previewImage?: string;
   styles: PdfTemplateStyles;
   layout: PdfTemplateLayout;
-  baseTemplate?: ArrayBuffer;
+  baseTemplate?: ArrayBuffer | Uint8Array;
   schemas?: Template['schemas'];
 }
 

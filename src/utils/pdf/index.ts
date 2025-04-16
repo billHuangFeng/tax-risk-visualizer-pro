@@ -25,12 +25,17 @@ export const exportToPDF = async (calculator: any, template?: PdfTemplate) => {
       }
     ];
     
+    // 创建一个符合PDFME Template类型要求的模板
+    const pdfTemplate: Template = {
+      basePdf: selectedTemplate.baseTemplate || new Uint8Array(),
+      schemas: selectedTemplate.schemas ? 
+        (Array.isArray(selectedTemplate.schemas) ? selectedTemplate.schemas : []) : 
+        [[]]  // Ensure schemas is a valid array array even if undefined
+    };
+    
     // 使用PDFME生成PDF
     const pdf = await generate({
-      template: {
-        basePdf: selectedTemplate.baseTemplate || new Uint8Array(),
-        schemas: selectedTemplate.schemas || [],
-      } as Template,
+      template: pdfTemplate,
       inputs: inputs,
     });
     
