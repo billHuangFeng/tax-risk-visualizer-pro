@@ -66,14 +66,14 @@ const createPdfMeTemplate = (template: PdfTemplate): Template => {
     basePdf = template.baseTemplate;
   }
   
-  // 从模板中提取并处理schemas - 确保类型安全
+  // 从模板中提取并处理schemas
   const schemas: any[][] = extractSchemas(template);
   
-  // 创建符合PDFME要求的模板对象 - 使用类型断言确保类型兼容性
-  const pdfMeTemplate: Template = {
+  // 创建符合PDFME要求的模板对象并明确类型
+  const pdfMeTemplate = {
     basePdf,
     schemas
-  };
+  } as Template;
   
   return pdfMeTemplate;
 };
@@ -105,30 +105,33 @@ export const exportToPDF = async (calculator: any, template?: PdfTemplate) => {
     // 创建PDFME所需的模板对象
     const pdfMeTemplate = createPdfMeTemplate(selectedTemplate);
     
-    // 确保schemas存在且格式有效 - 这将解决类型错误问题
+    // 确认模板属性存在，特别是schemas必须是有效的二维数组
     if (!pdfMeTemplate.schemas || !Array.isArray(pdfMeTemplate.schemas)) {
-      console.warn("Invalid schemas found, using default schema");
-      pdfMeTemplate.schemas = [createBaseSchema()]; 
+      console.warn("Invalid or missing schemas in template, using fallback");
+      // 手动分配一个有效的schemas数组，使用as断言确保类型匹配
+      (pdfMeTemplate as any).schemas = [createBaseSchema()];
     }
     
-    // 确保每个schema页面都是数组
-    for (let i = 0; i < pdfMeTemplate.schemas.length; i++) {
-      if (!Array.isArray(pdfMeTemplate.schemas[i])) {
+    // 确保每个页面的schema是一个数组
+    const schemasArray = pdfMeTemplate.schemas as any[][];
+    for (let i = 0; i < schemasArray.length; i++) {
+      if (!Array.isArray(schemasArray[i])) {
         console.warn(`Schema at index ${i} is not an array, fixing`);
-        pdfMeTemplate.schemas[i] = createBaseSchema();
+        schemasArray[i] = createBaseSchema();
       }
     }
     
-    // 记录调试信息 - 使用类型守卫确保安全访问
+    // 记录调试信息
     console.log("PDF template prepared:", {
       hasBasePdf: pdfMeTemplate.basePdf instanceof Uint8Array,
       schemasCount: Array.isArray(pdfMeTemplate.schemas) ? pdfMeTemplate.schemas.length : 0,
-      firstSchemaFields: Array.isArray(pdfMeTemplate.schemas) && pdfMeTemplate.schemas.length > 0 && 
-                        Array.isArray(pdfMeTemplate.schemas[0]) && pdfMeTemplate.schemas[0].length > 0 ? 
+      firstSchemaFields: Array.isArray(pdfMeTemplate.schemas) && 
+                        pdfMeTemplate.schemas.length > 0 && 
+                        Array.isArray(pdfMeTemplate.schemas[0]) ? 
                         Object.keys(pdfMeTemplate.schemas[0][0] || {}).length : 0
     });
     
-    // 使用PDFME生成PDF - 避免使用类型断言，确保对象结构正确
+    // 使用PDFME生成PDF，确保模板类型匹配PDFME要求
     console.log("Generating PDF with PDFME...");
     const pdf = await generate({
       template: pdfMeTemplate,
