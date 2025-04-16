@@ -37,12 +37,16 @@ export const useVatCalculator = () => {
     tax.setPayableTax(calculatedPayableTax);
   }, [sales.salesTotal.tax, purchases.purchasesTotal.tax]);
 
-  // Calculate tax difference
+  // Calculate tax difference and risk level
   useEffect(() => {
     const difference = tax.payableTax - tax.actualTax;
     tax.setTaxDifference(difference);
     
-    const baseAmount = Math.max(Math.abs(tax.payableTax), Math.abs(sales.salesTotal.tax));
+    // 取应交增值税与销项税的10%中的较大值作为基数
+    const baseAmount = Math.max(
+      Math.abs(tax.payableTax * 0.1), 
+      Math.abs(sales.salesTotal.tax * 0.1)
+    );
     
     const riskPercentage = baseAmount !== 0 
       ? (Math.abs(tax.unexplainedDifference) / baseAmount) * 100 
