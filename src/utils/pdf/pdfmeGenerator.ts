@@ -32,50 +32,52 @@ export const generatePdfWithPdfme = async (
     
     console.log("Input data prepared:", inputs);
     
-    // 创建PDFME格式的schema
-    const schema = [
-      {
-        name: 'companyName',
-        type: 'text',
-        position: { x: 50, y: 50 },
-        width: 200,
-        height: 20,
-      },
-      {
-        name: 'totalRevenue', 
-        type: 'text',
-        position: { x: 50, y: 80 }, 
-        width: 200,
-        height: 20,
-      },
-      {
-        name: 'invoicedRevenue',
-        type: 'text',
-        position: { x: 50, y: 110 },
-        width: 200,
-        height: 20,
-      },
-      {
-        name: 'taxableIncome',
-        type: 'text',
-        position: { x: 50, y: 140 },
-        width: 200,
-        height: 20,
-      },
-      {
-        name: 'actualTax',
-        type: 'text',
-        position: { x: 50, y: 170 },
-        width: 200,
-        height: 20,
-      },
-      {
-        name: 'riskPercentage',
-        type: 'text',
-        position: { x: 50, y: 200 },
-        width: 200,
-        height: 20,
-      }
+    // 创建PDFME格式的schema - 注意这里需要是二维数组
+    const schemas = [
+      [
+        {
+          name: 'companyName',
+          type: 'text',
+          position: { x: 50, y: 50 },
+          width: 200,
+          height: 20,
+        },
+        {
+          name: 'totalRevenue', 
+          type: 'text',
+          position: { x: 50, y: 80 }, 
+          width: 200,
+          height: 20,
+        },
+        {
+          name: 'invoicedRevenue',
+          type: 'text',
+          position: { x: 50, y: 110 },
+          width: 200,
+          height: 20,
+        },
+        {
+          name: 'taxableIncome',
+          type: 'text',
+          position: { x: 50, y: 140 },
+          width: 200,
+          height: 20,
+        },
+        {
+          name: 'actualTax',
+          type: 'text',
+          position: { x: 50, y: 170 },
+          width: 200,
+          height: 20,
+        },
+        {
+          name: 'riskPercentage',
+          type: 'text',
+          position: { x: 50, y: 200 },
+          width: 200,
+          height: 20,
+        }
+      ]
     ];
     
     // 创建空白PDF作为基础模板
@@ -105,13 +107,16 @@ export const generatePdfWithPdfme = async (
       0x34, 0x30, 0x36, 0x0a, 0x25, 0x25, 0x45, 0x4f, 0x46, 0x0a
     ]);
     
-    // 准备PDFME模板对象 - 直接按照PDFME文档格式创建
+    // 准备PDFME模板对象 - 注意schema必须是二维数组 
     const pdfTemplate: Template = {
       basePdf: blankPdf,
-      schemas: [schema]
+      schemas: schemas
     };
     
-    console.log("PDFME template prepared");
+    console.log("PDFME template prepared with schema format:", 
+      Array.isArray(pdfTemplate.schemas), 
+      Array.isArray(pdfTemplate.schemas[0])
+    );
     
     // 使用PDFME generate生成PDF
     const pdf = await generate({
