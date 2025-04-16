@@ -7,6 +7,8 @@ import { createCanvas, generateFilename, addContentToPDF } from './pdfGeneration
 // Main export function
 export const exportToPDF = async (calculator: any) => {
   try {
+    console.log("Starting PDF export process");
+    
     // Get the calculator content
     const content = safeGetElement('#calculator-content');
     if (!content) {
@@ -29,7 +31,7 @@ export const exportToPDF = async (calculator: any) => {
     
     try {
       // Wait a bit to ensure DOM is fully processed
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 1200));
       
       // Create canvas
       const canvas = await createCanvas(clonedContent);

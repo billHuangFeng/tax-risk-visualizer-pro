@@ -1,3 +1,4 @@
+
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import { processTextElements, processInputFields } from './elementStyles';
@@ -16,13 +17,11 @@ const createCanvas = async (content: HTMLElement): Promise<HTMLCanvasElement> =>
       logging: true,
       backgroundColor: '#ffffff',
       allowTaint: true,
-      width: 1000, // Fixed width for better formatting
+      width: 800, // Fixed width for better formatting
       onclone: (document, element) => {
         console.log("Cloned document prepared for rendering");
         
         try {
-          // First remove all redundant elements
-          
           // Process text elements to ensure visibility
           processTextElements(element);
           
@@ -56,11 +55,12 @@ const createCanvas = async (content: HTMLElement): Promise<HTMLCanvasElement> =>
           // Set explicitly visible style on all elements
           element.style.display = 'block';
           element.style.visibility = 'visible';
-          element.style.width = '1000px';
+          element.style.width = '800px';
           element.style.padding = '20px';
           element.style.boxSizing = 'border-box';
           element.style.position = 'relative';
           element.style.minHeight = '1200px';
+          element.style.fontFamily = 'Arial, sans-serif';
         } catch (error) {
           console.warn("Error in html2canvas onclone callback:", error);
         }

@@ -49,9 +49,11 @@
     visibility: visible !important;
     opacity: 1 !important;
     color: black !important;
-    font-weight: bold !important;
-    margin-right: 4px !important;
-    position: static !important;
+    border: 1px solid #000 !important;
+    padding: 4px 8px !important;
+    min-width: 120px !important;
+    text-align: right !important;
+    min-height: 20px !important;
   }
   
   /* Hide unnecessary elements */
@@ -63,7 +65,7 @@
   
   /* Company header style */
   .for-pdf-export .company-header {
-    font-size: 22px !important;
+    font-size: 20px !important;
     font-weight: bold !important;
     text-align: center !important;
     margin-bottom: 24px !important;
@@ -78,72 +80,132 @@
     font-weight: bold !important;
     margin-top: 24px !important;
     margin-bottom: 16px !important;
-    border-left: 4px solid #3B82F6 !important;
+    border-left: 4px solid #000 !important;
     padding-left: 10px !important;
     display: block !important;
     width: 100% !important;
-    background-color: #f8fafc !important;
-    padding: 8px 12px !important;
   }
   
-  /* Grid layout fix */
+  /* Grid layout fix - to match the image style */
   .for-pdf-export [class*="grid"] {
-    display: table !important;
+    display: grid !important;
+    grid-template-columns: 50% 50% !important;
     width: 100% !important;
-    border-collapse: collapse !important;
-    margin-bottom: 16px !important;
+    margin-bottom: 8px !important;
+    align-items: center !important;
   }
   
   .for-pdf-export [class*="grid"] > * {
-    display: table-cell !important;
-    padding: 8px !important;
-    vertical-align: middle !important;
+    padding: 4px !important;
   }
   
   .for-pdf-export [class*="grid"] > *:nth-child(odd) {
-    width: 50% !important;
     text-align: left !important;
   }
   
   .for-pdf-export [class*="grid"] > *:nth-child(even) {
-    width: 50% !important;
     text-align: right !important;
   }
   
-  /* Handle number input containers */
-  .for-pdf-export .pdf-text-visible {
-    display: flex !important;
-    justify-content: flex-end !important;
-    align-items: center !important;
+  /* Subheader label style */
+  .for-pdf-export .subheader-label,
+  .for-pdf-export div:contains("其中:") {
+    font-style: italic !important;
+    margin-left: 20px !important;
+    margin-top: 10px !important;
+    margin-bottom: 8px !important;
   }
   
-  /* Table styling */
+  /* Table styling to match the image */
   .for-pdf-export table {
     width: 100% !important;
     border-collapse: collapse !important;
     margin-bottom: 16px !important;
-    border: 1px solid #e5e7eb !important;
+    border: 1px solid #000 !important;
   }
   
   .for-pdf-export table th,
   .for-pdf-export table td {
-    padding: 12px !important;
-    border: 1px solid #e5e7eb !important;
-    text-align: right !important;
+    padding: 8px !important;
+    border: 1px solid #000 !important;
   }
   
   .for-pdf-export table th {
     background-color: #f8fafc !important;
     font-weight: bold !important;
+    text-align: center !important;
   }
   
-  /* Card styling */
-  .for-pdf-export .card {
-    margin-bottom: 24px !important;
-    border: 1px solid #e5e7eb !important;
-    padding: 16px !important;
-    border-radius: 8px !important;
-    page-break-inside: avoid !important;
+  .for-pdf-export table td {
+    text-align: right !important;
+  }
+  
+  .for-pdf-export table td:first-child {
+    text-align: left !important;
+  }
+  
+  /* Checkbox styling to match the image */
+  .for-pdf-export [role="checkbox"] {
+    display: inline-block !important;
+    width: 16px !important;
+    height: 16px !important;
+    border: 1px solid #000 !important;
+    position: relative !important;
+    vertical-align: middle !important;
+  }
+  
+  .for-pdf-export [role="checkbox"][data-state="checked"] {
+    background-color: #000 !important;
+  }
+  
+  .for-pdf-export [role="checkbox"][data-state="checked"]::after {
+    content: "✓" !important;
+    position: absolute !important;
+    top: -2px !important;
+    left: 2px !important;
+    font-size: 14px !important;
+    color: #fff !important;
+  }
+  
+  /* Label styling */
+  .for-pdf-export label {
+    font-weight: normal !important;
+    display: inline-block !important;
+    vertical-align: middle !important;
+  }
+  
+  /* Unit label (万元) */
+  .for-pdf-export .unit-label {
+    margin-left: 4px !important;
+  }
+  
+  /* Adjustment table specific styling */
+  .for-pdf-export .adjustment-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin-top: 15px !important;
+    margin-bottom: 15px !important;
+    border: 1px solid #000 !important;
+  }
+  
+  .for-pdf-export .adjustment-table th,
+  .for-pdf-export .adjustment-table td {
+    border: 1px solid #000 !important;
+    padding: 8px !important;
+  }
+  
+  .for-pdf-export .adjustment-table th {
+    background-color: #f8fafc !important;
+    font-weight: bold !important;
+    text-align: center !important;
+  }
+  
+  .for-pdf-export .adjustment-table td:first-child {
+    text-align: left !important;
+  }
+  
+  .for-pdf-export .adjustment-table td:not(:first-child) {
+    text-align: right !important;
   }
   
   /* Temporary container styling */
@@ -151,58 +213,9 @@
     position: absolute !important;
     left: -9999px !important;
     top: 0 !important;
-    width: 1000px !important;
+    width: 800px !important;
     background-color: white !important;
     z-index: -9999 !important;
     visibility: hidden !important;
-  }
-  
-  /* Vertical title for company name */
-  .for-pdf-export .pdf-vertical-title {
-    position: absolute;
-    left: 20px;
-    top: 0;
-    bottom: 0;
-    width: 30px;
-    height: 100%;
-  }
-  
-  /* Make checkboxes visible */
-  .for-pdf-export [role="checkbox"] {
-    display: inline-block !important;
-    width: 16px !important;
-    height: 16px !important;
-    border: 2px solid #000 !important;
-    visibility: visible !important;
-    position: relative !important;
-  }
-  
-  .for-pdf-export [role="checkbox"][data-state="checked"]::after {
-    content: "✓" !important;
-    position: absolute !important;
-    top: -3px !important;
-    left: 2px !important;
-    font-size: 14px !important;
-    color: #000 !important;
-  }
-  
-  /* Fix for content alignment */
-  .for-pdf-export #calculator-content {
-    padding-left: 40px !important; /* Make space for vertical title */
-    width: calc(100% - 40px) !important;
-  }
-  
-  /* Label and field alignment */
-  .for-pdf-export label {
-    font-weight: normal !important;
-    margin-bottom: 4px !important;
-    display: inline-block !important;
-  }
-  
-  /* Fix for container width */
-  .for-pdf-export .container {
-    width: 100% !important;
-    max-width: none !important;
-    padding: 0 !important;
   }
 }
