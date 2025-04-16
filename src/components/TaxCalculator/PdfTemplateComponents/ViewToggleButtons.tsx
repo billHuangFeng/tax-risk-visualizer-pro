@@ -1,11 +1,11 @@
 
 import React from 'react';
 import { Toggle } from "@/components/ui/toggle";
-import { Eye, Layout, Paintbrush } from "lucide-react";
+import { Eye, Layout, Paintbrush, Columns } from "lucide-react";
 
 interface ViewToggleButtonsProps {
-  activeView: 'preview' | 'edit' | 'layout';
-  onViewChange: (view: 'preview' | 'edit' | 'layout') => void;
+  activeView: 'preview' | 'edit' | 'layout' | 'designer';
+  onViewChange: (view: 'preview' | 'edit' | 'layout' | 'designer') => void;
 }
 
 export const ViewToggleButtons: React.FC<ViewToggleButtonsProps> = ({
@@ -31,12 +31,20 @@ export const ViewToggleButtons: React.FC<ViewToggleButtonsProps> = ({
         布局
       </Toggle>
       <Toggle 
+        pressed={activeView === 'designer'}
+        onPressedChange={() => onViewChange('designer')}
+        aria-label="设计器"
+      >
+        <Columns className="h-4 w-4 mr-2" />
+        设计器
+      </Toggle>
+      <Toggle 
         pressed={activeView === 'edit'} 
         onPressedChange={() => onViewChange('edit')}
         aria-label="编辑模板"
       >
         <Paintbrush className="h-4 w-4 mr-2" />
-        设计
+        样式
       </Toggle>
     </div>
   );

@@ -52,6 +52,14 @@ export interface PdfField {
   label: string;
   visible: boolean;
   sourceField?: string;
+  format?: string;
+  prefix?: string;
+  suffix?: string;
+  style?: {
+    fontWeight?: string;
+    color?: string;
+    alignment?: 'left' | 'center' | 'right';
+  };
 }
 
 export interface PdfTemplateEditorState {

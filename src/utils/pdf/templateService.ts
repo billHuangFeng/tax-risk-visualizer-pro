@@ -1,5 +1,5 @@
 
-import { PdfTemplate } from "@/types/pdfTemplates";
+import { PdfTemplate, PdfSection, PdfField } from "@/types/pdfTemplates";
 import { DEFAULT_TEMPLATES } from "@/constants/pdfTemplates";
 
 // 根据模板ID获取模板
@@ -10,7 +10,7 @@ export const getTemplateById = (templateId: string): PdfTemplate => {
 
 // 应用模板样式到DOM元素
 export const applyTemplateStyles = (container: HTMLElement, template: PdfTemplate) => {
-  const { styles } = template;
+  const { styles, layout } = template;
   
   try {
     // 应用全局样式
@@ -91,8 +91,55 @@ export const applyTemplateStyles = (container: HTMLElement, template: PdfTemplat
       }
     });
     
+    // 应用模板布局 - 隐藏不可见部分和字段
+    applyLayoutVisibility(container, layout.sections);
+    
     console.log("Template styles applied successfully");
   } catch (error) {
     console.error("Error applying template styles:", error);
+  }
+};
+
+// 应用布局可见性设置
+const applyLayoutVisibility = (container: HTMLElement, sections: PdfSection[]) => {
+  try {
+    // 处理节区可见性
+    sections.forEach(section => {
+      const sectionElement = container.querySelector(`[data-section="${section.id}"], [data-section-type="${section.type}"]`);
+      if (sectionElement instanceof HTMLElement) {
+        sectionElement.style.display = section.visible ? 'block' : 'none';
+        
+        // 处理字段可见性
+        if (section.fields) {
+          section.fields.forEach(field => {
+            const fieldSelector = `[data-field="${field.sourceField}"], [data-field-id="${field.id}"]`;
+            const fieldElement = sectionElement.querySelector(fieldSelector);
+            
+            if (fieldElement instanceof HTMLElement) {
+              fieldElement.style.display = field.visible ? '' : 'none';
+              
+              // 应用字段样式（如果有）
+              if (field.style) {
+                if (field.style.fontWeight) fieldElement.style.fontWeight = field.style.fontWeight;
+                if (field.style.color) fieldElement.style.color = field.style.color;
+                if (field.style.alignment) fieldElement.style.textAlign = field.style.alignment;
+              }
+              
+              // 应用前缀和后缀（如果有）
+              if (field.type === 'number' || field.type === 'text') {
+                const textContent = fieldElement.textContent || '';
+                
+                if (field.prefix || field.suffix) {
+                  const value = textContent.replace(field.prefix || '', '').replace(field.suffix || '', '');
+                  fieldElement.textContent = `${field.prefix || ''}${value}${field.suffix || ''}`;
+                }
+              }
+            }
+          });
+        }
+      }
+    });
+  } catch (error) {
+    console.error("Error applying layout visibility:", error);
   }
 };
