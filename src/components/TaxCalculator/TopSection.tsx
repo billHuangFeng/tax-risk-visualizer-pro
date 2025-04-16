@@ -32,8 +32,8 @@ const TopSection: React.FC<TopSectionProps> = ({
           className="w-full"
         />
       </div>
-      <div className="md:col-span-2">
-        <Card className="w-full md:max-w-[66%]">
+      <div className="md:col-span-2 flex justify-end">
+        <Card className="w-full md:w-[66%]">
           <CardHeader className="pb-2">
             <CardTitle className="flex items-center gap-2 text-[#1677FF]">
               <CircleAlert className="h-5 w-5" />
