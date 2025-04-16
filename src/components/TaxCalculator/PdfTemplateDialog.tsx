@@ -42,6 +42,20 @@ export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({
     onClose();
   };
   
+  // Handle toggle press for preview mode
+  const handlePreviewToggle = (pressed: boolean) => {
+    if (pressed) setView('preview');
+  };
+  
+  // Handle toggle press for edit mode
+  const handleEditToggle = (pressed: boolean) => {
+    if (pressed) setView('edit');
+  };
+  
+  // Determine if a toggle should be pressed based on current view
+  const isPreviewActive = view === 'preview';
+  const isEditActive = view === 'edit';
+  
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[900px] max-h-[80vh] overflow-y-auto">
@@ -56,16 +70,16 @@ export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({
           <>
             <div className="flex items-center justify-end space-x-2 mb-4">
               <Toggle 
-                pressed={view === 'preview'} 
-                onPressedChange={(pressed) => pressed && setView('preview')}
+                pressed={isPreviewActive} 
+                onPressedChange={handlePreviewToggle}
                 aria-label="预览模板"
               >
                 <Eye className="h-4 w-4 mr-2" />
                 预览
               </Toggle>
               <Toggle 
-                pressed={view === 'edit'} 
-                onPressedChange={(pressed) => pressed && setView('edit')}
+                pressed={isEditActive} 
+                onPressedChange={handleEditToggle}
                 aria-label="编辑模板"
               >
                 <Paintbrush className="h-4 w-4 mr-2" />
