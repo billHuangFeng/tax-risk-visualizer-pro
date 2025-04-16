@@ -5,16 +5,17 @@ import { DEFAULT_TEMPLATES } from '@/constants/pdfTemplates';
 import { PdfTemplate } from '@/types/pdfTemplates';
 
 /**
- * Validates if the provided value is a properly structured schemas array
+ * 验证提供的值是否为结构良好的schemas数组
  */
 const isValidSchemas = (value: any): boolean => {
-  return Array.isArray(value) && 
-         value.length > 0 && 
-         Array.isArray(value[0]);
+  if (!Array.isArray(value)) return false;
+  if (value.length === 0) return false;
+  if (!Array.isArray(value[0])) return false;
+  return true;
 };
 
 /**
- * Creates a minimal valid schema structure for PDFME
+ * 创建最小有效的schema结构给PDFME
  */
 const createMinimalSchema = (): any[][] => {
   return [[{
@@ -28,16 +29,16 @@ const createMinimalSchema = (): any[][] => {
 };
 
 /**
- * Exports calculator data to PDF using PDFME generator
+ * 导出计算器数据到PDF使用PDFME生成器
  */
 export const exportToPDF = async (calculator: any, template?: PdfTemplate) => {
   try {
     console.log("Starting PDF export with PDFME");
     
-    // Get template or use default
+    // 获取模板或使用默认模板
     const selectedTemplate = template || DEFAULT_TEMPLATES[0];
     
-    // Prepare PDF data
+    // 准备PDF数据
     const inputs = [
       {
         companyName: calculator.companyName || '税务计算',
@@ -51,44 +52,48 @@ export const exportToPDF = async (calculator: any, template?: PdfTemplate) => {
     
     console.log("Preparing template for PDF generation");
     
-    // Create a PDFME template object
+    // 创建PDFME模板对象
     const pdfTemplate: Template = {
       basePdf: selectedTemplate.baseTemplate instanceof Uint8Array 
                ? selectedTemplate.baseTemplate 
                : new Uint8Array(),
-      schemas: []
+      schemas: [] as any[][]
     };
     
-    // Safely handle schemas assignment
+    // 安全地处理schemas赋值
     let schemasToUse: any[][] = createMinimalSchema();
     
+    // 检查schemas是否有效并进行安全赋值
     if (selectedTemplate.schemas && isValidSchemas(selectedTemplate.schemas)) {
       try {
-        // Deep copy the schemas to avoid reference issues
-        schemasToUse = JSON.parse(JSON.stringify(selectedTemplate.schemas));
+        // 深拷贝schemas以避免引用问题
+        schemasToUse = JSON.parse(JSON.stringify(selectedTemplate.schemas)) as any[][];
       } catch (err) {
         console.error("Error parsing schemas, using minimal schema:", err);
       }
     }
     
-    // Assign the schemas to the template
+    // 将schemas赋值给模板
     pdfTemplate.schemas = schemasToUse;
     
+    // 记录准备好的模板信息用于调试
     console.log("Template prepared:", {
       hasSchemasArray: Array.isArray(pdfTemplate.schemas),
-      schemasLength: pdfTemplate.schemas.length,
-      firstSchemaIsArray: Array.isArray(pdfTemplate.schemas[0]),
-      innerArrayLength: Array.isArray(pdfTemplate.schemas[0]) ? pdfTemplate.schemas[0].length : 0
+      schemasLength: Array.isArray(pdfTemplate.schemas) ? pdfTemplate.schemas.length : 0,
+      firstSchemaIsArray: Array.isArray(pdfTemplate.schemas) && pdfTemplate.schemas.length > 0 
+                          ? Array.isArray(pdfTemplate.schemas[0]) : false,
+      innerArrayLength: Array.isArray(pdfTemplate.schemas) && pdfTemplate.schemas.length > 0 && Array.isArray(pdfTemplate.schemas[0]) 
+                        ? pdfTemplate.schemas[0].length : 0
     });
     
-    // Generate PDF with PDFME
+    // 使用PDFME生成PDF
     console.log("Generating PDF...");
     const pdf = await generate({
       template: pdfTemplate,
       inputs: inputs,
     });
     
-    // Create and download PDF
+    // 创建并下载PDF
     const blob = new Blob([pdf], { type: 'application/pdf' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
