@@ -23,23 +23,29 @@ const createBaseSchema = (): any[] => {
  */
 const extractSchemas = (template: PdfTemplate): any[][] => {
   // 先创建一个默认有效的schema
-  const defaultSchema = [createBaseSchema()];
+  const defaultSchema: any[][] = [createBaseSchema()];
   
   try {
     // 检查模板是否有有效的schemas
-    if (!template.schemas || !Array.isArray(template.schemas)) {
-      console.log("No valid schemas found, using default");
+    if (!template.schemas) {
+      console.log("No schemas found in template, using default");
+      return defaultSchema;
+    }
+    
+    // 确保schemas是数组
+    if (!Array.isArray(template.schemas)) {
+      console.log("Template schemas is not an array, using default");
       return defaultSchema;
     }
     
     // 确保它是一个二维数组
     if (template.schemas.length === 0 || !Array.isArray(template.schemas[0])) {
-      console.log("Invalid schema format, using default");
+      console.log("Invalid schema format (not 2D array), using default");
       return defaultSchema;
     }
     
     // 创建深拷贝以避免引用问题
-    const schemasCopy = JSON.parse(JSON.stringify(template.schemas));
+    const schemasCopy: any[][] = JSON.parse(JSON.stringify(template.schemas));
     console.log("Using template schemas, count:", schemasCopy.length);
     return schemasCopy;
   } catch (error) {
@@ -101,7 +107,7 @@ export const exportToPDF = async (calculator: any, template?: PdfTemplate) => {
     console.log("PDF template prepared:", {
       hasBasePdf: pdfMeTemplate.basePdf instanceof Uint8Array,
       schemasCount: pdfMeTemplate.schemas.length,
-      firstSchemaFields: Object.keys(pdfMeTemplate.schemas[0][0] || {}).length
+      firstSchemaFields: pdfMeTemplate.schemas[0] ? Object.keys(pdfMeTemplate.schemas[0][0] || {}).length : 0
     });
     
     // 使用PDFME生成PDF
