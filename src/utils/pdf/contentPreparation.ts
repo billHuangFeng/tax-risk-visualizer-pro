@@ -25,6 +25,9 @@ export const prepareContentForExport = (content: HTMLElement): HTMLElement | nul
     tempContainer.style.width = '1200px';
     tempContainer.style.backgroundColor = '#ffffff';
     
+    // Remove duplicate elements before export
+    removeDuplicateElements(clonedContent);
+    
     // Safely append to body
     document.body.appendChild(tempContainer);
     tempContainer.appendChild(clonedContent);
@@ -33,5 +36,64 @@ export const prepareContentForExport = (content: HTMLElement): HTMLElement | nul
   } catch (error) {
     console.error('Error preparing content for export:', error);
     return null;
+  }
+};
+
+// Remove duplicate elements that might appear in PDF export
+const removeDuplicateElements = (container: HTMLElement) => {
+  try {
+    // Remove duplicate inputs and their display values
+    const seenIds = new Set<string>();
+    const inputs = container.querySelectorAll('input');
+    
+    inputs.forEach((input: HTMLInputElement) => {
+      if (input.id && seenIds.has(input.id)) {
+        // This is a duplicate input, remove it
+        if (input.parentElement) {
+          const parentElement = input.parentElement;
+          parentElement.style.display = 'none';
+          
+          // If this is inside a grid, hide the entire row
+          const gridRow = parentElement.closest('.grid');
+          if (gridRow) {
+            gridRow.classList.add('pdf-duplicate-row');
+            gridRow.style.display = 'none';
+          }
+        }
+      } else if (input.id) {
+        seenIds.add(input.id);
+      }
+    });
+    
+    // Handle duplicate headers and section titles
+    const headings = container.querySelectorAll('h1, h2, h3, h4, h5, h6');
+    const seenHeadings = new Set<string>();
+    
+    headings.forEach((heading) => {
+      const headingText = heading.textContent?.trim() || '';
+      if (seenHeadings.has(headingText) && headingText.length > 0) {
+        heading.style.display = 'none';
+      } else {
+        seenHeadings.add(headingText);
+      }
+    });
+    
+    // Handle duplicate spans and labels
+    const labels = container.querySelectorAll('label, .pdf-value');
+    const seenLabels = new Set<string>();
+    
+    labels.forEach((label) => {
+      const labelText = label.textContent?.trim() || '';
+      const labelId = label.id || '';
+      const key = `${labelText}-${labelId}`;
+      
+      if (seenLabels.has(key) && labelText.length > 0) {
+        label.style.display = 'none';
+      } else if (labelText.length > 0) {
+        seenLabels.add(key);
+      }
+    });
+  } catch (error) {
+    console.warn('Error removing duplicate elements:', error);
   }
 };

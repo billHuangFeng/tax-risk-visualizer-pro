@@ -9,6 +9,7 @@
   .for-pdf-export {
     background-color: white !important;
     color: black !important;
+    font-family: Arial, sans-serif !important;
   }
   
   /* Make all text elements visible in PDF export mode */
@@ -29,7 +30,6 @@
     opacity: 1 !important;
     font-family: Arial, sans-serif !important;
     text-shadow: none !important;
-    display: block !important;
   }
   
   /* Handle input fields - remove borders and show text content */
@@ -52,68 +52,63 @@
   }
   
   .for-pdf-export .pdf-value {
-    display: block !important;
     opacity: 1 !important;
     visibility: visible !important;
     color: black !important;
     position: static !important;
+    font-weight: bold !important;
+    display: inline-block !important;
+    margin-right: 4px !important;
   }
   
   /* Hide any unnecessary elements during export */
   .for-pdf-export button,
   .for-pdf-export svg:not([data-keep-in-pdf="true"]),
-  .for-pdf-export [role="dialog"] {
+  .for-pdf-export [role="dialog"],
+  .for-pdf-export .pdf-duplicate-row {
     display: none !important;
   }
   
   /* Ensure proper spacing and layout */
   .for-pdf-export .space-y-4 > * {
-    margin-top: 1rem !important;
-    margin-bottom: 1rem !important;
+    margin-top: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
   }
   
   /* Ensure all headings are visible */
   .for-pdf-export h2 {
-    font-size: 1.5rem !important;
+    font-size: 18px !important;
     font-weight: bold !important;
     margin-bottom: 1rem !important;
-    margin-top: 1rem !important;
+    margin-top: 1.5rem !important;
     display: block !important;
+    border-left: 4px solid #3B82F6 !important;
+    padding-left: 10px !important;
   }
   
-  /* Ensure all table content is visible */
-  .for-pdf-export table,
-  .for-pdf-export tbody,
-  .for-pdf-export tr,
-  .for-pdf-export td,
-  .for-pdf-export th {
-    visibility: visible !important;
-    display: table !important;
-    border-collapse: collapse !important;
+  /* Ensure all grid layouts display properly */
+  .for-pdf-export [class*="grid"] {
+    display: block !important;
+    margin-bottom: 8px !important;
   }
   
-  .for-pdf-export tr {
-    display: table-row !important;
-  }
-  
-  .for-pdf-export td,
-  .for-pdf-export th {
-    display: table-cell !important;
-    padding: 8px !important;
+  .for-pdf-export [class*="grid"] > * {
+    display: block !important;
+    width: 100% !important;
   }
   
   /* Handle display of input containers */
-  .pdf-text-visible {
-    position: relative !important;
-  }
-  
   .for-pdf-export .pdf-text-visible {
-    border: none !important;
+    display: flex !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+    margin-bottom: 8px !important;
   }
   
-  /* Don't show redundant elements in PDF */
-  .for-pdf-export span:not(.pdf-value)[style*="position: absolute"] {
-    display: none !important;
+  /* Unit text should appear after value */
+  .for-pdf-export .ml-2 {
+    margin-left: 4px !important;
+    display: inline-block !important;
   }
   
   /* Clean up specific for the PDF container */
@@ -145,5 +140,10 @@
     display: none !important;
     visibility: hidden !important;
     z-index: -9999 !important;
+  }
+  
+  /* Fix for duplicate elements */
+  .for-pdf-export .pdf-duplicate {
+    display: none !important;
   }
 }
