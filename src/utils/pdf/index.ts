@@ -15,11 +15,11 @@ export const exportToPDF = async (calculatorData: any): Promise<boolean> => {
     tempContainer.style.width = '210mm';
     tempContainer.style.backgroundColor = 'white';
     tempContainer.style.fontFamily = 'SimSun, serif';
-    tempContainer.style.padding = '20px';
+    tempContainer.style.padding = '0';
     tempContainer.style.boxSizing = 'border-box';
     tempContainer.style.zIndex = '-1000';
     
-    // 添加SimSun字体（如果需要）
+    // 添加SimSun字体支持
     const style = document.createElement('style');
     style.textContent = `
       @font-face {
@@ -73,7 +73,7 @@ export const exportToPDF = async (calculatorData: any): Promise<boolean> => {
     const pageHeight = pdf.internal.pageSize.getHeight();
     
     // 计算图像缩放以适应页面宽度，保留10mm边距
-    const margin = 10;
+    const margin = 5;
     const imgWidth = pageWidth - 2 * margin;
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
     

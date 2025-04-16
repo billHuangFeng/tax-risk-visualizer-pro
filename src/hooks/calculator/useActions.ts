@@ -63,16 +63,39 @@ export const useActions = (riskValue: string, riskPercentage: number) => {
           data.companyName = companyNameInput.value || '测试科技有限公司';
         }
         
-        // 是否高新技术企业
+        // 获取所有数值输入
+        const numericInputs = [
+          'totalAssets', 'employeeCount', 'totalRevenue', 'invoicedRevenue', 
+          'nonInvoicedRevenue', 'newInvoicedRevenue', 'totalExpenses', 
+          'invoicedExpenses', 'nonInvoicedExpenses', 'personalTax', 
+          'socialSecurity', 'depreciation', 'otherExpenses', 'rdExpenses',
+          'entertainmentExpenses', 'advertisingExpenses', 'educationExpenses',
+          'welfareExpenses', 'insuranceExpenses', 'nonDeductibleExpenses',
+          'totalAdjustment', 'taxableIncome', 'theoreticalTax', 'actualTax'
+        ];
+        
+        numericInputs.forEach(inputId => {
+          const input = document.getElementById(inputId) as HTMLInputElement;
+          if (input) {
+            data[inputId] = input.value || '0';
+          }
+        });
+        
+        // 特殊字段 - 是否高新技术企业和是否享受研发费加计扣除
         const isHighTechCheckbox = document.querySelector('[data-id="isHighTechEnterprise"]') as HTMLElement;
         if (isHighTechCheckbox) {
           data.isHighTechEnterprise = isHighTechCheckbox.getAttribute('data-state') === 'checked';
         }
         
-        // 是否享受研发费用加计扣除
         const exemptBusinessCheckbox = document.querySelector('[data-id="exemptBusiness"]') as HTMLElement;
         if (exemptBusinessCheckbox) {
           data.exemptBusiness = exemptBusinessCheckbox.getAttribute('data-state') === 'checked';
+        }
+        
+        // 添加税率
+        const taxRateInput = document.getElementById('taxRate') as HTMLInputElement;
+        if (taxRateInput) {
+          data.taxRate = taxRateInput.value || '25';
         }
         
         console.log("收集的表单数据:", data);
