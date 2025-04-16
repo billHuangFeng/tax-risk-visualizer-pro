@@ -143,6 +143,7 @@ const TaxSummary: React.FC<TaxSummaryProps> = ({
         <RiskIndicator 
           riskPercentage={riskPercentage} 
           riskValue={riskValue}
+          unexplainedDifference={unexplainedDifference}
         />
       </div>
     </div>

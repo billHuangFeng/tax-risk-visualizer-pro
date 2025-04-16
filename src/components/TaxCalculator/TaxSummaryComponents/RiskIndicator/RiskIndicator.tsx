@@ -7,17 +7,19 @@ import RiskDetails from './RiskDetails';
 interface RiskIndicatorProps {
   riskPercentage: number;
   riskValue?: string;
+  unexplainedDifference?: string;
 }
 
 const RiskIndicator: React.FC<RiskIndicatorProps> = ({ 
   riskPercentage, 
-  riskValue = '0'
+  riskValue = '0',
+  unexplainedDifference = '0'
 }) => {
   const [showRiskDetails, setShowRiskDetails] = useState(false);
 
   useEffect(() => {
     setShowRiskDetails(false);
-  }, [riskValue, riskPercentage]);
+  }, [unexplainedDifference, riskPercentage]);
 
   const getRiskLevel = (percentage: number) => {
     if (percentage < 30) return '低风险';
@@ -26,7 +28,7 @@ const RiskIndicator: React.FC<RiskIndicatorProps> = ({
   };
 
   const calculateRiskDetails = () => {
-    const baseRisk = parseFloat(riskValue);
+    const baseRisk = parseFloat(unexplainedDifference);
     const taxAmount = baseRisk;
     const lateFee = baseRisk * 0.0005 * 365 * 3;
     const penalty = baseRisk;
