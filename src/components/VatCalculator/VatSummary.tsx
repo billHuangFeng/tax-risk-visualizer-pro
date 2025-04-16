@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -69,7 +70,7 @@ const VatSummary: React.FC<VatSummaryProps> = ({
                 </button>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-lg font-bold">{payableTax.toFixed(2)}</span>
+                <span className="text-lg font-bold text-black">{payableTax.toFixed(2)}</span>
                 <span className="text-sm text-gray-500">
                   {payableTax < 0 ? "(留抵)" : ""}
                 </span>
@@ -91,7 +92,7 @@ const VatSummary: React.FC<VatSummaryProps> = ({
                   type="number"
                   value={actualTax}
                   onChange={(e) => setActualTax(parseFloat(e.target.value) || 0)}
-                  className="w-32 text-right"
+                  className="w-32 text-right text-black"
                 />
               </div>
             </div>
@@ -109,7 +110,7 @@ const VatSummary: React.FC<VatSummaryProps> = ({
                 </button>
               </div>
               <div className="flex items-center gap-2">
-                <span className={`text-lg font-bold ${Math.abs(taxDifference) > 0 ? 'text-red-500' : ''}`}>
+                <span className={`text-lg font-bold text-black ${Math.abs(taxDifference) > 0 ? 'text-red-500' : ''}`}>
                   {taxDifference.toFixed(2)}
                 </span>
               </div>
@@ -118,7 +119,7 @@ const VatSummary: React.FC<VatSummaryProps> = ({
             <div className="flex justify-between items-center">
               <div className="font-medium">差异幅度</div>
               <div className="flex items-center gap-2">
-                <span className={`text-lg font-bold ${taxDifferencePercentage > 20 ? 'text-red-500' : ''}`}>
+                <span className={`text-lg font-bold text-black ${taxDifferencePercentage > 20 ? 'text-red-500' : ''}`}>
                   {taxDifferencePercentage.toFixed(2)}%
                 </span>
               </div>
