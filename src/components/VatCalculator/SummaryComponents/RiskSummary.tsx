@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { AlertCircle } from 'lucide-react';
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
@@ -50,8 +49,13 @@ const RiskSummary: React.FC<RiskSummaryProps> = ({
             </Tooltip>
           </TooltipProvider>
         </div>
-        <div className="text-lg font-bold text-red-600">
-          {unexplainedDifference.toFixed(2)}
+        <div className="flex items-center gap-2">
+          <span className="text-lg font-bold text-red-600">
+            {unexplainedDifference.toFixed(2)}
+          </span>
+          <span className="text-sm text-red-600">
+            ({riskPercentage.toFixed(2)}%)
+          </span>
         </div>
       </div>
       
@@ -75,7 +79,7 @@ const RiskSummary: React.FC<RiskSummaryProps> = ({
           </TooltipProvider>
         </div>
         <div className={`px-3 py-1 rounded-full font-medium ${getRiskColor()}`}>
-          {riskLevel} (风险百分比: {riskPercentage.toFixed(2)}%)
+          {riskLevel}
         </div>
       </div>
     </div>
