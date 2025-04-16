@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -6,18 +7,6 @@ import { Input } from '@/components/ui/input';
 import { Trash2, Plus, Info } from 'lucide-react';
 import { VatPurchaseItem } from '@/hooks/useVatCalculator';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
-
-interface VatPurchasesSectionProps {
-  purchasesData: VatPurchaseItem[];
-  addPurchaseItem: () => void;
-  updatePurchaseItem: (id: string, field: keyof VatPurchaseItem, value: any) => void;
-  removePurchaseItem: (id: string) => void;
-  purchasesTotal: {
-    amount: number;
-    tax: number;
-  };
-  onInfoClick?: (infoKey: string) => void;
-}
 
 const VAT_RATES = ['13', '10', '9', '6', '5', '3', '1'];
 
@@ -40,7 +29,7 @@ const VatPurchasesSection: React.FC<VatPurchasesSectionProps> = ({
         <Table>
           <TableHeader>
             <TableRow className="bg-gray-100">
-              <TableHead className="w-1/3">产品类别</TableHead>
+              <TableHead className="w-1/3 text-left">产品类别</TableHead>
               <TableHead className="text-right">采购额<br/>(不含增值税)</TableHead>
               <TableHead className="text-right">增值税率（征收率）</TableHead>
               <TableHead className="text-right">
@@ -58,11 +47,11 @@ const VatPurchasesSection: React.FC<VatPurchasesSectionProps> = ({
           <TableBody>
             {purchasesData.map((item) => (
               <TableRow key={item.id}>
-                <TableCell>
+                <TableCell className="text-left">
                   <Input
                     value={item.productName}
                     onChange={(e) => updatePurchaseItem(item.id, 'productName', e.target.value)}
-                    className="w-full"
+                    className="w-full text-left"
                   />
                 </TableCell>
                 <TableCell className="text-right">
@@ -108,7 +97,7 @@ const VatPurchasesSection: React.FC<VatPurchasesSectionProps> = ({
             ))}
             
             <TableRow className="bg-gray-50 font-bold">
-              <TableCell>合计</TableCell>
+              <TableCell className="text-left">合计</TableCell>
               <TableCell className="text-right">{purchasesTotal.amount.toFixed(2)}</TableCell>
               <TableCell></TableCell>
               <TableCell className="text-right">{purchasesTotal.tax.toFixed(2)}</TableCell>

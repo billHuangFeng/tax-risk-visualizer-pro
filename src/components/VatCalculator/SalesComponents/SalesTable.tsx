@@ -7,18 +7,6 @@ import { Trash2, Plus, Info } from 'lucide-react';
 import { VatSalesItem } from '@/hooks/useVatCalculator';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 
-interface SalesTableProps {
-  salesData: VatSalesItem[];
-  addSalesItem: () => void;
-  updateSalesItem: (id: string, field: keyof VatSalesItem, value: any) => void;
-  removeSalesItem: (id: string) => void;
-  salesTotal: {
-    amount: number;
-    tax: number;
-  };
-  onInfoClick?: (infoKey: string) => void;
-}
-
 const VAT_RATES = ['13', '9', '6', '5', '3', '1'];
 
 const SalesTable: React.FC<SalesTableProps> = ({
@@ -33,7 +21,7 @@ const SalesTable: React.FC<SalesTableProps> = ({
     <Table>
       <TableHeader>
         <TableRow className="bg-gray-100">
-          <TableHead className="w-1/3">产品类别</TableHead>
+          <TableHead className="w-1/3 text-left">产品类别</TableHead>
           <TableHead className="text-right">销售额<br/>(不含增值税)</TableHead>
           <TableHead className="text-right">增值税率（征收率）</TableHead>
           <TableHead className="text-right">
@@ -51,11 +39,11 @@ const SalesTable: React.FC<SalesTableProps> = ({
       <TableBody>
         {salesData.map((item) => (
           <TableRow key={item.id} className="h-10 py-0">
-            <TableCell className="py-1">
+            <TableCell className="py-1 text-left">
               <Input
                 value={item.productName}
                 onChange={(e) => updateSalesItem(item.id, 'productName', e.target.value)}
-                className="w-full h-8"
+                className="w-full h-8 text-left"
               />
             </TableCell>
             <TableCell className="text-right py-1">
@@ -116,7 +104,7 @@ const SalesTable: React.FC<SalesTableProps> = ({
         </TableRow>
         
         <TableRow className="bg-gray-50 font-bold">
-          <TableCell className="py-1">合计</TableCell>
+          <TableCell className="py-1 text-left">合计</TableCell>
           <TableCell className="text-right py-1">{salesTotal.amount.toFixed(2)}</TableCell>
           <TableCell className="py-1"></TableCell>
           <TableCell className="text-right py-1">{salesTotal.tax.toFixed(2)}</TableCell>
