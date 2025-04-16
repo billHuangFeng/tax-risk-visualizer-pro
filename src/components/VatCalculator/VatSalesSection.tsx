@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Trash2, Plus, Info } from 'lucide-react';
 import { VatSalesItem } from '@/hooks/useVatCalculator';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 
 interface VatSalesSectionProps {
   salesData: VatSalesItem[];
@@ -35,6 +36,7 @@ const VatSalesSection: React.FC<VatSalesSectionProps> = ({
 }) => {
   const salesCollectionDifference = salesTotal.amount + salesTotal.tax - bankSalesAmount;
   const salesCollectionDifferencePercentage = ((salesCollectionDifference) / (salesTotal.amount + salesTotal.tax) * 100) || 0;
+  const showDifferenceExplanation = Math.abs(salesCollectionDifferencePercentage) > 10;
 
   return (
     <Card className="mb-6">
@@ -178,6 +180,45 @@ const VatSalesSection: React.FC<VatSalesSectionProps> = ({
             </span>
           </div>
         </div>
+
+        {showDifferenceExplanation && (
+          <div className="mt-4 p-4 border rounded-lg bg-yellow-50">
+            <div className="mb-2 font-medium text-yellow-800">
+              差异说明
+              <span className="ml-2 text-sm text-yellow-600">
+                (销售与收款差异超过10%)
+              </span>
+            </div>
+            <div className="space-y-4">
+              <div>
+                <div className="text-sm text-gray-600 mb-1">差异原因：</div>
+                <Textarea
+                  placeholder="请说明销售与收款差异的原因..."
+                  className="w-full"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <div className="text-sm text-gray-600 mb-1">已解释差异金额：</div>
+                  <Input
+                    type="number"
+                    className="w-full"
+                    placeholder="输入已解释的差异金额"
+                  />
+                </div>
+                <div>
+                  <div className="text-sm text-gray-600 mb-1">未解释差异金额：</div>
+                  <Input
+                    type="number"
+                    value={salesCollectionDifference}
+                    className="w-full bg-gray-100"
+                    disabled
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
