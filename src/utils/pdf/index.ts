@@ -66,8 +66,8 @@ const createPdfMeTemplate = (template: PdfTemplate): Template => {
     basePdf = template.baseTemplate;
   }
   
-  // 从模板中提取并处理schemas
-  const schemas = extractSchemas(template);
+  // 从模板中提取并处理schemas - 确保类型安全
+  const schemas: any[][] = extractSchemas(template);
   
   // 创建符合PDFME要求的模板对象
   return {
@@ -103,17 +103,24 @@ export const exportToPDF = async (calculator: any, template?: PdfTemplate) => {
     // 创建PDFME所需的模板对象
     const pdfMeTemplate = createPdfMeTemplate(selectedTemplate);
     
-    // 记录调试信息
+    // TypeSafe - 确保schemas存在并有正确的结构
+    if (!pdfMeTemplate.schemas || !Array.isArray(pdfMeTemplate.schemas)) {
+      pdfMeTemplate.schemas = [createBaseSchema()];
+    }
+    
+    // 记录调试信息 - 使用类型守卫确保安全访问
     console.log("PDF template prepared:", {
       hasBasePdf: pdfMeTemplate.basePdf instanceof Uint8Array,
-      schemasCount: pdfMeTemplate.schemas.length,
-      firstSchemaFields: pdfMeTemplate.schemas[0] ? Object.keys(pdfMeTemplate.schemas[0][0] || {}).length : 0
+      schemasCount: Array.isArray(pdfMeTemplate.schemas) ? pdfMeTemplate.schemas.length : 0,
+      firstSchemaFields: Array.isArray(pdfMeTemplate.schemas) && pdfMeTemplate.schemas.length > 0 && 
+                        Array.isArray(pdfMeTemplate.schemas[0]) && pdfMeTemplate.schemas[0].length > 0 ? 
+                        Object.keys(pdfMeTemplate.schemas[0][0] || {}).length : 0
     });
     
-    // 使用PDFME生成PDF
+    // 使用PDFME生成PDF - 确保模板格式符合PDFME要求
     console.log("Generating PDF with PDFME...");
     const pdf = await generate({
-      template: pdfMeTemplate,
+      template: pdfMeTemplate as Template,
       inputs: inputs,
     });
     
