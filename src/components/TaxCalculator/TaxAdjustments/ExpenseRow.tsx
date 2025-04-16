@@ -68,7 +68,7 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
         </div>
       </TableCell>
       <TableCell className="w-[15%] min-w-[180px]">
-        <div className="w-full pdf-text-visible relative">
+        <div className="w-full relative">
           <Input
             ref={actualInputRef}
             type="number"
@@ -77,13 +77,13 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
             className="text-right w-full pr-8 overflow-visible letter-spacing-normal"
             data-value={safeValues.actual}
           />
-          <div className="absolute right-3 top-0 bottom-0 flex items-center justify-end h-full pointer-events-none pdf-value">
+          <div className="absolute right-3 top-0 bottom-0 flex items-center justify-end h-full pointer-events-none pdf-value hidden print:block">
             {safeValues.actual}
           </div>
         </div>
       </TableCell>
       <TableCell className="w-[20%] min-w-[180px]">
-        <div className="w-full pdf-text-visible relative">
+        <div className="w-full relative">
           <Input
             ref={deductibleInputRef}
             type="text"
@@ -92,13 +92,13 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
             className="text-right bg-muted w-full pr-8 overflow-visible letter-spacing-normal"
             data-value={safeValues.deductible}
           />
-          <div className="absolute right-3 top-0 bottom-0 flex items-center justify-end h-full pointer-events-none pdf-value">
+          <div className="absolute right-3 top-0 bottom-0 flex items-center justify-end h-full pointer-events-none pdf-value hidden print:block">
             {safeValues.deductible}
           </div>
         </div>
       </TableCell>
       <TableCell className="w-[20%] min-w-[180px]">
-        <div className="w-full pdf-text-visible relative">
+        <div className="w-full relative">
           <Input
             ref={adjustmentInputRef}
             type="text"
@@ -111,7 +111,7 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
             }`}
             data-value={safeValues.adjustment}
           />
-          <div className="absolute right-3 top-0 bottom-0 flex items-center justify-end h-full pointer-events-none pdf-value">
+          <div className="absolute right-3 top-0 bottom-0 flex items-center justify-end h-full pointer-events-none pdf-value hidden print:block">
             {safeValues.adjustment}
           </div>
         </div>

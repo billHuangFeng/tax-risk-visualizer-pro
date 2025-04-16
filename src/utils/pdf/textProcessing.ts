@@ -1,3 +1,4 @@
+
 // Functions for processing text elements in PDF export
 
 export const removeRedundantTextElements = (container: HTMLElement) => {
@@ -31,5 +32,23 @@ export const removeRedundantTextElements = (container: HTMLElement) => {
     });
   } catch (error) {
     console.warn('Error removing redundant elements:', error);
+  }
+};
+
+// 在容器中标记所有PDF值显示元素为"仅PDF显示"
+export const markPdfOnlyElements = (container: HTMLElement) => {
+  try {
+    // 找到所有PDF值元素
+    const pdfValues = container.querySelectorAll('.pdf-value');
+    pdfValues.forEach((element) => {
+      if (element instanceof HTMLElement) {
+        // 确保这些元素仅在PDF中显示
+        element.classList.add('pdf-only');
+        element.style.display = 'none';
+        element.dataset.pdfOnly = 'true';
+      }
+    });
+  } catch (error) {
+    console.warn('Error marking PDF-only elements:', error);
   }
 };

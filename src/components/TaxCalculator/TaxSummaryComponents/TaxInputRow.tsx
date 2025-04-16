@@ -49,7 +49,7 @@ const TaxInputRow: React.FC<TaxInputRowProps> = ({
           </button>
         )}
       </div>
-      <div className="md:col-span-3 flex items-center justify-end w-full pdf-text-visible">
+      <div className="md:col-span-3 flex items-center justify-end w-full">
         <div className="min-w-[220px] w-full max-w-[300px] relative">
           <Input
             id={id}
@@ -61,8 +61,8 @@ const TaxInputRow: React.FC<TaxInputRowProps> = ({
             className="text-right font-bold pr-8 w-full overflow-visible letter-spacing-normal"
             data-value={value} /* Add data attribute for PDF export */
           />
-          {/* Ensure only one pdf-value element */}
-          <span className="absolute right-3 top-0 bottom-0 flex items-center justify-end h-full pointer-events-none pdf-value">
+          {/* 隐藏在正常UI中，只在PDF中显示 */}
+          <span className="absolute right-3 top-0 bottom-0 flex items-center justify-end h-full pointer-events-none pdf-value hidden print:block">
             {value}
           </span>
         </div>

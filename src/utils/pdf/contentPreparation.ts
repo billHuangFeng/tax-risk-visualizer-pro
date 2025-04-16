@@ -1,5 +1,6 @@
 
 // Functions for preparing content for PDF export
+import { markPdfOnlyElements } from './textProcessing';
 
 export const prepareContentForExport = (content: HTMLElement): HTMLElement | null => {
   try {
@@ -39,6 +40,9 @@ export const prepareContentForExport = (content: HTMLElement): HTMLElement | nul
     // Remove duplicate elements
     removeDuplicateElements(clonedContent);
     
+    // 确保PDF专用元素在导出时可见
+    showPdfOnlyElements(clonedContent);
+    
     // Add to body for rendering, but hidden
     document.body.appendChild(tempContainer);
     tempContainer.appendChild(clonedContent);
@@ -48,6 +52,31 @@ export const prepareContentForExport = (content: HTMLElement): HTMLElement | nul
   } catch (error) {
     console.error('Error preparing content for export:', error);
     return null;
+  }
+};
+
+// 在PDF导出时显示仅PDF元素
+const showPdfOnlyElements = (container: HTMLElement) => {
+  try {
+    // 找到所有PDF专用元素并使其可见
+    const pdfOnlyElements = container.querySelectorAll('.pdf-only, .pdf-value, [data-pdf-only="true"]');
+    pdfOnlyElements.forEach((element) => {
+      if (element instanceof HTMLElement) {
+        element.style.display = 'block';
+        element.style.visibility = 'visible';
+        element.style.opacity = '1';
+      }
+    });
+    
+    // 隐藏所有原始输入框
+    const inputs = container.querySelectorAll('input');
+    inputs.forEach((input) => {
+      if (input instanceof HTMLInputElement) {
+        input.style.display = 'none';
+      }
+    });
+  } catch (error) {
+    console.warn('Error showing PDF-only elements:', error);
   }
 };
 
@@ -61,6 +90,9 @@ const prepareFormElements = (container: HTMLElement) => {
         input.setAttribute('data-value', input.value || '');
       }
     });
+    
+    // Mark PDF-only elements
+    markPdfOnlyElements(container);
     
     // Ensure checkboxes have proper data-state
     const checkboxes = container.querySelectorAll('[role="checkbox"]');
