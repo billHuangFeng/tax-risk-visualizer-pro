@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React from 'react';
 import CalculatorHeader from '@/components/TaxCalculator/CalculatorHeader';
 import CalculatorActions from '@/components/TaxCalculator/CalculatorActions';
 import BasicInfo from '@/components/TaxCalculator/BasicInfo';
@@ -24,10 +23,12 @@ const Index = () => {
     <>
       <CalculatorHeader />
       <TaxNavbar />
-      <CalculatorLayout selectedInfoItem={selectedInfoItem}>
+      <CalculatorLayout 
+        selectedInfoItem={selectedInfoItem}
+        companyName={calculator.companyName}
+        setCompanyName={calculator.setCompanyName}
+      >
         <BasicInfo 
-          companyName={calculator.companyName}
-          setCompanyName={calculator.setCompanyName}
           isExcludedIndustry={calculator.isExcludedIndustry}
           setIsExcludedIndustry={calculator.setIsExcludedIndustry}
           isHighTechEnterprise={calculator.isHighTechEnterprise}

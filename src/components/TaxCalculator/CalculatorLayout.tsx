@@ -1,24 +1,27 @@
 
 import React from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { CircleAlert, ListMinus } from 'lucide-react';
 import { TaxInfoPanelItem } from '@/types/calculator';
 import TaxInfoPanel from '@/components/TaxCalculator/TaxInfoPanel';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
+import { CircleAlert } from 'lucide-react';
+import TopSection from './TopSection';
 
 interface CalculatorLayoutProps {
   children: React.ReactNode;
   selectedInfoItem: TaxInfoPanelItem | null;
+  companyName: string;
+  setCompanyName: (value: string) => void;
 }
 
-const CalculatorLayout: React.FC<CalculatorLayoutProps> = ({ children, selectedInfoItem }) => {
+const CalculatorLayout: React.FC<CalculatorLayoutProps> = ({ 
+  children, 
+  selectedInfoItem,
+  companyName,
+  setCompanyName
+}) => {
   const isMobile = useIsMobile();
-
-  const handleContactAdvisor = () => {
-    window.open('https://work.weixin.qq.com/ca/cawcde03d69f2d37e9', '_blank');
-  };
 
   const InfoPanelContent = () => (
     <TaxInfoPanel selectedItem={selectedInfoItem} />
@@ -29,43 +32,11 @@ const CalculatorLayout: React.FC<CalculatorLayoutProps> = ({ children, selectedI
       <div className="container max-w-[100vw] px-4 md:px-8">
         <div className="flex flex-col md:flex-row gap-8">
           <div className="w-full">
-            <div className="grid gap-4 md:gap-8 mb-8">
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="flex items-center gap-2 text-[#1677FF]">
-                    <CircleAlert className="h-5 w-5" />
-                    <span className="text-lg">使用说明</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="py-2">
-                  <div className="text-gray-600 space-y-2">
-                    <div className="flex items-start gap-2">
-                      <ListMinus className="h-4 w-4 mt-1 flex-shrink-0 text-[#1677FF]" />
-                      <span>填写基本信息和财务数据</span>
-                    </div>
-                    <div className="flex items-start gap-2">
-                      <ListMinus className="h-4 w-4 mt-1 flex-shrink-0 text-[#1677FF]" />
-                      <span>系统将自动计算税务调整及风险值</span>
-                    </div>
-                    <div className="flex items-start gap-2">
-                      <ListMinus className="h-4 w-4 mt-1 flex-shrink-0 text-[#1677FF]" />
-                      <span>风险指数越高，表示理论应纳税额差异越大</span>
-                    </div>
-                    <div className="flex items-start gap-2">
-                      <ListMinus className="h-4 w-4 mt-1 flex-shrink-0 text-[#1677FF]" />
-                      <span>点击数据后方的信息图标查看详细分析</span>
-                    </div>
-                  </div>
-                  <Button 
-                    onClick={handleContactAdvisor}
-                    className="w-full mt-4 bg-vivid-purple hover:bg-secondary-purple text-white"
-                  >
-                    立即联系税务顾问
-                  </Button>
-                </CardContent>
-              </Card>
-              {children}
-            </div>
+            <TopSection 
+              companyName={companyName}
+              setCompanyName={setCompanyName}
+            />
+            {children}
           </div>
           
           {isMobile ? (
