@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { AlertCircle, Info, Phone } from 'lucide-react';
+import { AlertCircle, CircleInfo, ListOrdered } from 'lucide-react';
 import { TaxInfoPanelItem } from '@/types/calculator';
 import TaxInfoPanel from '@/components/TaxCalculator/TaxInfoPanel';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -31,29 +31,37 @@ const CalculatorLayout: React.FC<CalculatorLayoutProps> = ({ children, selectedI
           <div className="w-full">
             <div className="grid gap-4 md:gap-8 mb-8">
               <Card>
-                <CardHeader>
-                  <CardTitle className="text-tax-blue flex items-center gap-2">
-                    <AlertCircle className="h-5 w-5" />
+                <CardHeader className="pb-3">
+                  <CardTitle className="flex items-center text-tax-blue gap-2">
+                    <CircleInfo className="h-5 w-5" />
                     使用说明
                   </CardTitle>
-                  <CardDescription>
-                    本计算器用于评估企业所得税的潜在风险，数据仅供参考，请根据实际情况谨慎使用
-                  </CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <div className="text-sm text-gray-600 space-y-2">
-                    <p>1. 填写基本信息和财务数据</p>
-                    <p>2. 系统将自动计算税务调整及风险值</p>
-                    <p>3. 风险指数越高，表示与理论应纳税额差异越大，需要更多关注</p>
-                    <p>4. 点击数据后方的<Info className="h-3 w-3 inline-block text-tax-blue mx-1" />图标查看详细分析</p>
-                    <Button 
-                      onClick={handleContactAdvisor}
-                      className="w-full mt-4 bg-vivid-purple hover:bg-secondary-purple text-white"
-                    >
-                      <Phone className="w-4 h-4 mr-2" />
-                      立即联系税务顾问
-                    </Button>
+                <CardContent className="py-2">
+                  <div className="text-sm text-gray-600 space-y-1">
+                    <div className="flex items-start gap-2">
+                      <ListOrdered className="h-4 w-4 mt-1 flex-shrink-0" />
+                      <span>填写基本信息和财务数据</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <ListOrdered className="h-4 w-4 mt-1 flex-shrink-0" />
+                      <span>系统将自动计算税务调整及风险值</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <ListOrdered className="h-4 w-4 mt-1 flex-shrink-0" />
+                      <span>风险指数越高，表示理论应纳税额差异越大</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <ListOrdered className="h-4 w-4 mt-1 flex-shrink-0" />
+                      <span>点击数据后方的信息图标查看详细分析</span>
+                    </div>
                   </div>
+                  <Button 
+                    onClick={handleContactAdvisor}
+                    className="w-full mt-2 bg-vivid-purple hover:bg-secondary-purple text-white"
+                  >
+                    立即联系税务顾问
+                  </Button>
                 </CardContent>
               </Card>
               {children}
@@ -68,7 +76,7 @@ const CalculatorLayout: React.FC<CalculatorLayoutProps> = ({ children, selectedI
                     variant="outline" 
                     className="fixed bottom-4 right-4 z-50 rounded-full shadow-lg bg-white"
                   >
-                    <Info className="h-5 w-5" />
+                    <CircleInfo className="h-5 w-5" />
                   </Button>
                 </SheetTrigger>
                 <SheetContent side="bottom" className="h-[80vh]">
@@ -88,3 +96,4 @@ const CalculatorLayout: React.FC<CalculatorLayoutProps> = ({ children, selectedI
 };
 
 export default CalculatorLayout;
+
