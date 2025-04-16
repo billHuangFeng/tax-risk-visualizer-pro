@@ -42,7 +42,7 @@ export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({
     onClose();
   };
 
-  // Helper functions to safely set view state
+  // Helper functions to safely set view state with proper typing
   const setPreviewView = () => setView('preview');
   const setEditView = () => setView('edit');
   
