@@ -3,8 +3,9 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
-import { Trash2, Plus, CircleCheck, TriangleAlert, CircleX } from 'lucide-react';
+import { Trash2, Plus, CircleCheck, TriangleAlert, CircleX, Info } from 'lucide-react';
 import { DifferenceExplanation as DifferenceExplanationType } from '@/hooks/useVatCalculator';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface DifferenceExplanationProps {
   differenceExplanations: DifferenceExplanationType[];
@@ -14,6 +15,7 @@ interface DifferenceExplanationProps {
   explainedDifferenceTotal: number;
   unexplainedDifference: number;
   unexplainedDifferencePercentage: number;
+  onInfoClick?: (infoKey: string) => void;
 }
 
 const DifferenceExplanation: React.FC<DifferenceExplanationProps> = ({
@@ -24,6 +26,7 @@ const DifferenceExplanation: React.FC<DifferenceExplanationProps> = ({
   explainedDifferenceTotal,
   unexplainedDifference,
   unexplainedDifferencePercentage,
+  onInfoClick,
 }) => {
   const getWarningIcon = (percentage: number) => {
     const absPercentage = Math.abs(percentage);
@@ -110,7 +113,28 @@ const DifferenceExplanation: React.FC<DifferenceExplanationProps> = ({
           </TableRow>
 
           <TableRow className="bg-gray-100/50 font-medium">
-            <TableCell className="py-1">未解释差异</TableCell>
+            <TableCell className="py-1 flex items-center">
+              未解释差异
+              {onInfoClick && (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="h-6 w-6 ml-1 p-0.5" 
+                        onClick={() => onInfoClick('salesUnexplainedDifference')}
+                      >
+                        <Info className="h-4 w-4 text-blue-600" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent className="max-w-[200px]" side="top">
+                      <p className="text-xs">点击查看销售未解释差异的风险分析</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
+            </TableCell>
             <TableCell className="text-right flex items-center justify-end gap-2 py-1">
               <div className="flex items-center gap-2">
                 {getWarningIcon(unexplainedDifferencePercentage)}
