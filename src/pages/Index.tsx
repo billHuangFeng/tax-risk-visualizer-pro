@@ -28,6 +28,12 @@ const Index = () => {
         selectedInfoItem={selectedInfoItem}
         companyName={calculator.companyName}
         setCompanyName={calculator.setCompanyName}
+        creditCode={calculator.creditCode}
+        setCreditCode={calculator.setCreditCode}
+        contactPerson={calculator.contactPerson}
+        setContactPerson={calculator.setContactPerson}
+        contactPhone={calculator.contactPhone}
+        setContactPhone={calculator.setContactPhone}
       >
         <BasicInfo 
           isExcludedIndustry={calculator.isExcludedIndustry}

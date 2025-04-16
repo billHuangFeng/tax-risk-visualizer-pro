@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import CalculatorHeader from '@/components/TaxCalculator/CalculatorHeader';
@@ -31,6 +32,12 @@ const VatCalculator = () => {
         selectedInfoItem={selectedInfoItem}
         companyName={vatCalculator.companyName}
         setCompanyName={vatCalculator.setCompanyName}
+        creditCode=""
+        setCreditCode={() => {}}
+        contactPerson=""
+        setContactPerson={() => {}}
+        contactPhone=""
+        setContactPhone={() => {}}
       >
         <VatSalesSection 
           salesData={vatCalculator.salesData}

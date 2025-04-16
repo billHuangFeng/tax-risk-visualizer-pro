@@ -13,13 +13,25 @@ interface CalculatorLayoutProps {
   selectedInfoItem: TaxInfoPanelItem | null;
   companyName: string;
   setCompanyName: (value: string) => void;
+  creditCode: string;
+  setCreditCode: (value: string) => void;
+  contactPerson: string;
+  setContactPerson: (value: string) => void;
+  contactPhone: string;
+  setContactPhone: (value: string) => void;
 }
 
 const CalculatorLayout: React.FC<CalculatorLayoutProps> = ({ 
   children, 
   selectedInfoItem,
   companyName,
-  setCompanyName
+  setCompanyName,
+  creditCode,
+  setCreditCode,
+  contactPerson,
+  setContactPerson,
+  contactPhone,
+  setContactPhone
 }) => {
   const isMobile = useIsMobile();
 
@@ -35,6 +47,12 @@ const CalculatorLayout: React.FC<CalculatorLayoutProps> = ({
             <TopSection 
               companyName={companyName}
               setCompanyName={setCompanyName}
+              creditCode={creditCode}
+              setCreditCode={setCreditCode}
+              contactPerson={contactPerson}
+              setContactPerson={setContactPerson}
+              contactPhone={contactPhone}
+              setContactPhone={setContactPhone}
             />
             {children}
           </div>

@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -27,8 +26,11 @@ export interface DifferenceFactor {
 export const useVatCalculator = () => {
   const { toast } = useToast();
   
-  // Company name
+  // Company name and contact info
   const [companyName, setCompanyName] = useState<string>('');
+  const [creditCode, setCreditCode] = useState<string>('');
+  const [contactPerson, setContactPerson] = useState<string>('');
+  const [contactPhone, setContactPhone] = useState<string>('');
   
   // Sales data
   const [salesData, setSalesData] = useState<VatSalesItem[]>([
@@ -256,9 +258,15 @@ export const useVatCalculator = () => {
   }, [toast]);
   
   return {
-    // Company name
+    // Company name and contact info
     companyName,
     setCompanyName,
+    creditCode,
+    setCreditCode,
+    contactPerson,
+    setContactPerson,
+    contactPhone,
+    setContactPhone,
     
     // Sales data
     salesData,
