@@ -1,15 +1,13 @@
-
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Toggle } from "@/components/ui/toggle";
 import { DEFAULT_TEMPLATES } from "@/constants/pdfTemplates";
 import { PdfTemplate } from "@/types/pdfTemplates";
-import { Paintbrush, Eye, Download, Settings, Layout } from "lucide-react";
+import { Paintbrush, Eye, Download, Settings, Layout, ArrowLeft } from "lucide-react";
 import { PdfTemplateEditor } from './PdfTemplateEditor';
 import { PdfTemplatePreview } from './PdfTemplatePreview';
-import { PdfLayoutEditor } from './PdfLayoutEditor';
+import { PdfCanvasEditor } from './PdfCanvasEditor';
 
 interface PdfTemplateDialogProps {
   open: boolean;
@@ -40,13 +38,15 @@ export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({
     onExport(selectedTemplate);
     onClose();
   };
+
+  const handleBack = () => {
+    setView('select');
+  };
   
-  // Determine if a toggle should be pressed based on current view
   const isPreviewActive = view === 'preview';
   const isEditActive = view === 'edit';
   const isLayoutActive = view === 'layout';
   
-  // Handle toggle press for each mode
   const handlePreviewToggle = (pressed: boolean) => {
     if (pressed) setView('preview');
   };
@@ -62,7 +62,17 @@ export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[900px] max-h-[80vh] overflow-y-auto">
-        <DialogHeader>
+        <DialogHeader className="relative">
+          {view !== 'select' && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute left-0 top-0"
+              onClick={handleBack}
+            >
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
+          )}
           <DialogTitle>PDF模板选择</DialogTitle>
           <DialogDescription>
             选择导出PDF的模板样式或自定义设计
@@ -195,7 +205,7 @@ export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({
         )}
         
         {view === 'layout' && (
-          <PdfLayoutEditor
+          <PdfCanvasEditor
             template={selectedTemplate}
             onUpdate={handleSaveTemplate}
           />
