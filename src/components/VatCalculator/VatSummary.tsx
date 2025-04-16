@@ -5,6 +5,12 @@ import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Info, Plus, Trash2, AlertCircle } from 'lucide-react';
 import { DifferenceFactor } from '@/hooks/useVatCalculator';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface VatSummaryProps {
   payableTax: number;
@@ -61,12 +67,21 @@ const VatSummary: React.FC<VatSummaryProps> = ({
             <div className="flex justify-between items-center">
               <div className="font-medium flex items-center">
                 应交增值税
-                <button 
-                  className="ml-2 text-tax-blue hover:text-tax-light-blue"
-                  onClick={() => onInfoClick?.('payableTax')}
-                >
-                  <Info size={16} />
-                </button>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button 
+                        className="ml-2 text-tax-blue hover:text-tax-light-blue"
+                        onClick={() => onInfoClick?.('payableTax')}
+                      >
+                        <Info size={16} />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>销项税额减去进项税额后的差额</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-lg font-bold text-black">{payableTax.toFixed(2)}</span>
@@ -79,12 +94,21 @@ const VatSummary: React.FC<VatSummaryProps> = ({
             <div className="flex justify-between items-center">
               <div className="font-medium flex items-center">
                 实缴增值税
-                <button 
-                  className="ml-2 text-tax-blue hover:text-tax-light-blue"
-                  onClick={() => onInfoClick?.('actualTax')}
-                >
-                  <Info size={16} />
-                </button>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button 
+                        className="ml-2 text-tax-blue hover:text-tax-light-blue"
+                        onClick={() => onInfoClick?.('actualTax')}
+                      >
+                        <Info size={16} />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>企业实际缴纳的增值税额</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </div>
               <div className="flex items-center gap-2">
                 <Input
@@ -101,15 +125,24 @@ const VatSummary: React.FC<VatSummaryProps> = ({
             <div className="flex justify-between items-center">
               <div className="font-medium flex items-center">
                 差异
-                <button 
-                  className="ml-2 text-tax-blue hover:text-tax-light-blue"
-                  onClick={() => onInfoClick?.('taxDifference')}
-                >
-                  <Info size={16} />
-                </button>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button 
+                        className="ml-2 text-tax-blue hover:text-tax-light-blue"
+                        onClick={() => onInfoClick?.('taxDifference')}
+                      >
+                        <Info size={16} />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>理论应交与实缴税额的差异</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </div>
               <div className="flex items-center gap-2">
-                <span className={`text-lg font-bold text-black ${Math.abs(taxDifference) > 0 ? 'text-red-500' : ''}`}>
+                <span className={`text-lg font-bold ${Math.abs(taxDifference) > 0 ? 'text-red-500' : ''}`}>
                   {taxDifference.toFixed(2)}
                 </span>
               </div>
@@ -118,7 +151,7 @@ const VatSummary: React.FC<VatSummaryProps> = ({
             <div className="flex justify-between items-center">
               <div className="font-medium">差异幅度</div>
               <div className="flex items-center gap-2">
-                <span className={`text-lg font-bold text-black ${Math.abs(taxDifferencePercentage) > 20 ? 'text-red-500' : ''}`}>
+                <span className={`text-lg font-bold ${Math.abs(taxDifferencePercentage) > 20 ? 'text-red-500' : ''}`}>
                   {taxDifferencePercentage.toFixed(2)}%
                 </span>
               </div>
@@ -130,12 +163,21 @@ const VatSummary: React.FC<VatSummaryProps> = ({
           <div>
             <div className="flex items-center mb-4">
               <h3 className="text-lg font-semibold">差异原因分析</h3>
-              <button 
-                className="ml-2 text-tax-blue hover:text-tax-light-blue"
-                onClick={() => onInfoClick?.('taxDifferenceFactors')}
-              >
-                <Info size={16} />
-              </button>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button 
+                      className="ml-2 text-tax-blue hover:text-tax-light-blue"
+                      onClick={() => onInfoClick?.('differenceFactors')}
+                    >
+                      <Info size={16} />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>详细分析税款差异的具体原因</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
 
             <Table>
@@ -194,12 +236,21 @@ const VatSummary: React.FC<VatSummaryProps> = ({
             <div className="flex justify-between items-center">
               <div className="font-medium flex items-center">
                 未解释差异
-                <button 
-                  className="ml-2 text-tax-blue hover:text-tax-light-blue"
-                  onClick={() => onInfoClick?.('unexplainedDifference')}
-                >
-                  <Info size={16} />
-                </button>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button 
+                        className="ml-2 text-tax-blue hover:text-tax-light-blue"
+                        onClick={() => onInfoClick?.('unexplainedDifference')}
+                      >
+                        <Info size={16} />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>扣除已知差异后的未解释金额</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </div>
               <div className="text-lg font-bold text-red-600">
                 {unexplainedDifference.toFixed(2)}
@@ -209,12 +260,21 @@ const VatSummary: React.FC<VatSummaryProps> = ({
             <div className="flex justify-between items-center pt-2 border-t">
               <div className="font-medium flex items-center gap-2">
                 风险评估
-                <button 
-                  className="text-tax-blue hover:text-tax-light-blue"
-                  onClick={() => onInfoClick?.('riskAssessment')}
-                >
-                  <AlertCircle size={16} />
-                </button>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button 
+                        className="text-tax-blue hover:text-tax-light-blue"
+                        onClick={() => onInfoClick?.('riskAssessment')}
+                      >
+                        <AlertCircle size={16} />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>点击查看详细的风险评估信息</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </div>
               <div className={`px-3 py-1 rounded-full font-medium ${getRiskColor()}`}>
                 {riskLevel} (风险百分比: {taxDifferencePercentage.toFixed(2)}%)
