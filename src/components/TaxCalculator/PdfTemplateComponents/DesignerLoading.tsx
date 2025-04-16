@@ -5,9 +5,13 @@ import { Button } from '@/components/ui/button';
 
 interface DesignerLoadingProps {
   timeout?: number;
+  onRetry?: () => void;
 }
 
-export const DesignerLoading: React.FC<DesignerLoadingProps> = ({ timeout = 15 }) => {
+export const DesignerLoading: React.FC<DesignerLoadingProps> = ({ 
+  timeout = 10, // 减少默认超时时间
+  onRetry 
+}) => {
   const [seconds, setSeconds] = useState(0);
   const [showRetry, setShowRetry] = useState(false);
   
@@ -27,8 +31,15 @@ export const DesignerLoading: React.FC<DesignerLoadingProps> = ({ timeout = 15 }
   }, [timeout]);
   
   const handleRetry = () => {
-    // 刷新页面是最直接的解决方案
-    window.location.reload();
+    setSeconds(0);
+    setShowRetry(false);
+    
+    if (onRetry) {
+      onRetry();
+    } else {
+      // 刷新页面是次要备用方案
+      window.location.reload();
+    }
   };
   
   return (
@@ -44,11 +55,11 @@ export const DesignerLoading: React.FC<DesignerLoadingProps> = ({ timeout = 15 }
         
         {seconds > 0 && !showRetry && (
           <p className="text-sm text-gray-500">
-            已等待 {seconds} 秒
+            已等待 {seconds} 秒 (最多 {timeout} 秒)
           </p>
         )}
         
-        {seconds >= 5 && !showRetry && (
+        {seconds >= 3 && !showRetry && (
           <p className="text-sm text-amber-600">
             加载时间超过预期，正在尝试初始化设计器...
           </p>
@@ -60,7 +71,7 @@ export const DesignerLoading: React.FC<DesignerLoadingProps> = ({ timeout = 15 }
               加载时间过长，设计器可能遇到了问题
             </p>
             <p className="text-xs text-gray-600">
-              这可能是由于浏览器兼容性问题或网络连接问题导致的。您可以尝试刷新页面，使用不同的浏览器，或者稍后再试。
+              这可能是由于浏览器兼容性问题或网络连接问题导致的。您可以尝试刷新重试，或切换到简化模式。
             </p>
             <Button 
               variant="outline" 
