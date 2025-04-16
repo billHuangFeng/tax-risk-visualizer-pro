@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { RotateCcw, Download, Phone } from 'lucide-react';
 import SaveDataButton from './SaveDataButton';
 import { useCalculator } from '@/hooks/useCalculator';
+import { exportToPDF } from '@/utils/pdfExport';
+import { useToast } from '@/hooks/use-toast';
 
 interface CalculatorActionsProps {
   riskPercentage: number;
@@ -17,9 +19,26 @@ const CalculatorActions: React.FC<CalculatorActionsProps> = ({
   onExport,
 }) => {
   const calculator = useCalculator();
+  const { toast } = useToast();
   
   const handleContactAdvisor = () => {
     window.open('https://work.weixin.qq.com/ca/cawcde03d69f2d37e9', '_blank');
+  };
+
+  const handleExport = async () => {
+    try {
+      await exportToPDF(calculator);
+      toast({
+        title: "导出成功",
+        description: "PDF文件已生成",
+      });
+    } catch (error) {
+      toast({
+        title: "导出失败",
+        description: "请稍后重试",
+        variant: "destructive",
+      });
+    }
   };
   
   return (
@@ -35,7 +54,7 @@ const CalculatorActions: React.FC<CalculatorActionsProps> = ({
       
       <Button
         variant="outline"
-        onClick={onExport}
+        onClick={handleExport}
         className="w-full md:w-auto"
       >
         <Download className="w-4 h-4 mr-2" />
