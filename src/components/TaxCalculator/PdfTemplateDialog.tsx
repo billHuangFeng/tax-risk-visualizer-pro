@@ -55,7 +55,7 @@ export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({
             <div className="flex items-center justify-end space-x-2 mb-4">
               <Toggle 
                 pressed={view === 'preview'} 
-                onPressedChange={() => setView('preview')}
+                onPressedChange={() => setView('preview' as ViewState)}
                 aria-label="预览模板"
               >
                 <Eye className="h-4 w-4 mr-2" />
@@ -63,7 +63,7 @@ export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({
               </Toggle>
               <Toggle 
                 pressed={view === 'edit'} 
-                onPressedChange={() => setView('edit')}
+                onPressedChange={() => setView('edit' as ViewState)}
                 aria-label="编辑模板"
               >
                 <Paintbrush className="h-4 w-4 mr-2" />
