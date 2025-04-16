@@ -13,14 +13,10 @@ interface VatSummaryProps {
   setActualTax: (value: number) => void;
   taxDifference: number;
   taxDifferencePercentage: number;
-  salesDifferenceFactors: DifferenceFactor[];
-  addSalesDifferenceFactor: () => void;
-  updateSalesDifferenceFactor: (id: string, field: keyof DifferenceFactor, value: any) => void;
-  removeSalesDifferenceFactor: (id: string) => void;
-  purchasesDifferenceFactors: DifferenceFactor[];
-  addPurchasesDifferenceFactor: () => void;
-  updatePurchasesDifferenceFactor: (id: string, field: keyof DifferenceFactor, value: any) => void;
-  removePurchasesDifferenceFactor: (id: string) => void;
+  taxDifferenceFactors: DifferenceFactor[];
+  addTaxDifferenceFactor: () => void;
+  updateTaxDifferenceFactor: (id: string, field: keyof DifferenceFactor, value: any) => void;
+  removeTaxDifferenceFactor: (id: string) => void;
   unexplainedDifference: number;
   riskLevel: string;
   onInfoClick?: (infoKey: string) => void;
@@ -32,14 +28,10 @@ const VatSummary: React.FC<VatSummaryProps> = ({
   setActualTax,
   taxDifference,
   taxDifferencePercentage,
-  salesDifferenceFactors,
-  addSalesDifferenceFactor,
-  updateSalesDifferenceFactor,
-  removeSalesDifferenceFactor,
-  purchasesDifferenceFactors,
-  addPurchasesDifferenceFactor,
-  updatePurchasesDifferenceFactor,
-  removePurchasesDifferenceFactor,
+  taxDifferenceFactors,
+  addTaxDifferenceFactor,
+  updateTaxDifferenceFactor,
+  removeTaxDifferenceFactor,
   unexplainedDifference,
   riskLevel,
   onInfoClick
@@ -138,10 +130,10 @@ const VatSummary: React.FC<VatSummaryProps> = ({
         <div className="border-t pt-6 space-y-6">
           <div>
             <div className="flex items-center mb-4">
-              <h3 className="text-lg font-semibold">销售差异原因分析</h3>
+              <h3 className="text-lg font-semibold">差异原因分析</h3>
               <button 
                 className="ml-2 text-tax-blue hover:text-tax-light-blue"
-                onClick={() => onInfoClick?.('salesDifferenceFactors')}
+                onClick={() => onInfoClick?.('taxDifferenceFactors')}
               >
                 <Info size={16} />
               </button>
@@ -156,12 +148,12 @@ const VatSummary: React.FC<VatSummaryProps> = ({
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {salesDifferenceFactors.map((factor) => (
+                {taxDifferenceFactors.map((factor) => (
                   <TableRow key={factor.id} className="h-12">
                     <TableCell className="py-1">
                       <Input
                         value={factor.description}
-                        onChange={(e) => updateSalesDifferenceFactor(factor.id, 'description', e.target.value)}
+                        onChange={(e) => updateTaxDifferenceFactor(factor.id, 'description', e.target.value)}
                         className="w-full text-left h-8"
                       />
                     </TableCell>
@@ -169,7 +161,7 @@ const VatSummary: React.FC<VatSummaryProps> = ({
                       <Input
                         type="number"
                         value={factor.amount}
-                        onChange={(e) => updateSalesDifferenceFactor(factor.id, 'amount', parseFloat(e.target.value) || 0)}
+                        onChange={(e) => updateTaxDifferenceFactor(factor.id, 'amount', parseFloat(e.target.value) || 0)}
                         className="text-right w-full h-8"
                       />
                     </TableCell>
@@ -177,8 +169,8 @@ const VatSummary: React.FC<VatSummaryProps> = ({
                       <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => removeSalesDifferenceFactor(factor.id)}
-                        disabled={salesDifferenceFactors.length <= 1}
+                        onClick={() => removeTaxDifferenceFactor(factor.id)}
+                        disabled={taxDifferenceFactors.length <= 1}
                       >
                         <Trash2 className="h-4 w-4 text-gray-500" />
                       </Button>
@@ -192,73 +184,10 @@ const VatSummary: React.FC<VatSummaryProps> = ({
               variant="outline"
               size="sm"
               className="mt-4"
-              onClick={addSalesDifferenceFactor}
+              onClick={addTaxDifferenceFactor}
             >
               <Plus className="h-4 w-4 mr-2" />
-              添加销售差异原因
-            </Button>
-          </div>
-
-          <div>
-            <div className="flex items-center mb-4">
-              <h3 className="text-lg font-semibold">采购差异原因分析</h3>
-              <button 
-                className="ml-2 text-tax-blue hover:text-tax-light-blue"
-                onClick={() => onInfoClick?.('purchasesDifferenceFactors')}
-              >
-                <Info size={16} />
-              </button>
-            </div>
-
-            <Table>
-              <TableHeader>
-                <TableRow className="bg-gray-100">
-                  <TableHead className="w-3/4 text-left">差异原因</TableHead>
-                  <TableHead className="text-right">金额</TableHead>
-                  <TableHead className="w-[50px]"></TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {purchasesDifferenceFactors.map((factor) => (
-                  <TableRow key={factor.id} className="h-12">
-                    <TableCell className="py-1">
-                      <Input
-                        value={factor.description}
-                        onChange={(e) => updatePurchasesDifferenceFactor(factor.id, 'description', e.target.value)}
-                        className="w-full text-left h-8"
-                      />
-                    </TableCell>
-                    <TableCell className="text-right py-1">
-                      <Input
-                        type="number"
-                        value={factor.amount}
-                        onChange={(e) => updatePurchasesDifferenceFactor(factor.id, 'amount', parseFloat(e.target.value) || 0)}
-                        className="text-right w-full h-8"
-                      />
-                    </TableCell>
-                    <TableCell className="py-1">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => removePurchasesDifferenceFactor(factor.id)}
-                        disabled={purchasesDifferenceFactors.length <= 1}
-                      >
-                        <Trash2 className="h-4 w-4 text-gray-500" />
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-            
-            <Button
-              variant="outline"
-              size="sm"
-              className="mt-4"
-              onClick={addPurchasesDifferenceFactor}
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              添加采购差异原因
+              添加差异原因
             </Button>
           </div>
 

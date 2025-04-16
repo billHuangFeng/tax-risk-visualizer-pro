@@ -51,35 +51,26 @@ export const useVatCalculator = () => {
 
   // Calculate unexplained difference and risk level
   useEffect(() => {
-    // Calculate total explained difference from the difference factors in the VAT summary
-    const salesExplainedAmount = differences.salesDifferenceFactors.reduce(
+    // Calculate total explained difference from the tax difference factors
+    const explainedAmount = differences.taxDifferenceFactors.reduce(
       (sum, factor) => sum + factor.amount, 
       0
     );
-    
-    const purchasesExplainedAmount = differences.purchasesDifferenceFactors.reduce(
-      (sum, factor) => sum + factor.amount, 
-      0
-    );
-    
-    // Calculate total explained difference
-    const totalExplainedDifference = salesExplainedAmount + purchasesExplainedAmount;
     
     // Calculate unexplained difference
-    const unexplained = tax.taxDifference - totalExplainedDifference;
+    const unexplained = tax.taxDifference - explainedAmount;
     tax.setUnexplainedDifference(unexplained);
     
     // Updated risk assessment logic based on the specified requirements
     if (Math.abs(unexplained) > 0) {
-      // If there is any unexplained difference, set risk to "风险非常高" as shown in the image
+      // If there is any unexplained difference, set risk to "风险非常高"
       tax.setRiskLevel('风险非常高');
     } else {
       tax.setRiskLevel('风险较低');
     }
   }, [
     tax.taxDifference,
-    differences.salesDifferenceFactors,
-    differences.purchasesDifferenceFactors
+    differences.taxDifferenceFactors
   ]);
 
   const handleReset = () => {
@@ -94,12 +85,9 @@ export const useVatCalculator = () => {
     purchases.setBankPurchasesAmount(0);
     tax.setActualTax(0);
     
-    // Reset difference factors for both sales and purchases
-    differences.setSalesDifferenceFactors([
-      { id: '1', description: '销售差异原因1', amount: 0 }
-    ]);
-    differences.setPurchasesDifferenceFactors([
-      { id: '1', description: '采购差异原因1', amount: 0 }
+    // Reset difference factors
+    differences.setTaxDifferenceFactors([
+      { id: '1', description: '差异原因1', amount: 0 }
     ]);
     
     toast({
