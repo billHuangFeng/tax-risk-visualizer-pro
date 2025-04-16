@@ -18,7 +18,7 @@ export const processInputFields = (container: HTMLElement) => {
           if (!valueDisplay) {
             valueDisplay = document.createElement('div');
             valueDisplay.className = 'pdf-value pdf-only';
-            valueDisplay.style.display = 'none'; // 默认隐藏，仅PDF时显示
+            (valueDisplay as HTMLElement).style.display = 'none'; // 默认隐藏，仅PDF时显示
             parentElement.appendChild(valueDisplay);
           } else if (valueDisplay instanceof HTMLElement) {
             // 确保现有的元素也有pdf-only类
@@ -63,9 +63,9 @@ export const processInputFields = (container: HTMLElement) => {
                 const unitLabel = document.createElement('span');
                 unitLabel.className = 'unit-label pdf-only';
                 unitLabel.textContent = input.dataset.unit || ' 万元';
-                unitLabel.style.marginLeft = '4px';
-                unitLabel.style.display = 'none'; // 默认隐藏
-                unitLabel.dataset.pdfOnly = 'true';
+                (unitLabel as HTMLElement).style.marginLeft = '4px';
+                (unitLabel as HTMLElement).style.display = 'none'; // 默认隐藏
+                (unitLabel as HTMLElement).dataset.pdfOnly = 'true';
                 parentElement.appendChild(unitLabel);
               }
             }
@@ -89,8 +89,8 @@ export const processInputFields = (container: HTMLElement) => {
         if (!valueDisplay) {
           valueDisplay = document.createElement('div');
           valueDisplay.className = 'pdf-value pdf-only';
-          valueDisplay.style.display = 'none'; // 默认隐藏
-          valueDisplay.dataset.pdfOnly = 'true';
+          (valueDisplay as HTMLElement).style.display = 'none'; // 默认隐藏
+          (valueDisplay as HTMLElement).dataset.pdfOnly = 'true';
           parentElement.appendChild(valueDisplay);
         }
         
