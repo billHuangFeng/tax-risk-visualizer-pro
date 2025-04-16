@@ -2,13 +2,27 @@
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 
+// Safely check if an element exists in the DOM
+const elementExists = (element: Element | null): boolean => {
+  return !!(element && document.body.contains(element));
+};
+
 // Prepare cloned content for PDF export
 const prepareContentForExport = (content: HTMLElement): HTMLElement => {
+  // Remove any existing temp container first
+  const existingTempContainer = document.getElementById('temp-pdf-container');
+  if (existingTempContainer) {
+    try {
+      document.body.removeChild(existingTempContainer);
+    } catch (e) {
+      console.warn('Could not remove existing temp container:', e);
+    }
+  }
+  
   const clonedContent = content.cloneNode(true) as HTMLElement;
   const tempContainer = document.createElement('div');
   tempContainer.id = 'temp-pdf-container';
-  document.body.appendChild(tempContainer);
-  tempContainer.appendChild(clonedContent);
+  tempContainer.classList.add('pdf-temp-element', 'pdf-export-container');
   
   // Set container styles
   tempContainer.style.position = 'absolute';
@@ -16,7 +30,10 @@ const prepareContentForExport = (content: HTMLElement): HTMLElement => {
   tempContainer.style.top = '0';
   tempContainer.style.width = '1200px';
   tempContainer.style.backgroundColor = '#ffffff';
-  tempContainer.classList.add('pdf-export-container');
+  
+  // Safely append to body
+  document.body.appendChild(tempContainer);
+  tempContainer.appendChild(clonedContent);
   
   return tempContainer;
 };
@@ -54,7 +71,7 @@ const processInputFields = (container: HTMLElement) => {
       valueDisplay.style.fontWeight = 'bold';
       valueDisplay.style.zIndex = '10';
       
-      input.parentElement.appendChild(valueDisplay);
+      parentElement.appendChild(valueDisplay);
       
       // Hide the input for PDF export
       input.style.opacity = '0';
@@ -137,13 +154,13 @@ const enhanceVisualElements = (container: HTMLElement) => {
   removeRedundantTextElements(container);
 };
 
-// Remove redundant text elements that might cause duplicates
+// Remove redundant text elements that might cause duplicates - with safety checks
 const removeRedundantTextElements = (container: HTMLElement) => {
   // Find all spans that were added by the onclone callback in html2canvas
   const redundantSpans = container.querySelectorAll('span:not(.pdf-value)[style*="position: absolute"]');
   redundantSpans.forEach((span) => {
     try {
-      if (span.parentElement) {
+      if (span.parentElement && span.parentElement.contains(span)) {
         span.parentElement.removeChild(span);
       }
     } catch (e) {
@@ -195,37 +212,43 @@ const createCanvas = async (content: HTMLElement): Promise<HTMLCanvasElement> =>
   // Give the DOM time to process all styling changes
   await new Promise(resolve => setTimeout(resolve, 500));
   
-  const canvas = await html2canvas(content, {
-    scale: 2,
-    useCORS: true,
-    logging: true,
-    backgroundColor: '#ffffff',
-    allowTaint: true,
-    width: 1200,
-    onclone: (document, element) => {
-      console.log("Cloned document prepared for rendering");
-      
-      // Mark all existing value displays to prevent duplication
-      const existingDisplays = element.querySelectorAll('.pdf-value');
-      existingDisplays.forEach((display) => {
-        display.setAttribute('data-pdf-value', 'true');
-      });
-      
-      // Remove any already generated spans to avoid duplication
-      const redundantSpans = element.querySelectorAll('span:not([data-pdf-value="true"])[style*="position: absolute"]');
-      redundantSpans.forEach((span) => {
-        try {
-          if (span.parentElement) {
-            span.parentElement.removeChild(span);
+  try {
+    const canvas = await html2canvas(content, {
+      scale: 2,
+      useCORS: true,
+      logging: true,
+      backgroundColor: '#ffffff',
+      allowTaint: true,
+      width: 1200,
+      onclone: (document, element) => {
+        console.log("Cloned document prepared for rendering");
+        
+        // Mark all existing value displays to prevent duplication
+        const existingDisplays = element.querySelectorAll('.pdf-value');
+        existingDisplays.forEach((display) => {
+          display.setAttribute('data-pdf-value', 'true');
+        });
+        
+        // Safely remove any already generated spans to avoid duplication
+        const redundantSpans = element.querySelectorAll('span:not([data-pdf-value="true"])[style*="position: absolute"]');
+        redundantSpans.forEach((span) => {
+          try {
+            if (span.parentElement && elementExists(span) && span.parentElement.contains(span)) {
+              span.parentElement.removeChild(span);
+            }
+          } catch (e) {
+            console.warn('Could not remove span in onclone:', e);
           }
-        } catch (e) {
-          console.warn('Could not remove span in onclone:', e);
-        }
-      });
-    }
-  });
-  console.log("Canvas created successfully", canvas.width, canvas.height);
-  return canvas;
+        });
+      }
+    });
+    
+    console.log("Canvas created successfully", canvas.width, canvas.height);
+    return canvas;
+  } catch (error) {
+    console.error("Canvas creation failed:", error);
+    throw error;
+  }
 };
 
 // Generate filename for PDF
@@ -271,7 +294,13 @@ const safelyRemoveElement = (element: HTMLElement | null): void => {
   if (!element) return;
   
   try {
-    // Only attempt to remove if the element is still in the DOM
+    // First check if the element is actually in the DOM
+    if (!elementExists(element)) {
+      console.warn('Element not in DOM, cannot remove it');
+      return;
+    }
+    
+    // Only attempt to remove if the element is still in the DOM and has a parent
     if (element.parentNode && document.body.contains(element)) {
       element.parentNode.removeChild(element);
     } else if (element.id) {
@@ -286,35 +315,43 @@ const safelyRemoveElement = (element: HTMLElement | null): void => {
   }
 };
 
-// Clean up after PDF export
+// Clean up after PDF export - improved with safety checks
 const cleanupAfterExport = (): void => {
-  // Find any temporary containers by ID
-  const tempContainer = document.getElementById('temp-pdf-container');
-  if (tempContainer) {
-    safelyRemoveElement(tempContainer);
-  }
-  
-  // Remove any orphaned PDF-related elements
-  const orphanedElements = document.querySelectorAll('.pdf-temp-element');
-  orphanedElements.forEach((element) => {
-    try {
-      if (element.parentNode) {
-        element.parentNode.removeChild(element);
-      }
-    } catch (e) {
-      console.warn('Could not remove orphaned element:', e);
+  try {
+    // Find any temporary containers by ID
+    const tempContainer = document.getElementById('temp-pdf-container');
+    if (tempContainer && elementExists(tempContainer)) {
+      safelyRemoveElement(tempContainer);
     }
-  });
-  
-  // Remove PDF-specific classes from the calculator content
-  const calculatorContent = document.getElementById('calculator-content');
-  if (calculatorContent) {
-    calculatorContent.classList.remove('for-pdf-export', 'pdf-export-container');
+    
+    // Remove any orphaned PDF-related elements
+    const orphanedElements = document.querySelectorAll('.pdf-temp-element');
+    orphanedElements.forEach((element) => {
+      if (elementExists(element)) {
+        try {
+          if (element.parentNode && element.parentNode.contains(element)) {
+            element.parentNode.removeChild(element);
+          }
+        } catch (e) {
+          console.warn('Could not remove orphaned element:', e);
+        }
+      }
+    });
+    
+    // Remove PDF-specific classes from the calculator content
+    const calculatorContent = document.getElementById('calculator-content');
+    if (calculatorContent) {
+      calculatorContent.classList.remove('for-pdf-export', 'pdf-export-container');
+    }
+  } catch (error) {
+    console.warn('Error during cleanup:', error);
   }
 };
 
-// Main export function
+// Main export function - with improved error handling and cleanup
 export const exportToPDF = async (calculator: any) => {
+  let tempContainer: HTMLElement | null = null;
+  
   try {
     const content = document.querySelector('#calculator-content');
     if (!content) {
@@ -330,7 +367,7 @@ export const exportToPDF = async (calculator: any) => {
     cleanupAfterExport();
 
     // Prepare content
-    const tempContainer = prepareContentForExport(content);
+    tempContainer = prepareContentForExport(content);
     const clonedContent = tempContainer.firstChild as HTMLElement;
     
     // Process elements

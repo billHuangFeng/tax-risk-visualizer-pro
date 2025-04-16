@@ -35,12 +35,28 @@ const CalculatorActions: React.FC<CalculatorActionsProps> = ({
         description: "正在处理所有页面，可能需要几秒钟...",
       });
       
-      // Safely clean duplicate spans first - wrap in try/catch to prevent errors
+      // Remove any existing temporary elements first
+      const existingTempElements = document.querySelectorAll('.pdf-temp-element');
+      existingTempElements.forEach(el => {
+        try {
+          if (el.parentElement && document.body.contains(el) && el.parentElement.contains(el)) {
+            el.parentElement.removeChild(el);
+          }
+        } catch (err) {
+          console.warn("Error removing temporary element:", err);
+        }
+      });
+      
+      // Safely clean duplicate spans first - with additional checks
       try {
         const duplicateSpans = document.querySelectorAll('span:not(.pdf-value)[style*="position: absolute"]');
         duplicateSpans.forEach(span => {
-          if (span.parentElement && span.parentElement.contains(span)) {
-            span.parentElement.removeChild(span);
+          try {
+            if (span.parentElement && document.body.contains(span) && span.parentElement.contains(span)) {
+              span.parentElement.removeChild(span);
+            }
+          } catch (innerError) {
+            console.warn("Error safely removing a span:", innerError);
           }
         });
       } catch (error) {

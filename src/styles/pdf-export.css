@@ -38,6 +38,11 @@
     opacity: 0 !important;
   }
 
+  /* Prevent duplicate content during export */
+  span:not(.pdf-value)[style*="position: absolute"] {
+    display: none !important;
+  }
+
   .for-pdf-export td input {
     position: relative !important;
   }
@@ -84,23 +89,27 @@
     position: relative !important;
   }
   
-  /* Ensure duplicate spans are hidden */
+  /* Ensure duplicate spans are hidden globally */
   body span:not(.pdf-value)[style*="position: absolute"] {
     display: none !important;
   }
   
-  /* Make sure temporary elements are properly removed */
+  /* Make sure temporary elements are properly positioned and hidden */
   #temp-pdf-container {
     position: absolute !important;
     left: -9999px !important;
     top: 0 !important;
     opacity: 0 !important;
     pointer-events: none !important;
+    visibility: hidden !important;
   }
   
   /* Add a class to mark temporary elements for cleanup */
   .pdf-temp-element {
     display: none !important;
+    position: absolute !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
   }
   
   /* Hide any temporary elements that might be created during pdf rendering */

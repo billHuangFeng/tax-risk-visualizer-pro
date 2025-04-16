@@ -28,23 +28,40 @@ export const useActions = (riskValue: string, riskPercentage: number) => {
         throw new Error('计算器内容未找到');
       }
       
+      // Define a helper function to check if an element is in the DOM
+      const elementExists = (el: Element): boolean => {
+        return document.body.contains(el);
+      };
+      
       // Safely remove any existing duplicate elements before export
       const safelyRemoveDuplicates = () => {
         try {
           const duplicateElements = document.querySelectorAll('span:not(.pdf-value)[style*="position: absolute"]');
           duplicateElements.forEach(el => {
             try {
-              if (el.parentElement && el.parentElement.contains(el)) {
+              if (el.parentElement && elementExists(el) && el.parentElement.contains(el)) {
                 el.parentElement.removeChild(el);
               }
             } catch (err) {
-              console.warn("Could not remove duplicate element:", err);
+              console.warn("Could not safely remove duplicate element:", err);
             }
           });
         } catch (err) {
           console.warn("Error in duplicate removal:", err);
         }
       };
+      
+      // Clean up any temporary elements first
+      const tempElements = document.querySelectorAll('.pdf-temp-element');
+      tempElements.forEach(el => {
+        try {
+          if (el.parentElement && elementExists(el) && el.parentElement.contains(el)) {
+            el.parentElement.removeChild(el);
+          }
+        } catch (err) {
+          console.warn("Error removing temporary element:", err);
+        }
+      });
       
       // Clean up any previous export artifacts
       safelyRemoveDuplicates();
