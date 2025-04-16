@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -121,8 +122,8 @@ const VatSalesSection: React.FC<VatSalesSectionProps> = ({
           </TableBody>
         </Table>
         
-        <div className="flex justify-between items-center mt-6 mb-4">
-          <div className="font-medium flex items-center">
+        <div className="grid grid-cols-12 gap-4 mt-6 mb-4 items-center">
+          <div className="col-span-3 font-medium flex items-center">
             银行收款金额
             <button 
               className="ml-2 text-tax-blue hover:text-tax-light-blue"
@@ -131,12 +132,12 @@ const VatSalesSection: React.FC<VatSalesSectionProps> = ({
               <Info size={16} />
             </button>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="col-span-3 text-right">
             <Input
               type="number"
               value={bankSalesAmount}
               onChange={(e) => setBankSalesAmount(parseFloat(e.target.value) || 0)}
-              className="w-32 text-right"
+              className="w-full text-right"
             />
           </div>
         </div>
@@ -155,3 +156,4 @@ const VatSalesSection: React.FC<VatSalesSectionProps> = ({
 };
 
 export default VatSalesSection;
+

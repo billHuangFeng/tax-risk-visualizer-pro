@@ -37,6 +37,8 @@ const VatCalculator = () => {
           updateSalesItem={vatCalculator.updateSalesItem}
           removeSalesItem={vatCalculator.removeSalesItem}
           salesTotal={vatCalculator.salesTotal}
+          bankSalesAmount={vatCalculator.bankSalesAmount}
+          setBankSalesAmount={vatCalculator.setBankSalesAmount}
           onInfoClick={onInfoClick}
         />
 
@@ -55,8 +57,6 @@ const VatCalculator = () => {
           setActualTax={vatCalculator.setActualTax}
           taxDifference={vatCalculator.taxDifference}
           taxDifferencePercentage={vatCalculator.taxDifferencePercentage}
-          bankSalesAmount={vatCalculator.bankSalesAmount} 
-          setBankSalesAmount={vatCalculator.setBankSalesAmount}
           bankPurchasesAmount={vatCalculator.bankPurchasesAmount}
           setBankPurchasesAmount={vatCalculator.setBankPurchasesAmount}
           onInfoClick={onInfoClick}
@@ -84,3 +84,4 @@ const VatCalculator = () => {
 };
 
 export default VatCalculator;
+
