@@ -59,9 +59,11 @@ export const formatLabelValue = (container: HTMLElement) => {
                 if (!unitLabel) {
                   unitLabel = document.createElement('span');
                   unitLabel.className = 'unit-label';
-                  unitLabel.textContent = input.dataset.unit;
-                  unitLabel.style.marginLeft = '4px';
-                  valueEl.appendChild(unitLabel);
+                  if (unitLabel instanceof HTMLElement) {
+                    unitLabel.textContent = input.dataset.unit;
+                    unitLabel.style.marginLeft = '4px';
+                    valueEl.appendChild(unitLabel);
+                  }
                 }
               }
               
@@ -108,11 +110,13 @@ export const enhanceCheckboxes = (container: HTMLElement) => {
             checkmark = document.createElement('span');
             checkmark.className = 'checkmark';
             checkmark.textContent = '✓';
-            checkmark.style.position = 'absolute';
-            checkmark.style.top = '-2px';
-            checkmark.style.left = '2px';
-            checkmark.style.fontSize = '14px';
-            checkbox.appendChild(checkmark);
+            if (checkmark instanceof HTMLElement) {
+              checkmark.style.position = 'absolute';
+              checkmark.style.top = '-2px';
+              checkmark.style.left = '2px';
+              checkmark.style.fontSize = '14px';
+              checkbox.appendChild(checkmark);
+            }
           }
           
           if (checkmark instanceof HTMLElement) {

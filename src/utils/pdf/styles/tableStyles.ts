@@ -24,7 +24,7 @@ export const enhanceTableLayout = (container: HTMLElement) => {
             if (cell.classList.contains('label-cell') || 
                 cell.textContent?.includes('项目') || 
                 cell.textContent?.includes('名称') ||
-                cell.cellIndex === 0) {
+                (cell instanceof HTMLTableCellElement && cell.cellIndex === 0)) {
               cell.style.textAlign = 'left';
             } else {
               cell.style.textAlign = 'right';
