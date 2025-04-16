@@ -57,7 +57,9 @@ const VatSummary: React.FC<VatSummaryProps> = ({
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="grid md:grid-cols-2 gap-6">
+        {/* Top section with grid layout */}
+        <div className="grid md:grid-cols-2 gap-6 mb-8">
+          {/* Left section - Payable and Actual Tax */}
           <div className="space-y-4">
             <div className="flex justify-between items-center">
               <div className="font-medium flex items-center">
@@ -96,8 +98,11 @@ const VatSummary: React.FC<VatSummaryProps> = ({
                 />
               </div>
             </div>
-            
-            <div className="flex justify-between items-center pt-2 border-t">
+          </div>
+
+          {/* Right section - Differences */}
+          <div className="space-y-4">
+            <div className="flex justify-between items-center">
               <div className="font-medium flex items-center">
                 差异
                 <button 
@@ -125,7 +130,8 @@ const VatSummary: React.FC<VatSummaryProps> = ({
           </div>
         </div>
 
-        <div className="mt-8 border-t pt-6">
+        {/* Bottom section - Difference Analysis */}
+        <div className="border-t pt-6">
           <div className="flex items-center mb-4">
             <h3 className="text-lg font-semibold">差异原因分析</h3>
             <button 
