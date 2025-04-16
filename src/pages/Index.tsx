@@ -114,6 +114,7 @@ const Index = () => {
           <CalculatorActions
             riskPercentage={calculator.riskPercentage}
             onReset={calculator.handleReset}
+            onLoadTestData={calculator.loadTestData}
           />
         </div>
       </CalculatorLayout>
