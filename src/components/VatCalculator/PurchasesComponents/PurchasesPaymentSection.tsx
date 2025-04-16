@@ -2,6 +2,12 @@
 import React from 'react';
 import { Input } from '@/components/ui/input';
 import { Info } from 'lucide-react';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface PurchasesPaymentSectionProps {
   bankPurchasesAmount: number;
@@ -27,12 +33,21 @@ const PurchasesPaymentSection: React.FC<PurchasesPaymentSectionProps> = ({
     <div className="grid grid-cols-12 gap-4 mt-6 mb-4 items-center">
       <div className="col-span-3 font-medium flex items-center">
         银行采购款
-        <button 
-          className="ml-2 text-tax-blue hover:text-tax-light-blue"
-          onClick={() => onInfoClick?.('bankPurchasesAmount')}
-        >
-          <Info size={16} />
-        </button>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button 
+                className="ml-2 text-tax-blue hover:text-tax-light-blue"
+                onClick={() => onInfoClick?.('bankPurchasesAmount')}
+              >
+                <Info size={16} />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>通过银行支付的采购款项总额</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
       <div className="col-span-3 text-right">
         <Input
@@ -45,12 +60,21 @@ const PurchasesPaymentSection: React.FC<PurchasesPaymentSectionProps> = ({
       
       <div className="col-span-3 font-medium flex items-center">
         采购与付款差异
-        <button 
-          className="ml-2 text-tax-blue hover:text-tax-light-blue"
-          onClick={() => onInfoClick?.('purchaseCollectionDifference')}
-        >
-          <Info size={16} />
-        </button>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button 
+                className="ml-2 text-tax-blue hover:text-tax-light-blue"
+                onClick={() => onInfoClick?.('purchaseCollectionDifference')}
+              >
+                <Info size={16} />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>进项发票金额与实际付款金额的差异</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
       <div className="col-span-3 text-right flex items-center justify-end gap-2">
         <Input
