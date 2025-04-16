@@ -1,4 +1,5 @@
-import React from 'react';
+
+import React, { useState } from 'react';  // Added useState import
 import CalculatorHeader from '@/components/TaxCalculator/CalculatorHeader';
 import CalculatorActions from '@/components/TaxCalculator/CalculatorActions';
 import BasicInfo from '@/components/TaxCalculator/BasicInfo';
