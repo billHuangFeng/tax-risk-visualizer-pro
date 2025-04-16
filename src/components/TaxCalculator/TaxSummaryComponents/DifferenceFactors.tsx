@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
 import { Trash2, Plus, Info } from 'lucide-react';
+import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 
 export interface DifferenceFactor {
   id: string;
@@ -30,12 +31,21 @@ const DifferenceFactors: React.FC<DifferenceFactorsProps> = ({
     <div className="pt-4 border-t">
       <div className="flex items-center mb-4">
         <h3 className="text-lg font-semibold">差异原因分析</h3>
-        <button 
-          className="ml-2 text-tax-blue hover:text-tax-light-blue"
-          onClick={() => onInfoClick?.('taxDifferenceFactors')}
-        >
-          <Info size={16} />
-        </button>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button 
+                className="ml-2 text-tax-blue hover:text-tax-light-blue"
+                onClick={() => onInfoClick?.('taxDifferenceFactors')}
+              >
+                <Info size={16} />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>列出理论税额与实际税额的差异原因，如税收优惠、允许抵扣项目等</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
 
       <Table>

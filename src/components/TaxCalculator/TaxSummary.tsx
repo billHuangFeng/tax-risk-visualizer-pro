@@ -124,7 +124,7 @@ const TaxSummary: React.FC<TaxSummaryProps> = ({
                     </button>
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p>扣除已知差异后的未解释金额</p>
+                    <p className="text-sm max-w-[300px]">未解释差异金额是指企业所得税差异扣除已知差异因素后的剩余部分，代表存在税务风险的金额。百分比越高风险越大。</p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
