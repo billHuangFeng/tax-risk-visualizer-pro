@@ -5,92 +5,118 @@
 
 /* PDF Export Specific Styles */
 @layer base {
-  /* Specific PDF export classes for input fields and value visibility */
-  .for-pdf-export input,
-  .pdf-text-visible input {
-    overflow: visible !important;
-    text-overflow: clip !important;
-    white-space: normal !important;
-  }
-
-  /* Hide regular pdf-value elements normally, show only in export mode */
-  .pdf-value {
-    opacity: 0 !important;
-    visibility: hidden !important;
-    transition: opacity 0.1s ease;
-    z-index: 5;
-    font-weight: bold;
-    padding-right: 4px;
-  }
-
-  /* Only show pdf-value in export mode */
-  .for-pdf-export .pdf-value {
-    opacity: 1 !important;
-    visibility: visible !important;
-    color: #000 !important;
+  /* General export container settings */
+  .for-pdf-export {
     background-color: white !important;
-  }
-
-  /* Prevent cloned elements from showing up in the exported PDF */
-  .for-pdf-export span:not(.pdf-value)[style*="position: absolute"],
-  span:not(.pdf-value)[style*="position: absolute"] {
-    display: none !important;
-    visibility: hidden !important;
-    opacity: 0 !important;
-    pointer-events: none !important;
-  }
-
-  /* Position input values correctly in tables during export */
-  .for-pdf-export td input {
-    position: relative !important;
-    background-color: transparent !important;
-  }
-
-  /* Make text visible during export */
-  .pdf-text-visible {
-    overflow: visible !important;
-    white-space: nowrap !important;
-    text-overflow: clip !important;
-    position: relative !important;
-  }
-
-  /* Ensure all elements are visible in the PDF export container */
-  .pdf-export-container * {
-    color: #000 !important;
-    background-color: white !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-  }
-
-  /* Hide duplicate content */
-  .pdf-export-container span[data-pdf-value="true"] {
-    display: none !important;
-  }
-
-  /* Style input borders for better visibility */
-  .pdf-export-container input {
-    border: 1px solid #000 !important;
+    color: black !important;
   }
   
-  /* Ensure all text is visible in PDF export mode */
-  .for-pdf-export input,
-  .for-pdf-export span,
+  /* Make all text elements visible in PDF export mode */
   .for-pdf-export p,
-  .for-pdf-export div,
   .for-pdf-export h1,
   .for-pdf-export h2,
   .for-pdf-export h3,
+  .for-pdf-export h4,
+  .for-pdf-export h5,
+  .for-pdf-export h6,
+  .for-pdf-export span,
+  .for-pdf-export div,
   .for-pdf-export label,
-  .for-pdf-export td {
-    color: #000 !important;
+  .for-pdf-export td,
+  .for-pdf-export th {
+    color: black !important;
     visibility: visible !important;
     opacity: 1 !important;
+    font-family: Arial, sans-serif !important;
     text-shadow: none !important;
-    background-color: white !important;
+    display: block !important;
+  }
+  
+  /* Handle input fields - remove borders and show text content */
+  .for-pdf-export input {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    background-color: transparent !important;
+    color: black !important;
+    font-weight: bold !important;
+  }
+  
+  /* Show PDF value elements in export mode */
+  .pdf-value {
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
+    font-weight: bold;
+    z-index: 5;
+  }
+  
+  .for-pdf-export .pdf-value {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    color: black !important;
+    position: static !important;
+  }
+  
+  /* Hide any unnecessary elements during export */
+  .for-pdf-export button,
+  .for-pdf-export svg:not([data-keep-in-pdf="true"]),
+  .for-pdf-export [role="dialog"] {
+    display: none !important;
+  }
+  
+  /* Ensure proper spacing and layout */
+  .for-pdf-export .space-y-4 > * {
+    margin-top: 1rem !important;
+    margin-bottom: 1rem !important;
+  }
+  
+  /* Ensure all headings are visible */
+  .for-pdf-export h2 {
+    font-size: 1.5rem !important;
+    font-weight: bold !important;
+    margin-bottom: 1rem !important;
+    margin-top: 1rem !important;
+    display: block !important;
+  }
+  
+  /* Ensure all table content is visible */
+  .for-pdf-export table,
+  .for-pdf-export tbody,
+  .for-pdf-export tr,
+  .for-pdf-export td,
+  .for-pdf-export th {
+    visibility: visible !important;
+    display: table !important;
+    border-collapse: collapse !important;
+  }
+  
+  .for-pdf-export tr {
+    display: table-row !important;
+  }
+  
+  .for-pdf-export td,
+  .for-pdf-export th {
+    display: table-cell !important;
+    padding: 8px !important;
+  }
+  
+  /* Handle display of input containers */
+  .pdf-text-visible {
     position: relative !important;
   }
   
-  /* Hide temporary container used for PDF generation */
+  .for-pdf-export .pdf-text-visible {
+    border: none !important;
+  }
+  
+  /* Don't show redundant elements in PDF */
+  .for-pdf-export span:not(.pdf-value)[style*="position: absolute"] {
+    display: none !important;
+  }
+  
+  /* Clean up specific for the PDF container */
   #temp-pdf-container {
     position: absolute !important;
     left: -9999px !important;

@@ -46,7 +46,7 @@ const prepareContentForExport = (content: HTMLElement): HTMLElement | null => {
     // Create a new temporary container
     const tempContainer = document.createElement('div');
     tempContainer.id = 'temp-pdf-container';
-    tempContainer.classList.add('pdf-temp-element', 'pdf-export-container');
+    tempContainer.classList.add('pdf-temp-element', 'pdf-export-container', 'for-pdf-export');
     
     // Set container styles
     tempContainer.style.position = 'absolute';
@@ -66,6 +66,35 @@ const prepareContentForExport = (content: HTMLElement): HTMLElement | null => {
   }
 };
 
+// Process text elements for PDF display
+const processTextElements = (container: HTMLElement) => {
+  try {
+    // Process all text-containing elements
+    const textElements = container.querySelectorAll('p, h1, h2, h3, h4, h5, h6, span, label, div');
+    textElements.forEach((el: Element) => {
+      if (el instanceof HTMLElement) {
+        // Ensure text is visible
+        el.style.color = '#000';
+        el.style.visibility = 'visible';
+        el.style.opacity = '1';
+        
+        // If element has no content but has child elements with text, ensure they're visible
+        if (el.childNodes.length > 0) {
+          el.childNodes.forEach((child) => {
+            if (child instanceof HTMLElement) {
+              child.style.color = '#000';
+              child.style.visibility = 'visible';
+              child.style.opacity = '1';
+            }
+          });
+        }
+      }
+    });
+  } catch (error) {
+    console.warn('Error processing text elements:', error);
+  }
+};
+
 // Process input fields for PDF display with improved safety
 const processInputFields = (container: HTMLElement) => {
   try {
@@ -74,40 +103,36 @@ const processInputFields = (container: HTMLElement) => {
       const parentElement = input.parentElement;
       if (!parentElement) return;
       
-      // Check if a pdf-value element already exists
-      const existingValueDisplay = parentElement.querySelector('.pdf-value');
+      // For all inputs, create or update a visible text element to show the value
+      let valueDisplay = parentElement.querySelector('.pdf-value');
       
-      // Only create a value display if one doesn't already exist
-      if (!existingValueDisplay) {
-        const valueDisplay = document.createElement('div');
-        valueDisplay.textContent = input.value || '0';
+      if (!valueDisplay) {
+        valueDisplay = document.createElement('div');
         valueDisplay.className = 'pdf-value';
         valueDisplay.setAttribute('data-pdf-value', 'true');
         valueDisplay.style.position = 'absolute';
-        valueDisplay.style.left = '0';
-        valueDisplay.style.top = '0';
-        valueDisplay.style.width = '100%';
-        valueDisplay.style.height = '100%';
-        valueDisplay.style.display = 'flex';
-        valueDisplay.style.alignItems = 'center';
-        valueDisplay.style.justifyContent = input.classList.contains('text-right') ? 'flex-end' : 'flex-start';
-        valueDisplay.style.paddingRight = input.classList.contains('text-right') ? '8px' : '0';
-        valueDisplay.style.paddingLeft = !input.classList.contains('text-right') ? '8px' : '0';
-        valueDisplay.style.backgroundColor = '#fff';
+        valueDisplay.style.right = input.classList.contains('text-right') ? '8px' : 'auto';
+        valueDisplay.style.left = input.classList.contains('text-right') ? 'auto' : '8px';
+        valueDisplay.style.top = '50%';
+        valueDisplay.style.transform = 'translateY(-50%)';
         valueDisplay.style.color = '#000';
-        valueDisplay.style.fontSize = '14px';
         valueDisplay.style.fontWeight = 'bold';
-        valueDisplay.style.zIndex = '10';
-        
+        valueDisplay.style.fontSize = '14px';
         parentElement.appendChild(valueDisplay);
-        
-        // Hide the input for PDF export
-        input.style.opacity = '0';
-      } else if (existingValueDisplay instanceof HTMLElement) {
-        // Update the existing value display
-        existingValueDisplay.textContent = input.value || '0';
-        existingValueDisplay.setAttribute('data-pdf-value', 'true');
       }
+      
+      if (valueDisplay instanceof HTMLElement) {
+        // Make sure we show the input value or a default
+        valueDisplay.textContent = input.value || '0';
+        valueDisplay.style.visibility = 'visible';
+        valueDisplay.style.opacity = '1';
+      }
+      
+      // Remove the border from the input
+      input.style.border = 'none';
+      input.style.boxShadow = 'none';
+      input.style.outline = 'none';
+      input.style.backgroundColor = 'transparent';
     });
   } catch (error) {
     console.warn('Error processing input fields:', error);
@@ -121,18 +146,24 @@ const processCheckboxes = (container: HTMLElement) => {
     checkboxes.forEach((checkbox: Element) => {
       const checkboxElement = checkbox as HTMLElement;
       
+      // Make checkbox visible in PDF
+      checkboxElement.style.visibility = 'visible';
+      checkboxElement.style.display = 'inline-block';
+      
       if (checkboxElement.getAttribute('data-state') === 'checked') {
-        checkboxElement.style.backgroundColor = '#000';
         checkboxElement.style.border = '2px solid #000';
+        checkboxElement.style.backgroundColor = '#000';
         
         const checkIcon = checkboxElement.querySelector('svg');
         if (checkIcon && checkIcon instanceof SVGElement) {
           checkIcon.style.color = '#fff';
-          checkIcon.style.width = '16px';
-          checkIcon.style.height = '16px';
+          checkIcon.style.visibility = 'visible';
+          checkIcon.style.display = 'block';
+          checkIcon.setAttribute('data-keep-in-pdf', 'true');
         }
       } else {
         checkboxElement.style.border = '2px solid #000';
+        checkboxElement.style.backgroundColor = 'transparent';
       }
     });
   } catch (error) {
@@ -140,56 +171,68 @@ const processCheckboxes = (container: HTMLElement) => {
   }
 };
 
-// Enhance visual elements for PDF with improved safety
-const enhanceVisualElements = (container: HTMLElement) => {
+// Enhance tables for PDF visibility
+const enhanceTables = (container: HTMLElement) => {
   try {
-    // Make all text elements visible with proper styling
-    const allElements = container.querySelectorAll('*');
-    allElements.forEach((el: Element) => {
-      if (el instanceof HTMLElement && el.style) {
-        el.style.color = '#000';
-        el.style.textShadow = 'none';
-        el.style.boxShadow = 'none';
-      }
+    // Find all tables and ensure they're properly styled for PDF
+    const tables = container.querySelectorAll('table');
+    tables.forEach((table: HTMLTableElement) => {
+      table.style.borderCollapse = 'collapse';
+      table.style.width = '100%';
+      table.style.visibility = 'visible';
+      table.style.display = 'table';
+      
+      // Style table rows
+      const rows = table.querySelectorAll('tr');
+      rows.forEach((row: HTMLTableRowElement) => {
+        row.style.display = 'table-row';
+        row.style.visibility = 'visible';
+        
+        // Style table cells
+        const cells = row.querySelectorAll('td, th');
+        cells.forEach((cell: HTMLTableCellElement) => {
+          cell.style.padding = '8px';
+          cell.style.display = 'table-cell';
+          cell.style.visibility = 'visible';
+          cell.style.color = '#000';
+          
+          // Ensure any content inside the cell is visible
+          const textElements = cell.querySelectorAll('p, span, div');
+          textElements.forEach((el: Element) => {
+            if (el instanceof HTMLElement) {
+              el.style.color = '#000';
+              el.style.visibility = 'visible';
+            }
+          });
+          
+          // Process any inputs inside cells
+          const inputs = cell.querySelectorAll('input');
+          inputs.forEach((input: HTMLInputElement) => {
+            input.style.border = 'none';
+            input.style.boxShadow = 'none';
+            
+            // Create or find the value display
+            let valueDisplay = cell.querySelector('.pdf-value');
+            if (!valueDisplay) {
+              valueDisplay = document.createElement('div');
+              valueDisplay.className = 'pdf-value';
+              valueDisplay.setAttribute('data-pdf-value', 'true');
+              cell.appendChild(valueDisplay);
+            }
+            
+            if (valueDisplay instanceof HTMLElement) {
+              valueDisplay.textContent = input.value || '0';
+              valueDisplay.style.visibility = 'visible';
+              valueDisplay.style.opacity = '1';
+              valueDisplay.style.color = '#000';
+              valueDisplay.style.fontWeight = 'bold';
+            }
+          });
+        });
+      });
     });
-    
-    // Ensure table elements are visible
-    const tableCells = container.querySelectorAll('td');
-    tableCells.forEach((cell: Element) => {
-      if (cell instanceof HTMLElement) {
-        cell.style.border = '1px solid #ddd';
-        cell.style.padding = '8px';
-        cell.style.color = '#000';
-        cell.style.backgroundColor = '#fff';
-      }
-    });
-
-    // Make text elements visible
-    const textElements = container.querySelectorAll('p, h1, h2, h3, h4, h5, h6, span, label, div');
-    textElements.forEach((el: Element) => {
-      if (el instanceof HTMLElement && el.textContent && el.textContent.trim() !== '') {
-        el.style.color = '#000';
-        el.style.fontWeight = el.tagName.startsWith('H') ? 'bold' : 'normal';
-        el.style.visibility = 'visible';
-        el.style.opacity = '1';
-      }
-    });
-    
-    // Fix specific PDF value visibility
-    const pdfValues = container.querySelectorAll('.pdf-value');
-    pdfValues.forEach((el: Element) => {
-      if (el instanceof HTMLElement) {
-        el.style.opacity = '1';
-        el.style.visibility = 'visible';
-        el.style.color = '#000';
-        el.style.backgroundColor = '#fff';
-      }
-    });
-    
-    // Remove any duplicated text elements that might have been created
-    removeRedundantTextElements(container);
   } catch (error) {
-    console.warn('Error enhancing visual elements:', error);
+    console.warn('Error enhancing tables:', error);
   }
 };
 
@@ -212,46 +255,33 @@ const removeRedundantTextElements = (container: HTMLElement) => {
   }
 };
 
-// Force all input values to be visible with improved safety
-const forceInputValuesVisible = (container: HTMLElement) => {
+// Ensure layout is properly displayed
+const enhanceLayout = (container: HTMLElement) => {
   try {
-    // Find all input elements and their containers
-    const inputContainers = container.querySelectorAll('.pdf-text-visible');
-    inputContainers.forEach((container: Element) => {
-      if (container instanceof HTMLElement) {
-        container.style.position = 'relative';
-        
-        // Get the input within this container
-        const input = container.querySelector('input');
-        if (input && input instanceof HTMLInputElement) {
-          // Get or create the value display div
-          let valueDisplay = container.querySelector('.pdf-value');
-          if (!valueDisplay) {
-            valueDisplay = document.createElement('div');
-            valueDisplay.className = 'pdf-value';
-            valueDisplay.setAttribute('data-pdf-value', 'true');
-            container.appendChild(valueDisplay);
-          }
-          
-          // Make sure value display is visible and has the input value
-          if (valueDisplay instanceof HTMLElement) {
-            valueDisplay.textContent = input.value || '0';
-            valueDisplay.style.position = 'absolute';
-            valueDisplay.style.right = '10px';
-            valueDisplay.style.top = '50%';
-            valueDisplay.style.transform = 'translateY(-50%)';
-            valueDisplay.style.opacity = '1';
-            valueDisplay.style.visibility = 'visible';
-            valueDisplay.style.color = '#000';
-            valueDisplay.style.backgroundColor = '#fff';
-            valueDisplay.style.zIndex = '100';
-            valueDisplay.style.fontWeight = 'bold';
-          }
-        }
+    // Process headings to ensure they're visible and properly styled
+    const headings = container.querySelectorAll('h1, h2, h3, h4, h5, h6');
+    headings.forEach((heading: Element) => {
+      if (heading instanceof HTMLElement) {
+        heading.style.color = '#000';
+        heading.style.fontWeight = 'bold';
+        heading.style.marginBottom = '16px';
+        heading.style.display = 'block';
+        heading.style.visibility = 'visible';
+        heading.style.opacity = '1';
+      }
+    });
+    
+    // Ensure grid layouts are properly displayed
+    const gridItems = container.querySelectorAll('[class*="grid"]');
+    gridItems.forEach((grid: Element) => {
+      if (grid instanceof HTMLElement) {
+        grid.style.display = 'block';
+        grid.style.marginBottom = '16px';
+        grid.style.visibility = 'visible';
       }
     });
   } catch (error) {
-    console.warn('Error forcing input values visible:', error);
+    console.warn('Error enhancing layout:', error);
   }
 };
 
@@ -259,7 +289,7 @@ const forceInputValuesVisible = (container: HTMLElement) => {
 const createCanvas = async (content: HTMLElement): Promise<HTMLCanvasElement> => {
   console.log("Starting HTML to canvas conversion");
   // Give the DOM time to process all styling changes
-  await new Promise(resolve => setTimeout(resolve, 500));
+  await new Promise(resolve => setTimeout(resolve, 800));
   
   try {
     const canvas = await html2canvas(content, {
@@ -273,25 +303,16 @@ const createCanvas = async (content: HTMLElement): Promise<HTMLCanvasElement> =>
         console.log("Cloned document prepared for rendering");
         
         try {
-          // Mark all existing value displays to prevent duplication
-          const existingDisplays = element.querySelectorAll('.pdf-value');
-          existingDisplays.forEach((display) => {
-            display.setAttribute('data-pdf-value', 'true');
-          });
-          
-          // Safely remove any already generated spans to avoid duplication
-          const redundantSpans = element.querySelectorAll('span:not([data-pdf-value="true"])[style*="position: absolute"]');
-          redundantSpans.forEach((span) => {
-            if (span.parentElement && span.parentElement.contains(span)) {
-              try {
-                span.parentElement.removeChild(span);
-              } catch (e) {
-                // Silent fail
-              }
-            }
-          });
+          // Apply all our enhancing functions to the cloned element
+          processTextElements(element);
+          processInputFields(element);
+          processCheckboxes(element);
+          enhanceTables(element);
+          enhanceLayout(element);
+          removeRedundantTextElements(element);
         } catch (error) {
           // Silent fail to prevent html2canvas from crashing
+          console.warn("Error in html2canvas onclone callback:", error);
         }
       }
     });
@@ -313,7 +334,7 @@ const generateFilename = (calculator: any): string => {
   return `税务计算_${today}`;
 };
 
-// Add content to PDF document with improved safety - THIS FUNCTION FIXED
+// Add content to PDF document with improved safety
 const addContentToPDF = (pdf: jsPDF, canvas: HTMLCanvasElement, margin: number): void => {
   try {
     const pageWidth = pdf.internal.pageSize.getWidth();
@@ -411,6 +432,9 @@ export const exportToPDF = async (calculator: any) => {
       throw new Error('计算器内容未找到');
     }
     
+    // Add PDF export class to original content (this will be removed in cleanup)
+    content.classList.add('for-pdf-export');
+    
     // Prepare the content for export
     const tempContainer = prepareContentForExport(content);
     if (!tempContainer) {
@@ -421,12 +445,6 @@ export const exportToPDF = async (calculator: any) => {
     if (!clonedContent) {
       throw new Error('导出内容克隆失败');
     }
-    
-    // Process elements for better PDF rendering
-    processInputFields(clonedContent);
-    processCheckboxes(clonedContent);
-    enhanceVisualElements(clonedContent);
-    forceInputValuesVisible(clonedContent);
     
     try {
       // Create canvas

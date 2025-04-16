@@ -78,7 +78,7 @@ const CalculatorActions: React.FC<CalculatorActionsProps> = ({
             setExporting(false);
           }, 1000);
         }
-      }, 500); // Increased timeout for better stability
+      }, 1000); // Increased timeout for better rendering preparation
     } catch (error) {
       console.error("Export initialization error:", error);
       

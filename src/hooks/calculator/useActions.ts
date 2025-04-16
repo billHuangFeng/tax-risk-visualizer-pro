@@ -28,6 +28,9 @@ export const useActions = (riskValue: string, riskPercentage: number) => {
         throw new Error('计算器内容未找到');
       }
       
+      // Wait a moment to ensure all DOM updates are processed
+      await new Promise(resolve => setTimeout(resolve, 200));
+      
       // Define data for export
       const companyNameInput = document.querySelector('input#companyName') as HTMLInputElement | null;
       const companyName = companyNameInput?.value || '税务计算';
