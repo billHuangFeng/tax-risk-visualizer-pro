@@ -43,25 +43,25 @@ export const useVatCalculator = () => {
     const difference = tax.payableTax - tax.actualTax;
     tax.setTaxDifference(difference);
     
-    // 取销项税的10%与应交增值税中的较大值作为基数
+    // 取销项税的10%与应交增值税中绝对值的较大值作为基数
     const baseAmount = Math.max(
       Math.abs(tax.payableTax), 
       Math.abs(sales.salesTotal.tax * 0.1)
     );
     
-    // 计算风险百分比：未解释差异除以基数（可能是负数，所以取绝对值再计算）
+    // 计算风险百分比：税差异/基数（保留正负号）
     const riskPercentage = baseAmount !== 0 
-      ? (Math.abs(tax.unexplainedDifference) / baseAmount) * 100 
+      ? (tax.unexplainedDifference / baseAmount) * 100 
       : 0;
     
     tax.setTaxDifferencePercentage(parseFloat(riskPercentage.toFixed(2)));
 
     let riskLevel = '';
-    if (riskPercentage > 50) {
+    if (Math.abs(riskPercentage) > 50) {
       riskLevel = '风险非常高';
-    } else if (riskPercentage > 20) {
+    } else if (Math.abs(riskPercentage) > 20) {
       riskLevel = '风险比较高';
-    } else if (riskPercentage > 10) {
+    } else if (Math.abs(riskPercentage) > 10) {
       riskLevel = '存在风险';
     } else {
       riskLevel = '基本安全';
@@ -82,7 +82,7 @@ export const useVatCalculator = () => {
     
     // 这段逻辑在上面的 useEffect 中已经实现了基于百分比的风险评估
     // 所以这里只处理特殊情况
-    if (Math.abs(unexplained) > 0 && tax.taxDifferencePercentage <= 10) {
+    if (Math.abs(unexplained) > 0 && Math.abs(tax.taxDifferencePercentage) <= 10) {
       // 如果有未解释差异但百分比较低，至少标记为"存在风险"
       tax.setRiskLevel('存在风险');
     }
