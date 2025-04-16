@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -112,6 +111,20 @@ const VatSalesSection: React.FC<VatSalesSectionProps> = ({
               </TableRow>
             ))}
             
+            <TableRow>
+              <TableCell colSpan={5}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={addSalesItem}
+                  className="w-full"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  添加产品类别
+                </Button>
+              </TableCell>
+            </TableRow>
+            
             <TableRow className="bg-gray-50 font-bold">
               <TableCell>合计</TableCell>
               <TableCell className="text-right">{salesTotal.amount.toFixed(1)}</TableCell>
@@ -141,19 +154,9 @@ const VatSalesSection: React.FC<VatSalesSectionProps> = ({
             />
           </div>
         </div>
-        
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={addSalesItem}
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          添加产品类别
-        </Button>
       </CardContent>
     </Card>
   );
 };
 
 export default VatSalesSection;
-
