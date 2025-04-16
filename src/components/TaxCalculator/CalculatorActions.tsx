@@ -31,7 +31,7 @@ const CalculatorActions: React.FC<CalculatorActionsProps> = ({
       
       toast({
         title: "PDF生成中",
-        description: "正在处理所有页面，请稍候...",
+        description: "正在处理页面内容，请稍候...",
       });
       
       await calculator.handleExport();

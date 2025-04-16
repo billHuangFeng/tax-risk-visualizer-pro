@@ -24,10 +24,10 @@ export const useActions = (riskValue: string, riskPercentage: number) => {
     try {
       toast({
         title: "准备导出PDF",
-        description: "正在处理数据...",
+        description: "正在生成报告...",
       });
       
-      // 全面收集用于PDF的数据
+      // 收集用于PDF的数据 - 保持原有的数据收集逻辑
       const collectFormData = () => {
         const data: Record<string, any> = {};
         
@@ -78,6 +78,8 @@ export const useActions = (riskValue: string, riskPercentage: number) => {
           const input = document.getElementById(inputId) as HTMLInputElement;
           if (input) {
             data[inputId] = input.value || '0';
+          } else {
+            console.log(`未找到ID为${inputId}的输入元素`);
           }
         });
         
@@ -104,7 +106,7 @@ export const useActions = (riskValue: string, riskPercentage: number) => {
       
       const formData = collectFormData();
       
-      // 导出PDF
+      // 导出PDF，使用新的基于屏幕的方法
       await exportToPDF(formData);
       
       toast({
