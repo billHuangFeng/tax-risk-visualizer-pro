@@ -5,15 +5,16 @@
 
 /* PDF Export Specific Styles */
 @layer base {
-  /* General export container settings */
+  /* General PDF export container settings */
   .for-pdf-export {
     background-color: white !important;
     color: black !important;
     font-family: Arial, sans-serif !important;
     padding: 20px !important;
+    width: 100% !important;
   }
   
-  /* Make all text elements visible in PDF export mode */
+  /* Make all text elements visible */
   .for-pdf-export p,
   .for-pdf-export h1,
   .for-pdf-export h2,
@@ -30,158 +31,127 @@
     visibility: visible !important;
     opacity: 1 !important;
     font-family: Arial, sans-serif !important;
-    text-shadow: none !important;
   }
   
-  /* Handle input fields - remove borders and show text content */
+  /* Handle inputs */
   .for-pdf-export input {
     border: none !important;
-    outline: none !important;
     box-shadow: none !important;
     background-color: transparent !important;
-    color: black !important;
-    font-weight: bold !important;
-    opacity: 0 !important; /* Hide inputs to avoid duplicates */
-  }
-  
-  /* Show PDF value elements in export mode */
-  .pdf-value {
-    opacity: 0;
-    visibility: hidden;
-    position: absolute;
-    font-weight: bold;
-    z-index: 5;
-  }
-  
-  .for-pdf-export .pdf-value {
-    opacity: 1 !important;
-    visibility: visible !important;
-    color: black !important;
-    position: static !important;
-    font-weight: bold !important;
-    display: inline-block !important;
-    margin-right: 4px !important;
-  }
-  
-  /* Hide any unnecessary elements during export */
-  .for-pdf-export button,
-  .for-pdf-export svg:not([data-keep-in-pdf="true"]),
-  .for-pdf-export [role="dialog"],
-  .for-pdf-export .pdf-duplicate-row {
     display: none !important;
   }
   
-  /* Ensure proper spacing and layout */
-  .for-pdf-export .space-y-4 > * {
-    margin-top: 0.5rem !important;
-    margin-bottom: 0.5rem !important;
+  /* Make PDF value elements visible */
+  .for-pdf-export .pdf-value {
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    color: black !important;
+    font-weight: bold !important;
+    margin-right: 4px !important;
+    position: static !important;
   }
   
-  /* Ensure all headings are visible */
+  /* Hide unnecessary elements */
+  .for-pdf-export button,
+  .for-pdf-export .pdf-duplicate,
+  .for-pdf-export [role="dialog"] {
+    display: none !important;
+  }
+  
+  /* Company header style */
+  .for-pdf-export .company-header {
+    font-size: 22px !important;
+    font-weight: bold !important;
+    text-align: center !important;
+    margin-bottom: 24px !important;
+    border-bottom: 2px solid #000 !important;
+    padding-bottom: 12px !important;
+    width: 100% !important;
+  }
+  
+  /* Section headers */
   .for-pdf-export h2 {
     font-size: 18px !important;
     font-weight: bold !important;
-    margin-bottom: 1rem !important;
-    margin-top: 1.5rem !important;
-    display: block !important;
+    margin-top: 24px !important;
+    margin-bottom: 16px !important;
     border-left: 4px solid #3B82F6 !important;
     padding-left: 10px !important;
+    display: block !important;
     width: 100% !important;
     background-color: #f8fafc !important;
     padding: 8px 12px !important;
   }
   
-  /* Fix alignment in grid layouts */
+  /* Grid layout fix */
   .for-pdf-export [class*="grid"] {
     display: table !important;
-    width: 100% !important;
-    margin-bottom: 8px !important;
-  }
-  
-  .for-pdf-export [class*="grid"] > *:nth-child(odd) {
-    display: table-cell !important;
-    width: 60% !important;
-    text-align: left !important;
-    padding: 8px !important;
-  }
-  
-  .for-pdf-export [class*="grid"] > *:nth-child(even) {
-    display: table-cell !important;
-    width: 40% !important;
-    text-align: right !important;
-    padding: 8px !important;
-  }
-  
-  /* Handle display of input containers */
-  .for-pdf-export .pdf-text-visible {
-    display: flex !important;
-    justify-content: flex-end !important;
-    align-items: center !important;
-    margin-bottom: 0 !important;
-    width: 100% !important;
-  }
-  
-  /* Unit text should appear after value */
-  .for-pdf-export .ml-2 {
-    margin-left: 4px !important;
-    display: inline-block !important;
-  }
-  
-  /* Clean up specific for the PDF container */
-  #temp-pdf-container {
-    position: absolute !important;
-    left: -9999px !important;
-    top: 0 !important;
-    opacity: 0 !important;
-    pointer-events: none !important;
-    visibility: hidden !important;
-    z-index: -9999 !important;
-    width: 1200px !important;
-    overflow: visible !important;
-  }
-  
-  /* Add company name header style */
-  .for-pdf-export .company-header {
-    font-size: 24px !important;
-    font-weight: bold !important;
-    text-align: center !important;
-    margin-bottom: 24px !important;
-    border-bottom: 2px solid #3B82F6 !important;
-    padding-bottom: 12px !important;
-    page-break-after: avoid !important;
-  }
-  
-  /* Fix for duplicate elements */
-  .for-pdf-export .pdf-duplicate {
-    display: none !important;
-  }
-  
-  /* Hide original company name input */
-  .for-pdf-export input#companyName {
-    display: none !important;
-  }
-  
-  /* Ensure all numbers are right-aligned */
-  .for-pdf-export .pdf-value {
-    text-align: right !important;
-  }
-  
-  /* Fix table layout */
-  .for-pdf-export table {
     width: 100% !important;
     border-collapse: collapse !important;
     margin-bottom: 16px !important;
   }
   
-  .for-pdf-export table th,
-  .for-pdf-export table td {
-    border: 1px solid #e5e7eb !important;
+  .for-pdf-export [class*="grid"] > * {
+    display: table-cell !important;
     padding: 8px !important;
+    vertical-align: middle !important;
   }
   
-  /* Fix visual spacing */
+  .for-pdf-export [class*="grid"] > *:nth-child(odd) {
+    width: 60% !important;
+    text-align: left !important;
+  }
+  
+  .for-pdf-export [class*="grid"] > *:nth-child(even) {
+    width: 40% !important;
+    text-align: right !important;
+  }
+  
+  /* Handle number input containers */
+  .for-pdf-export .pdf-text-visible {
+    display: flex !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+  }
+  
+  /* Table styling */
+  .for-pdf-export table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin-bottom: 16px !important;
+    border: 1px solid #e5e7eb !important;
+  }
+  
+  .for-pdf-export table th,
+  .for-pdf-export table td {
+    padding: 12px !important;
+    border: 1px solid #e5e7eb !important;
+    text-align: left !important;
+  }
+  
+  .for-pdf-export table th {
+    background-color: #f8fafc !important;
+    font-weight: bold !important;
+  }
+  
+  /* Card styling */
   .for-pdf-export .card {
     margin-bottom: 24px !important;
+    border: 1px solid #e5e7eb !important;
+    padding: 16px !important;
+    border-radius: 8px !important;
     page-break-inside: avoid !important;
+  }
+  
+  /* Temporary container styling */
+  #temp-pdf-container {
+    position: absolute !important;
+    left: -9999px !important;
+    top: 0 !important;
+    width: 1000px !important;
+    background-color: white !important;
+    z-index: -9999 !important;
+    visibility: hidden !important;
   }
 }

@@ -8,32 +8,50 @@ import { enhanceLayout, removeRedundantTextElements } from './layoutEnhancement'
 // Create canvas from prepared content
 const createCanvas = async (content: HTMLElement): Promise<HTMLCanvasElement> => {
   console.log("Starting HTML to canvas conversion");
-  await new Promise(resolve => setTimeout(resolve, 1200));
+  await new Promise(resolve => setTimeout(resolve, 1500));
   
   try {
     const canvas = await html2canvas(content, {
-      scale: 2,
+      scale: 2, // Higher scale for better quality
       useCORS: true,
-      logging: false,
+      logging: true,
       backgroundColor: '#ffffff',
       allowTaint: true,
-      width: 1200,
+      width: 1000, // Fixed width for better formatting
       onclone: (document, element) => {
         console.log("Cloned document prepared for rendering");
         
         try {
-          // First remove all duplicates and redundant elements
+          // First remove all redundant elements
           removeRedundantTextElements(element);
           
-          // Then process and style the remaining elements
+          // Process text elements to ensure visibility
           processTextElements(element);
+          
+          // Process input fields for better display
           processInputFields(element);
+          
+          // Process checkboxes and table elements
           processCheckboxes(element);
           enhanceTables(element);
+          
+          // Apply final layout enhancements
           enhanceLayout(element);
           
-          // Fix specific layout issues
-          fixGridLayout(element);
+          // Force all text to be black for better visibility
+          const allTextElements = element.querySelectorAll('*');
+          allTextElements.forEach(el => {
+            if (el instanceof HTMLElement) {
+              el.style.color = '#000';
+            }
+          });
+          
+          // Set explicitly visible style on all elements
+          element.style.display = 'block';
+          element.style.visibility = 'visible';
+          element.style.width = '1000px';
+          element.style.padding = '20px';
+          element.style.boxSizing = 'border-box';
         } catch (error) {
           console.warn("Error in html2canvas onclone callback:", error);
         }
@@ -45,96 +63,6 @@ const createCanvas = async (content: HTMLElement): Promise<HTMLCanvasElement> =>
   } catch (error) {
     console.error("Canvas creation failed:", error);
     throw error;
-  }
-};
-
-// Fix specific grid layout issues
-const fixGridLayout = (element: HTMLElement) => {
-  try {
-    // Find all number input groups and make sure they display properly
-    const numberInputGroups = element.querySelectorAll('.pdf-text-visible');
-    numberInputGroups.forEach(group => {
-      if (group instanceof HTMLElement) {
-        group.style.display = 'flex';
-        group.style.justifyContent = 'flex-end';
-        group.style.alignItems = 'center';
-        
-        // Find any duplicate .pdf-value elements and remove them
-        const pdfValues = group.querySelectorAll('.pdf-value');
-        if (pdfValues.length > 1) {
-          for (let i = 1; i < pdfValues.length; i++) {
-            if (pdfValues[i].parentElement) {
-              pdfValues[i].parentElement.removeChild(pdfValues[i]);
-            }
-          }
-        }
-        
-        // Make sure input is hidden and value is shown
-        const input = group.querySelector('input');
-        if (input instanceof HTMLInputElement) {
-          input.style.opacity = '0';
-          input.style.height = '0';
-          input.style.overflow = 'hidden';
-        }
-        
-        const valueDisplay = group.querySelector('.pdf-value');
-        if (valueDisplay instanceof HTMLElement) {
-          valueDisplay.style.position = 'static';
-          valueDisplay.style.opacity = '1';
-          valueDisplay.style.visibility = 'visible';
-          valueDisplay.style.display = 'block';
-          valueDisplay.style.fontSize = '14px';
-          valueDisplay.style.fontWeight = 'bold';
-          valueDisplay.style.marginRight = '8px';
-        }
-      }
-    });
-    
-    // Ensure label elements display properly
-    const labels = element.querySelectorAll('label');
-    labels.forEach(label => {
-      if (label instanceof HTMLElement) {
-        label.style.display = 'block';
-        label.style.marginBottom = '4px';
-        label.style.fontWeight = 'bold';
-      }
-    });
-    
-    // Convert grid layout to table layout for better alignment
-    const gridContainers = element.querySelectorAll('[class*="grid"]');
-    gridContainers.forEach(grid => {
-      if (grid instanceof HTMLElement && !grid.classList.contains('pdf-duplicate-row')) {
-        // Skip if it's already been processed or should be hidden
-        if (grid.style.display === 'table' || grid.style.display === 'none') {
-          return;
-        }
-        
-        grid.style.display = 'table';
-        grid.style.width = '100%';
-        grid.style.marginBottom = '16px';
-        
-        const children = Array.from(grid.children);
-        children.forEach((child, index) => {
-          if (child instanceof HTMLElement) {
-            if (index % 2 === 0) { // Label column
-              child.style.display = 'table-cell';
-              child.style.width = '60%';
-              child.style.textAlign = 'left';
-              child.style.verticalAlign = 'middle';
-              child.style.padding = '8px';
-            } else { // Value column
-              child.style.display = 'table-cell';
-              child.style.width = '40%';
-              child.style.textAlign = 'right';
-              child.style.verticalAlign = 'middle';
-              child.style.padding = '8px';
-            }
-          }
-        });
-      }
-    });
-  } catch (error) {
-    console.warn('Error fixing grid layout:', error);
   }
 };
 
@@ -160,23 +88,25 @@ const addContentToPDF = (pdf: jsPDF, canvas: HTMLCanvasElement, margin: number):
     const imgWidth = pageWidth - (2 * margin);
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
     
+    let position = margin;
+    let heightLeft = imgHeight;
+    
+    // Add first page
     pdf.addImage(
       canvas.toDataURL('image/jpeg', 0.95), 
       'JPEG', 
       margin, 
-      margin, 
+      position, 
       imgWidth, 
       imgHeight
     );
     
-    let heightLeft = imgHeight - (pageHeight - 2 * margin);
-    let position = 0;
-    let page = 1;
+    heightLeft -= (pageHeight - margin * 2);
+    position = -(pageHeight - margin * 2);
     
+    // Add additional pages if needed
     while (heightLeft > 0) {
       pdf.addPage();
-      page++;
-      position = margin - (page - 1) * (pageHeight - 2 * margin);
       pdf.addImage(
         canvas.toDataURL('image/jpeg', 0.95), 
         'JPEG', 
@@ -185,10 +115,10 @@ const addContentToPDF = (pdf: jsPDF, canvas: HTMLCanvasElement, margin: number):
         imgWidth, 
         imgHeight
       );
-      heightLeft -= (pageHeight - 2 * margin);
+      
+      heightLeft -= (pageHeight - margin * 2);
+      position -= (pageHeight - margin * 2);
     }
-    
-    console.log(`PDF created with ${page} pages`);
   } catch (error) {
     console.error('Error adding content to PDF:', error);
     throw error;

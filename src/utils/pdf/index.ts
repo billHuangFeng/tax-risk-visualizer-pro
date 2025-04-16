@@ -29,7 +29,7 @@ export const exportToPDF = async (calculator: any) => {
     
     try {
       // Wait a bit to ensure DOM is fully processed
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise(resolve => setTimeout(resolve, 1000));
       
       // Create canvas
       const canvas = await createCanvas(clonedContent);

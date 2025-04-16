@@ -36,12 +36,11 @@ const NumberInput: React.FC<NumberInputProps> = ({
         type="number"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className={`text-right w-full min-w-[180px] pr-8 overflow-visible letter-spacing-normal ${className}`}
+        className={`text-right w-full min-w-[180px] pr-8 ${className}`}
         disabled={disabled}
         data-value={value} /* Add data attribute for PDF export */
       />
-      {/* Single pdf-value element to avoid duplication */}
-      <div className="absolute right-[45px] top-0 bottom-0 flex items-center justify-end h-full pointer-events-none pdf-value">
+      <div className="pdf-value absolute right-3 top-0 bottom-0 flex items-center justify-center h-full pointer-events-none opacity-0">
         {value}
       </div>
       <span className="ml-2 text-sm whitespace-nowrap">{suffix}</span>

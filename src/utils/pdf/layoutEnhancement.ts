@@ -1,4 +1,3 @@
-
 // Functions for enhancing layout for PDF export
 
 import { elementExists } from './domHelpers';
@@ -6,26 +5,51 @@ import { elementExists } from './domHelpers';
 // Remove redundant text elements
 export const removeRedundantTextElements = (container: HTMLElement) => {
   try {
-    // Hide any redundant spans
-    const redundantSpans = container.querySelectorAll('span:not(.pdf-value)[style*="position: absolute"]');
-    redundantSpans.forEach((span) => {
-      if (span instanceof HTMLElement && span.parentElement?.contains(span)) {
-        span.style.display = 'none';
+    // Find all duplicate labels or values and hide them
+    const texts = container.querySelectorAll('span, p, div:not(.pdf-value):not(.card):not([class*="grid"])');
+    const textContents = new Map<string, HTMLElement[]>();
+    
+    texts.forEach((textElement) => {
+      if (textElement instanceof HTMLElement) {
+        const content = textElement.textContent?.trim() || '';
+        if (content && content.length > 0) {
+          const list = textContents.get(content) || [];
+          list.push(textElement);
+          textContents.set(content, list);
+        }
       }
     });
     
-    // Handle duplicate pdf-value elements
-    const inputContainers = container.querySelectorAll('.pdf-text-visible');
-    inputContainers.forEach((container) => {
-      if (container instanceof HTMLElement) {
-        const pdfValues = container.querySelectorAll('.pdf-value');
-        if (pdfValues.length > 1) {
-          // Keep only the first one
-          Array.from(pdfValues).slice(1).forEach((element) => {
-            if (element instanceof HTMLElement) {
-              element.style.display = 'none';
+    // Hide duplicates (keep the first occurrence)
+    textContents.forEach((elements) => {
+      if (elements.length > 1) {
+        // Keep the first, hide the rest
+        for (let i = 1; i < elements.length; i++) {
+          elements[i].style.display = 'none';
+          elements[i].classList.add('pdf-duplicate');
+        }
+      }
+    });
+    
+    // Hide absolute positioned elements that often cause overlaps
+    const absoluteElements = container.querySelectorAll('[style*="position: absolute"]');
+    absoluteElements.forEach((element) => {
+      if (element instanceof HTMLElement && !element.classList.contains('pdf-value')) {
+        element.style.display = 'none';
+      }
+    });
+    
+    // Hide redundant pdf-value elements (keep only one per input)
+    const inputGroups = container.querySelectorAll('.pdf-text-visible');
+    inputGroups.forEach((group) => {
+      if (group instanceof HTMLElement) {
+        const values = group.querySelectorAll('.pdf-value');
+        if (values.length > 1) {
+          for (let i = 1; i < values.length; i++) {
+            if (values[i] instanceof HTMLElement) {
+              values[i].style.display = 'none';
             }
-          });
+          }
         }
       }
     });
@@ -37,19 +61,21 @@ export const removeRedundantTextElements = (container: HTMLElement) => {
 // Enhance layout display
 export const enhanceLayout = (container: HTMLElement) => {
   try {
-    // Make company name more prominent at the top
+    // Create company name header
     const companyNameInput = container.querySelector('input#companyName') as HTMLInputElement;
     if (companyNameInput) {
-      const companyNameValue = companyNameInput.value || '';
+      const companyNameValue = companyNameInput.value || companyNameInput.getAttribute('data-value') || '税务计算报告';
       
-      // Create a prominent header for the company name
+      // Create a header for the PDF
       const headerDiv = document.createElement('div');
-      headerDiv.style.fontSize = '24px';
+      headerDiv.className = 'company-header';
+      headerDiv.style.fontSize = '22px';
       headerDiv.style.fontWeight = 'bold';
       headerDiv.style.textAlign = 'center';
       headerDiv.style.marginBottom = '24px';
-      headerDiv.style.borderBottom = '2px solid #3B82F6';
+      headerDiv.style.borderBottom = '2px solid #000';
       headerDiv.style.paddingBottom = '12px';
+      headerDiv.style.width = '100%';
       headerDiv.textContent = companyNameValue + ' - 税务计算报告';
       
       // Insert at the top of the container
@@ -59,73 +85,90 @@ export const enhanceLayout = (container: HTMLElement) => {
         container.appendChild(headerDiv);
       }
       
-      // Hide the original company name field to avoid duplication
-      const companyNameField = container.querySelector('input#companyName')?.closest('.grid');
+      // Hide the original company name input to avoid duplication
+      const companyNameField = companyNameInput.closest('[class*="grid"]');
       if (companyNameField instanceof HTMLElement) {
         companyNameField.style.display = 'none';
       }
     }
     
-    // Improve layout for all grid items to ensure proper label/value alignment
-    const gridItems = container.querySelectorAll('[class*="grid"]');
-    gridItems.forEach((grid) => {
-      if (grid instanceof HTMLElement) {
-        // Skip any grid that needs to be hidden
-        if (grid.classList.contains('pdf-duplicate-row') || grid.style.display === 'none') {
-          return;
-        }
-        
+    // Make section headings more visible
+    const sectionHeadings = container.querySelectorAll('h2');
+    sectionHeadings.forEach((heading) => {
+      if (heading instanceof HTMLElement) {
+        heading.style.fontSize = '18px';
+        heading.style.fontWeight = 'bold';
+        heading.style.marginTop = '32px';
+        heading.style.marginBottom = '16px';
+        heading.style.paddingLeft = '10px';
+        heading.style.borderLeft = '4px solid #3B82F6';
+        heading.style.display = 'block';
+        heading.style.width = '100%';
+        heading.style.backgroundColor = '#f8fafc';
+        heading.style.padding = '8px 12px';
+        heading.style.pageBreakAfter = 'avoid';
+      }
+    });
+    
+    // Fix grid layout for better alignment
+    const gridContainers = container.querySelectorAll('[class*="grid"]');
+    gridContainers.forEach((grid) => {
+      if (grid instanceof HTMLElement && !grid.classList.contains('pdf-duplicate')) {
+        // Convert grid to table-like layout for better PDF rendering
         grid.style.display = 'table';
         grid.style.width = '100%';
+        grid.style.borderCollapse = 'collapse';
         grid.style.marginBottom = '16px';
-        grid.style.pageBreakInside = 'avoid';
         
-        // Convert grid children to table-like layout
-        const gridChildren = Array.from(grid.children);
-        for (let i = 0; i < gridChildren.length; i += 2) {
-          const labelElement = gridChildren[i];
-          const valueElement = gridChildren[i + 1];
+        // Convert grid items to table cells
+        const gridItems = Array.from(grid.children);
+        for (let i = 0; i < gridItems.length; i += 2) {
+          const labelItem = gridItems[i];
+          const valueItem = i + 1 < gridItems.length ? gridItems[i + 1] : null;
           
-          if (labelElement instanceof HTMLElement) {
-            labelElement.style.display = 'table-cell';
-            labelElement.style.width = '60%';
-            labelElement.style.textAlign = 'left';
-            labelElement.style.padding = '8px 12px';
-            labelElement.style.fontWeight = '500';
-            labelElement.style.verticalAlign = 'middle';
+          if (labelItem instanceof HTMLElement) {
+            labelItem.style.display = 'table-cell';
+            labelItem.style.width = '60%';
+            labelItem.style.textAlign = 'left';
+            labelItem.style.paddingTop = '8px';
+            labelItem.style.paddingBottom = '8px';
+            labelItem.style.paddingLeft = '8px';
+            labelItem.style.verticalAlign = 'middle';
           }
           
-          if (valueElement instanceof HTMLElement) {
-            valueElement.style.display = 'table-cell';
-            valueElement.style.width = '40%';
-            valueElement.style.textAlign = 'right';
-            valueElement.style.padding = '8px 12px';
-            valueElement.style.verticalAlign = 'middle';
+          if (valueItem instanceof HTMLElement) {
+            valueItem.style.display = 'table-cell';
+            valueItem.style.width = '40%';
+            valueItem.style.textAlign = 'right';
+            valueItem.style.paddingTop = '8px';
+            valueItem.style.paddingBottom = '8px';
+            valueItem.style.paddingRight = '8px';
+            valueItem.style.verticalAlign = 'middle';
             
-            // Fix number input containers
-            const numberInputContainer = valueElement.querySelector('.pdf-text-visible');
-            if (numberInputContainer instanceof HTMLElement) {
-              numberInputContainer.style.display = 'flex';
-              numberInputContainer.style.justifyContent = 'flex-end';
-              numberInputContainer.style.alignItems = 'center';
-              numberInputContainer.style.width = '100%';
+            // Make sure number inputs display correctly
+            const numberInput = valueItem.querySelector('.pdf-text-visible');
+            if (numberInput instanceof HTMLElement) {
+              numberInput.style.display = 'flex';
+              numberInput.style.justifyContent = 'flex-end';
+              numberInput.style.alignItems = 'center';
               
-              // Hide the actual input to avoid duplication
-              const input = numberInputContainer.querySelector('input');
-              if (input instanceof HTMLInputElement) {
-                input.style.opacity = '0';
-                input.style.position = 'absolute';
-                input.style.pointerEvents = 'none';
+              // Make sure the PDF value is visible
+              const pdfValue = numberInput.querySelector('.pdf-value');
+              if (pdfValue instanceof HTMLElement) {
+                pdfValue.style.opacity = '1';
+                pdfValue.style.position = 'static';
+                pdfValue.style.marginRight = '4px';
+                pdfValue.style.display = 'inline-block';
+                pdfValue.style.visibility = 'visible';
               }
               
-              // Make the PDF value visible
-              const pdfValue = numberInputContainer.querySelector('.pdf-value');
-              if (pdfValue instanceof HTMLElement) {
-                pdfValue.style.position = 'static';
-                pdfValue.style.visibility = 'visible';
-                pdfValue.style.opacity = '1';
-                pdfValue.style.marginRight = '4px';
-                pdfValue.style.fontWeight = '500';
+              // Hide the actual input
+              const input = numberInput.querySelector('input');
+              if (input instanceof HTMLInputElement) {
+                input.style.display = 'none';
+                input.style.opacity = '0';
+                input.style.height = '0';
+                input.style.position = 'absolute';
               }
             }
           }
@@ -133,69 +176,51 @@ export const enhanceLayout = (container: HTMLElement) => {
       }
     });
     
-    // Enhance section headers
-    const headings = container.querySelectorAll('h2');
-    headings.forEach((heading) => {
-      if (heading instanceof HTMLElement) {
-        heading.style.fontSize = '18px';
-        heading.style.fontWeight = 'bold';
-        heading.style.marginTop = '32px';
-        heading.style.marginBottom = '16px';
-        heading.style.borderLeft = '4px solid #3B82F6';
-        heading.style.paddingLeft = '12px';
-        heading.style.color = '#000';
-        heading.style.backgroundColor = '#f8fafc';
-        heading.style.padding = '8px 12px';
-        heading.style.width = '100%';
-        heading.style.boxSizing = 'border-box';
-      }
-    });
-    
-    // Fix card layout
-    const cards = container.querySelectorAll('.card, [class*="rounded-lg"]');
-    cards.forEach(card => {
-      if (card instanceof HTMLElement) {
-        card.style.marginBottom = '32px';
-        card.style.pageBreakInside = 'avoid';
-        card.style.border = '1px solid #e5e7eb';
-        card.style.borderRadius = '8px';
-        card.style.padding = '24px';
-        card.style.backgroundColor = '#fff';
-        card.style.boxShadow = 'none';
-      }
-    });
-    
-    // Fix risk indicator display
-    const riskIndicator = container.querySelector('[class*="risk-indicator"]');
-    if (riskIndicator instanceof HTMLElement) {
-      riskIndicator.style.pageBreakInside = 'avoid';
-      riskIndicator.style.marginTop = '16px';
-      
-      // Make percentage text more visible
-      const percentageText = riskIndicator.querySelector('[class*="percentage"]');
-      if (percentageText instanceof HTMLElement) {
-        percentageText.style.fontWeight = 'bold';
-        percentageText.style.fontSize = '16px';
-      }
-    }
-    
-    // Enhance table layouts
+    // Fix table layout
     const tables = container.querySelectorAll('table');
-    tables.forEach(table => {
-      if (table instanceof HTMLElement) {
+    tables.forEach((table) => {
+      if (table instanceof HTMLTableElement) {
         table.style.width = '100%';
         table.style.borderCollapse = 'collapse';
         table.style.marginBottom = '24px';
         table.style.border = '1px solid #e5e7eb';
         
-        const cells = table.querySelectorAll('td, th');
-        cells.forEach(cell => {
-          if (cell instanceof HTMLElement) {
-            cell.style.padding = '12px';
-            cell.style.textAlign = cell.classList.contains('text-right') ? 'right' : 'left';
-            cell.style.border = '1px solid #e5e7eb';
+        const rows = table.querySelectorAll('tr');
+        rows.forEach((row) => {
+          if (row instanceof HTMLTableRowElement) {
+            row.style.borderBottom = '1px solid #e5e7eb';
           }
         });
+        
+        const cells = table.querySelectorAll('td, th');
+        cells.forEach((cell) => {
+          if (cell instanceof HTMLTableCellElement) {
+            cell.style.padding = '12px';
+            cell.style.border = '1px solid #e5e7eb';
+            
+            // Make sure text is visible
+            cell.style.color = '#000';
+            
+            const textElements = cell.querySelectorAll('p, span, div');
+            textElements.forEach((el) => {
+              if (el instanceof HTMLElement) {
+                el.style.color = '#000';
+              }
+            });
+          }
+        });
+      }
+    });
+    
+    // Fix card layout
+    const cards = container.querySelectorAll('.card');
+    cards.forEach((card) => {
+      if (card instanceof HTMLElement) {
+        card.style.marginBottom = '24px';
+        card.style.pageBreakInside = 'avoid';
+        card.style.border = '1px solid #e5e7eb';
+        card.style.padding = '16px';
+        card.style.borderRadius = '8px';
       }
     });
   } catch (error) {

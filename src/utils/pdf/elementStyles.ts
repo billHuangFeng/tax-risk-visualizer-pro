@@ -6,63 +6,40 @@ export const processTextElements = (container: HTMLElement) => {
   try {
     const textElements = container.querySelectorAll('p, h1, h2, h3, h4, h5, h6, span, label, div');
     textElements.forEach((el) => {
-      if (el instanceof HTMLElement && !el.classList.contains('pdf-duplicate-row')) {
+      if (el instanceof HTMLElement) {
         el.style.color = '#000';
         el.style.visibility = 'visible';
         el.style.opacity = '1';
+        el.style.fontSize = '14px';
         
-        if (el.childNodes.length > 0) {
-          el.childNodes.forEach((child) => {
-            if (child instanceof HTMLElement) {
-              child.style.color = '#000';
-              child.style.visibility = 'visible';
-              child.style.opacity = '1';
-            }
-          });
+        // Make sure text in children is visible too
+        const children = el.querySelectorAll('*');
+        children.forEach(child => {
+          if (child instanceof HTMLElement) {
+            child.style.color = '#000';
+            child.style.visibility = 'visible';
+          }
+        });
+      }
+    });
+    
+    // Make headings stand out
+    const headings = container.querySelectorAll('h1, h2, h3, h4, h5');
+    headings.forEach(heading => {
+      if (heading instanceof HTMLElement) {
+        heading.style.fontWeight = 'bold';
+        heading.style.marginTop = '16px';
+        heading.style.marginBottom = '8px';
+        
+        if (heading.tagName === 'H1') {
+          heading.style.fontSize = '24px';
+        } else if (heading.tagName === 'H2') {
+          heading.style.fontSize = '20px';
+        } else {
+          heading.style.fontSize = '16px';
         }
       }
     });
-    
-    // Make headings clear and visible
-    const headings = container.querySelectorAll('h1, h2, h3, h4, h5, h6');
-    headings.forEach((heading) => {
-      if (heading instanceof HTMLElement) {
-        heading.style.pageBreakBefore = 'auto';
-        heading.style.pageBreakAfter = 'avoid';
-        heading.style.marginTop = '24px';
-        heading.style.marginBottom = '16px';
-        heading.style.width = '100%';
-      }
-    });
-    
-    // Make company name prominent at the top
-    const companyNameInput = container.querySelector('input#companyName');
-    if (companyNameInput instanceof HTMLInputElement) {
-      const companyName = companyNameInput.value || companyNameInput.getAttribute('data-value') || '税务计算报告';
-      
-      const titleElement = document.createElement('h1');
-      titleElement.textContent = companyName + ' - 税务计算报告';
-      titleElement.style.fontSize = '24px';
-      titleElement.style.fontWeight = 'bold';
-      titleElement.style.textAlign = 'center';
-      titleElement.style.marginBottom = '24px';
-      titleElement.style.borderBottom = '2px solid #3B82F6';
-      titleElement.style.paddingBottom = '12px';
-      titleElement.style.width = '100%';
-      titleElement.style.pageBreakAfter = 'avoid';
-      
-      if (container.firstChild) {
-        container.insertBefore(titleElement, container.firstChild);
-      } else {
-        container.appendChild(titleElement);
-      }
-      
-      // Hide the original company name field
-      const companyField = companyNameInput.closest('[class*="grid"]');
-      if (companyField instanceof HTMLElement) {
-        companyField.style.display = 'none';
-      }
-    }
   } catch (error) {
     console.warn('Error processing text elements:', error);
   }
@@ -72,76 +49,77 @@ export const processTextElements = (container: HTMLElement) => {
 export const processInputFields = (container: HTMLElement) => {
   try {
     const inputs = container.querySelectorAll('input');
-    const processedParents = new Set<HTMLElement>();
-    
-    inputs.forEach((input: HTMLInputElement) => {
-      const parentElement = input.closest('.pdf-text-visible');
-      if (!parentElement || !(parentElement instanceof HTMLElement) || processedParents.has(parentElement)) return;
-      
-      processedParents.add(parentElement);
-      
-      // Find or create the pdf-value element
-      let valueDisplay = parentElement.querySelector('.pdf-value');
-      
-      if (!valueDisplay) {
-        valueDisplay = document.createElement('div');
-        valueDisplay.className = 'pdf-value';
-        valueDisplay.setAttribute('data-pdf-value', 'true');
+    inputs.forEach((input) => {
+      if (input instanceof HTMLInputElement) {
+        // Get the input value
+        const value = input.getAttribute('data-value') || input.value || '';
         
-        if (valueDisplay instanceof HTMLElement) {
-          valueDisplay.style.position = 'absolute';
-          valueDisplay.style.right = input.classList.contains('text-right') ? '8px' : 'auto';
-          valueDisplay.style.left = input.classList.contains('text-right') ? 'auto' : '8px';
-          valueDisplay.style.top = '50%';
-          valueDisplay.style.transform = 'translateY(-50%)';
-          valueDisplay.style.color = '#000';
+        // Find the parent container
+        const parentElement = input.closest('.pdf-text-visible');
+        if (parentElement instanceof HTMLElement) {
+          // Find or create the PDF value display element
+          let valueDisplay = parentElement.querySelector('.pdf-value');
+          if (!valueDisplay) {
+            valueDisplay = document.createElement('div');
+            valueDisplay.className = 'pdf-value';
+            parentElement.appendChild(valueDisplay);
+          }
+          
+          if (valueDisplay instanceof HTMLElement) {
+            // Set the value to display
+            valueDisplay.textContent = value;
+            valueDisplay.style.visibility = 'visible';
+            valueDisplay.style.opacity = '1';
+            valueDisplay.style.display = 'inline-block';
+            valueDisplay.style.fontWeight = 'bold';
+            valueDisplay.style.marginRight = '4px';
+            valueDisplay.style.position = 'static';
+          }
+          
+          // Hide the actual input element
+          input.style.display = 'none';
+          input.style.opacity = '0';
+          input.style.position = 'absolute';
+          input.style.pointerEvents = 'none';
+        } else {
+          // Standalone input not in a container
+          const wrapper = document.createElement('div');
+          wrapper.style.display = 'inline-block';
+          
+          const valueDisplay = document.createElement('span');
+          valueDisplay.textContent = value;
           valueDisplay.style.fontWeight = 'bold';
-          valueDisplay.style.fontSize = '14px';
+          
+          // Replace input with text
+          if (input.parentElement) {
+            wrapper.appendChild(valueDisplay);
+            input.parentElement.insertBefore(wrapper, input);
+            input.style.display = 'none';
+          }
         }
-        
-        parentElement.appendChild(valueDisplay);
       }
-      
-      if (valueDisplay instanceof HTMLElement) {
-        // Use data-value attribute if available, otherwise use input value
-        const inputValue = input.getAttribute('data-value') || input.value || '0';
-        valueDisplay.textContent = inputValue;
-        valueDisplay.style.visibility = 'visible';
-        valueDisplay.style.opacity = '1';
-        valueDisplay.style.position = 'static';
-        valueDisplay.style.display = 'inline-block';
-        valueDisplay.style.marginRight = '4px';
-      }
-      
-      // Hide the actual input to avoid duplication
-      input.style.opacity = '0';
-      input.style.height = '0';
-      input.style.position = 'absolute';
-      input.style.border = 'none';
-      input.style.boxShadow = 'none';
-      input.style.outline = 'none';
-      input.style.backgroundColor = 'transparent';
     });
     
-    // Handle standalone inputs (not in pdf-text-visible containers)
-    const standaloneInputs = container.querySelectorAll('input:not(.pdf-text-visible *)');
-    standaloneInputs.forEach((input) => {
-      if (input instanceof HTMLInputElement) {
-        const parentElement = input.parentElement;
-        if (!parentElement || !(parentElement instanceof HTMLElement)) return;
+    // Process number inputs specifically
+    const numberInputs = container.querySelectorAll('.pdf-text-visible');
+    numberInputs.forEach(container => {
+      if (container instanceof HTMLElement) {
+        container.style.display = 'flex';
+        container.style.justifyContent = 'flex-end';
+        container.style.alignItems = 'center';
         
-        const inputValue = input.getAttribute('data-value') || input.value || '';
+        const input = container.querySelector('input');
+        if (input instanceof HTMLInputElement) {
+          input.style.display = 'none';
+        }
         
-        // Create a text display to replace the input
-        const textDisplay = document.createElement('span');
-        textDisplay.textContent = inputValue;
-        textDisplay.style.fontWeight = 'bold';
-        textDisplay.style.fontSize = '14px';
-        textDisplay.style.color = '#000';
-        
-        // Add the text display and hide the input
-        parentElement.appendChild(textDisplay);
-        input.style.display = 'none';
+        const pdfValue = container.querySelector('.pdf-value');
+        if (pdfValue instanceof HTMLElement) {
+          pdfValue.style.display = 'inline-block';
+          pdfValue.style.visibility = 'visible';
+          pdfValue.style.opacity = '1';
+          pdfValue.style.position = 'static';
+        }
       }
     });
   } catch (error) {
