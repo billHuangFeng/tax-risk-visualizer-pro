@@ -18,6 +18,14 @@ export const ReportBroDesigner: React.FC<ReportBroDesignerProps> = ({
   const [loadError, setLoadError] = useState<string | null>(null);
   const [designer, setDesigner] = useState<any>(null);
   const [retryCount, setRetryCount] = useState(0);
+  const [containerReady, setContainerReady] = useState(false);
+
+  // First ensure the container is mounted and ready
+  useEffect(() => {
+    if (containerRef.current) {
+      setContainerReady(true);
+    }
+  }, []);
 
   useEffect(() => {
     let isMounted = true;
@@ -25,6 +33,11 @@ export const ReportBroDesigner: React.FC<ReportBroDesignerProps> = ({
     
     const initReportBro = async () => {
       try {
+        if (!containerReady) {
+          console.log("Container not ready yet, waiting...");
+          return;
+        }
+
         setIsLoading(true);
         setLoadError(null);
         
@@ -40,7 +53,7 @@ export const ReportBroDesigner: React.FC<ReportBroDesignerProps> = ({
         
         console.log("ReportBro libraries loaded successfully, waiting for DOM to be ready");
         
-        // 确保DOM已准备好再初始化设计器
+        // 增加一个较长的延迟，确保DOM完全准备好
         initTimeout = window.setTimeout(() => {
           try {
             if (!isMounted) return;
@@ -49,6 +62,15 @@ export const ReportBroDesigner: React.FC<ReportBroDesignerProps> = ({
             if (!containerRef.current) {
               throw new Error('设计器容器未准备好');
             }
+            
+            // 确保容器有足够的尺寸和可见性
+            const container = containerRef.current;
+            container.style.display = 'block';
+            container.style.height = '600px';
+            container.style.minHeight = '600px';
+            container.style.width = '100%';
+            container.style.position = 'relative';
+            container.style.visibility = 'visible';
             
             console.log("Creating ReportBro designer instance with container:", containerRef.current);
             
@@ -104,11 +126,11 @@ export const ReportBroDesigner: React.FC<ReportBroDesignerProps> = ({
                 // 延迟重试，给DOM更多时间准备
                 setTimeout(() => {
                   if (isMounted) initReportBro();
-                }, 1000);
+                }, 2000); // 增加延迟时间
               }
             }
           }
-        }, 300); // 增加延迟，确保DOM完全渲染
+        }, 1000); // 增加延迟，确保DOM完全渲染
       } catch (error) {
         console.error("Error loading ReportBro:", error);
         if (isMounted) {
@@ -118,7 +140,10 @@ export const ReportBroDesigner: React.FC<ReportBroDesignerProps> = ({
       }
     };
 
-    initReportBro();
+    // 只有当容器准备好后再初始化
+    if (containerReady) {
+      initReportBro();
+    }
     
     // 清理函数
     return () => {
@@ -132,7 +157,7 @@ export const ReportBroDesigner: React.FC<ReportBroDesignerProps> = ({
         }
       }
     };
-  }, [initialReport, retryCount]);
+  }, [initialReport, retryCount, containerReady]);
 
   // 保存报表定义
   const handleSave = () => {
@@ -204,7 +229,7 @@ export const ReportBroDesigner: React.FC<ReportBroDesignerProps> = ({
             ref={containerRef} 
             id="reportbro-designer-container"
             className="w-full border border-gray-300 rounded flex-grow" 
-            style={{ height: '600px', minHeight: '600px' }}
+            style={{ height: '600px', minHeight: '600px', display: 'block', visibility: 'visible' }}
           />
         </>
       )}
