@@ -27,8 +27,9 @@ export const removeRedundantTextElements = (container: HTMLElement) => {
       if (pdfValues.length > 1) {
         // Keep only the first one
         for (let i = 1; i < pdfValues.length; i++) {
-          if (pdfValues[i] instanceof HTMLElement) {
-            pdfValues[i].style.display = 'none';
+          const element = pdfValues[i];
+          if (element instanceof HTMLElement) {
+            element.style.display = 'none';
           }
         }
       }
