@@ -26,71 +26,32 @@ const CalculatorActions: React.FC<CalculatorActionsProps> = ({
   };
 
   const handleExport = async () => {
+    // Prevent multiple export attempts
     if (exporting) return;
     
     try {
       setExporting(true);
+      
       toast({
         title: "PDF生成中",
-        description: "正在处理所有页面，可能需要几秒钟...",
+        description: "正在处理所有页面，请稍候...",
       });
       
-      // Remove any existing temporary elements first
-      const existingTempElements = document.querySelectorAll('.pdf-temp-element');
-      existingTempElements.forEach(el => {
-        try {
-          if (el.parentElement && document.body.contains(el) && el.parentElement.contains(el)) {
-            el.parentElement.removeChild(el);
-          }
-        } catch (err) {
-          console.warn("Error removing temporary element:", err);
-        }
-      });
-      
-      // Safely clean duplicate spans first - with additional checks
-      try {
-        const duplicateSpans = document.querySelectorAll('span:not(.pdf-value)[style*="position: absolute"]');
-        duplicateSpans.forEach(span => {
-          try {
-            if (span.parentElement && document.body.contains(span) && span.parentElement.contains(span)) {
-              span.parentElement.removeChild(span);
-            }
-          } catch (innerError) {
-            console.warn("Error safely removing a span:", innerError);
-          }
-        });
-      } catch (error) {
-        console.warn("Error removing duplicate spans:", error);
-      }
-      
-      // Add PDF-specific classes to container before export
-      const calculatorContent = document.getElementById('calculator-content');
-      if (calculatorContent) {
-        calculatorContent.classList.add('for-pdf-export', 'pdf-export-container');
-      }
-      
-      // Make all input values visible before export
-      try {
-        const allInputs = document.querySelectorAll('input') as NodeListOf<HTMLInputElement>;
-        allInputs.forEach(input => {
-          if (input.value) {
-            input.setAttribute('data-value', input.value);
-          }
-        });
-      } catch (error) {
-        console.warn("Error processing inputs:", error);
-      }
-      
-      // Trigger a short delay to allow the toast to render and CSS to apply
+      // Allow the toast to render and give time for synchronous operations
       setTimeout(async () => {
         try {
-          await onExport();
+          // Find calculator content
+          const calculatorContent = document.getElementById('calculator-content');
           
-          // Remove PDF-specific classes after export
+          // Add PDF export classes before export
           if (calculatorContent) {
-            calculatorContent.classList.remove('for-pdf-export', 'pdf-export-container');
+            calculatorContent.classList.add('for-pdf-export', 'pdf-export-container');
           }
           
+          // Wait for the export to complete
+          await onExport();
+          
+          // Success notification
           toast({
             title: "导出成功",
             description: "PDF文件已生成并下载",
@@ -98,31 +59,34 @@ const CalculatorActions: React.FC<CalculatorActionsProps> = ({
         } catch (error) {
           console.error("Export error:", error);
           
-          // Remove PDF-specific classes if there was an error
-          if (calculatorContent) {
-            calculatorContent.classList.remove('for-pdf-export', 'pdf-export-container');
-          }
-          
+          // Error notification
           toast({
             title: "导出失败",
             description: "PDF生成过程中发生错误",
             variant: "destructive",
           });
         } finally {
-          // Set exporting to false with a delay
+          // Remove PDF classes regardless of outcome
+          const calculatorContent = document.getElementById('calculator-content');
+          if (calculatorContent) {
+            calculatorContent.classList.remove('for-pdf-export', 'pdf-export-container');
+          }
+          
+          // Reset export state after a delay
           setTimeout(() => {
             setExporting(false);
-          }, 2000);
+          }, 1000);
         }
-      }, 1000); // Increased delay to allow CSS changes to take effect
-      
+      }, 300);
     } catch (error) {
-      console.error("Export error:", error);
+      console.error("Export initialization error:", error);
+      
       toast({
         title: "导出失败",
-        description: "PDF生成过程中发生错误",
+        description: "无法初始化PDF导出",
         variant: "destructive",
       });
+      
       setExporting(false);
     }
   };

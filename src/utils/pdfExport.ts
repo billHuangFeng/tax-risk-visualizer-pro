@@ -2,211 +2,260 @@
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 
-// Safely check if an element exists in the DOM
+// Safely check if an element exists and is attached to the DOM
 const elementExists = (element: Element | null): boolean => {
   return !!(element && document.body.contains(element));
 };
 
-// Prepare cloned content for PDF export
-const prepareContentForExport = (content: HTMLElement): HTMLElement => {
-  // Remove any existing temp container first
+// Safely get an element by its id or selector
+const safeGetElement = (selector: string): HTMLElement | null => {
+  try {
+    return document.querySelector(selector) as HTMLElement;
+  } catch (error) {
+    console.warn(`Could not find element with selector: ${selector}`, error);
+    return null;
+  }
+};
+
+// Safely remove an element without causing DOM errors
+const safeRemoveElement = (element: Element | null): void => {
+  if (!element) return;
+  
+  try {
+    // Check if element is in the DOM and has a parent
+    if (elementExists(element) && element.parentNode) {
+      element.parentNode.removeChild(element);
+    }
+  } catch (error) {
+    console.warn('Failed to safely remove element:', error);
+  }
+};
+
+// Prepare cloned content for PDF export with improved safety
+const prepareContentForExport = (content: HTMLElement): HTMLElement | null => {
+  // First remove any existing temp containers to avoid duplicates
   const existingTempContainer = document.getElementById('temp-pdf-container');
   if (existingTempContainer) {
-    try {
-      document.body.removeChild(existingTempContainer);
-    } catch (e) {
-      console.warn('Could not remove existing temp container:', e);
-    }
+    safeRemoveElement(existingTempContainer);
   }
   
-  const clonedContent = content.cloneNode(true) as HTMLElement;
-  const tempContainer = document.createElement('div');
-  tempContainer.id = 'temp-pdf-container';
-  tempContainer.classList.add('pdf-temp-element', 'pdf-export-container');
-  
-  // Set container styles
-  tempContainer.style.position = 'absolute';
-  tempContainer.style.left = '-9999px';
-  tempContainer.style.top = '0';
-  tempContainer.style.width = '1200px';
-  tempContainer.style.backgroundColor = '#ffffff';
-  
-  // Safely append to body
-  document.body.appendChild(tempContainer);
-  tempContainer.appendChild(clonedContent);
-  
-  return tempContainer;
+  try {
+    // Create a deep clone of the content
+    const clonedContent = content.cloneNode(true) as HTMLElement;
+    
+    // Create a new temporary container
+    const tempContainer = document.createElement('div');
+    tempContainer.id = 'temp-pdf-container';
+    tempContainer.classList.add('pdf-temp-element', 'pdf-export-container');
+    
+    // Set container styles
+    tempContainer.style.position = 'absolute';
+    tempContainer.style.left = '-9999px';
+    tempContainer.style.top = '0';
+    tempContainer.style.width = '1200px';
+    tempContainer.style.backgroundColor = '#ffffff';
+    
+    // Safely append to body
+    document.body.appendChild(tempContainer);
+    tempContainer.appendChild(clonedContent);
+    
+    return tempContainer;
+  } catch (error) {
+    console.error('Error preparing content for export:', error);
+    return null;
+  }
 };
 
-// Process input fields for PDF display
+// Process input fields for PDF display with improved safety
 const processInputFields = (container: HTMLElement) => {
-  const inputs = container.querySelectorAll('input');
-  inputs.forEach((input: HTMLInputElement) => {
-    // Check if a value display element already exists for this input
-    const parentElement = input.parentElement;
-    if (!parentElement) return;
-    
-    // Check if a pdf-value element already exists
-    const existingValueDisplay = parentElement.querySelector('.pdf-value');
-    
-    // Only create a value display if one doesn't already exist
-    if (!existingValueDisplay) {
-      const valueDisplay = document.createElement('div');
-      valueDisplay.textContent = input.value || '0';
-      valueDisplay.className = 'pdf-value';
-      valueDisplay.setAttribute('data-pdf-value', 'true');
-      valueDisplay.style.position = 'absolute';
-      valueDisplay.style.left = '0';
-      valueDisplay.style.top = '0';
-      valueDisplay.style.width = '100%';
-      valueDisplay.style.height = '100%';
-      valueDisplay.style.display = 'flex';
-      valueDisplay.style.alignItems = 'center';
-      valueDisplay.style.justifyContent = input.classList.contains('text-right') ? 'flex-end' : 'flex-start';
-      valueDisplay.style.paddingRight = input.classList.contains('text-right') ? '8px' : '0';
-      valueDisplay.style.paddingLeft = !input.classList.contains('text-right') ? '8px' : '0';
-      valueDisplay.style.backgroundColor = '#fff';
-      valueDisplay.style.color = '#000';
-      valueDisplay.style.fontSize = '14px';
-      valueDisplay.style.fontWeight = 'bold';
-      valueDisplay.style.zIndex = '10';
+  try {
+    const inputs = container.querySelectorAll('input');
+    inputs.forEach((input: HTMLInputElement) => {
+      const parentElement = input.parentElement;
+      if (!parentElement) return;
       
-      parentElement.appendChild(valueDisplay);
+      // Check if a pdf-value element already exists
+      const existingValueDisplay = parentElement.querySelector('.pdf-value');
       
-      // Hide the input for PDF export
-      input.style.opacity = '0';
-    } else if (existingValueDisplay instanceof HTMLElement) {
-      // Update the existing value display
-      existingValueDisplay.textContent = input.value || '0';
-      existingValueDisplay.setAttribute('data-pdf-value', 'true');
-    }
-  });
-};
-
-// Process checkboxes for PDF display
-const processCheckboxes = (container: HTMLElement) => {
-  const checkboxes = container.querySelectorAll('[role="checkbox"]');
-  checkboxes.forEach((checkbox: Element) => {
-    const checkboxElement = checkbox as HTMLElement;
-    
-    if (checkboxElement.getAttribute('data-state') === 'checked') {
-      checkboxElement.style.backgroundColor = '#000';
-      checkboxElement.style.border = '2px solid #000';
-      
-      const checkIcon = checkboxElement.querySelector('svg');
-      if (checkIcon && checkIcon instanceof SVGElement) {
-        checkIcon.style.color = '#fff';
-        checkIcon.style.width = '16px';
-        checkIcon.style.height = '16px';
-      }
-    } else {
-      checkboxElement.style.border = '2px solid #000';
-    }
-  });
-};
-
-// Enhance visual elements for PDF
-const enhanceVisualElements = (container: HTMLElement) => {
-  // Make all text elements visible with proper styling
-  const allElements = container.querySelectorAll('*');
-  allElements.forEach((el: Element) => {
-    const element = el as HTMLElement;
-    if (element.style) {
-      element.style.color = '#000';
-      element.style.textShadow = 'none';
-      element.style.boxShadow = 'none';
-    }
-  });
-  
-  // Ensure table elements are visible
-  const tableCells = container.querySelectorAll('td');
-  tableCells.forEach((cell: Element) => {
-    const cellElement = cell as HTMLElement;
-    cellElement.style.border = '1px solid #ddd';
-    cellElement.style.padding = '8px';
-    cellElement.style.color = '#000';
-    cellElement.style.backgroundColor = '#fff';
-  });
-
-  // Make text elements visible
-  const textElements = container.querySelectorAll('p, h1, h2, h3, h4, h5, h6, span, label, div');
-  textElements.forEach((el: Element) => {
-    const textElement = el as HTMLElement;
-    if (textElement.textContent && textElement.textContent.trim() !== '') {
-      textElement.style.color = '#000';
-      textElement.style.fontWeight = textElement.tagName.startsWith('H') ? 'bold' : 'normal';
-      textElement.style.visibility = 'visible';
-      textElement.style.opacity = '1';
-    }
-  });
-  
-  // Fix specific PDF value visibility
-  const pdfValues = container.querySelectorAll('.pdf-value');
-  pdfValues.forEach((el: Element) => {
-    const valueElement = el as HTMLElement;
-    valueElement.style.opacity = '1';
-    valueElement.style.visibility = 'visible';
-    valueElement.style.color = '#000';
-    valueElement.style.backgroundColor = '#fff';
-  });
-  
-  // Remove any duplicated text elements that might have been created
-  removeRedundantTextElements(container);
-};
-
-// Remove redundant text elements that might cause duplicates - with safety checks
-const removeRedundantTextElements = (container: HTMLElement) => {
-  // Find all spans that were added by the onclone callback in html2canvas
-  const redundantSpans = container.querySelectorAll('span:not(.pdf-value)[style*="position: absolute"]');
-  redundantSpans.forEach((span) => {
-    try {
-      if (span.parentElement && span.parentElement.contains(span)) {
-        span.parentElement.removeChild(span);
-      }
-    } catch (e) {
-      console.warn('Could not remove redundant span:', e);
-    }
-  });
-};
-
-// Force all input values to be visible
-const forceInputValuesVisible = (container: HTMLElement) => {
-  // Find all input elements and their containers
-  const inputContainers = container.querySelectorAll('.pdf-text-visible');
-  inputContainers.forEach((container: Element) => {
-    const containerElement = container as HTMLElement;
-    containerElement.style.position = 'relative';
-    
-    // Get the input within this container
-    const input = containerElement.querySelector('input');
-    if (input && input instanceof HTMLInputElement) {
-      // Get or create the value display div
-      let valueDisplay = containerElement.querySelector('.pdf-value');
-      if (!valueDisplay) {
-        valueDisplay = document.createElement('div');
+      // Only create a value display if one doesn't already exist
+      if (!existingValueDisplay) {
+        const valueDisplay = document.createElement('div');
+        valueDisplay.textContent = input.value || '0';
         valueDisplay.className = 'pdf-value';
         valueDisplay.setAttribute('data-pdf-value', 'true');
-        containerElement.appendChild(valueDisplay);
+        valueDisplay.style.position = 'absolute';
+        valueDisplay.style.left = '0';
+        valueDisplay.style.top = '0';
+        valueDisplay.style.width = '100%';
+        valueDisplay.style.height = '100%';
+        valueDisplay.style.display = 'flex';
+        valueDisplay.style.alignItems = 'center';
+        valueDisplay.style.justifyContent = input.classList.contains('text-right') ? 'flex-end' : 'flex-start';
+        valueDisplay.style.paddingRight = input.classList.contains('text-right') ? '8px' : '0';
+        valueDisplay.style.paddingLeft = !input.classList.contains('text-right') ? '8px' : '0';
+        valueDisplay.style.backgroundColor = '#fff';
+        valueDisplay.style.color = '#000';
+        valueDisplay.style.fontSize = '14px';
+        valueDisplay.style.fontWeight = 'bold';
+        valueDisplay.style.zIndex = '10';
+        
+        parentElement.appendChild(valueDisplay);
+        
+        // Hide the input for PDF export
+        input.style.opacity = '0';
+      } else if (existingValueDisplay instanceof HTMLElement) {
+        // Update the existing value display
+        existingValueDisplay.textContent = input.value || '0';
+        existingValueDisplay.setAttribute('data-pdf-value', 'true');
       }
-      
-      // Make sure value display is visible and has the input value
-      const valueDisplayElement = valueDisplay as HTMLElement;
-      valueDisplayElement.textContent = input.value || '0';
-      valueDisplayElement.style.position = 'absolute';
-      valueDisplayElement.style.right = '10px';
-      valueDisplayElement.style.top = '50%';
-      valueDisplayElement.style.transform = 'translateY(-50%)';
-      valueDisplayElement.style.opacity = '1';
-      valueDisplayElement.style.visibility = 'visible';
-      valueDisplayElement.style.color = '#000';
-      valueDisplayElement.style.backgroundColor = '#fff';
-      valueDisplayElement.style.zIndex = '100';
-      valueDisplayElement.style.fontWeight = 'bold';
-    }
-  });
+    });
+  } catch (error) {
+    console.warn('Error processing input fields:', error);
+  }
 };
 
-// Create canvas from prepared content
+// Process checkboxes for PDF display with improved safety
+const processCheckboxes = (container: HTMLElement) => {
+  try {
+    const checkboxes = container.querySelectorAll('[role="checkbox"]');
+    checkboxes.forEach((checkbox: Element) => {
+      const checkboxElement = checkbox as HTMLElement;
+      
+      if (checkboxElement.getAttribute('data-state') === 'checked') {
+        checkboxElement.style.backgroundColor = '#000';
+        checkboxElement.style.border = '2px solid #000';
+        
+        const checkIcon = checkboxElement.querySelector('svg');
+        if (checkIcon && checkIcon instanceof SVGElement) {
+          checkIcon.style.color = '#fff';
+          checkIcon.style.width = '16px';
+          checkIcon.style.height = '16px';
+        }
+      } else {
+        checkboxElement.style.border = '2px solid #000';
+      }
+    });
+  } catch (error) {
+    console.warn('Error processing checkboxes:', error);
+  }
+};
+
+// Enhance visual elements for PDF with improved safety
+const enhanceVisualElements = (container: HTMLElement) => {
+  try {
+    // Make all text elements visible with proper styling
+    const allElements = container.querySelectorAll('*');
+    allElements.forEach((el: Element) => {
+      if (el instanceof HTMLElement && el.style) {
+        el.style.color = '#000';
+        el.style.textShadow = 'none';
+        el.style.boxShadow = 'none';
+      }
+    });
+    
+    // Ensure table elements are visible
+    const tableCells = container.querySelectorAll('td');
+    tableCells.forEach((cell: Element) => {
+      if (cell instanceof HTMLElement) {
+        cell.style.border = '1px solid #ddd';
+        cell.style.padding = '8px';
+        cell.style.color = '#000';
+        cell.style.backgroundColor = '#fff';
+      }
+    });
+
+    // Make text elements visible
+    const textElements = container.querySelectorAll('p, h1, h2, h3, h4, h5, h6, span, label, div');
+    textElements.forEach((el: Element) => {
+      if (el instanceof HTMLElement && el.textContent && el.textContent.trim() !== '') {
+        el.style.color = '#000';
+        el.style.fontWeight = el.tagName.startsWith('H') ? 'bold' : 'normal';
+        el.style.visibility = 'visible';
+        el.style.opacity = '1';
+      }
+    });
+    
+    // Fix specific PDF value visibility
+    const pdfValues = container.querySelectorAll('.pdf-value');
+    pdfValues.forEach((el: Element) => {
+      if (el instanceof HTMLElement) {
+        el.style.opacity = '1';
+        el.style.visibility = 'visible';
+        el.style.color = '#000';
+        el.style.backgroundColor = '#fff';
+      }
+    });
+    
+    // Remove any duplicated text elements that might have been created
+    removeRedundantTextElements(container);
+  } catch (error) {
+    console.warn('Error enhancing visual elements:', error);
+  }
+};
+
+// Remove redundant text elements with improved safety
+const removeRedundantTextElements = (container: HTMLElement) => {
+  try {
+    // Find all spans that were added by the onclone callback in html2canvas
+    const redundantSpans = container.querySelectorAll('span:not(.pdf-value)[style*="position: absolute"]');
+    redundantSpans.forEach((span) => {
+      if (span.parentElement && elementExists(span) && span.parentElement.contains(span)) {
+        try {
+          span.parentElement.removeChild(span);
+        } catch (e) {
+          console.warn('Could not remove redundant span:', e);
+        }
+      }
+    });
+  } catch (error) {
+    console.warn('Error removing redundant elements:', error);
+  }
+};
+
+// Force all input values to be visible with improved safety
+const forceInputValuesVisible = (container: HTMLElement) => {
+  try {
+    // Find all input elements and their containers
+    const inputContainers = container.querySelectorAll('.pdf-text-visible');
+    inputContainers.forEach((container: Element) => {
+      if (container instanceof HTMLElement) {
+        container.style.position = 'relative';
+        
+        // Get the input within this container
+        const input = container.querySelector('input');
+        if (input && input instanceof HTMLInputElement) {
+          // Get or create the value display div
+          let valueDisplay = container.querySelector('.pdf-value');
+          if (!valueDisplay) {
+            valueDisplay = document.createElement('div');
+            valueDisplay.className = 'pdf-value';
+            valueDisplay.setAttribute('data-pdf-value', 'true');
+            container.appendChild(valueDisplay);
+          }
+          
+          // Make sure value display is visible and has the input value
+          if (valueDisplay instanceof HTMLElement) {
+            valueDisplay.textContent = input.value || '0';
+            valueDisplay.style.position = 'absolute';
+            valueDisplay.style.right = '10px';
+            valueDisplay.style.top = '50%';
+            valueDisplay.style.transform = 'translateY(-50%)';
+            valueDisplay.style.opacity = '1';
+            valueDisplay.style.visibility = 'visible';
+            valueDisplay.style.color = '#000';
+            valueDisplay.style.backgroundColor = '#fff';
+            valueDisplay.style.zIndex = '100';
+            valueDisplay.style.fontWeight = 'bold';
+          }
+        }
+      }
+    });
+  } catch (error) {
+    console.warn('Error forcing input values visible:', error);
+  }
+};
+
+// Create canvas from prepared content with improved safety
 const createCanvas = async (content: HTMLElement): Promise<HTMLCanvasElement> => {
   console.log("Starting HTML to canvas conversion");
   // Give the DOM time to process all styling changes
@@ -216,30 +265,34 @@ const createCanvas = async (content: HTMLElement): Promise<HTMLCanvasElement> =>
     const canvas = await html2canvas(content, {
       scale: 2,
       useCORS: true,
-      logging: true,
+      logging: false, // Reduce logging noise
       backgroundColor: '#ffffff',
       allowTaint: true,
       width: 1200,
       onclone: (document, element) => {
         console.log("Cloned document prepared for rendering");
         
-        // Mark all existing value displays to prevent duplication
-        const existingDisplays = element.querySelectorAll('.pdf-value');
-        existingDisplays.forEach((display) => {
-          display.setAttribute('data-pdf-value', 'true');
-        });
-        
-        // Safely remove any already generated spans to avoid duplication
-        const redundantSpans = element.querySelectorAll('span:not([data-pdf-value="true"])[style*="position: absolute"]');
-        redundantSpans.forEach((span) => {
-          try {
-            if (span.parentElement && elementExists(span) && span.parentElement.contains(span)) {
-              span.parentElement.removeChild(span);
+        try {
+          // Mark all existing value displays to prevent duplication
+          const existingDisplays = element.querySelectorAll('.pdf-value');
+          existingDisplays.forEach((display) => {
+            display.setAttribute('data-pdf-value', 'true');
+          });
+          
+          // Safely remove any already generated spans to avoid duplication
+          const redundantSpans = element.querySelectorAll('span:not([data-pdf-value="true"])[style*="position: absolute"]');
+          redundantSpans.forEach((span) => {
+            if (span.parentElement && span.parentElement.contains(span)) {
+              try {
+                span.parentElement.removeChild(span);
+              } catch (e) {
+                // Silent fail
+              }
             }
-          } catch (e) {
-            console.warn('Could not remove span in onclone:', e);
-          }
-        });
+          });
+        } catch (error) {
+          // Silent fail to prevent html2canvas from crashing
+        }
       }
     });
     
@@ -260,82 +313,53 @@ const generateFilename = (calculator: any): string => {
   return `税务计算_${today}`;
 };
 
-// Add content to PDF document
+// Add content to PDF document with improved safety
 const addContentToPDF = (pdf: jsPDF, canvas: HTMLCanvasElement, margin: number): void => {
-  const pageWidth = pdf.internal.pageSize.getWidth();
-  const pageHeight = pdf.internal.pageSize.getHeight();
-  
-  const imgWidth = pageWidth - (2 * margin);
-  const imgHeight = (canvas.height * imgWidth) / canvas.width;
-  
-  let heightLeft = imgHeight;
-  let position = margin;
-  let page = 1;
-  
-  // Add first page
-  pdf.addImage(canvas.toDataURL('image/png'), 'PNG', margin, position, imgWidth, imgHeight);
-  console.log(`Added page ${page} to PDF`);
-  
-  // Add new pages if needed
-  heightLeft -= (pageHeight - 2 * margin);
-  while (heightLeft > 0) {
-    position = margin - (page * (pageHeight - 2 * margin));
-    pdf.addPage();
-    page++;
-    
-    pdf.addImage(canvas.toDataURL('image/png'), 'PNG', margin, position, imgWidth, imgHeight);
-    console.log(`Added page ${page} to PDF`);
-    heightLeft -= (pageHeight - 2 * margin);
-  }
-};
-
-// Safely remove an element to avoid Node removal errors
-const safelyRemoveElement = (element: HTMLElement | null): void => {
-  if (!element) return;
-  
   try {
-    // First check if the element is actually in the DOM
-    if (!elementExists(element)) {
-      console.warn('Element not in DOM, cannot remove it');
-      return;
-    }
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
     
-    // Only attempt to remove if the element is still in the DOM and has a parent
-    if (element.parentNode && document.body.contains(element)) {
-      element.parentNode.removeChild(element);
-    } else if (element.id) {
-      // Alternative approach: find by ID and remove
-      const elementById = document.getElementById(element.id);
-      if (elementById && elementById.parentNode) {
-        elementById.parentNode.removeChild(elementById);
-      }
+    const imgWidth = pageWidth - (2 * margin);
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    
+    let heightLeft = imgHeight;
+    let position = margin;
+    let page = 1;
+    
+    // Add first page
+    pdf.addImage(canvas.toDataURL('image/jpeg', 0.95), 'JPEG', margin, position, imgWidth, imgHeight);
+    console.log(`Added page ${page} to PDF`);
+    
+    // Add new pages if needed
+    heightLeft -= (pageHeight - 2 * margin);
+    while (heightLeft > 0) {
+      position = margin - (page * (pageHeight - 2 * margin));
+      pdf.addPage();
+      page++;
+      
+      pdf.addImage(canvas.toDataURL('image/jpeg', 0.95), 'JPEG', margin, position, imgWidth, imgHeight);
+      console.log(`Added page ${page} to PDF`);
+      heightLeft -= (pageHeight - 2 * margin);
     }
   } catch (error) {
-    console.warn('Failed to remove element:', error);
+    console.error('Error adding content to PDF:', error);
+    throw error;
   }
 };
 
-// Clean up after PDF export - improved with safety checks
+// Clean up after PDF export with improved safety
 const cleanupAfterExport = (): void => {
   try {
-    // Find any temporary containers by ID
+    // Find and remove the temporary container
     const tempContainer = document.getElementById('temp-pdf-container');
-    if (tempContainer && elementExists(tempContainer)) {
-      safelyRemoveElement(tempContainer);
+    if (tempContainer) {
+      safeRemoveElement(tempContainer);
     }
     
     // Remove any orphaned PDF-related elements
     const orphanedElements = document.querySelectorAll('.pdf-temp-element');
     orphanedElements.forEach((element) => {
-      if (elementExists(element)) {
-        try {
-          if (element.parentNode && element.parentNode.contains(element)) {
-            element.parentNode.removeChild(element);
-          }
-        } catch (e) {
-          console.warn('Could not remove orphaned element:', e);
-        }
-      }
+      safeRemoveElement(element);
     });
     
     // Remove PDF-specific classes from the calculator content
@@ -348,36 +372,34 @@ const cleanupAfterExport = (): void => {
   }
 };
 
-// Main export function - with improved error handling and cleanup
+// Main export function with improved error handling and DOM safety
 export const exportToPDF = async (calculator: any) => {
-  let tempContainer: HTMLElement | null = null;
+  // Always clean up first to prevent stale elements from previous exports
+  cleanupAfterExport();
   
   try {
-    const content = document.querySelector('#calculator-content');
+    // Get the calculator content
+    const content = safeGetElement('#calculator-content');
     if (!content) {
       throw new Error('计算器内容未找到');
     }
-
-    // Ensure content is an HTMLElement
-    if (!(content instanceof HTMLElement)) {
-      throw new Error('计算器内容不是有效的HTML元素');
+    
+    // Prepare the content for export
+    const tempContainer = prepareContentForExport(content);
+    if (!tempContainer) {
+      throw new Error('准备导出内容时出错');
     }
     
-    // Cleanup any existing temporary elements from previous export attempts
-    cleanupAfterExport();
-
-    // Prepare content
-    tempContainer = prepareContentForExport(content);
     const clonedContent = tempContainer.firstChild as HTMLElement;
+    if (!clonedContent) {
+      throw new Error('导出内容克隆失败');
+    }
     
-    // Process elements
+    // Process elements for better PDF rendering
     processInputFields(clonedContent);
     processCheckboxes(clonedContent);
     enhanceVisualElements(clonedContent);
     forceInputValuesVisible(clonedContent);
-    
-    // Remove any remaining duplicate elements
-    removeRedundantTextElements(clonedContent);
     
     try {
       // Create canvas
@@ -398,6 +420,8 @@ export const exportToPDF = async (calculator: any) => {
       const filename = generateFilename(calculator);
       pdf.save(`${filename}.pdf`);
       console.log("PDF saved successfully");
+      
+      return true;
     } catch (error) {
       console.error('PDF generation error:', error);
       throw error;
@@ -405,8 +429,6 @@ export const exportToPDF = async (calculator: any) => {
       // Always clean up, even if there's an error during PDF creation
       cleanupAfterExport();
     }
-    
-    return true;
   } catch (error) {
     console.error('PDF export failed:', error);
     // Ensure cleanup happens even if the overall process fails
