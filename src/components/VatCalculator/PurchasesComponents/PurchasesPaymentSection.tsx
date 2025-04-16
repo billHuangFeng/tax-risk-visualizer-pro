@@ -38,7 +38,7 @@ const PurchasesPaymentSection: React.FC<PurchasesPaymentSectionProps> = ({
             <TooltipTrigger asChild>
               <button 
                 className="ml-2 text-tax-blue hover:text-tax-light-blue"
-                onClick={() => onInfoClick?.('bankPurchasesAmount')}
+                onClick={() => onInfoClick?.('purchasePayment')}
               >
                 <Info size={16} />
               </button>
