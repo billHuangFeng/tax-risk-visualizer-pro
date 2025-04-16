@@ -6,34 +6,14 @@ import { useVatSales } from './vat/useVatSales';
 import { useVatPurchases } from './vat/useVatPurchases';
 import { useVatDifferences } from './vat/useVatDifferences';
 import { useVatTax } from './vat/useVatTax';
+import { VatSalesItem, VatPurchaseItem, DifferenceFactor, DifferenceExplanation } from './types';
 
-export interface VatSalesItem {
-  id: string;
-  productName: string;
-  salesAmount: number;
-  vatRate: number;
-  outputTax: number;
-}
-
-export interface VatPurchaseItem {
-  id: string;
-  productName: string;
-  purchaseAmount: number;
-  vatRate: number;
-  inputTax: number;
-}
-
-export interface DifferenceFactor {
-  id: string;
-  description: string;
-  amount: number;
-}
-
-export interface DifferenceExplanation {
-  id: string;
-  reason: string;
-  amount: number;
-}
+export {
+  VatSalesItem,
+  VatPurchaseItem,
+  DifferenceFactor,
+  DifferenceExplanation
+};
 
 export const useVatCalculator = () => {
   const { toast } = useToast();
@@ -85,7 +65,7 @@ export const useVatCalculator = () => {
     } else if (Math.abs(unexplained) > Math.abs(tax.payableTax) * 0.1) {
       tax.setRiskLevel('风险较高');
     } else if (Math.abs(unexplained) > Math.abs(tax.payableTax) * 0.05) {
-      tax.setRiskLevel('风险中等');
+      tax.setRiskLevel('风险较低');
     } else {
       tax.setRiskLevel('风险较低');
     }

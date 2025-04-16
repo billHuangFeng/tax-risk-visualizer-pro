@@ -1,5 +1,5 @@
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { DifferenceFactor, DifferenceExplanation } from '../types';
 
 export const useVatDifferences = () => {
@@ -51,14 +51,20 @@ export const useVatDifferences = () => {
     setDifferenceExplanations(prev => prev.filter(item => item.id !== id));
   }, []);
 
+  const explainedDifferenceTotal = useMemo(() => {
+    return differenceExplanations.reduce((sum, explanation) => sum + explanation.amount, 0);
+  }, [differenceExplanations]);
+
   return {
     differenceFactors,
+    setDifferenceFactors,
     addDifferenceFactor,
     updateDifferenceFactor,
     removeDifferenceFactor,
     differenceExplanations,
     addDifferenceExplanation,
     updateDifferenceExplanation,
-    removeDifferenceExplanation
+    removeDifferenceExplanation,
+    explainedDifferenceTotal
   };
 };
