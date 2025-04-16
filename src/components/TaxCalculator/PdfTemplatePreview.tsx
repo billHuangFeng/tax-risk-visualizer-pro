@@ -18,10 +18,10 @@ export const PdfTemplatePreview: React.FC<PdfTemplatePreviewProps> = ({
   const { styles } = template;
   
   return (
-    <div className="space-y-4 w-full">
+    <div className="space-y-4 w-full h-full flex flex-col">
       <PreviewHeader templateName={template.name} onBack={onBack} />
       
-      <ScrollArea className="h-[calc(100vh-200px)] w-full rounded-lg border">
+      <ScrollArea className="flex-1 w-full rounded-lg border">
         <div 
           className="p-6 bg-white w-full"
           style={{
