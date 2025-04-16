@@ -30,14 +30,23 @@ const CalculatorActions: React.FC<CalculatorActionsProps> = ({
     
     try {
       setExporting(true);
-      onExport();
+      toast({
+        title: "PDF生成中",
+        description: "正在处理所有页面，可能需要几秒钟...",
+      });
+      await onExport();
     } catch (error) {
       console.error("Export error:", error);
+      toast({
+        title: "导出失败",
+        description: "PDF生成过程中发生错误",
+        variant: "destructive",
+      });
     } finally {
-      // Set exporting to false after a short delay to prevent double clicks
+      // Set exporting to false after a longer delay for larger documents
       setTimeout(() => {
         setExporting(false);
-      }, 2000);
+      }, 3000);
     }
   };
   

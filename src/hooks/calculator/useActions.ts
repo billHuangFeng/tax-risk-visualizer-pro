@@ -37,7 +37,7 @@ export const useActions = (riskValue: string, riskPercentage: number) => {
       await exportToPDF({
         riskValue,
         riskPercentage,
-        companyName: '税务计算',  // Default name if not available
+        companyName: document.querySelector('input#companyName')?.value || '税务计算',
       });
       
       toast({

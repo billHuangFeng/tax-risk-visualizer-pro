@@ -1,7 +1,6 @@
 
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
-import taxInfoData from '@/constants/taxInfoData';
 
 export const exportToPDF = async (calculator: any) => {
   try {
@@ -11,9 +10,6 @@ export const exportToPDF = async (calculator: any) => {
       unit: 'mm',
       format: 'a4',
     });
-    
-    // Using standard built-in fonts instead of trying to load external fonts
-    // This approach is more reliable
     
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
@@ -25,6 +21,10 @@ export const exportToPDF = async (calculator: any) => {
       throw new Error('计算器内容未找到');
     }
 
+    // Calculate scale to fit content width to page
+    const contentWidth = (content as HTMLElement).offsetWidth;
+    const scale = (pageWidth - 2 * margin) / contentWidth;
+    
     // Temporarily set styles to ensure full content is visible
     const originalStyle = (content as HTMLElement).style.cssText;
     (content as HTMLElement).style.overflow = 'visible';
@@ -34,27 +34,11 @@ export const exportToPDF = async (calculator: any) => {
     // Convert the content to canvas with higher quality settings
     console.log("Starting HTML to canvas conversion");
     const canvas = await html2canvas(content as HTMLElement, {
-      scale: 2, // Higher scale for better quality
+      scale: 2,
       useCORS: true,
       logging: false,
       backgroundColor: '#ffffff',
       allowTaint: true,
-      windowWidth: document.documentElement.offsetWidth,
-      windowHeight: document.documentElement.offsetHeight,
-      height: (content as HTMLElement).scrollHeight,
-      width: (content as HTMLElement).scrollWidth,
-      onclone: (document, element) => {
-        // Make all elements visible in the cloned document
-        const allElements = element.querySelectorAll('*');
-        allElements.forEach((el) => {
-          if (el instanceof HTMLElement) {
-            el.style.overflow = 'visible';
-            el.style.height = 'auto';
-            el.style.maxHeight = 'none';
-          }
-        });
-        return element;
-      }
     });
     console.log("Canvas created successfully", canvas.width, canvas.height);
     
@@ -65,19 +49,48 @@ export const exportToPDF = async (calculator: any) => {
     const imgWidth = pageWidth - (2 * margin);
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
     
-    // Add the image to the PDF (simplified parameters)
+    // Handle multi-page content
+    let heightLeft = imgHeight;
+    let position = margin;
+    
+    // Add first page
     pdf.addImage(
-      canvas.toDataURL('image/png'),
-      'PNG',
-      margin,
-      margin,
-      imgWidth,
+      canvas.toDataURL('image/png'), 
+      'PNG', 
+      margin, 
+      position, 
+      imgWidth, 
       imgHeight
     );
     
-    // Save the PDF with proper encoding in the filename
-    const filename = encodeURIComponent(`${calculator.companyName || '税务计算'}_${new Date().toLocaleDateString('zh-CN')}.pdf`);
-    pdf.save(filename);
+    // Add new pages if content doesn't fit on one page
+    heightLeft -= pageHeight;
+    
+    while (heightLeft > 0) {
+      position = heightLeft - imgHeight;
+      pdf.addPage();
+      pdf.addImage(
+        canvas.toDataURL('image/png'), 
+        'PNG', 
+        margin, 
+        position, 
+        imgWidth, 
+        imgHeight
+      );
+      heightLeft -= pageHeight;
+    }
+    
+    // Create a proper filename without encoding issues
+    const today = new Date().toISOString().slice(0, 10);
+    let filename = `税务计算_${today}`;
+    
+    // Add company name if available
+    if (calculator.companyName && calculator.companyName.trim() !== '') {
+      filename = `${calculator.companyName}_${today}`;
+    }
+    
+    // Save with proper filename
+    pdf.save(`${filename}.pdf`);
     
     return true;
   } catch (error) {
