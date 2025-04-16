@@ -1,5 +1,5 @@
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { DifferenceFactor } from '@/components/TaxCalculator/TaxSummaryComponents/DifferenceFactors';
 
 export const useTaxSummary = () => {
@@ -10,10 +10,24 @@ export const useTaxSummary = () => {
   const [riskValue, setRiskValue] = useState('');
   const [riskPercentage, setRiskPercentage] = useState(0);
   const [unexplainedDifference, setUnexplainedDifference] = useState('0');
+  const [unexplainedDifferencePercentage, setUnexplainedDifferencePercentage] = useState(0);
   
   const [taxDifferenceFactors, setTaxDifferenceFactors] = useState<DifferenceFactor[]>([
     { id: '1', description: '差异原因1', amount: 0 }
   ]);
+
+  // Calculate unexplained difference percentage whenever the unexplained difference or theoretical tax changes
+  useEffect(() => {
+    const unexplainedDiff = parseFloat(unexplainedDifference) || 0;
+    const theoretical = parseFloat(theoreticalTax) || 0;
+    
+    // Calculate as: 未解释差异/理论应纳企业所得税的绝对值
+    const percentage = theoretical !== 0 
+      ? (unexplainedDiff / Math.abs(theoretical)) * 100 
+      : 0;
+    
+    setUnexplainedDifferencePercentage(percentage);
+  }, [unexplainedDifference, theoreticalTax]);
 
   const addTaxDifferenceFactor = useCallback(() => {
     const newId = (taxDifferenceFactors.length + 1).toString();
@@ -83,5 +97,6 @@ export const useTaxSummary = () => {
     removeTaxDifferenceFactor,
     unexplainedDifference,
     setUnexplainedDifference,
+    unexplainedDifferencePercentage,
   };
 };
