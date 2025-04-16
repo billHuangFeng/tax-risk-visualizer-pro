@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import CalculatorHeader from '@/components/TaxCalculator/CalculatorHeader';
 import TaxNavbar from '@/components/TaxNavbar';
