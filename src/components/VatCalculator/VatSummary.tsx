@@ -40,9 +40,9 @@ const VatSummary: React.FC<VatSummaryProps> = ({
     switch (riskLevel) {
       case '风险非常高':
         return 'text-red-600 bg-red-50';
-      case '风险较高':
+      case '风险比较高':
         return 'text-orange-600 bg-orange-50';
-      case '风险中等':
+      case '存在风险':
         return 'text-yellow-600 bg-yellow-50';
       default:
         return 'text-green-600 bg-green-50';
@@ -210,7 +210,7 @@ const VatSummary: React.FC<VatSummaryProps> = ({
             <div className="flex justify-between items-center pt-2 border-t">
               <div className="font-medium">风险评估</div>
               <div className={`px-3 py-1 rounded-full font-medium ${getRiskColor()}`}>
-                {riskLevel}
+                {riskLevel} ({taxDifferencePercentage.toFixed(2)}%)
               </div>
             </div>
           </div>
@@ -221,3 +221,4 @@ const VatSummary: React.FC<VatSummaryProps> = ({
 };
 
 export default VatSummary;
+

@@ -1,4 +1,3 @@
-
 import { useEffect } from 'react';
 import { useToast } from './use-toast';
 import { useVatBasicInfo } from './vat/useVatBasicInfo';
@@ -43,27 +42,39 @@ export const useVatCalculator = () => {
     const difference = tax.payableTax - tax.actualTax;
     tax.setTaxDifference(difference);
     
-    const percentage = tax.payableTax !== 0 
-      ? (Math.abs(difference) / Math.abs(tax.payableTax)) * 100 
+    const baseAmount = Math.max(Math.abs(tax.payableTax), Math.abs(sales.salesTotal.tax));
+    
+    const riskPercentage = baseAmount !== 0 
+      ? (Math.abs(tax.unexplainedDifference) / baseAmount) * 100 
       : 0;
-    tax.setTaxDifferencePercentage(parseFloat(percentage.toFixed(0)));
-  }, [tax.payableTax, tax.actualTax]);
+    
+    tax.setTaxDifferencePercentage(parseFloat(riskPercentage.toFixed(2)));
 
-  // Calculate unexplained difference and risk level
+    let riskLevel = '';
+    if (riskPercentage > 50) {
+      riskLevel = '风险非常高';
+    } else if (riskPercentage > 20) {
+      riskLevel = '风险比较高';
+    } else if (riskPercentage > 10) {
+      riskLevel = '存在风险';
+    } else {
+      riskLevel = '基本安全';
+    }
+    
+    tax.setRiskLevel(riskLevel);
+  }, [tax.payableTax, tax.actualTax, tax.unexplainedDifference, sales.salesTotal.tax]);
+
+  // Calculate unexplained difference
   useEffect(() => {
-    // Calculate total explained difference from the tax difference factors
     const explainedAmount = differences.taxDifferenceFactors.reduce(
       (sum, factor) => sum + factor.amount, 
       0
     );
     
-    // Calculate unexplained difference
     const unexplained = tax.taxDifference - explainedAmount;
     tax.setUnexplainedDifference(unexplained);
     
-    // Updated risk assessment logic based on the specified requirements
     if (Math.abs(unexplained) > 0) {
-      // If there is any unexplained difference, set risk to "风险非常高"
       tax.setRiskLevel('风险非常高');
     } else {
       tax.setRiskLevel('风险较低');
@@ -85,7 +96,6 @@ export const useVatCalculator = () => {
     purchases.setBankPurchasesAmount(0);
     tax.setActualTax(0);
     
-    // Reset difference factors
     differences.setTaxDifferenceFactors([
       { id: '1', description: '差异原因1', amount: 0 }
     ]);
