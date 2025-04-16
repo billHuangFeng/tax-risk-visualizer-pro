@@ -7,6 +7,7 @@ export const enhanceTableLayout = (container: HTMLElement) => {
       table.style.borderCollapse = 'collapse';
       table.style.marginBottom = '16px';
       table.style.pageBreakInside = 'avoid';
+      table.style.border = '1px solid #000';
       
       const cells = table.querySelectorAll('td, th');
       cells.forEach((cell) => {
@@ -17,7 +18,7 @@ export const enhanceTableLayout = (container: HTMLElement) => {
           
           // Format numbers with commas and fixed decimal places
           const numValue = cell.textContent?.trim();
-          if (numValue && !isNaN(Number(numValue))) {
+          if (numValue && !isNaN(Number(numValue)) && !numValue.includes('¥')) {
             cell.textContent = Number(numValue).toLocaleString('zh-CN', {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2
@@ -25,6 +26,18 @@ export const enhanceTableLayout = (container: HTMLElement) => {
           }
         }
       });
+      
+      // Style the header row
+      const headerRow = table.querySelector('tr:first-child');
+      if (headerRow) {
+        const headerCells = headerRow.querySelectorAll('th');
+        headerCells.forEach((cell) => {
+          if (cell instanceof HTMLElement) {
+            cell.style.backgroundColor = '#f8f9fa';
+            cell.style.fontWeight = 'bold';
+          }
+        });
+      }
     }
   });
 };

@@ -16,21 +16,25 @@
   }
   
   .for-pdf-export .company-header {
-    font-size: 24px !important;
+    font-size: 18px !important;
     font-weight: bold !important;
     text-align: center !important;
-    margin-bottom: 32px !important;
-    border-bottom: 2px solid #000 !important;
-    padding-bottom: 16px !important;
+    margin-bottom: 24px !important;
+    border-bottom: 1px solid #000 !important;
+    padding-bottom: 12px !important;
     width: 100% !important;
+    letter-spacing: 1px !important;
   }
   
   .for-pdf-export h2 {
-    font-size: 18px !important;
+    font-size: 16px !important;
     font-weight: bold !important;
     margin-top: 24px !important;
     margin-bottom: 16px !important;
     border-bottom: 1px solid #000 !important;
+    border-left: 4px solid #000 !important;
+    padding-left: 8px !important;
+    padding-bottom: 4px !important;
   }
   
   .for-pdf-export [class*="grid"] {
@@ -46,6 +50,7 @@
     min-width: 120px !important;
     text-align: right !important;
     padding: 4px 8px !important;
+    border: 1px solid #ccc !important; 
   }
   
   .for-pdf-export table {
