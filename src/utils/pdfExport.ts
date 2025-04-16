@@ -6,6 +6,7 @@ import { jsPDF } from 'jspdf';
 const prepareContentForExport = (content: HTMLElement): HTMLElement => {
   const clonedContent = content.cloneNode(true) as HTMLElement;
   const tempContainer = document.createElement('div');
+  tempContainer.id = 'temp-pdf-container';
   document.body.appendChild(tempContainer);
   tempContainer.appendChild(clonedContent);
   
@@ -141,8 +142,12 @@ const removeRedundantTextElements = (container: HTMLElement) => {
   // Find all spans that were added by the onclone callback in html2canvas
   const redundantSpans = container.querySelectorAll('span:not(.pdf-value)[style*="position: absolute"]');
   redundantSpans.forEach((span) => {
-    if (span.parentElement) {
-      span.parentElement.removeChild(span);
+    try {
+      if (span.parentElement) {
+        span.parentElement.removeChild(span);
+      }
+    } catch (e) {
+      console.warn('Could not remove redundant span:', e);
     }
   });
 };
@@ -209,8 +214,12 @@ const createCanvas = async (content: HTMLElement): Promise<HTMLCanvasElement> =>
       // Remove any already generated spans to avoid duplication
       const redundantSpans = element.querySelectorAll('span:not([data-pdf-value="true"])[style*="position: absolute"]');
       redundantSpans.forEach((span) => {
-        if (span.parentElement) {
-          span.parentElement.removeChild(span);
+        try {
+          if (span.parentElement) {
+            span.parentElement.removeChild(span);
+          }
+        } catch (e) {
+          console.warn('Could not remove span in onclone:', e);
         }
       });
     }
@@ -257,6 +266,53 @@ const addContentToPDF = (pdf: jsPDF, canvas: HTMLCanvasElement, margin: number):
   }
 };
 
+// Safely remove an element to avoid Node removal errors
+const safelyRemoveElement = (element: HTMLElement | null): void => {
+  if (!element) return;
+  
+  try {
+    // Only attempt to remove if the element is still in the DOM
+    if (element.parentNode && document.body.contains(element)) {
+      element.parentNode.removeChild(element);
+    } else if (element.id) {
+      // Alternative approach: find by ID and remove
+      const elementById = document.getElementById(element.id);
+      if (elementById && elementById.parentNode) {
+        elementById.parentNode.removeChild(elementById);
+      }
+    }
+  } catch (error) {
+    console.warn('Failed to remove element:', error);
+  }
+};
+
+// Clean up after PDF export
+const cleanupAfterExport = (): void => {
+  // Find any temporary containers by ID
+  const tempContainer = document.getElementById('temp-pdf-container');
+  if (tempContainer) {
+    safelyRemoveElement(tempContainer);
+  }
+  
+  // Remove any orphaned PDF-related elements
+  const orphanedElements = document.querySelectorAll('.pdf-temp-element');
+  orphanedElements.forEach((element) => {
+    try {
+      if (element.parentNode) {
+        element.parentNode.removeChild(element);
+      }
+    } catch (e) {
+      console.warn('Could not remove orphaned element:', e);
+    }
+  });
+  
+  // Remove PDF-specific classes from the calculator content
+  const calculatorContent = document.getElementById('calculator-content');
+  if (calculatorContent) {
+    calculatorContent.classList.remove('for-pdf-export', 'pdf-export-container');
+  }
+};
+
 // Main export function
 export const exportToPDF = async (calculator: any) => {
   try {
@@ -269,6 +325,9 @@ export const exportToPDF = async (calculator: any) => {
     if (!(content instanceof HTMLElement)) {
       throw new Error('计算器内容不是有效的HTML元素');
     }
+    
+    // Cleanup any existing temporary elements from previous export attempts
+    cleanupAfterExport();
 
     // Prepare content
     const tempContainer = prepareContentForExport(content);
@@ -283,31 +342,38 @@ export const exportToPDF = async (calculator: any) => {
     // Remove any remaining duplicate elements
     removeRedundantTextElements(clonedContent);
     
-    // Create canvas
-    const canvas = await createCanvas(clonedContent);
-    
-    // Initialize PDF
-    const pdf = new jsPDF({
-      orientation: 'portrait',
-      unit: 'mm',
-      format: 'a4',
-    });
-    
-    // Add content to PDF
-    const margin = 10;
-    addContentToPDF(pdf, canvas, margin);
-    
-    // Save PDF
-    const filename = generateFilename(calculator);
-    pdf.save(`${filename}.pdf`);
-    console.log("PDF saved successfully");
-    
-    // Clean up
-    document.body.removeChild(tempContainer);
+    try {
+      // Create canvas
+      const canvas = await createCanvas(clonedContent);
+      
+      // Initialize PDF
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4',
+      });
+      
+      // Add content to PDF
+      const margin = 10;
+      addContentToPDF(pdf, canvas, margin);
+      
+      // Save PDF
+      const filename = generateFilename(calculator);
+      pdf.save(`${filename}.pdf`);
+      console.log("PDF saved successfully");
+    } catch (error) {
+      console.error('PDF generation error:', error);
+      throw error;
+    } finally {
+      // Always clean up, even if there's an error during PDF creation
+      cleanupAfterExport();
+    }
     
     return true;
   } catch (error) {
     console.error('PDF export failed:', error);
+    // Ensure cleanup happens even if the overall process fails
+    cleanupAfterExport();
     throw error;
   }
 };

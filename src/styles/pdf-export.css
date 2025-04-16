@@ -32,9 +32,10 @@
   }
 
   /* Hide any other generated text spans during export */
-  .for-pdf-export input + span:not(.pdf-value),
-  .for-pdf-export div + span:not(.pdf-value) {
+  .for-pdf-export span:not(.pdf-value)[style*="position: absolute"] {
     display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
   }
 
   .for-pdf-export td input {
@@ -45,6 +46,7 @@
     overflow: visible !important;
     white-space: nowrap !important;
     text-overflow: clip !important;
+    position: relative !important;
   }
 
   /* Control visibility of all elements in PDF export */
@@ -80,5 +82,31 @@
     text-shadow: none !important;
     background-color: white !important;
     position: relative !important;
+  }
+  
+  /* Ensure duplicate spans are hidden */
+  body span:not(.pdf-value)[style*="position: absolute"] {
+    display: none !important;
+  }
+  
+  /* Make sure temporary elements are properly removed */
+  #temp-pdf-container {
+    position: absolute !important;
+    left: -9999px !important;
+    top: 0 !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+  
+  /* Add a class to mark temporary elements for cleanup */
+  .pdf-temp-element {
+    display: none !important;
+  }
+  
+  /* Hide any temporary elements that might be created during pdf rendering */
+  body > canvas[style*="position: absolute"],
+  body > div[style*="position: absolute"]:not(.pdf-export-container) {
+    display: none !important;
+    visibility: hidden !important;
   }
 }

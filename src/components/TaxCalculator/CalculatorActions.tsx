@@ -35,13 +35,17 @@ const CalculatorActions: React.FC<CalculatorActionsProps> = ({
         description: "正在处理所有页面，可能需要几秒钟...",
       });
       
-      // Get all existing duplicate spans that might cause issues and remove them before export
-      const duplicateSpans = document.querySelectorAll('span:not(.pdf-value)[style*="position: absolute"]');
-      duplicateSpans.forEach(span => {
-        if (span.parentElement) {
-          span.parentElement.removeChild(span);
-        }
-      });
+      // Safely clean duplicate spans first - wrap in try/catch to prevent errors
+      try {
+        const duplicateSpans = document.querySelectorAll('span:not(.pdf-value)[style*="position: absolute"]');
+        duplicateSpans.forEach(span => {
+          if (span.parentElement && span.parentElement.contains(span)) {
+            span.parentElement.removeChild(span);
+          }
+        });
+      } catch (error) {
+        console.warn("Error removing duplicate spans:", error);
+      }
       
       // Add PDF-specific classes to container before export
       const calculatorContent = document.getElementById('calculator-content');
@@ -50,12 +54,16 @@ const CalculatorActions: React.FC<CalculatorActionsProps> = ({
       }
       
       // Make all input values visible before export
-      const allInputs = document.querySelectorAll('input') as NodeListOf<HTMLInputElement>;
-      allInputs.forEach(input => {
-        if (input.value) {
-          input.setAttribute('data-value', input.value);
-        }
-      });
+      try {
+        const allInputs = document.querySelectorAll('input') as NodeListOf<HTMLInputElement>;
+        allInputs.forEach(input => {
+          if (input.value) {
+            input.setAttribute('data-value', input.value);
+          }
+        });
+      } catch (error) {
+        console.warn("Error processing inputs:", error);
+      }
       
       // Trigger a short delay to allow the toast to render and CSS to apply
       setTimeout(async () => {

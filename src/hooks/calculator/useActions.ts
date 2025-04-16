@@ -28,13 +28,26 @@ export const useActions = (riskValue: string, riskPercentage: number) => {
         throw new Error('计算器内容未找到');
       }
       
-      // Clear any existing duplicate elements before export
-      const duplicateElements = document.querySelectorAll('span:not(.pdf-value)[style*="position: absolute"]');
-      duplicateElements.forEach(el => {
-        if (el.parentElement) {
-          el.parentElement.removeChild(el);
+      // Safely remove any existing duplicate elements before export
+      const safelyRemoveDuplicates = () => {
+        try {
+          const duplicateElements = document.querySelectorAll('span:not(.pdf-value)[style*="position: absolute"]');
+          duplicateElements.forEach(el => {
+            try {
+              if (el.parentElement && el.parentElement.contains(el)) {
+                el.parentElement.removeChild(el);
+              }
+            } catch (err) {
+              console.warn("Could not remove duplicate element:", err);
+            }
+          });
+        } catch (err) {
+          console.warn("Error in duplicate removal:", err);
         }
-      });
+      };
+      
+      // Clean up any previous export artifacts
+      safelyRemoveDuplicates();
       
       // Pre-process all inputs for better visibility in PDF
       const inputs = document.querySelectorAll('input') as NodeListOf<HTMLInputElement>;
