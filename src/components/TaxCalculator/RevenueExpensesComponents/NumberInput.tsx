@@ -29,7 +29,7 @@ const NumberInput: React.FC<NumberInputProps> = ({
   }, [value]);
 
   return (
-    <div className="flex items-center min-w-[220px] max-w-full justify-end pdf-text-visible">
+    <div className="flex items-center min-w-[220px] max-w-full justify-end pdf-text-visible relative">
       <Input
         id={id}
         ref={inputRef}
@@ -40,6 +40,9 @@ const NumberInput: React.FC<NumberInputProps> = ({
         disabled={disabled}
         data-value={value} /* Add data attribute for PDF export */
       />
+      <div className="absolute right-[45px] top-0 bottom-0 flex items-center justify-end h-full pointer-events-none pdf-value">
+        {value}
+      </div>
       <span className="ml-2 text-sm whitespace-nowrap">{suffix}</span>
     </div>
   );

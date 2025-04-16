@@ -28,10 +28,17 @@ export const useActions = (riskValue: string, riskPercentage: number) => {
         throw new Error('计算器内容未找到');
       }
       
-      // Collect all the calculator data
-      const inputs = document.querySelectorAll('input') as NodeListOf<HTMLInputElement>;
-      const formData: Record<string, string> = {};
+      // Prepare inputs for PDF export
+      const inputs = calculatorContent.querySelectorAll('input') as NodeListOf<HTMLInputElement>;
+      inputs.forEach(input => {
+        // Make sure the data-value attribute is set (backup)
+        if (input.value && !input.hasAttribute('data-value')) {
+          input.setAttribute('data-value', input.value);
+        }
+      });
       
+      // Collect all the calculator data
+      const formData: Record<string, string> = {};
       inputs.forEach(input => {
         if (input.id) {
           formData[input.id] = input.value;

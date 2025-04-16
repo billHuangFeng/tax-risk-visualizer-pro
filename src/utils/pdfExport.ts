@@ -29,74 +29,84 @@ export const exportToPDF = async (calculator: any) => {
     tempContainer.style.position = 'absolute';
     tempContainer.style.left = '-9999px';
     tempContainer.style.top = '0';
-    tempContainer.style.width = '100%';
-    tempContainer.style.maxWidth = '1200px';
+    tempContainer.style.width = '1200px'; // Fixed width for better rendering
+    tempContainer.style.backgroundColor = '#ffffff';
     
-    // Set specific CSS for PDF rendering
-    // Make sure input values are fully visible
-    const inputElements = clonedContent.querySelectorAll('input');
-    inputElements.forEach((input: HTMLInputElement) => {
-      // Create a visible text node to show the input value
-      const textSpan = document.createElement('span');
-      textSpan.textContent = input.value;
-      textSpan.style.position = 'absolute';
-      textSpan.style.left = '0';
-      textSpan.style.top = '0';
-      textSpan.style.width = '100%';
-      textSpan.style.height = '100%';
-      textSpan.style.display = 'flex';
-      textSpan.style.alignItems = 'center';
-      textSpan.style.justifyContent = input.classList.contains('text-right') ? 'flex-end' : 'flex-start';
-      textSpan.style.paddingRight = input.classList.contains('text-right') ? '8px' : '0';
-      textSpan.style.paddingLeft = !input.classList.contains('text-right') ? '8px' : '0';
-      textSpan.style.fontWeight = 'bold';
-      textSpan.style.overflow = 'visible';
-      textSpan.style.whiteSpace = 'nowrap';
-      textSpan.style.fontSize = '14px';
-      textSpan.style.color = '#000';
-      textSpan.style.backgroundColor = '#fff';
+    // Process all input elements in the cloned content
+    const inputs = clonedContent.querySelectorAll('input');
+    inputs.forEach((input: HTMLInputElement) => {
+      // Create a label element that will display the input value
+      const valueDisplay = document.createElement('div');
+      valueDisplay.textContent = input.value || '0';
+      valueDisplay.style.position = 'absolute';
+      valueDisplay.style.left = '0';
+      valueDisplay.style.top = '0';
+      valueDisplay.style.width = '100%';
+      valueDisplay.style.height = '100%';
+      valueDisplay.style.display = 'flex';
+      valueDisplay.style.alignItems = 'center';
+      valueDisplay.style.justifyContent = input.classList.contains('text-right') ? 'flex-end' : 'flex-start';
+      valueDisplay.style.paddingRight = input.classList.contains('text-right') ? '8px' : '0';
+      valueDisplay.style.paddingLeft = !input.classList.contains('text-right') ? '8px' : '0';
+      valueDisplay.style.backgroundColor = '#fff';
+      valueDisplay.style.color = '#000';
+      valueDisplay.style.fontSize = '14px';
+      valueDisplay.style.fontWeight = 'bold';
+      valueDisplay.style.zIndex = '10';
       
-      // Add the text span and hide the original input
-      input.parentNode?.appendChild(textSpan);
-      input.style.opacity = '0';
+      // Add the display element and hide the input
+      const parentNode = input.parentNode;
+      if (parentNode) {
+        parentNode.appendChild(valueDisplay);
+        input.style.opacity = '0';
+      }
     });
     
-    // Ensure number containers are wide enough
-    const numberContainers = clonedContent.querySelectorAll('.min-w-\\[200px\\]');
-    numberContainers.forEach((container: HTMLElement) => {
-      container.style.minWidth = '220px';
-      container.style.width = 'auto';
+    // Process all checkboxes
+    const checkboxes = clonedContent.querySelectorAll('[role="checkbox"]');
+    checkboxes.forEach((checkbox: HTMLElement) => {
+      // Make checked state more visible for PDF
+      if (checkbox.getAttribute('data-state') === 'checked') {
+        checkbox.style.backgroundColor = '#000';
+        checkbox.style.border = '2px solid #000';
+        
+        const checkIcon = checkbox.querySelector('svg');
+        if (checkIcon) {
+          checkIcon.style.color = '#fff';
+          checkIcon.style.width = '16px';
+          checkIcon.style.height = '16px';
+        }
+      } else {
+        checkbox.style.border = '2px solid #000';
+      }
     });
     
-    // Make sure text is not wrapped unnecessarily
-    const textElements = clonedContent.querySelectorAll('.break-words');
+    // Improve table cell visibility
+    const tableCells = clonedContent.querySelectorAll('td');
+    tableCells.forEach((cell: HTMLElement) => {
+      cell.style.border = '1px solid #ddd';
+      cell.style.padding = '8px';
+    });
+    
+    // Scale up all text elements for better visibility
+    const textElements = clonedContent.querySelectorAll('p, h1, h2, h3, h4, h5, h6, span, label');
     textElements.forEach((el: HTMLElement) => {
-      el.style.whiteSpace = 'nowrap';
-      el.style.overflow = 'visible';
+      el.style.color = '#000';
+      el.style.fontWeight = el.tagName.startsWith('H') ? 'bold' : 'normal';
     });
     
-    // Increase column widths in responsive grids
-    const gridCells = clonedContent.querySelectorAll('.md\\:col-span-3');
-    gridCells.forEach((cell: HTMLElement) => {
-      cell.style.minWidth = '220px';
-    });
-    
-    // Add PDF-specific class to all input containers
-    const inputContainers = clonedContent.querySelectorAll('.flex.items-center');
-    inputContainers.forEach((container: HTMLElement) => {
-      container.classList.add('pdf-text-visible');
-    });
-    
-    // Convert the content to canvas with higher quality settings
+    // Convert the cloned content to canvas with higher quality settings
     console.log("Starting HTML to canvas conversion");
     const canvas = await html2canvas(clonedContent, {
-      scale: 2.5, // Increased scale for better quality
+      scale: 3, // Higher scale for better quality
       useCORS: true,
-      logging: false,
+      logging: true,
       backgroundColor: '#ffffff',
       allowTaint: true,
-      width: 1200, // Fixed width for better layout
-      windowWidth: 1200
+      width: 1200,
+      onclone: (document, element) => {
+        console.log("Cloned document prepared for rendering");
+      }
     });
     
     console.log("Canvas created successfully", canvas.width, canvas.height);
@@ -111,6 +121,7 @@ export const exportToPDF = async (calculator: any) => {
     // Handle multi-page content
     let heightLeft = imgHeight;
     let position = margin;
+    let page = 1;
     
     // Add first page
     pdf.addImage(
@@ -122,12 +133,16 @@ export const exportToPDF = async (calculator: any) => {
       imgHeight
     );
     
+    console.log(`Added page ${page} to PDF`);
+    
     // Add new pages if content doesn't fit on one page
-    heightLeft -= pageHeight;
+    heightLeft -= (pageHeight - 2 * margin);
     
     while (heightLeft > 0) {
-      position = heightLeft - imgHeight;
+      position = margin - (page * (pageHeight - 2 * margin));
       pdf.addPage();
+      page++;
+      
       pdf.addImage(
         canvas.toDataURL('image/png'), 
         'PNG', 
@@ -136,7 +151,9 @@ export const exportToPDF = async (calculator: any) => {
         imgWidth, 
         imgHeight
       );
-      heightLeft -= pageHeight;
+      
+      console.log(`Added page ${page} to PDF`);
+      heightLeft -= (pageHeight - 2 * margin);
     }
     
     // Create a proper filename without encoding issues
@@ -150,6 +167,7 @@ export const exportToPDF = async (calculator: any) => {
     
     // Save with proper filename
     pdf.save(`${filename}.pdf`);
+    console.log("PDF saved successfully");
     
     return true;
   } catch (error) {

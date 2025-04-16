@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -137,21 +138,34 @@
     overflow: visible !important;
     text-overflow: clip !important;
     white-space: normal !important;
-    opacity: 1 !important;
   }
   
-  .pdf-input-value {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    padding-right: 8px;
+  /* Hidden value for PDF export */
+  .pdf-value {
+    opacity: 0 !important;
+    transition: opacity 0.1s ease;
+    z-index: 5;
     font-weight: bold;
-    color: #000;
-    background-color: #fff;
-    z-index: 10;
+    padding-right: 4px;
+  }
+  
+  /* When PDF exporting, make values visible */
+  .for-pdf-export .pdf-value {
+    opacity: 1 !important;
+    color: #000 !important;
+    background-color: white !important;
+  }
+  
+  /* Special styling for table cells in PDF export */
+  .for-pdf-export td input {
+    position: relative !important;
+  }
+  
+  /* Special styling for PDF export */
+  .pdf-text-visible {
+    overflow: visible !important;
+    white-space: nowrap !important;
+    text-overflow: clip !important;
   }
 }
 
@@ -194,9 +208,13 @@
   letter-spacing: normal !important;
 }
 
-/* Special styling for PDF export */
-.pdf-text-visible {
-  overflow: visible !important;
-  white-space: nowrap !important;
-  text-overflow: clip !important;
+/* Special PDF export class */
+.pdf-export-container * {
+  color: #000 !important;
+  background-color: white !important;
+}
+
+/* Make inputs more visible in PDF */
+.pdf-export-container input {
+  border: 1px solid #000 !important;
 }

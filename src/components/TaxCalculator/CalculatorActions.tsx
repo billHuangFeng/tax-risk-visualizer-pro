@@ -35,16 +35,34 @@ const CalculatorActions: React.FC<CalculatorActionsProps> = ({
         description: "正在处理所有页面，可能需要几秒钟...",
       });
       
-      // Trigger a short delay to allow the toast to render before processing the DOM
+      // Add PDF-specific classes to container before export
+      const calculatorContent = document.getElementById('calculator-content');
+      if (calculatorContent) {
+        calculatorContent.classList.add('for-pdf-export', 'pdf-export-container');
+      }
+      
+      // Trigger a short delay to allow the toast to render and CSS to apply
       setTimeout(async () => {
         try {
           await onExport();
+          
+          // Remove PDF-specific classes after export
+          if (calculatorContent) {
+            calculatorContent.classList.remove('for-pdf-export', 'pdf-export-container');
+          }
+          
           toast({
             title: "导出成功",
             description: "PDF文件已生成并下载",
           });
         } catch (error) {
           console.error("Export error:", error);
+          
+          // Remove PDF-specific classes if there was an error
+          if (calculatorContent) {
+            calculatorContent.classList.remove('for-pdf-export', 'pdf-export-container');
+          }
+          
           toast({
             title: "导出失败",
             description: "PDF生成过程中发生错误",
