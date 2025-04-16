@@ -12,6 +12,7 @@ import { PdfTemplatePreview } from './PdfTemplatePreview';
 import { ReportBroDesigner } from './PdfTemplateComponents/ReportBroDesigner';
 import { loadReportBroLibraries } from '@/utils/reportbro-loader';
 import { useToast } from '@/hooks/use-toast';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface PdfTemplateDialogProps {
   open: boolean;
@@ -30,21 +31,35 @@ export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({
   const [view, setView] = useState<ViewState>('select');
   const [reportDefinition, setReportDefinition] = useState<any>(null);
   const [designerLoaded, setDesignerLoaded] = useState(false);
+  const [isPreloading, setIsPreloading] = useState(true);
   const { toast } = useToast();
   
-  // 预加载设计器库
+  // 对话框打开时立即开始预加载
   useEffect(() => {
-    if (open && view === 'designer' && !designerLoaded) {
-      loadReportBroLibraries()
-        .then(() => {
+    if (open) {
+      setIsPreloading(true);
+      
+      // 启动预加载过程
+      const preloadDesigner = async () => {
+        try {
+          await loadReportBroLibraries();
           console.log("PDF设计器库预加载成功");
           setDesignerLoaded(true);
-        })
-        .catch(error => {
+        } catch (error) {
           console.error("PDF设计器库预加载失败:", error);
-        });
+          toast({
+            title: "加载错误",
+            description: "无法加载PDF设计器，请刷新页面后重试",
+            variant: "destructive",
+          });
+        } finally {
+          setIsPreloading(false);
+        }
+      };
+      
+      preloadDesigner();
     }
-  }, [open, view, designerLoaded]);
+  }, [open, toast]);
   
   const handleSelectTemplate = (template: PdfTemplate) => {
     setSelectedTemplate(template);
@@ -66,20 +81,17 @@ export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({
   };
 
   const handleViewChange = (newView: string) => {
-    // 如果当前视图是设计器，并且用户选择了另一个视图，则保存当前设计
-    if (view === 'designer' && reportDefinition && newView !== 'designer') {
-      const updatedTemplate = {
-        ...selectedTemplate,
-        reportDefinition: reportDefinition
-      };
-      setSelectedTemplate(updatedTemplate);
-    }
-    
-    // 切换视图
-    setView(newView as ViewState);
-    
-    // 如果新视图是设计器，确保库已加载
+    // 如果用户想要打开设计器视图，但设计器尚未加载
     if (newView === 'designer' && !designerLoaded) {
+      toast({
+        title: "正在加载",
+        description: "PDF设计器正在加载中，请稍候",
+      });
+      
+      // 仍然切换视图，但显示加载状态
+      setView(newView as ViewState);
+      
+      // 确保库加载
       loadReportBroLibraries()
         .then(() => {
           console.log("PDF设计器库加载成功");
@@ -92,7 +104,21 @@ export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({
             description: "无法加载PDF设计器，请刷新页面后重试",
             variant: "destructive",
           });
+          // 如果加载失败，返回到选择视图
+          setView('select');
         });
+    } else {
+      // 如果当前视图是设计器，并且用户选择了另一个视图，则保存当前设计
+      if (view === 'designer' && reportDefinition && newView !== 'designer') {
+        const updatedTemplate = {
+          ...selectedTemplate,
+          reportDefinition: reportDefinition
+        };
+        setSelectedTemplate(updatedTemplate);
+      }
+      
+      // 切换视图
+      setView(newView as ViewState);
     }
   };
 
@@ -120,7 +146,16 @@ export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({
             />
           )}
           
-          {view === 'designer' && (
+          {view === 'designer' && isPreloading && (
+            <div className="p-4 h-96">
+              <div className="space-y-4">
+                <Skeleton className="h-8 w-40" />
+                <Skeleton className="h-96 w-full" />
+              </div>
+            </div>
+          )}
+          
+          {view === 'designer' && !isPreloading && (
             <ReportBroDesigner
               onSave={handleSaveReport}
               initialReport={selectedTemplate.reportDefinition}

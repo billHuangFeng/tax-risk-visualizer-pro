@@ -20,6 +20,8 @@ export const ReportBroDesigner: React.FC<ReportBroDesignerProps> = ({
   const [designer, setDesigner] = useState<any>(null);
   const { toast } = useToast();
   const designerInitializedRef = useRef(false);
+  const initAttemptsRef = useRef(0);
+  const maxInitAttempts = 10;
 
   // 确保设计器库已加载
   useEffect(() => {
@@ -45,23 +47,44 @@ export const ReportBroDesigner: React.FC<ReportBroDesignerProps> = ({
   useEffect(() => {
     let isMounted = true;
     let rbDesigner: any = null;
+    let initTimer: NodeJS.Timeout;
     
     const initDesigner = async () => {
+      // 增加重试计数
+      initAttemptsRef.current += 1;
+      
       // 防止重复初始化
       if (designerInitializedRef.current) {
         console.log("设计器已初始化，跳过");
+        setIsLoading(false);
         return;
       }
       
-      if (!containerRef.current) {
-        console.log("容器元素未就绪，10ms后重试");
-        setTimeout(initDesigner, 10);
+      // 检查容器
+      if (!containerRef.current || !document.body.contains(containerRef.current)) {
+        console.log(`容器元素未就绪或不在DOM中，尝试 ${initAttemptsRef.current}/${maxInitAttempts}`);
+        
+        // 如果超过最大尝试次数，显示错误
+        if (initAttemptsRef.current >= maxInitAttempts) {
+          console.error("初始化尝试次数过多，放弃");
+          if (isMounted) {
+            setIsLoading(false);
+            toast({
+              title: "加载失败",
+              description: "无法初始化设计器，请刷新页面重试",
+              variant: "destructive",
+            });
+          }
+          return;
+        }
+        
+        // 稍后重试
+        initTimer = setTimeout(initDesigner, 100 * Math.min(initAttemptsRef.current, 5));
         return;
       }
       
       try {
-        setIsLoading(true);
-        console.log("开始初始化设计器");
+        console.log("开始初始化设计器", containerRef.current);
         
         // 确保设计器库已加载
         if (!window.ReportBroDesigner) {
@@ -76,6 +99,14 @@ export const ReportBroDesigner: React.FC<ReportBroDesignerProps> = ({
           console.error("容器已被移除或不在DOM中");
           return;
         }
+        
+        // 确保容器是可见的
+        if (containerRef.current) {
+          containerRef.current.style.display = 'block';
+        }
+        
+        // 短暂延迟以确保DOM完全就绪
+        await new Promise(resolve => setTimeout(resolve, 50));
         
         console.log("创建设计器实例，容器:", containerRef.current);
         rbDesigner = new window.ReportBroDesigner(
@@ -103,7 +134,7 @@ export const ReportBroDesigner: React.FC<ReportBroDesignerProps> = ({
       }
     };
 
-    // 延迟初始化以确保DOM已准备好
+    // 添加一个延迟以确保DOM已准备好
     const timer = setTimeout(() => {
       initDesigner();
     }, 300);
@@ -111,6 +142,7 @@ export const ReportBroDesigner: React.FC<ReportBroDesignerProps> = ({
     return () => {
       isMounted = false;
       clearTimeout(timer);
+      clearTimeout(initTimer);
       
       if (rbDesigner) {
         try {
