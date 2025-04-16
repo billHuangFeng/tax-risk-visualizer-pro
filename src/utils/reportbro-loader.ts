@@ -12,9 +12,11 @@ export const loadReportBroLibraries = (): Promise<void> => {
         return;
       }
       
-      // 创建基础的ReportBro对象
+      console.log("开始创建ReportBro对象");
+      
+      // 创建基础的ReportBro对象 - 确保不使用箭头函数，保持正确的this绑定
       window.ReportBro = function() {
-        function ReportBro(reportDefinition: any) {
+        function ReportBro(reportDefinition) {
           this.reportDefinition = reportDefinition || { 
             docElements: [], 
             parameters: [], 
@@ -29,16 +31,20 @@ export const loadReportBroLibraries = (): Promise<void> => {
         };
         
         ReportBro.prototype.generatePdf = function() {
+          console.log("生成PDF...");
           return Promise.resolve(new Blob(['PDF内容'], {type: 'application/pdf'}));
         };
         
         return ReportBro;
       }();
       
-      // 创建简化版的ReportBroDesigner
+      console.log("开始创建ReportBroDesigner对象");
+      
+      // 创建简化版的ReportBroDesigner - 使用直接赋值而非函数闭包
       window.ReportBroDesigner = function() {
         function ReportBroDesigner(element, options, reportDefinition) {
           if (!element) {
+            console.error("容器元素无效");
             throw new Error("容器元素无效");
           }
           
@@ -64,6 +70,10 @@ export const loadReportBroLibraries = (): Promise<void> => {
           if (!this.element) {
             throw new Error("容器元素无效");
           }
+          
+          // 确保容器是可见的
+          this.element.style.display = 'block';
+          this.element.style.visibility = 'visible';
           
           // 清空容器
           this.element.innerHTML = '';

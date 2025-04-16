@@ -15,57 +15,45 @@ export const DesignerContainer = ({ containerRef, onReady }: DesignerContainerPr
     const element = containerRef.current || localRef.current;
     if (!element) return;
 
+    console.log("设计器容器: 开始设置样式和可见性");
+
     // 确保容器具有明确的尺寸和样式
     element.style.display = 'block';
     element.style.visibility = 'visible';
     element.style.width = '100%';
     element.style.minHeight = '600px';
     element.style.backgroundColor = '#f9f9f9';
+    element.style.border = '1px solid #e0e0e0';
     element.style.position = 'relative';
     element.style.overflow = 'hidden';
+    element.style.padding = '10px';
     
-    // 确保容器在DOM中并可见
-    if (document.body.contains(element)) {
-      console.log('设计器容器已加载 - 立即就绪');
-      
-      // 通知父组件容器已就绪
-      if (onReady) {
-        onReady(); // 立即通知就绪
-      }
-    } else {
-      // 如果容器不在DOM中，使用MutationObserver监听DOM变化
-      console.log('设计器容器尚未在DOM中，设置MutationObserver');
-      const observer = new MutationObserver((mutationsList, observer) => {
-        if (document.body.contains(element)) {
-          console.log('MutationObserver检测到容器已添加到DOM');
-          observer.disconnect();
-          
-          if (onReady) {
-            onReady();
-          }
-        }
-      });
-      
-      observer.observe(document.body, { childList: true, subtree: true });
-      
-      // 设置备用超时
-      const timeout = setTimeout(() => {
-        observer.disconnect();
-        console.log('超时检查容器状态');
-        
-        if (document.body.contains(element)) {
-          console.log('超时检查:容器在DOM中');
-          if (onReady) {
-            onReady();
-          }
-        }
-      }, 1000);
-      
-      return () => {
-        observer.disconnect();
-        clearTimeout(timeout);
-      };
+    // 添加测试内容以验证元素可见性
+    const testDiv = document.createElement('div');
+    testDiv.textContent = '容器已初始化 - 如果可见，说明DOM正常';
+    testDiv.style.textAlign = 'center';
+    testDiv.style.padding = '20px';
+    testDiv.style.backgroundColor = '#e0f7fa';
+    testDiv.style.border = '1px dashed #00acc1';
+    testDiv.style.marginBottom = '10px';
+    element.appendChild(testDiv);
+    
+    console.log("设计器容器：测试内容已添加，容器应该可见");
+    
+    // 立即通知容器已就绪
+    if (onReady) {
+      console.log("设计器容器：通知容器就绪");
+      setTimeout(() => {
+        onReady();
+      }, 100); // 短延迟确保DOM已更新
     }
+
+    return () => {
+      // 清理操作
+      if (element.contains(testDiv)) {
+        element.removeChild(testDiv);
+      }
+    };
   }, [containerRef, onReady]);
 
   return (
@@ -81,8 +69,8 @@ export const DesignerContainer = ({ containerRef, onReady }: DesignerContainerPr
       }}
       className="w-full border border-gray-200 rounded-md flex-grow designer-container"
       style={{ 
-        height: '600px', 
-        minHeight: '600px', 
+        height: '500px', // 减小高度，避免滚动问题
+        minHeight: '500px', 
         display: 'block', 
         position: 'relative',
         backgroundColor: '#f9f9f9',

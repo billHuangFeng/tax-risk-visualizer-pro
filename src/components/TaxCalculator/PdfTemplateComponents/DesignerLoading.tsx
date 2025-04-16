@@ -9,7 +9,7 @@ interface DesignerLoadingProps {
 }
 
 export const DesignerLoading: React.FC<DesignerLoadingProps> = ({ 
-  timeout = 10, // 减少默认超时时间
+  timeout = 5, // 更短的超时时间，提高用户体验
   onRetry 
 }) => {
   const [seconds, setSeconds] = useState(0);
@@ -59,9 +59,9 @@ export const DesignerLoading: React.FC<DesignerLoadingProps> = ({
           </p>
         )}
         
-        {seconds >= 3 && !showRetry && (
+        {seconds >= 2 && !showRetry && (
           <p className="text-sm text-amber-600">
-            加载时间超过预期，正在尝试初始化设计器...
+            加载时间超过预期，请检查网络或浏览器兼容性...
           </p>
         )}
         

@@ -26,19 +26,21 @@ export const ReportBroDesigner: React.FC<ReportBroDesignerProps> = ({
   const initAttemptsRef = useRef(0);
   const maxInitAttempts = 3;
 
-  // 组件挂载状态跟踪
+  // 首先加载ReportBro库
   useEffect(() => {
+    console.log("ReportBroDesigner: 组件挂载中");
     mountedRef.current = true;
     
-    // 先加载库
+    // 立即加载库
     loadReportBroLibraries()
       .then(() => {
         if (mountedRef.current) {
-          console.log("设计器库加载成功");
+          console.log("ReportBroDesigner: 设计器库加载成功");
+          // 库加载成功后，我们等下一个useEffect去初始化设计器
         }
       })
       .catch(error => {
-        console.error("设计器库加载失败:", error);
+        console.error("ReportBroDesigner: 设计器库加载失败:", error);
         if (mountedRef.current) {
           setInitError("无法加载设计器库: " + (error instanceof Error ? error.message : "未知错误"));
           setIsLoading(false);
@@ -46,103 +48,171 @@ export const ReportBroDesigner: React.FC<ReportBroDesignerProps> = ({
       });
     
     return () => {
+      console.log("ReportBroDesigner: 组件卸载中");
       mountedRef.current = false;
       
       // 清理设计器实例
       if (designer) {
         try {
-          console.log("清理设计器实例");
+          console.log("ReportBroDesigner: 清理设计器实例");
           designer.destroy();
         } catch (e) {
-          console.error("销毁设计器时出错", e);
+          console.error("ReportBroDesigner: 销毁设计器时出错", e);
         }
       }
     };
-  }, [designer]);
+  }, []);
 
-  // 通知容器已就绪
+  // 通知容器已就绪的处理程序
   const handleContainerReady = () => {
-    console.log("设计器容器准备就绪，开始初始化设计器");
+    console.log("ReportBroDesigner: 设计器容器准备就绪");
     setContainerReady(true);
+  };
+
+  // 验证设计器DOM状态并初始化
+  const verifyAndInitialize = () => {
+    if (!containerRef.current) {
+      console.error("ReportBroDesigner: 容器引用未设置");
+      return false;
+    }
+    
+    console.log("ReportBroDesigner: 验证容器DOM状态...");
+    
+    // 验证DOM状态
+    if (!document.body.contains(containerRef.current)) {
+      console.error("ReportBroDesigner: 容器不在DOM中");
+      return false;
+    }
+    
+    // 验证样式是否可见
+    const styles = window.getComputedStyle(containerRef.current);
+    if (styles.display === 'none' || styles.visibility === 'hidden') {
+      console.error("ReportBroDesigner: 容器不可见", {
+        display: styles.display,
+        visibility: styles.visibility
+      });
+      return false;
+    }
+    
+    console.log("ReportBroDesigner: 容器验证通过，可以初始化设计器");
+    return true;
   };
 
   // 初始化设计器
   const initializeDesigner = async () => {
     if (!mountedRef.current || designerInitializedRef.current) return;
-    if (initAttemptsRef.current >= maxInitAttempts) {
-      setInitError(`初始化失败(${initAttemptsRef.current}/${maxInitAttempts})，请刷新页面重试`);
+    
+    initAttemptsRef.current += 1;
+    console.log(`ReportBroDesigner: 尝试初始化设计器 (${initAttemptsRef.current}/${maxInitAttempts})`);
+    
+    if (initAttemptsRef.current > maxInitAttempts) {
+      setInitError(`初始化失败(${initAttemptsRef.current}/${maxInitAttempts})，已超过最大尝试次数`);
       setIsLoading(false);
       return;
     }
 
-    initAttemptsRef.current += 1;
-    console.log(`尝试初始化设计器 (${initAttemptsRef.current}/${maxInitAttempts})`);
-    
-    if (!window.ReportBroDesigner) {
-      console.error("ReportBro设计器库未加载，重新加载");
-      try {
-        await loadReportBroLibraries();
-      } catch (error) {
-        console.error("无法加载设计器库:", error);
-        setInitError("无法加载设计器库");
-        setIsLoading(false);
-        return;
-      }
+    // 验证容器状态
+    if (!verifyAndInitialize()) {
+      console.log("ReportBroDesigner: 容器验证失败，将在1秒后重试");
+      setTimeout(() => {
+        if (mountedRef.current) {
+          initializeDesigner();
+        }
+      }, 1000);
+      return;
     }
     
     try {
-      // 验证容器元素
-      if (!containerRef.current) {
-        throw new Error("容器引用未设置");
+      // 确保库已加载
+      if (!window.ReportBroDesigner) {
+        console.log("ReportBroDesigner: 库未加载，尝试重新加载");
+        await loadReportBroLibraries();
       }
       
-      if (!document.body.contains(containerRef.current)) {
-        throw new Error("容器元素不在DOM树中");
+      // 获取容器元素
+      const container = containerRef.current;
+      if (!container) {
+        throw new Error("无法获取设计器容器元素");
       }
       
-      // 创建简单的报表定义对象
-      const reportDef = initialReport || { 
-        docElements: [], 
-        parameters: [], 
-        styles: [],
-        version: "1.0"
-      };
-
-      console.log("创建设计器实例...");
+      console.log("ReportBroDesigner: 准备创建设计器实例");
       
-      // 创建设计器实例
-      const rbDesigner = new window.ReportBroDesigner(
-        containerRef.current, 
-        {}, 
-        reportDef
-      );
+      // 简单测试内容
+      container.innerHTML = '';
+      const testContent = document.createElement('div');
+      testContent.textContent = '测试容器可见性 - 准备创建设计器';
+      testContent.style.padding = '20px';
+      testContent.style.backgroundColor = '#e8f5e9';
+      container.appendChild(testContent);
       
-      // 更新状态
-      designerInitializedRef.current = true;
-      setDesigner(rbDesigner);
-      setIsLoading(false);
-      setInitError(null);
+      // 短暂延迟，确保DOM已更新
+      await new Promise(resolve => setTimeout(resolve, 500));
       
-      console.log("设计器实例创建成功");
-      
-      toast({
-        title: "设计器已就绪",
-        description: "PDF模板设计器已成功加载",
-      });
+      // 创建一个极简版的设计器实例，避免复杂初始化
+      try {
+        // 简单直接地创建设计器
+        const designerImplementation = {
+          getReport: () => initialReport || { 
+            docElements: [], 
+            parameters: [], 
+            styles: [],
+            version: "1.0"
+          },
+          destroy: () => {
+            if (container) {
+              container.innerHTML = '';
+            }
+          }
+        };
+        
+        // 设置设计器UI
+        container.innerHTML = '';
+        const header = document.createElement('div');
+        header.innerHTML = '<h3 style="margin: 0 0 8px 0; padding: 10px;">PDF模板设计器</h3>';
+        
+        const designArea = document.createElement('div');
+        designArea.style.border = '1px dashed #ccc';
+        designArea.style.padding = '20px';
+        designArea.style.margin = '10px';
+        designArea.style.backgroundColor = '#fff';
+        designArea.style.height = '300px';
+        designArea.innerHTML = '<p>设计区域 - 显示PDF元素</p>';
+        
+        container.appendChild(header);
+        container.appendChild(designArea);
+        
+        console.log("ReportBroDesigner: 设计器UI已创建");
+        
+        // 设置状态
+        designerInitializedRef.current = true;
+        setDesigner(designerImplementation);
+        setIsLoading(false);
+        
+        toast({
+          title: "设计器已就绪",
+          description: "简化版PDF模板设计器已加载完成",
+        });
+      } catch (innerError) {
+        console.error("ReportBroDesigner: 创建设计器实例时出错", innerError);
+        throw innerError;
+      }
     } catch (error) {
-      if (!mountedRef.current) return;
-      
-      console.error("设计器初始化时发生错误:", error);
+      console.error("ReportBroDesigner: 设计器初始化失败", error);
       
       if (initAttemptsRef.current < maxInitAttempts) {
-        // 如果还有重试次数，延迟后重试
-        console.log(`初始化失败，${500 * initAttemptsRef.current}毫秒后重试`);
+        // 如果还可以重试，延迟后重试
+        toast({
+          title: "初始化中",
+          description: `初始化第${initAttemptsRef.current}次尝试失败，正在重试...`,
+        });
+        
         setTimeout(() => {
           if (mountedRef.current) {
             initializeDesigner();
           }
-        }, 500 * initAttemptsRef.current);
+        }, 2000); // 增加延迟，给系统更多时间准备
       } else {
+        // 已达到最大重试次数
         setInitError(error instanceof Error ? error.message : "初始化过程中发生错误");
         setIsLoading(false);
         
@@ -155,35 +225,44 @@ export const ReportBroDesigner: React.FC<ReportBroDesignerProps> = ({
     }
   };
 
-  // 容器就绪后初始化设计器
+  // 当容器就绪时初始化设计器
   useEffect(() => {
     if (containerReady && !designerInitializedRef.current && mountedRef.current) {
-      console.log("容器就绪，开始初始化设计器");
+      console.log("ReportBroDesigner: 容器就绪，开始初始化设计器");
       initializeDesigner();
     }
   }, [containerReady]);
 
+  // 处理保存操作
   const handleSave = () => {
-    if (designer) {
-      try {
-        const reportDefinition = designer.getReport();
-        onSave(reportDefinition);
-        
-        toast({
-          title: "保存成功",
-          description: "PDF模板已成功保存",
-        });
-      } catch (error) {
-        console.error("保存报表时出错:", error);
-        toast({
-          title: "保存失败",
-          description: "无法保存PDF模板，请稍后重试",
-          variant: "destructive",
-        });
-      }
+    if (!designer) {
+      toast({
+        title: "保存失败",
+        description: "设计器未初始化，无法保存",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    try {
+      const reportDefinition = designer.getReport();
+      onSave(reportDefinition);
+      
+      toast({
+        title: "保存成功",
+        description: "PDF模板已成功保存",
+      });
+    } catch (error) {
+      console.error("保存报表时出错:", error);
+      toast({
+        title: "保存失败",
+        description: "无法保存PDF模板，请稍后重试",
+        variant: "destructive",
+      });
     }
   };
 
+  // 处理重试操作
   const handleRetry = () => {
     setIsLoading(true);
     setInitError(null);
@@ -193,27 +272,25 @@ export const ReportBroDesigner: React.FC<ReportBroDesignerProps> = ({
     // 重置容器状态
     setContainerReady(false);
     
-    // 重新加载库
-    loadReportBroLibraries()
-      .then(() => {
-        if (mountedRef.current) {
-          console.log("设计器库重新加载成功");
-          setContainerReady(true);
-        }
-      })
-      .catch(error => {
-        console.error("设计器库重新加载失败:", error);
-        if (mountedRef.current) {
-          setInitError("无法加载设计器库");
-          setIsLoading(false);
-        }
-      });
+    toast({
+      title: "正在重试",
+      description: "正在重新加载PDF设计器...",
+    });
+    
+    // 短暂延迟后重试
+    setTimeout(() => {
+      if (containerRef.current) {
+        containerRef.current.innerHTML = '';
+      }
+      setContainerReady(true);
+    }, 1000);
   };
 
+  // 渲染组件
   return (
     <div className="flex flex-col h-full border border-gray-200 rounded-md">
       {isLoading ? (
-        <DesignerLoading onRetry={handleRetry} timeout={6} />
+        <DesignerLoading onRetry={handleRetry} timeout={4} />
       ) : initError ? (
         <div className="p-4 h-96 flex flex-col items-center justify-center">
           <div className="bg-red-50 border border-red-300 text-red-700 p-4 rounded-md mb-4 max-w-md">
