@@ -1,5 +1,5 @@
 
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
 import { Input } from '@/components/ui/input';
 import { Info } from 'lucide-react';
 
@@ -12,7 +12,6 @@ interface TaxInputRowProps {
   onInfoClick?: () => void;
   type?: "text" | "number";
   className?: string;
-  id?: string;
 }
 
 const TaxInputRow: React.FC<TaxInputRowProps> = ({
@@ -23,18 +22,8 @@ const TaxInputRow: React.FC<TaxInputRowProps> = ({
   showInfo = false,
   onInfoClick,
   type = "text",
-  className = "",
-  id
+  className = ""
 }) => {
-  const inputRef = useRef<HTMLInputElement>(null);
-  
-  // Add a data attribute with the value for PDF export
-  useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.setAttribute('data-value', value);
-    }
-  }, [value]);
-  
   return (
     <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-center">
       <div className={`md:col-span-3 break-words font-medium ${className}`}>
@@ -50,21 +39,14 @@ const TaxInputRow: React.FC<TaxInputRowProps> = ({
         )}
       </div>
       <div className="md:col-span-3 flex items-center justify-end w-full">
-        <div className="min-w-[220px] w-full max-w-[300px] relative">
+        <div className="min-w-[120px] w-[120px]">
           <Input
-            id={id}
-            ref={inputRef}
             type={type}
             value={value}
             onChange={onChange ? (e) => onChange(e.target.value) : undefined}
             readOnly={readOnly}
-            className="text-right font-bold pr-8 w-full overflow-visible letter-spacing-normal"
-            data-value={value} /* Add data attribute for PDF export */
+            className="text-right font-bold pr-2 w-full"
           />
-          {/* 隐藏在正常UI中，只在PDF中显示 */}
-          <span className="absolute right-3 top-0 bottom-0 flex items-center justify-end h-full pointer-events-none pdf-value hidden print:block">
-            {value}
-          </span>
         </div>
         <span className="ml-2 text-sm whitespace-nowrap">万元</span>
       </div>

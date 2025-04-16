@@ -98,8 +98,6 @@
 
   body {
     @apply bg-background text-foreground;
-    color: hsl(var(--foreground));
-    background-color: #f8f9fa;
   }
   
   .w-36 {
@@ -123,95 +121,5 @@
   .w-input-sm {
     width: 8rem;
   }
-  
-  /* Ensure text in inputs is fully visible */
-  input[type="text"],
-  input[type="number"] {
-    text-overflow: visible !important;
-    overflow: visible !important;
-    padding-right: 12px !important;
-    letter-spacing: normal !important;
-    font-size: 14px !important;
-    color: #333 !important;
-  }
-  
-  /* Make all text elements visible */
-  p, h1, h2, h3, h4, h5, h6, span, label, div {
-    color: inherit;
-    visibility: visible !important;
-    opacity: 1 !important;
-  }
-  
-  /* Fix backgrounds */
-  .bg-white {
-    background-color: white !important;
-  }
-  
-  /* Fix specific card elements */
-  .card {
-    background-color: white !important;
-  }
-  
-  .card-header {
-    background-color: white !important;
-  }
-  
-  .card-content {
-    background-color: white !important;
-    color: hsl(var(--foreground)) !important;
-  }
-  
-  /* Sheet content needs white background */
-  .sheet-content {
-    background-color: white !important;
-  }
-  
-  /* Ensure buttons have proper colors */
-  .button {
-    color: white !important;
-  }
-  
-  /* Fix radix shadcn components */
-  [data-radix-popper-content-wrapper] {
-    background-color: white !important;
-  }
 }
 
-@media (max-width: 768px) {
-  input[type="number"],
-  input[type="text"] {
-    width: 100%;
-    max-width: 100%;
-    font-size: 16px; /* Prevents iOS zoom on focus */
-  }
-  
-  .w-input-text,
-  .w-input-sm {
-    width: 100%;
-  }
-
-  .container {
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-}
-
-/* Improve touch targets on mobile */
-@media (max-width: 768px) {
-  button,
-  [role="button"],
-  input,
-  select {
-    min-height: 44px;
-  }
-
-  .text-sm {
-    font-size: 0.875rem;
-    line-height: 1.5rem;
-  }
-}
-
-/* Fix letter spacing for number inputs */
-.letter-spacing-normal {
-  letter-spacing: normal !important;
-}

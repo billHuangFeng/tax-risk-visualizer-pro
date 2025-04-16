@@ -1,5 +1,5 @@
 
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
 import { Input } from '@/components/ui/input';
 import { TableCell, TableRow } from '@/components/ui/table';
 import { Info } from 'lucide-react';
@@ -27,22 +27,6 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
   isNegativeAdjustment,
 }) => {
   const safeValues = values || { actual: '0', deductible: '0.00', adjustment: '0.00' };
-  const actualInputRef = useRef<HTMLInputElement>(null);
-  const deductibleInputRef = useRef<HTMLInputElement>(null);
-  const adjustmentInputRef = useRef<HTMLInputElement>(null);
-  
-  // Update data attributes for PDF export
-  useEffect(() => {
-    if (actualInputRef.current) {
-      actualInputRef.current.setAttribute('data-value', safeValues.actual);
-    }
-    if (deductibleInputRef.current) {
-      deductibleInputRef.current.setAttribute('data-value', safeValues.deductible);
-    }
-    if (adjustmentInputRef.current) {
-      adjustmentInputRef.current.setAttribute('data-value', safeValues.adjustment);
-    }
-  }, [safeValues]);
   
   return (
     <TableRow>
@@ -67,54 +51,37 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
           )}
         </div>
       </TableCell>
-      <TableCell className="w-[15%] min-w-[180px]">
-        <div className="w-full relative">
+      <TableCell className="w-[15%] min-w-[80px]">
+        <div className="w-full">
           <Input
-            ref={actualInputRef}
             type="number"
             value={safeValues.actual}
             onChange={(e) => onChange('actual', e.target.value)}
-            className="text-right w-full pr-8 overflow-visible letter-spacing-normal"
-            data-value={safeValues.actual}
+            className="text-right w-full"
           />
-          <div className="absolute right-3 top-0 bottom-0 flex items-center justify-end h-full pointer-events-none pdf-value hidden print:block">
-            {safeValues.actual}
-          </div>
         </div>
       </TableCell>
-      <TableCell className="w-[20%] min-w-[180px]">
-        <div className="w-full relative">
+      <TableCell className="w-[20%] min-w-[80px]">
+        <div className="w-full">
           <Input
-            ref={deductibleInputRef}
             type="text"
             value={safeValues.deductible}
             readOnly
-            className="text-right bg-muted w-full pr-8 overflow-visible letter-spacing-normal"
-            data-value={safeValues.deductible}
+            className="text-right bg-muted w-full"
           />
-          <div className="absolute right-3 top-0 bottom-0 flex items-center justify-end h-full pointer-events-none pdf-value hidden print:block">
-            {safeValues.deductible}
-          </div>
         </div>
       </TableCell>
-      <TableCell className="w-[20%] min-w-[180px]">
-        <div className="w-full relative">
-          <Input
-            ref={adjustmentInputRef}
-            type="text"
-            value={safeValues.adjustment}
-            readOnly
-            className={`text-right bg-muted w-full font-bold pr-8 overflow-visible letter-spacing-normal ${
-              parseFloat(safeValues.adjustment) !== 0
-                ? 'text-tax-red' 
-                : 'text-foreground'
-            }`}
-            data-value={safeValues.adjustment}
-          />
-          <div className="absolute right-3 top-0 bottom-0 flex items-center justify-end h-full pointer-events-none pdf-value hidden print:block">
-            {safeValues.adjustment}
-          </div>
-        </div>
+      <TableCell className="w-[20%] min-w-[80px]">
+        <Input
+          type="text"
+          value={safeValues.adjustment}
+          readOnly
+          className={`text-right bg-muted w-full font-bold ${
+            parseFloat(safeValues.adjustment) !== 0
+              ? 'text-tax-red' 
+              : 'text-foreground'
+          }`}
+        />
       </TableCell>
       <TableCell className="w-[10%] text-sm whitespace-nowrap">万元</TableCell>
     </TableRow>

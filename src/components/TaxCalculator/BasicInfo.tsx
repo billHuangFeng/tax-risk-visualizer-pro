@@ -1,5 +1,5 @@
 
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -33,23 +33,6 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
   setEmployeeCount,
   onInfoClick,
 }) => {
-  const companyNameRef = useRef<HTMLInputElement>(null);
-  const totalAssetsRef = useRef<HTMLInputElement>(null);
-  const employeeCountRef = useRef<HTMLInputElement>(null);
-  
-  // Update data attributes for PDF export
-  useEffect(() => {
-    if (companyNameRef.current) {
-      companyNameRef.current.setAttribute('data-value', companyName);
-    }
-    if (totalAssetsRef.current) {
-      totalAssetsRef.current.setAttribute('data-value', totalAssets);
-    }
-    if (employeeCountRef.current) {
-      employeeCountRef.current.setAttribute('data-value', employeeCount);
-    }
-  }, [companyName, totalAssets, employeeCount]);
-  
   return (
     <div className="space-y-6 border rounded-lg p-6 bg-white">
       <h2 className="text-xl font-bold border-l-4 border-tax-blue pl-3">基本信息</h2>
@@ -57,14 +40,12 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
       <div className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-2 items-center">
           <Label htmlFor="companyName" className="md:col-span-1 font-medium">企业名称：</Label>
-          <div className="md:col-span-2 pdf-text-visible">
+          <div className="md:col-span-2">
             <Input
               id="companyName"
-              ref={companyNameRef}
               value={companyName}
               onChange={(e) => setCompanyName(e.target.value)}
-              className="w-full text-left overflow-visible"
-              data-value={companyName}
+              className="w-full text-left" 
             />
           </div>
         </div>
@@ -124,16 +105,14 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
               </TooltipContent>
             </Tooltip>
           </Label>
-          <div className="flex items-center pdf-text-visible">
-            <div className="min-w-[220px] w-full max-w-[300px]">
+          <div className="flex items-center">
+            <div className="w-[20rem]">
               <Input
                 id="totalAssets"
-                ref={totalAssetsRef}
                 type="number"
                 value={totalAssets}
                 onChange={(e) => setTotalAssets(e.target.value)}
-                className="text-right w-full pr-8 overflow-visible"
-                data-value={totalAssets}
+                className="text-right w-full"
               />
             </div>
             <span className="ml-2 text-sm whitespace-nowrap">万元</span>
@@ -158,16 +137,14 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
               </TooltipContent>
             </Tooltip>
           </Label>
-          <div className="flex items-center pdf-text-visible">
-            <div className="min-w-[220px] w-full max-w-[300px]">
+          <div className="flex items-center">
+            <div className="w-input-text">
               <Input
                 id="employeeCount"
-                ref={employeeCountRef}
                 type="number"
                 value={employeeCount}
                 onChange={(e) => setEmployeeCount(e.target.value)}
-                className="text-right w-full pr-8 overflow-visible"
-                data-value={employeeCount}
+                className="text-right w-full"
               />
             </div>
             <span className="ml-2 text-sm">人</span>

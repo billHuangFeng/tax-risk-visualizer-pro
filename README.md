@@ -71,15 +71,3 @@ Yes it is!
 To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
-
-## Troubleshooting Dependency Installation
-
-If you encounter a "vite not found" error, try these steps:
-
-1. Ensure you have Node.js and npm installed
-2. Run `npm install` in the project root directory
-3. If issues persist, try `npm install --legacy-peer-deps`
-
-## Recommended Node.js Version
-- Node.js: v18.x or higher
-- npm: v9.x or higher

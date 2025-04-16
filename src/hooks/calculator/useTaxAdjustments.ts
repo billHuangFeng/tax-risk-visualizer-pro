@@ -1,56 +1,44 @@
 
 import { useState, useEffect } from 'react';
 
-// 测试数据 - 上线前请删除
-const TEST_MODE = true; // 上线前设置为 false
-const TEST_DATA = {
-  rdExpenses: { actual: '150', deductible: '0', adjustment: '0' },
-  entertainmentExpenses: { actual: '50', deductible: '0', adjustment: '0' },
-  advertisingExpenses: { actual: '80', deductible: '0', adjustment: '0' },
-  educationExpenses: { actual: '30', deductible: '0', adjustment: '0' },
-  welfareExpenses: { actual: '40', deductible: '0', adjustment: '0' },
-  insuranceExpenses: { actual: '25', deductible: '0', adjustment: '0' },
-  nonDeductibleExpenses: { actual: '20', deductible: '0', adjustment: '0' }
-};
-
 export const useTaxAdjustments = () => {
-  const [rdExpenses, setRdExpenses] = useState(TEST_MODE ? TEST_DATA.rdExpenses : {
+  const [rdExpenses, setRdExpenses] = useState({
     actual: '',
     deductible: '',
     adjustment: '',
   });
   
-  const [entertainmentExpenses, setEntertainmentExpenses] = useState(TEST_MODE ? TEST_DATA.entertainmentExpenses : {
+  const [entertainmentExpenses, setEntertainmentExpenses] = useState({
     actual: '',
     deductible: '',
     adjustment: '',
   });
   
-  const [advertisingExpenses, setAdvertisingExpenses] = useState(TEST_MODE ? TEST_DATA.advertisingExpenses : {
+  const [advertisingExpenses, setAdvertisingExpenses] = useState({
     actual: '',
     deductible: '',
     adjustment: '',
   });
   
-  const [educationExpenses, setEducationExpenses] = useState(TEST_MODE ? TEST_DATA.educationExpenses : {
+  const [educationExpenses, setEducationExpenses] = useState({
     actual: '',
     deductible: '',
     adjustment: '',
   });
   
-  const [welfareExpenses, setWelfareExpenses] = useState(TEST_MODE ? TEST_DATA.welfareExpenses : {
+  const [welfareExpenses, setWelfareExpenses] = useState({
     actual: '',
     deductible: '',
     adjustment: '',
   });
   
-  const [insuranceExpenses, setInsuranceExpenses] = useState(TEST_MODE ? TEST_DATA.insuranceExpenses : {
+  const [insuranceExpenses, setInsuranceExpenses] = useState({
     actual: '',
     deductible: '',
     adjustment: '',
   });
   
-  const [nonDeductibleExpenses, setNonDeductibleExpenses] = useState(TEST_MODE ? TEST_DATA.nonDeductibleExpenses : {
+  const [nonDeductibleExpenses, setNonDeductibleExpenses] = useState({
     actual: '',
     deductible: '',
     adjustment: '',
