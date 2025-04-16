@@ -4,6 +4,13 @@ export const loadReportBroLibraries = (): Promise<void> => {
   return new Promise((resolve) => {
     console.log("初始化本地PDF设计器...");
     
+    // 如果已经加载了，直接返回成功
+    if (window.ReportBro && window.ReportBroDesigner) {
+      console.log("本地PDF设计器库已加载，跳过初始化");
+      resolve();
+      return;
+    }
+    
     // 创建本地模拟版本的ReportBro
     window.ReportBro = function() {
       function ReportBro(reportDefinition: any) {
@@ -25,12 +32,41 @@ export const loadReportBroLibraries = (): Promise<void> => {
         return this.reportDefinition;
       };
       
+      ReportBro.prototype.generatePdf = function(data: any, options: any, callbacks: any) {
+        return new Promise((resolve) => {
+          console.log("模拟生成PDF...");
+          
+          // 创建一个简单的PDF blob作为响应
+          const pdfContent = "JVBERi0xLjcKJeLjz9MKNSAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDM4Cj4+CnN0cmVhbQp4nCvkMlAwMDDgMjJRMAZiCyDNZchlCOQyNOS64AIySZIFQIkMAGd7Bm0KZW5kc3RyZWFtCmVuZG9iago0IDAgb2JqCjw8Ci9UeXBlIC9QYWdlCi9NZWRpYUJveCBbMCAwIDU5NS4yOCA4NDEuODldCi9SZXNvdXJjZXMgPDwKL0ZvbnQgPDwKL0YxIDEgMCBSCi9GMiAyIDAgUgo+Pgo+PgovQ29udGVudHMgNSAwIFIKL1BhcmVudCAzIDAgUgo+PgplbmRvYmoKMyAwIG9iago8PAovVHlwZSAvUGFnZXMKL0NvdW50IDEKL0tpZHMgWzQgMCBSXQo+PgplbmRvYmoKNiAwIG9iago8PAovVHlwZSAvQ2F0YWxvZwovUGFnZXMgMyAwIFIKPj4KZW5kb2JqCjcgMCBvYmoKPDwKL1Byb2R1Y2VyIChMb3ZhYmxlIFBERiBHZW5lcmF0b3IpCi9DcmVhdGlvbkRhdGUgKEQ6MjAyNTA0MTYpCj4+CmVuZG9iagp4cmVmCjAgOAowMDAwMDAwMDAwIDY1NTM1IGYNCjAwMDAwMDAwMDAgMDAwMDAgbg0KMDAwMDAwMDAwMCAwMDAwMCBuDQowMDAwMDAwMjI0IDAwMDAwIG4NCjAwMDAwMDAwODcgMDAwMDAgbg0KMDAwMDAwMDAwOSAwMDAwMCBuDQowMDAwMDAwMjgxIDAwMDAwIG4NCjAwMDAwMDAzMzAgMDAwMDAgbg0KdHJhaWxlcgo8PAovU2l6ZSA4Ci9Sb290IDYgMCBSCi9JbmZvIDcgMCBSCj4+CnN0YXJ0eHJlZgozOTkKJSVFT0YK";
+          const byteCharacters = atob(pdfContent);
+          const byteArrays = [];
+          
+          for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+            const slice = byteCharacters.slice(offset, offset + 512);
+            const byteNumbers = new Array(slice.length);
+            for (let i = 0; i < slice.length; i++) {
+              byteNumbers[i] = slice.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+            byteArrays.push(byteArray);
+          }
+          
+          const blob = new Blob(byteArrays, {type: 'application/pdf'});
+          setTimeout(() => resolve(blob), 500); // 模拟处理时间
+        });
+      };
+      
       return ReportBro;
     }();
     
     // 创建本地模拟版本的设计器
     window.ReportBroDesigner = function() {
       function ReportBroDesigner(element: HTMLElement, options: any, reportDefinition: any) {
+        if (!element || !document.body.contains(element)) {
+          console.error("Designer初始化失败: 容器元素不存在或不在DOM中");
+          throw new Error("Container element is not valid");
+        }
+
         this.element = element;
         this.options = options || {};
         this.initialReport = reportDefinition || { 
@@ -40,16 +76,21 @@ export const loadReportBroLibraries = (): Promise<void> => {
           version: "1.0"
         };
         this.report = new window.ReportBro(this.initialReport);
-        this.setupDesigner();
+        
+        // 立即设置设计器
+        setTimeout(() => {
+          this.setupDesigner();
+        }, 50);
       }
       
       ReportBroDesigner.prototype.setupDesigner = function() {
-        if (!this.element) return;
+        if (!this.element || !document.body.contains(this.element)) {
+          console.error("设计器设置失败: 容器元素不存在或不在DOM中");
+          return;
+        }
         
         // 清空容器
-        while (this.element.firstChild) {
-          this.element.removeChild(this.element.firstChild);
-        }
+        this.element.innerHTML = '';
         
         // 创建简易设计器界面
         const container = document.createElement('div');
@@ -266,6 +307,8 @@ export const loadReportBroLibraries = (): Promise<void> => {
         
         // 添加到设计器元素
         this.element.appendChild(container);
+        
+        console.log("设计器界面设置完成");
       };
       
       ReportBroDesigner.prototype.createElementByType = function(element: any) {
@@ -321,7 +364,7 @@ export const loadReportBroLibraries = (): Promise<void> => {
         elem.addEventListener('click', (e) => {
           e.stopPropagation();
           // 选中元素
-          const selected = this.element.querySelectorAll('.selected-element');
+          const selected = document.querySelectorAll('.selected-element');
           selected.forEach((el: Element) => {
             el.classList.remove('selected-element');
             (el as HTMLElement).style.border = '1px dashed #ccc';
@@ -351,6 +394,9 @@ export const loadReportBroLibraries = (): Promise<void> => {
         };
         
         // 更新报表数据
+        if (!this.report.reportDefinition.docElements) {
+          this.report.reportDefinition.docElements = [];
+        }
         this.report.reportDefinition.docElements.push(elementData);
         
         // 创建DOM元素
@@ -365,10 +411,12 @@ export const loadReportBroLibraries = (): Promise<void> => {
       };
       
       ReportBroDesigner.prototype.destroy = function() {
-        if (this.element) {
-          while (this.element.firstChild) {
-            this.element.removeChild(this.element.firstChild);
+        try {
+          if (this.element) {
+            this.element.innerHTML = '';
           }
+        } catch (e) {
+          console.error("销毁设计器出错:", e);
         }
       };
       

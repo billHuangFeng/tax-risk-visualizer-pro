@@ -9,7 +9,9 @@ import { applyTemplateStyles } from './templateService';
 
 // 用于检查ReportBro是否可用
 const isReportBroAvailable = () => {
-  return typeof window !== 'undefined' && window.ReportBro && window.ReportBroDesigner;
+  return typeof window !== 'undefined' && 
+         typeof window.ReportBro === 'function' && 
+         typeof window.ReportBroDesigner === 'function';
 };
 
 // 使用ReportBro生成PDF
@@ -23,12 +25,18 @@ const generatePdfWithReportBro = async (
         throw new Error('ReportBro is not available');
       }
 
+      console.log("使用ReportBro生成PDF", { 
+        dataAvailable: !!data, 
+        reportDefAvailable: !!reportDefinition 
+      });
+      
       // 创建报表对象
       const rb = new window.ReportBro(reportDefinition);
       
       // 生成PDF
       rb.generatePdf(data, {}, {})
         .then((pdfData: Blob) => {
+          console.log("ReportBro PDF生成成功");
           resolve(pdfData);
         })
         .catch((error: any) => {

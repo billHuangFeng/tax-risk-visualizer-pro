@@ -58,6 +58,9 @@ export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({
       };
       
       preloadDesigner();
+    } else {
+      // 对话框关闭时重置视图到选择模式
+      setView('select');
     }
   }, [open, toast]);
   
@@ -81,35 +84,43 @@ export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({
   };
 
   const handleViewChange = (newView: string) => {
-    // 如果用户想要打开设计器视图，但设计器尚未加载
-    if (newView === 'designer' && !designerLoaded) {
-      toast({
-        title: "正在加载",
-        description: "PDF设计器正在加载中，请稍候",
-      });
-      
-      // 仍然切换视图，但显示加载状态
-      setView(newView as ViewState);
-      
-      // 确保库加载
-      loadReportBroLibraries()
-        .then(() => {
-          console.log("PDF设计器库加载成功");
-          setDesignerLoaded(true);
-        })
-        .catch(error => {
-          console.error("PDF设计器库加载失败:", error);
-          toast({
-            title: "加载错误",
-            description: "无法加载PDF设计器，请刷新页面后重试",
-            variant: "destructive",
-          });
-          // 如果加载失败，返回到选择视图
-          setView('select');
+    if (newView === 'designer') {
+      if (!designerLoaded) {
+        // 如果设计器未加载完成，通知用户并开始加载
+        toast({
+          title: "正在加载",
+          description: "PDF设计器正在加载中，请稍候",
         });
+        
+        // 先设置预加载状态，然后切换视图
+        setIsPreloading(true);
+        setView(newView as ViewState);
+        
+        // 确保库加载
+        loadReportBroLibraries()
+          .then(() => {
+            console.log("PDF设计器库加载成功");
+            setDesignerLoaded(true);
+            setIsPreloading(false);
+          })
+          .catch(error => {
+            console.error("PDF设计器库加载失败:", error);
+            toast({
+              title: "加载错误",
+              description: "无法加载PDF设计器，请刷新页面后重试",
+              variant: "destructive",
+            });
+            // 加载失败，返回到选择视图
+            setView('select');
+            setIsPreloading(false);
+          });
+      } else {
+        // 设计器已加载，直接切换视图
+        setView(newView as ViewState);
+      }
     } else {
-      // 如果当前视图是设计器，并且用户选择了另一个视图，则保存当前设计
-      if (view === 'designer' && reportDefinition && newView !== 'designer') {
+      // 如果从设计器视图切换出去，保存当前设计
+      if (view === 'designer' && reportDefinition) {
         const updatedTemplate = {
           ...selectedTemplate,
           reportDefinition: reportDefinition
@@ -117,7 +128,7 @@ export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({
         setSelectedTemplate(updatedTemplate);
       }
       
-      // 切换视图
+      // 切换到其他视图
       setView(newView as ViewState);
     }
   };
