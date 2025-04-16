@@ -195,7 +195,7 @@ const VatSalesSection: React.FC<VatSalesSectionProps> = ({
           <div className="col-span-3 text-right flex items-center justify-end gap-2">
             <Input
               type="number"
-              value={salesCollectionDifference}
+              value={salesCollectionDifference.toFixed(2)}
               className="w-full text-right bg-gray-100"
               disabled
             />
@@ -266,7 +266,7 @@ const VatSalesSection: React.FC<VatSalesSectionProps> = ({
                       className="w-full"
                     >
                       <Plus className="h-4 w-4 mr-2" />
-                      添加差��说明
+                      添加差异说明
                     </Button>
                   </TableCell>
                 </TableRow>

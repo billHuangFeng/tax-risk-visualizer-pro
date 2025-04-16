@@ -93,7 +93,7 @@ const VatSummary: React.FC<VatSummaryProps> = ({
               <div className="font-medium">差异幅度</div>
               <div className="flex items-center gap-2">
                 <span className={`text-lg font-bold ${taxDifferencePercentage > 20 ? 'text-red-500' : ''}`}>
-                  {taxDifferencePercentage}%
+                  {taxDifferencePercentage.toFixed(2)}%
                 </span>
               </div>
             </div>

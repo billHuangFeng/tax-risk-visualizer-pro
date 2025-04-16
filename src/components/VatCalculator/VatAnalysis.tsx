@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -116,7 +115,7 @@ const VatAnalysis: React.FC<VatAnalysisProps> = ({
               </button>
             </div>
             <div className="text-lg font-bold text-red-600">
-              {unexplainedDifference.toFixed(1)}
+              {unexplainedDifference.toFixed(2)}
             </div>
           </div>
           
@@ -129,7 +128,7 @@ const VatAnalysis: React.FC<VatAnalysisProps> = ({
 
           <div className="pt-2 border-t">
             <div className="text-sm text-gray-600">
-              差异评测基准：{Math.abs(unexplainedDifference).toFixed(6)}
+              差异评测基准：{Math.abs(unexplainedDifference).toFixed(2)}
             </div>
           </div>
         </div>

@@ -92,7 +92,7 @@ const VatPurchasesSection: React.FC<VatPurchasesSectionProps> = ({
                   </div>
                 </TableCell>
                 <TableCell className="text-right font-medium">
-                  {item.inputTax.toFixed(1)}
+                  {item.inputTax.toFixed(2)}
                 </TableCell>
                 <TableCell>
                   <Button
@@ -109,9 +109,9 @@ const VatPurchasesSection: React.FC<VatPurchasesSectionProps> = ({
             
             <TableRow className="bg-gray-50 font-bold">
               <TableCell>合计</TableCell>
-              <TableCell className="text-right">{purchasesTotal.amount.toFixed(1)}</TableCell>
+              <TableCell className="text-right">{purchasesTotal.amount.toFixed(2)}</TableCell>
               <TableCell></TableCell>
-              <TableCell className="text-right">{purchasesTotal.tax.toFixed(1)}</TableCell>
+              <TableCell className="text-right">{purchasesTotal.tax.toFixed(2)}</TableCell>
               <TableCell></TableCell>
             </TableRow>
           </TableBody>
