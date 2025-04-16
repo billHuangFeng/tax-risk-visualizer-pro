@@ -7,15 +7,15 @@ import { PdfTemplate } from '@/types/pdfTemplates';
 /**
  * Creates a basic valid schema structure for PDF fields
  */
-const createBaseSchema = (): any[] => {
-  return [{
+const createBaseSchema = (): any => {
+  return {
     emptyField: {
       type: 'text',
       position: { x: 0, y: 0 },
       width: 0,
       height: 0
     }
-  }];
+  };
 };
 
 /**
@@ -24,7 +24,7 @@ const createBaseSchema = (): any[] => {
  */
 const extractSchemas = (template: PdfTemplate): any[][] => {
   // Default valid schema to use as fallback
-  const defaultSchema: any[][] = [createBaseSchema()];
+  const defaultSchema: any[][] = [[createBaseSchema()]];
   
   try {
     // Verify the template has schemas
@@ -54,10 +54,10 @@ const extractSchemas = (template: PdfTemplate): any[][] => {
         if (typedPageSchema.length > 0) {
           validSchemas.push(typedPageSchema);
         } else {
-          validSchemas.push(createBaseSchema());
+          validSchemas.push([createBaseSchema()]);
         }
       } else {
-        validSchemas.push(createBaseSchema());
+        validSchemas.push([createBaseSchema()]);
       }
     }
     
@@ -129,17 +129,20 @@ export const exportToPDF = async (calculator: any, template?: PdfTemplate) => {
     // Extract and validate schemas from the template
     const validatedSchemas = extractSchemas(selectedTemplate);
     
-    // Create properly structured template compatible with PDFME
-    const pdfMeTemplate = {
+    // Define a proper PDFME template structure with explicit typing
+    const pdfMeTemplate: Template = {
       basePdf: basePdf,
-      schemas: validatedSchemas
-    } as Template;
+      schemas: validatedSchemas as any[][]
+    };
     
     // Log template info for debugging
     console.log("PDF template prepared:", {
       hasBasePdf: pdfMeTemplate.basePdf instanceof Uint8Array,
-      schemasCount: pdfMeTemplate.schemas.length,
-      firstSchemaFields: pdfMeTemplate.schemas[0] ? Object.keys(pdfMeTemplate.schemas[0][0] || {}).length : 0
+      schemasCount: Array.isArray(pdfMeTemplate.schemas) ? pdfMeTemplate.schemas.length : 0,
+      firstSchemaFields: Array.isArray(pdfMeTemplate.schemas) && 
+                        Array.isArray(pdfMeTemplate.schemas[0]) && 
+                        pdfMeTemplate.schemas[0][0] ? 
+                        Object.keys(pdfMeTemplate.schemas[0][0]).length : 0
     });
     
     // Generate PDF with validated template
@@ -160,10 +163,10 @@ export const exportToPDF = async (calculator: any, template?: PdfTemplate) => {
       console.log("Attempting to generate PDF with fallback template");
       
       // Create a minimal fallback template with just the base structure
-      const fallbackTemplate = {
+      const fallbackTemplate: Template = {
         basePdf: new Uint8Array(),
-        schemas: [[createBaseSchema()[0]]]
-      } as Template;
+        schemas: [[createBaseSchema()]]
+      };
       
       // Generate PDF with fallback template
       const pdf = await generate({
