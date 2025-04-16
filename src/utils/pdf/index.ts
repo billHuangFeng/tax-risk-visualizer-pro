@@ -69,11 +69,13 @@ const createPdfMeTemplate = (template: PdfTemplate): Template => {
   // 从模板中提取并处理schemas - 确保类型安全
   const schemas: any[][] = extractSchemas(template);
   
-  // 创建符合PDFME要求的模板对象
-  return {
+  // 创建符合PDFME要求的模板对象 - 使用类型断言确保类型兼容性
+  const pdfMeTemplate: Template = {
     basePdf,
     schemas
   };
+  
+  return pdfMeTemplate;
 };
 
 /**
@@ -103,9 +105,18 @@ export const exportToPDF = async (calculator: any, template?: PdfTemplate) => {
     // 创建PDFME所需的模板对象
     const pdfMeTemplate = createPdfMeTemplate(selectedTemplate);
     
-    // TypeSafe - 确保schemas存在并有正确的结构
+    // 确保schemas存在且格式有效 - 这将解决类型错误问题
     if (!pdfMeTemplate.schemas || !Array.isArray(pdfMeTemplate.schemas)) {
-      pdfMeTemplate.schemas = [createBaseSchema()];
+      console.warn("Invalid schemas found, using default schema");
+      pdfMeTemplate.schemas = [createBaseSchema()]; 
+    }
+    
+    // 确保每个schema页面都是数组
+    for (let i = 0; i < pdfMeTemplate.schemas.length; i++) {
+      if (!Array.isArray(pdfMeTemplate.schemas[i])) {
+        console.warn(`Schema at index ${i} is not an array, fixing`);
+        pdfMeTemplate.schemas[i] = createBaseSchema();
+      }
     }
     
     // 记录调试信息 - 使用类型守卫确保安全访问
@@ -117,10 +128,10 @@ export const exportToPDF = async (calculator: any, template?: PdfTemplate) => {
                         Object.keys(pdfMeTemplate.schemas[0][0] || {}).length : 0
     });
     
-    // 使用PDFME生成PDF - 确保模板格式符合PDFME要求
+    // 使用PDFME生成PDF - 避免使用类型断言，确保对象结构正确
     console.log("Generating PDF with PDFME...");
     const pdf = await generate({
-      template: pdfMeTemplate as Template,
+      template: pdfMeTemplate,
       inputs: inputs,
     });
     
