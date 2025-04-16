@@ -13,12 +13,15 @@ export const useBasicInfo = () => {
 
   // Load basic info from localStorage when the component mounts
   useEffect(() => {
-    // Check if we're coming from a reset
+    // Check if we're coming from a reset or test data loading
     const isResetting = localStorage.getItem('isResetting') === 'true';
+    const isLoadingTestData = localStorage.getItem('isLoadingTestData') === 'true';
     
-    if (isResetting) {
+    if (isResetting || isLoadingTestData) {
       // Clear the reset flag
-      localStorage.setItem('isResetting', 'false');
+      if (isResetting) {
+        localStorage.setItem('isResetting', 'false');
+      }
       
       // Load saved basic info
       const savedCompanyName = localStorage.getItem('companyName');
@@ -31,6 +34,13 @@ export const useBasicInfo = () => {
       if (savedCreditCode) setCreditCode(savedCreditCode);
       if (savedContactPerson) setContactPerson(savedContactPerson);
       if (savedContactPhone) setContactPhone(savedContactPhone);
+      
+      // If loading test data, also set enterprise info
+      if (isLoadingTestData) {
+        setIsHighTechEnterprise(localStorage.getItem('isHighTechEnterprise') === 'true');
+        setTotalAssets(localStorage.getItem('totalAssets') || '');
+        setEmployeeCount(localStorage.getItem('employeeCount') || '');
+      }
     }
   }, []);
 

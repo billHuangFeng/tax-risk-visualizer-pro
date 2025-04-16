@@ -1,17 +1,19 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { RotateCcw, Phone } from 'lucide-react';
+import { RotateCcw, Phone, Database } from 'lucide-react';
 import SaveDataButton from './SaveDataButton';
 
 interface CalculatorActionsProps {
   riskPercentage: number;
   onReset: () => void;
+  onLoadTestData?: () => void;
 }
 
 const CalculatorActions: React.FC<CalculatorActionsProps> = ({
   riskPercentage,
   onReset,
+  onLoadTestData,
 }) => {
   const handleContactAdvisor = () => {
     window.open('https://work.weixin.qq.com/ca/cawcde03d69f2d37e9', '_blank');
@@ -27,6 +29,17 @@ const CalculatorActions: React.FC<CalculatorActionsProps> = ({
         <RotateCcw className="w-4 h-4 mr-2" />
         重置
       </Button>
+      
+      {onLoadTestData && (
+        <Button
+          variant="outline"
+          onClick={onLoadTestData}
+          className="w-full md:w-auto"
+        >
+          <Database className="w-4 h-4 mr-2" />
+          加载测试数据
+        </Button>
+      )}
 
       <Button 
         onClick={handleContactAdvisor} 

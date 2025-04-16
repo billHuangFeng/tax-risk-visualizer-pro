@@ -84,6 +84,85 @@ export const useVatCalculator = () => {
     }
   }, [tax.riskPercentage, tax.unexplainedDifference]);
 
+  // Clear all data except basic info
+  const resetData = () => {
+    // Reset data except basic info
+    sales.setSalesData([
+      { id: '1', productName: '产品类别1', salesAmount: 0, vatRate: 13, outputTax: 0 }
+    ]);
+    sales.setSalesTotal({ amount: 0, tax: 0 });
+    sales.setBankSalesAmount(0);
+    
+    purchases.setPurchasesData([
+      { id: '1', productName: '采购物料或服务1', purchaseAmount: 0, vatRate: 13, inputTax: 0 }
+    ]);
+    purchases.setPurchasesTotal({ amount: 0, tax: 0 });
+    purchases.setBankPurchasesAmount(0);
+    
+    tax.setActualTax(0);
+    tax.setPayableTax(0);
+    tax.setTaxDifference(0);
+    tax.setTaxDifferencePercentage(0);
+    tax.setRiskPercentage(0);
+    tax.setUnexplainedDifference(0);
+    tax.setRiskLevel('基本安全');
+    
+    differences.setTaxDifferenceFactors([
+      { id: '1', description: '差异原因1', amount: 0 }
+    ]);
+    
+    differences.setSalesDifferenceExplanations([
+      { id: '1', reason: '', amount: 0 }
+    ]);
+    
+    differences.setPurchasesDifferenceExplanations([
+      { id: '1', reason: '', amount: 0 }
+    ]);
+  };
+
+  // Load test data for VAT calculator
+  const loadTestData = () => {
+    // Test data for sales
+    sales.setSalesData([
+      { id: '1', productName: '产品A - 标准税率', salesAmount: 85000, vatRate: 13, outputTax: 11050 },
+      { id: '2', productName: '产品B - 低税率', salesAmount: 42000, vatRate: 9, outputTax: 3780 },
+      { id: '3', productName: '服务C - 低税率', salesAmount: 26500, vatRate: 6, outputTax: 1590 }
+    ]);
+    sales.setBankSalesAmount(150000);
+    
+    // Test data for purchases
+    purchases.setPurchasesData([
+      { id: '1', productName: '原材料采购', purchaseAmount: 53000, vatRate: 13, inputTax: 6890 },
+      { id: '2', productName: '设备采购', purchaseAmount: 35000, vatRate: 13, inputTax: 4550 },
+      { id: '3', productName: '办公用品', purchaseAmount: 8500, vatRate: 9, inputTax: 765 }
+    ]);
+    purchases.setBankPurchasesAmount(92000);
+    
+    // Set actual tax and difference factors
+    tax.setActualTax(4000);
+    
+    differences.setTaxDifferenceFactors([
+      { id: '1', description: '上期留抵税额', amount: 1200 },
+      { id: '2', description: '不可抵扣进项税额', amount: -320 }
+    ]);
+    
+    // Set difference explanations
+    differences.setSalesDifferenceExplanations([
+      { id: '1', reason: '下一期收款', amount: 5200 },
+      { id: '2', reason: '未开票收入', amount: 3100 }
+    ]);
+    
+    differences.setPurchasesDifferenceExplanations([
+      { id: '1', reason: '上期采购本期付款', amount: 4500 }
+    ]);
+    
+    toast({
+      title: "测试数据已加载",
+      description: "增值税计算器测试数据已成功加载",
+      variant: "default",
+    });
+  };
+
   const handleReset = () => {
     if (confirm('确定要重置所有数据吗？')) {
       // Save current basic info before reset
@@ -92,20 +171,8 @@ export const useVatCalculator = () => {
       const contactPerson = basicInfo.contactPerson;
       const contactPhone = basicInfo.contactPhone;
       
-      // Reset data except basic info
-      sales.setSalesData([
-        { id: '1', productName: '产品类别1', salesAmount: 0, vatRate: 13, outputTax: 0 }
-      ]);
-      purchases.setPurchasesData([
-        { id: '1', productName: '采购物料或服务1', purchaseAmount: 0, vatRate: 13, inputTax: 0 }
-      ]);
-      sales.setBankSalesAmount(0);
-      purchases.setBankPurchasesAmount(0);
-      tax.setActualTax(0);
-      
-      differences.setTaxDifferenceFactors([
-        { id: '1', description: '差异原因1', amount: 0 }
-      ]);
+      // Reset all data
+      resetData();
       
       // Restore basic info
       basicInfo.setCompanyName(companyName);
@@ -127,6 +194,7 @@ export const useVatCalculator = () => {
     ...purchases,
     ...differences,
     ...tax,
-    handleReset
+    handleReset,
+    loadTestData
   };
 };

@@ -96,6 +96,7 @@ const VatCalculator = () => {
           <CalculatorActions
             riskPercentage={vatCalculator.riskPercentage}
             onReset={vatCalculator.handleReset}
+            onLoadTestData={vatCalculator.loadTestData}
           />
         </Card>
       </CalculatorLayout>
