@@ -1,139 +1,112 @@
-
-import { PdfTemplate } from "@/types/pdfTemplates";
-
-const defaultLayout = {
-  sections: [
-    {
-      id: "basic-info",
-      type: "basic-info" as const,
-      title: "基本信息",
-      visible: true,
-      order: 1,
-      fields: [
-        { id: "companyName", type: "text" as const, label: "公司名称", visible: true, sourceField: "companyName" },
-        { id: "employeeCount", type: "number" as const, label: "员工数量", visible: true, sourceField: "employeeCount" },
-        { id: "highTechEnterprise", type: "checkbox" as const, label: "高新技术企业", visible: true, sourceField: "isHighTech" }
-      ]
-    },
-    {
-      id: "revenue-expenses",
-      type: "revenue-expenses" as const,
-      title: "收入支出",
-      visible: true,
-      order: 2,
-      fields: [
-        { id: "totalRevenue", type: "number" as const, label: "总收入", visible: true, sourceField: "totalRevenue" },
-        { id: "totalExpenses", type: "number" as const, label: "总支出", visible: true, sourceField: "totalExpenses" }
-      ]
-    },
-    {
-      id: "tax-summary",
-      type: "tax-summary" as const,
-      title: "税务总结",
-      visible: true,
-      order: 3,
-      fields: [
-        { id: "taxRate", type: "number" as const, label: "适用税率", visible: true, sourceField: "taxRate" },
-        { id: "taxAmount", type: "number" as const, label: "应纳税额", visible: true, sourceField: "taxAmount" }
-      ]
-    }
-  ]
-};
-
-// Creating a proper layout object that matches the PdfTemplateLayout interface
-const createLayoutObject = () => ({
-  sections: defaultLayout.sections,
-});
+import { Template } from '@pdfme/generator';
+import { PdfTemplate } from '@/types/pdfTemplates';
 
 export const DEFAULT_TEMPLATES: PdfTemplate[] = [
   {
-    id: "classic",
-    name: "经典模板",
-    description: "简洁清晰的专业税务报告模板",
+    id: 'default-tax-report',
+    name: '默认税务报告模板',
+    baseTemplate: undefined, // 可以添加基础PDF模板路径
+    schemas: [
+      {
+        companyName: {
+          type: 'text',
+          position: { x: 50, y: 50 },
+          width: 100,
+          height: 10,
+        },
+        totalRevenue: {
+          type: 'text',
+          position: { x: 50, y: 70 },
+          width: 100,
+          height: 10,
+        },
+        // 添加更多字段定义
+      }
+    ],
     styles: {
-      fontFamily: "SimSun, serif",
+      fontFamily: 'SimSun, serif',
       headingStyle: {
-        fontSize: "16px",
-        fontWeight: "bold",
-        color: "#000000",
-        borderBottom: "1px solid #000",
-        marginBottom: "16px"
+        fontSize: '16px',
+        fontWeight: 'bold',
+        color: '#000000',
+        borderBottom: '1px solid #000',
+        marginBottom: '16px'
       },
       tableStyle: {
-        borderColor: "#000000",
-        headerBgColor: "#f5f5f5",
-        cellPadding: "8px"
+        headerBgColor: '#f5f5f5',
+        borderColor: '#000',
+        cellPadding: '8px'
       },
       formFieldStyle: {
-        borderColor: "#000000",
-        padding: "4px 8px",
-        labelColor: "#000000"
+        labelColor: '#333',
+        borderColor: '#ccc',
+        padding: '4px 8px'
       },
       layout: {
-        pageMargin: "20mm",
-        sectionSpacing: "16px"
+        pageMargin: '40px',
+        sectionSpacing: '20px'
       }
     },
-    layout: createLayoutObject()
-  },
-  {
-    id: "modern",
-    name: "现代模板",
-    description: "现代设计风格的税务报告模板",
-    styles: {
-      fontFamily: "Microsoft YaHei, sans-serif",
-      headingStyle: {
-        fontSize: "18px",
-        fontWeight: "bold",
-        color: "#333333",
-        borderBottom: "2px solid #8B5CF6",
-        marginBottom: "20px"
-      },
-      tableStyle: {
-        borderColor: "#dddddd",
-        headerBgColor: "#8B5CF6",
-        cellPadding: "10px"
-      },
-      formFieldStyle: {
-        borderColor: "#dddddd",
-        padding: "6px 10px",
-        labelColor: "#555555"
-      },
-      layout: {
-        pageMargin: "15mm",
-        sectionSpacing: "20px"
-      }
-    },
-    layout: createLayoutObject()
-  },
-  {
-    id: "minimal",
-    name: "简约模板",
-    description: "极简风格的财税报告模板",
-    styles: {
-      fontFamily: "SimHei, sans-serif",
-      headingStyle: {
-        fontSize: "14px",
-        fontWeight: "normal",
-        color: "#666666",
-        borderBottom: "1px dotted #cccccc",
-        marginBottom: "12px"
-      },
-      tableStyle: {
-        borderColor: "#eeeeee",
-        headerBgColor: "#f9f9f9",
-        cellPadding: "6px"
-      },
-      formFieldStyle: {
-        borderColor: "#eeeeee",
-        padding: "3px 6px",
-        labelColor: "#888888"
-      },
-      layout: {
-        pageMargin: "10mm",
-        sectionSpacing: "12px"
-      }
-    },
-    layout: createLayoutObject()
+    layout: {
+      sections: [
+        {
+          id: 'basic-info',
+          type: 'basic-info',
+          title: '基本信息',
+          visible: true,
+          fields: [
+            {
+              id: 'company-name',
+              sourceField: 'companyName',
+              type: 'text',
+              visible: true
+            },
+            {
+              id: 'total-assets',
+              sourceField: 'totalAssets',
+              type: 'number',
+              visible: true,
+              prefix: '¥',
+              style: {
+                alignment: 'right'
+              }
+            }
+          ]
+        },
+        {
+          id: 'revenue-expenses',
+          type: 'revenue-expenses',
+          title: '收入与支出',
+          visible: true,
+          fields: []
+        },
+        {
+          id: 'tax-adjustments',
+          type: 'tax-adjustments',
+          title: '税务调整',
+          visible: true,
+          fields: []
+        },
+        {
+          id: 'tax-summary',
+          type: 'tax-summary',
+          title: '税务总结',
+          visible: true,
+          fields: [
+            {
+              id: 'risk-percentage',
+              sourceField: 'riskPercentage',
+              type: 'number',
+              visible: true,
+              suffix: '%',
+              style: {
+                fontWeight: 'bold',
+                color: '#ff0000'
+              }
+            }
+          ]
+        }
+      ]
+    }
   }
 ];
