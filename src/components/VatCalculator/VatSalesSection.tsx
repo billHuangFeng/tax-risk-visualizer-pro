@@ -192,7 +192,7 @@ const VatSalesSection: React.FC<VatSalesSectionProps> = ({
         </div>
 
         {showDifferenceExplanation && (
-          <div className="mt-4 p-4 border rounded-lg bg-yellow-50">
+          <div className="mt-4 p-4 border rounded-lg bg-yellow-50 w-2/3 mx-auto">
             <div className="mb-2 font-medium text-yellow-800">
               差异说明
               <span className="ml-2 text-sm text-yellow-600">
@@ -203,8 +203,11 @@ const VatSalesSection: React.FC<VatSalesSectionProps> = ({
             <Table>
               <TableHeader>
                 <TableRow className="bg-yellow-100/50">
-                  <TableHead>差异原因</TableHead>
-                  <TableHead className="text-right">差异金额</TableHead>
+                  <TableHead className="w-2/3">差异原因</TableHead>
+                  <TableHead className="text-right w-1/3">
+                    差异金额
+                    <span className="text-xs text-gray-500 ml-1">(元)</span>
+                  </TableHead>
                   <TableHead className="w-[50px]"></TableHead>
                 </TableRow>
               </TableHeader>
