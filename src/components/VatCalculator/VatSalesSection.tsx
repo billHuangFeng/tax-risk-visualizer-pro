@@ -4,9 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
 import { Trash2, Plus, Info } from 'lucide-react';
-import { VatSalesItem } from '@/hooks/useVatCalculator';
+import { VatSalesItem, DifferenceExplanation } from '@/hooks/useVatCalculator';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
 
 interface VatSalesSectionProps {
   salesData: VatSalesItem[];
@@ -20,6 +19,11 @@ interface VatSalesSectionProps {
   bankSalesAmount: number;
   setBankSalesAmount: (value: number) => void;
   onInfoClick?: (infoKey: string) => void;
+  differenceExplanations: DifferenceExplanation[];
+  addDifferenceExplanation: () => void;
+  updateDifferenceExplanation: (id: string, field: keyof DifferenceExplanation, value: any) => void;
+  removeDifferenceExplanation: (id: string) => void;
+  explainedDifferenceTotal: number;
 }
 
 const VAT_RATES = ['13', '9', '6', '5', '3', '1'];
@@ -32,11 +36,17 @@ const VatSalesSection: React.FC<VatSalesSectionProps> = ({
   salesTotal,
   bankSalesAmount,
   setBankSalesAmount,
-  onInfoClick
+  onInfoClick,
+  differenceExplanations,
+  addDifferenceExplanation,
+  updateDifferenceExplanation,
+  removeDifferenceExplanation,
+  explainedDifferenceTotal
 }) => {
   const salesCollectionDifference = salesTotal.amount + salesTotal.tax - bankSalesAmount;
   const salesCollectionDifferencePercentage = ((salesCollectionDifference) / (salesTotal.amount + salesTotal.tax) * 100) || 0;
   const showDifferenceExplanation = Math.abs(salesCollectionDifferencePercentage) > 10;
+  const unexplainedDifference = salesCollectionDifference - explainedDifferenceTotal;
 
   return (
     <Card className="mb-6">
@@ -189,34 +199,74 @@ const VatSalesSection: React.FC<VatSalesSectionProps> = ({
                 (销售与收款差异超过10%)
               </span>
             </div>
-            <div className="space-y-4">
-              <div>
-                <div className="text-sm text-gray-600 mb-1">差异原因：</div>
-                <Textarea
-                  placeholder="请说明销售与收款差异的原因..."
-                  className="w-full"
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <div className="text-sm text-gray-600 mb-1">已解释差异金额：</div>
-                  <Input
-                    type="number"
-                    className="w-full"
-                    placeholder="输入已解释的差异金额"
-                  />
-                </div>
-                <div>
-                  <div className="text-sm text-gray-600 mb-1">未解释差异金额：</div>
-                  <Input
-                    type="number"
-                    value={salesCollectionDifference}
-                    className="w-full bg-gray-100"
-                    disabled
-                  />
-                </div>
-              </div>
-            </div>
+            
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-yellow-100/50">
+                  <TableHead>差异原因</TableHead>
+                  <TableHead className="text-right">差异金额</TableHead>
+                  <TableHead className="w-[50px]"></TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {differenceExplanations.map((explanation) => (
+                  <TableRow key={explanation.id}>
+                    <TableCell>
+                      <Input
+                        value={explanation.reason}
+                        onChange={(e) => updateDifferenceExplanation(explanation.id, 'reason', e.target.value)}
+                        placeholder="请输入差异原因"
+                        className="w-full bg-white"
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Input
+                        type="number"
+                        value={explanation.amount}
+                        onChange={(e) => updateDifferenceExplanation(explanation.id, 'amount', parseFloat(e.target.value) || 0)}
+                        className="text-right w-full bg-white"
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => removeDifferenceExplanation(explanation.id)}
+                        disabled={differenceExplanations.length <= 1}
+                      >
+                        <Trash2 className="h-4 w-4 text-gray-500" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+                
+                <TableRow>
+                  <TableCell colSpan={3}>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={addDifferenceExplanation}
+                      className="w-full"
+                    >
+                      <Plus className="h-4 w-4 mr-2" />
+                      添加差异说明
+                    </Button>
+                  </TableCell>
+                </TableRow>
+
+                <TableRow className="bg-yellow-100/50 font-medium">
+                  <TableCell>总计</TableCell>
+                  <TableCell className="text-right">{explainedDifferenceTotal.toFixed(1)}</TableCell>
+                  <TableCell></TableCell>
+                </TableRow>
+
+                <TableRow className="bg-yellow-100/50 font-medium">
+                  <TableCell>未解释差异</TableCell>
+                  <TableCell className="text-right">{unexplainedDifference.toFixed(1)}</TableCell>
+                  <TableCell></TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
           </div>
         )}
       </CardContent>

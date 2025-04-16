@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import CalculatorHeader from '@/components/TaxCalculator/CalculatorHeader';
@@ -40,6 +39,11 @@ const VatCalculator = () => {
           bankSalesAmount={vatCalculator.bankSalesAmount}
           setBankSalesAmount={vatCalculator.setBankSalesAmount}
           onInfoClick={onInfoClick}
+          differenceExplanations={vatCalculator.differenceExplanations}
+          addDifferenceExplanation={vatCalculator.addDifferenceExplanation}
+          updateDifferenceExplanation={vatCalculator.updateDifferenceExplanation}
+          removeDifferenceExplanation={vatCalculator.removeDifferenceExplanation}
+          explainedDifferenceTotal={vatCalculator.explainedDifferenceTotal}
         />
 
         <VatPurchasesSection 
@@ -84,4 +88,3 @@ const VatCalculator = () => {
 };
 
 export default VatCalculator;
-

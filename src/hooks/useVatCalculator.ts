@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useToast } from '@/hooks/use-toast';
 
 export interface VatSalesItem {
@@ -20,6 +20,12 @@ export interface VatPurchaseItem {
 export interface DifferenceFactor {
   id: string;
   description: string;
+  amount: number;
+}
+
+export interface DifferenceExplanation {
+  id: string;
+  reason: string;
   amount: number;
 }
 
@@ -234,6 +240,30 @@ export const useVatCalculator = () => {
     setDifferenceFactors(prevFactors => prevFactors.filter(factor => factor.id !== id));
   }, []);
   
+  // Difference explanations handlers
+  const [differenceExplanations, setDifferenceExplanations] = useState<DifferenceExplanation[]>([
+    { id: '1', reason: '', amount: 0 }
+  ]);
+
+  const addDifferenceExplanation = useCallback(() => {
+    const newId = (differenceExplanations.length + 1).toString();
+    setDifferenceExplanations(prev => [...prev, { id: newId, reason: '', amount: 0 }]);
+  }, [differenceExplanations]);
+
+  const updateDifferenceExplanation = useCallback((id: string, field: keyof DifferenceExplanation, value: any) => {
+    setDifferenceExplanations(prev => 
+      prev.map(item => item.id === id ? { ...item, [field]: value } : item)
+    );
+  }, []);
+
+  const removeDifferenceExplanation = useCallback((id: string) => {
+    setDifferenceExplanations(prev => prev.filter(item => item.id !== id));
+  }, []);
+
+  const explainedDifferenceTotal = useMemo(() => 
+    differenceExplanations.reduce((sum, item) => sum + item.amount, 0)
+  , [differenceExplanations]);
+
   // Reset calculator
   const handleReset = useCallback(() => {
     setCompanyName('');
@@ -302,6 +332,13 @@ export const useVatCalculator = () => {
     removeDifferenceFactor,
     unexplainedDifference,
     riskLevel,
+    
+    // Difference explanations
+    differenceExplanations,
+    addDifferenceExplanation,
+    updateDifferenceExplanation,
+    removeDifferenceExplanation,
+    explainedDifferenceTotal,
     
     // Actions
     handleReset
