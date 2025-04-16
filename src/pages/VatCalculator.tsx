@@ -74,12 +74,13 @@ const VatCalculator = () => {
           removeTaxDifferenceFactor={vatCalculator.removeTaxDifferenceFactor}
           unexplainedDifference={vatCalculator.unexplainedDifference}
           riskLevel={vatCalculator.riskLevel}
+          riskPercentage={vatCalculator.riskPercentage}
           onInfoClick={onInfoClick}
         />
 
         <Card className="w-full px-4 py-4 bg-white border-t border-gray-200 shadow-sm">
           <CalculatorActions
-            riskPercentage={Math.abs(vatCalculator.taxDifferencePercentage)}
+            riskPercentage={vatCalculator.riskPercentage}
             onReset={vatCalculator.handleReset}
           />
         </Card>

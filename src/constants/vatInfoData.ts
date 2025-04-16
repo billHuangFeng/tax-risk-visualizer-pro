@@ -32,6 +32,12 @@ const vatInfoData: TaxInfoData = {
     analysis: "差异产生的原因可能是税收优惠、留抵税额或税务处理不当",
     risk: "无法解释的税额差异会增加税务风险，建议详细分析差异原因"
   },
+  taxDifferencePercentage: {
+    title: "差异幅度",
+    description: "实缴增值税与应交增值税之间的百分比差异",
+    analysis: "计算公式：(实缴增值税 - 应交增值税) / 应交增值税 × 100%",
+    risk: "差异幅度过大可能表明税务处理不一致，需要准备合理的解释"
+  },
   bankSalesAmount: {
     title: "银行收款金额",
     description: "企业银行账户收到的销售款项总额",

@@ -6,6 +6,7 @@ export const useVatTax = () => {
   const [payableTax, setPayableTax] = useState<number>(0);
   const [taxDifference, setTaxDifference] = useState<number>(0);
   const [taxDifferencePercentage, setTaxDifferencePercentage] = useState<number>(0);
+  const [riskPercentage, setRiskPercentage] = useState<number>(0);
   const [unexplainedDifference, setUnexplainedDifference] = useState<number>(0);
   const [riskLevel, setRiskLevel] = useState<string>('');
 
@@ -18,6 +19,8 @@ export const useVatTax = () => {
     setTaxDifference,
     taxDifferencePercentage,
     setTaxDifferencePercentage,
+    riskPercentage,
+    setRiskPercentage,
     unexplainedDifference,
     setUnexplainedDifference,
     riskLevel,

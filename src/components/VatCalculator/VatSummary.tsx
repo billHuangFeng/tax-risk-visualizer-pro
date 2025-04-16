@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -24,6 +25,7 @@ interface VatSummaryProps {
   removeTaxDifferenceFactor: (id: string) => void;
   unexplainedDifference: number;
   riskLevel: string;
+  riskPercentage: number;
   onInfoClick?: (infoKey: string) => void;
 }
 
@@ -39,6 +41,7 @@ const VatSummary: React.FC<VatSummaryProps> = ({
   removeTaxDifferenceFactor,
   unexplainedDifference,
   riskLevel,
+  riskPercentage,
   onInfoClick
 }) => {
   const getRiskColor = () => {
@@ -149,7 +152,24 @@ const VatSummary: React.FC<VatSummaryProps> = ({
             </div>
             
             <div className="flex justify-between items-center">
-              <div className="font-medium">差异幅度</div>
+              <div className="font-medium flex items-center">
+                差异幅度
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button 
+                        className="ml-2 text-tax-blue hover:text-tax-light-blue"
+                        onClick={() => onInfoClick?.('taxDifferencePercentage')}
+                      >
+                        <Info size={16} />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>(实缴增值税 - 应交增值税) / 应交增值税 × 100%</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
               <div className="flex items-center gap-2">
                 <span className={`text-lg font-bold ${Math.abs(taxDifferencePercentage) > 20 ? 'text-red-500' : ''}`}>
                   {taxDifferencePercentage.toFixed(2)}%
@@ -277,7 +297,7 @@ const VatSummary: React.FC<VatSummaryProps> = ({
                 </TooltipProvider>
               </div>
               <div className={`px-3 py-1 rounded-full font-medium ${getRiskColor()}`}>
-                {riskLevel} (风险百分比: {taxDifferencePercentage.toFixed(2)}%)
+                {riskLevel} (风险百分比: {riskPercentage.toFixed(2)}%)
               </div>
             </div>
           </div>
