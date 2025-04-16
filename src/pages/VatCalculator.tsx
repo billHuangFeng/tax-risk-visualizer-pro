@@ -6,7 +6,6 @@ import CalculatorLayout from '@/components/TaxCalculator/CalculatorLayout';
 import VatSalesSection from '@/components/VatCalculator/VatSalesSection';
 import VatPurchasesSection from '@/components/VatCalculator/VatPurchasesSection';
 import VatSummary from '@/components/VatCalculator/VatSummary';
-import VatAnalysis from '@/components/VatCalculator/VatAnalysis';
 import { useVatCalculator } from '@/hooks/useVatCalculator';
 import vatInfoData from '@/constants/vatInfoData';
 import type { TaxInfoPanelItem } from '@/types/calculator';
@@ -68,10 +67,6 @@ const VatCalculator = () => {
           setActualTax={vatCalculator.setActualTax}
           taxDifference={vatCalculator.taxDifference}
           taxDifferencePercentage={vatCalculator.taxDifferencePercentage}
-          onInfoClick={onInfoClick}
-        />
-
-        <VatAnalysis 
           differenceFactors={vatCalculator.differenceFactors}
           addDifferenceFactor={vatCalculator.addDifferenceFactor}
           updateDifferenceFactor={vatCalculator.updateDifferenceFactor}
