@@ -1,10 +1,9 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
-import { Trash2, Plus, CircleCheck, TriangleAlert, CircleX } from 'lucide-react';
-import { DifferenceExplanation } from '@/hooks/types';
+import { Info, Plus, Trash2 } from 'lucide-react';
+import type { DifferenceExplanation } from '@/hooks/types';
 
 interface PurchaseDifferenceExplanationProps {
   differenceExplanations: DifferenceExplanation[];
@@ -14,6 +13,7 @@ interface PurchaseDifferenceExplanationProps {
   explainedDifferenceTotal: number;
   unexplainedDifference: number;
   unexplainedDifferencePercentage: number;
+  onInfoClick?: (infoKey: string) => void;
 }
 
 const PurchaseDifferenceExplanation: React.FC<PurchaseDifferenceExplanationProps> = ({
@@ -24,109 +24,86 @@ const PurchaseDifferenceExplanation: React.FC<PurchaseDifferenceExplanationProps
   explainedDifferenceTotal,
   unexplainedDifference,
   unexplainedDifferencePercentage,
+  onInfoClick
 }) => {
-  const getWarningIcon = (percentage: number) => {
-    const absPercentage = Math.abs(percentage);
-    if (absPercentage <= 10) {
-      return <CircleCheck className="h-4 w-4 text-green-500" />;
-    } else if (absPercentage <= 30) {
-      return <TriangleAlert className="h-4 w-4 text-yellow-500" />;
-    } else {
-      return <CircleX className="h-4 w-4 text-red-500" />;
-    }
-  };
-
   return (
-    <div className="mt-4 p-4 border rounded-lg bg-gray-100/70 w-2/3 ml-auto mr-0">
-      <div className="mb-2 font-medium text-gray-800">
-        差异说明
-        <span className="ml-2 text-sm text-gray-600">
-          (采购与付款差异超过10%)
-        </span>
-      </div>
+    <div className="border rounded-lg p-4 bg-gray-50">
+      <h3 className="text-lg font-medium mb-4">差异说明 (采购与付款差异超过10%)</h3>
       
-      <Table>
-        <TableHeader>
-          <TableRow className="bg-gray-100/50">
-            <TableHead className="w-2/3">差异原因</TableHead>
-            <TableHead className="text-right w-1/3">
-              差异金额
-              <span className="text-xs text-gray-500 ml-1">(元)</span>
-            </TableHead>
-            <TableHead className="w-[50px]"></TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {differenceExplanations.map((explanation) => (
-            <TableRow key={explanation.id} className="py-1 h-12">
-              <TableCell className="py-1">
-                <Input
-                  value={explanation.reason}
-                  onChange={(e) => updateDifferenceExplanation(explanation.id, 'reason', e.target.value)}
-                  placeholder="请输入差异原因"
-                  className="w-full bg-white h-8"
-                />
-              </TableCell>
-              <TableCell className="py-1">
-                <Input
-                  type="number"
-                  value={explanation.amount}
-                  onChange={(e) => updateDifferenceExplanation(explanation.id, 'amount', parseFloat(e.target.value) || 0)}
-                  className="text-right w-full bg-white h-8"
-                />
-              </TableCell>
-              <TableCell className="py-1">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => removeDifferenceExplanation(explanation.id)}
-                  disabled={differenceExplanations.length <= 1}
-                  className="h-8 w-8"
-                >
-                  <Trash2 className="h-4 w-4 text-gray-500" />
-                </Button>
-              </TableCell>
-            </TableRow>
-          ))}
-          
-          <TableRow>
-            <TableCell colSpan={3} className="py-1">
+      <div className="space-y-4">
+        {differenceExplanations.map((explanation) => (
+          <div key={explanation.id} className="grid grid-cols-12 gap-4 items-center">
+            <div className="col-span-7">
+              <Input
+                placeholder="请输入差异原因"
+                value={explanation.reason}
+                onChange={(e) => updateDifferenceExplanation(explanation.id, 'reason', e.target.value)}
+              />
+            </div>
+            <div className="col-span-4">
+              <Input
+                type="number"
+                className="text-right"
+                value={explanation.amount}
+                onChange={(e) => updateDifferenceExplanation(explanation.id, 'amount', parseFloat(e.target.value) || 0)}
+              />
+            </div>
+            <div className="col-span-1">
               <Button
-                variant="outline"
-                size="sm"
-                onClick={addDifferenceExplanation}
-                className="w-full h-8"
+                variant="ghost"
+                size="icon"
+                onClick={() => removeDifferenceExplanation(explanation.id)}
               >
-                <Plus className="h-4 w-4 mr-2" />
-                添加差异说明
+                <Trash2 className="h-4 w-4" />
               </Button>
-            </TableCell>
-          </TableRow>
+            </div>
+          </div>
+        ))}
+        
+        <Button
+          variant="outline"
+          className="w-full"
+          onClick={addDifferenceExplanation}
+        >
+          <Plus className="h-4 w-4 mr-2" />
+          添加差异说明
+        </Button>
 
-          <TableRow className="bg-gray-100/50 font-medium">
-            <TableCell className="py-1">总计</TableCell>
-            <TableCell className="text-right py-1">{explainedDifferenceTotal.toFixed(2)}</TableCell>
-            <TableCell className="py-1"></TableCell>
-          </TableRow>
+        <div className="grid grid-cols-12 gap-4 items-center mt-4">
+          <div className="col-span-7 font-medium flex items-center">
+            总计
+            <button
+              className="ml-2 text-tax-blue hover:text-tax-light-blue"
+              onClick={() => onInfoClick?.('differenceTotalAmount')}
+            >
+              <Info size={16} />
+            </button>
+          </div>
+          <div className="col-span-4 text-right">
+            {explainedDifferenceTotal.toFixed(2)}
+          </div>
+        </div>
 
-          <TableRow className="bg-gray-100/50 font-medium">
-            <TableCell className="py-1">未解释差异</TableCell>
-            <TableCell className="text-right flex items-center justify-end gap-2 py-1">
-              <div className="flex items-center gap-2">
-                {getWarningIcon(unexplainedDifferencePercentage)}
-                {unexplainedDifference.toFixed(2)}
-              </div>
-              <span className="text-sm text-gray-500 whitespace-nowrap">
-                {unexplainedDifferencePercentage.toFixed(2)}%
-              </span>
-            </TableCell>
-            <TableCell className="py-1"></TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
+        <div className="grid grid-cols-12 gap-4 items-center">
+          <div className="col-span-7 font-medium flex items-center text-tax-red">
+            未解释差异
+            <button
+              className="ml-2 text-tax-blue hover:text-tax-light-blue"
+              onClick={() => onInfoClick?.('unexplainedDifferenceAmount')}
+            >
+              <Info size={16} />
+            </button>
+          </div>
+          <div className="col-span-4 text-right text-tax-red flex items-center justify-end gap-2">
+            <span>{unexplainedDifference.toFixed(2)}</span>
+            <span className="text-sm text-gray-500">
+              {unexplainedDifferencePercentage.toFixed(2)}%
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
 
 export default PurchaseDifferenceExplanation;
-
