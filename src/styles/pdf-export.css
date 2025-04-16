@@ -9,10 +9,17 @@
     background-color: white !important;
     color: black !important;
     font-family: "SimSun", serif !important;
-    padding: 20px !important;
+    padding: 40px !important;
     width: 100% !important;
     min-height: 100vh !important;
     position: relative !important;
+  }
+  
+  .for-pdf-export * {
+    color: black !important;
+    background-color: white !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
   }
   
   .for-pdf-export .company-header {
@@ -22,8 +29,6 @@
     margin-bottom: 24px !important;
     border-bottom: 1px solid #000 !important;
     padding-bottom: 12px !important;
-    width: 100% !important;
-    letter-spacing: 1px !important;
   }
   
   .for-pdf-export h2 {
@@ -45,46 +50,18 @@
     margin-bottom: 8px !important;
   }
   
-  .for-pdf-export .pdf-value {
-    display: inline-block !important;
-    min-width: 120px !important;
-    text-align: right !important;
+  .for-pdf-export input {
+    border: 1px solid #ccc !important;
     padding: 4px 8px !important;
-    border: 1px solid #ccc !important; 
-  }
-  
-  .for-pdf-export table {
-    width: 100% !important;
-    border-collapse: collapse !important;
-    margin: 16px 0 !important;
-    page-break-inside: avoid !important;
-  }
-  
-  .for-pdf-export table th,
-  .for-pdf-export table td {
-    border: 1px solid #000 !important;
-    padding: 8px !important;
     text-align: right !important;
-  }
-  
-  .for-pdf-export table td:first-child,
-  .for-pdf-export table th:first-child {
-    text-align: left !important;
-  }
-  
-  .for-pdf-export table th {
-    background-color: #f8f9fa !important;
-    font-weight: bold !important;
   }
   
   .for-pdf-export [role="checkbox"] {
     display: inline-block !important;
-    width: 16px !important;
-    height: 16px !important;
+    width: 14px !important;
+    height: 14px !important;
     border: 1px solid #000 !important;
     position: relative !important;
-    vertical-align: middle !important;
-    margin-right: 8px !important;
   }
   
   .for-pdf-export [role="checkbox"][data-state="checked"]::after {
@@ -95,14 +72,43 @@
     font-size: 14px !important;
   }
   
-  .for-pdf-export .unit-label {
-    margin-left: 4px !important;
-    font-size: 14px !important;
+  .for-pdf-export table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin: 16px 0 !important;
   }
   
-  .for-pdf-export .subheader-label {
-    font-style: italic !important;
-    margin-left: 20px !important;
-    color: #666 !important;
+  .for-pdf-export table th,
+  .for-pdf-export table td {
+    border: 1px solid #000 !important;
+    padding: 8px !important;
+    text-align: right !important;
+  }
+  
+  .for-pdf-export table th {
+    background-color: #f0f0f0 !important;
+    font-weight: bold !important;
+  }
+  
+  .for-pdf-export .risk-indicator {
+    border: 1px solid #000 !important;
+    padding: 16px !important;
+    margin-top: 16px !important;
+  }
+  
+  .for-pdf-export .risk-indicator-bar {
+    height: 20px !important;
+    border: 1px solid #000 !important;
+    position: relative !important;
+  }
+  
+  .for-pdf-export .risk-indicator-progress {
+    background-color: #f0f0f0 !important;
+    border-right: 1px solid #000 !important;
+  }
+  
+  .for-pdf-export button,
+  .for-pdf-export .actions-section {
+    display: none !important;
   }
 }
