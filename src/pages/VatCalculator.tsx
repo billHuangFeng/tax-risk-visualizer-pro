@@ -16,15 +16,19 @@ const VatCalculator = () => {
   const vatCalculator = useVatCalculator();
   const [selectedInfoItem, setSelectedInfoItem] = useState<TaxInfoPanelItem | null>(null);
 
-  // Update risk percentage using the new formula
+  // Update risk percentage using the updated formula based on unexplained difference
   useEffect(() => {
     const newRiskPercentage = vatCalculator.calculateRiskPercentage(
-      vatCalculator.actualTax,
+      vatCalculator.unexplainedDifference,  // 未解释差异
       vatCalculator.payableTax,
       vatCalculator.salesTotal.tax
     );
     vatCalculator.setRiskPercentage(newRiskPercentage);
-  }, [vatCalculator.actualTax, vatCalculator.payableTax, vatCalculator.salesTotal.tax]);
+  }, [
+    vatCalculator.unexplainedDifference, 
+    vatCalculator.payableTax, 
+    vatCalculator.salesTotal.tax
+  ]);
 
   const onInfoClick = (infoKey: string) => {
     setSelectedInfoItem(vatInfoData[infoKey]);

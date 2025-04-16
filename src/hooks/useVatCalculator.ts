@@ -1,3 +1,4 @@
+
 import { useEffect } from 'react';
 import { useToast } from './use-toast';
 import { useVatBasicInfo } from './vat/useVatBasicInfo';
@@ -48,9 +49,21 @@ export const useVatCalculator = () => {
       : 0;
     
     tax.setTaxDifferencePercentage(parseFloat(differencePercentage.toFixed(2)));
+  }, [tax.payableTax, tax.actualTax]);
+
+  // Calculate unexplained difference
+  useEffect(() => {
+    const explainedAmount = differences.taxDifferenceFactors.reduce(
+      (sum, factor) => sum + factor.amount, 
+      0
+    );
     
-    // 风险百分比计算已经在VatCalculator组件中通过useEffect处理，这里不再重复计算
-    
+    const unexplained = tax.taxDifference - explainedAmount;
+    tax.setUnexplainedDifference(unexplained);
+  }, [tax.taxDifference, differences.taxDifferenceFactors]);
+
+  // Update risk level based on risk percentage
+  useEffect(() => {
     // 根据风险百分比确定风险等级
     let riskLevel = '';
     if (tax.riskPercentage > 50) {
@@ -64,27 +77,12 @@ export const useVatCalculator = () => {
     }
     
     tax.setRiskLevel(riskLevel);
-  }, [tax.payableTax, tax.actualTax, tax.riskPercentage]);
-
-  // Calculate unexplained difference
-  useEffect(() => {
-    const explainedAmount = differences.taxDifferenceFactors.reduce(
-      (sum, factor) => sum + factor.amount, 
-      0
-    );
-    
-    const unexplained = tax.taxDifference - explainedAmount;
-    tax.setUnexplainedDifference(unexplained);
     
     // 如果有未解释差异但百分比较低，至少标记为"存在风险"
-    if (Math.abs(unexplained) > 0 && Math.abs(tax.riskPercentage) <= 10) {
+    if (Math.abs(tax.unexplainedDifference) > 0 && Math.abs(tax.riskPercentage) <= 10) {
       tax.setRiskLevel('存在风险');
     }
-  }, [
-    tax.taxDifference,
-    differences.taxDifferenceFactors,
-    tax.riskPercentage
-  ]);
+  }, [tax.riskPercentage, tax.unexplainedDifference]);
 
   const handleReset = () => {
     basicInfo.setCompanyName('');
