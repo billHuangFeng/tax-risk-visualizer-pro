@@ -3,23 +3,23 @@ import { generatePdfWithPdfme, generatePdfWithHtml2Canvas } from './pdfmeGenerat
 import { PdfTemplate } from '@/types/pdfTemplates';
 
 /**
- * 导出计算器数据到PDF
- * 先尝试使用PDFME库，如果失败则回退到HTML2Canvas方法
+ * Export calculator data to PDF
+ * First try using PDFME library, if it fails fall back to HTML2Canvas method
  */
 export const exportToPDF = async (calculatorData: any, template?: PdfTemplate): Promise<boolean> => {
   try {
     console.log("Starting PDF export process");
     
-    // 首先尝试使用PDFME生成PDF
+    // First try generating with PDFME
     const pdfmeSuccess = await generatePdfWithPdfme(calculatorData, template);
     
-    // 如果PDFME成功，直接返回
+    // If PDFME is successful, return
     if (pdfmeSuccess) {
       console.log("PDFME PDF generation successful");
       return true;
     }
     
-    // 如果PDFME失败，尝试使用HTML2Canvas方法
+    // If PDFME fails, try HTML2Canvas method
     console.log("PDFME failed, trying HTML2Canvas method");
     const html2canvasSuccess = await generatePdfWithHtml2Canvas(calculatorData);
     
@@ -28,7 +28,7 @@ export const exportToPDF = async (calculatorData: any, template?: PdfTemplate): 
       return true;
     }
     
-    // 如果两种方法都失败，抛出错误
+    // If both methods fail, throw error
     throw new Error("无法使用任何方法生成PDF");
   } catch (error) {
     console.error("PDF export error:", error);

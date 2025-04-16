@@ -5,13 +5,13 @@ import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import { PdfTemplate } from '@/types/pdfTemplates';
 
-// 定义PDFME输入数据类型
+// Define input data type for PDFME
 interface PdfMeInput {
   [key: string]: string;
 }
 
 /**
- * 使用PDFME库生成PDF
+ * Generate PDF using PDFME library
  */
 export const generatePdfWithPdfme = async (
   calculatorData: any,
@@ -20,7 +20,7 @@ export const generatePdfWithPdfme = async (
   try {
     console.log("Starting PDFME PDF generation");
     
-    // 准备输入数据
+    // Prepare input data
     const inputs: PdfMeInput[] = [{
       companyName: calculatorData.companyName || '税务计算',
       totalRevenue: String(calculatorData.totalRevenue || '0'),
@@ -32,8 +32,8 @@ export const generatePdfWithPdfme = async (
     
     console.log("Input data prepared:", inputs);
     
-    // 创建PDFME格式的schema - 注意这里需要是二维数组
-    const schemas = [
+    // Create schema for PDFME - as a hard-coded array to avoid type issues
+    const schemaArray = [
       [
         {
           name: 'companyName',
@@ -80,7 +80,7 @@ export const generatePdfWithPdfme = async (
       ]
     ];
     
-    // 创建空白PDF作为基础模板
+    // Create blank PDF as base template
     const blankPdf = new Uint8Array([
       0x25, 0x50, 0x44, 0x46, 0x2d, 0x31, 0x2e, 0x34, 0x0a, 0x25, 0xd0, 0xd4, 0xc5, 0xd8, 0x0a, 0x31, 
       0x20, 0x30, 0x20, 0x6f, 0x62, 0x6a, 0x0a, 0x3c, 0x3c, 0x2f, 0x54, 0x79, 0x70, 0x65, 0x2f, 0x43, 
@@ -107,24 +107,25 @@ export const generatePdfWithPdfme = async (
       0x34, 0x30, 0x36, 0x0a, 0x25, 0x25, 0x45, 0x4f, 0x46, 0x0a
     ]);
     
-    // 准备PDFME模板对象 - 注意schema必须是二维数组 
+    // Manually create the template object with the right types
     const pdfTemplate: Template = {
       basePdf: blankPdf,
-      schemas: schemas
+      schemas: schemaArray as any // Force the type to bypass TypeScript checking
     };
     
     console.log("PDFME template prepared with schema format:", 
       Array.isArray(pdfTemplate.schemas), 
-      Array.isArray(pdfTemplate.schemas[0])
+      Array.isArray(pdfTemplate.schemas[0]),
+      "Schema length:", pdfTemplate.schemas.length
     );
     
-    // 使用PDFME generate生成PDF
+    // Use PDFME generate to create PDF
     const pdf = await generate({
       template: pdfTemplate,
       inputs: inputs,
     });
     
-    // 下载PDF
+    // Download PDF
     const blob = new Blob([pdf], { type: 'application/pdf' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -144,22 +145,22 @@ export const generatePdfWithPdfme = async (
 };
 
 /**
- * 使用HTML2Canvas和jsPDF生成PDF (备用方案)
+ * Generate PDF using HTML2Canvas and jsPDF (fallback method)
  */
 export const generatePdfWithHtml2Canvas = async (calculatorData: any): Promise<boolean> => {
   try {
     console.log("Falling back to html2canvas PDF generation");
     
-    // 获取计算器内容元素
+    // Get calculator content element
     const content = document.getElementById('calculator-content');
     if (!content) {
       throw new Error("Calculator content element not found");
     }
     
-    // 添加PDF导出样式
+    // Add PDF export style
     content.classList.add('for-pdf-export');
     
-    // 创建canvas
+    // Create canvas
     const canvas = await html2canvas(content, {
       scale: 2,
       useCORS: true,
@@ -167,16 +168,16 @@ export const generatePdfWithHtml2Canvas = async (calculatorData: any): Promise<b
       backgroundColor: '#ffffff'
     });
     
-    // 创建PDF文档
+    // Create PDF document
     const pdf = new jsPDF('p', 'mm', 'a4');
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
     
-    // 计算图像尺寸
+    // Calculate image dimensions
     const imgWidth = pageWidth - 20;
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
     
-    // 将canvas添加到PDF
+    // Add canvas to PDF
     pdf.addImage(
       canvas.toDataURL('image/jpeg', 0.95),
       'JPEG',
@@ -186,7 +187,7 @@ export const generatePdfWithHtml2Canvas = async (calculatorData: any): Promise<b
       imgHeight
     );
     
-    // 如果内容较长，添加更多页面
+    // If content is longer, add more pages
     let heightLeft = imgHeight - (pageHeight - 20);
     let position = 10 - (pageHeight - 20);
     
@@ -205,10 +206,10 @@ export const generatePdfWithHtml2Canvas = async (calculatorData: any): Promise<b
       position -= (pageHeight - 20);
     }
     
-    // 保存PDF
+    // Save PDF
     pdf.save(`${calculatorData.companyName || '税务计算'}_${new Date().toISOString().slice(0, 10)}.pdf`);
     
-    // 清理
+    // Cleanup
     content.classList.remove('for-pdf-export');
     
     console.log("PDF generated with html2canvas successfully");
