@@ -16,7 +16,7 @@ interface PdfTemplateDialogProps {
   onExport: (template: PdfTemplate) => void;
 }
 
-// Define the view state as a union type to ensure type safety
+// Define the view state as a union type for type safety
 type ViewState = 'select' | 'edit' | 'preview';
 
 export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({ 
@@ -25,7 +25,7 @@ export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({
   onExport 
 }) => {
   const [selectedTemplate, setSelectedTemplate] = useState<PdfTemplate>(DEFAULT_TEMPLATES[0]);
-  // Explicitly type the view state to ensure type safety
+  // Use the ViewState type for the view state variable
   const [view, setView] = useState<ViewState>('select');
   
   const handleSelectTemplate = (template: PdfTemplate) => {
@@ -41,10 +41,6 @@ export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({
     onExport(selectedTemplate);
     onClose();
   };
-
-  // Helper functions to safely set view state with proper typing
-  const setPreviewView = () => setView('preview');
-  const setEditView = () => setView('edit');
   
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -61,7 +57,7 @@ export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({
             <div className="flex items-center justify-end space-x-2 mb-4">
               <Toggle 
                 pressed={view === 'preview'} 
-                onPressedChange={() => setView('preview')}
+                onPressedChange={(pressed) => pressed && setView('preview')}
                 aria-label="预览模板"
               >
                 <Eye className="h-4 w-4 mr-2" />
@@ -69,7 +65,7 @@ export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({
               </Toggle>
               <Toggle 
                 pressed={view === 'edit'} 
-                onPressedChange={() => setView('edit')}
+                onPressedChange={(pressed) => pressed && setView('edit')}
                 aria-label="编辑模板"
               >
                 <Paintbrush className="h-4 w-4 mr-2" />
