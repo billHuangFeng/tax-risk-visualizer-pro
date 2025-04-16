@@ -30,14 +30,6 @@ const VatCalculator = () => {
       <TaxNavbar />
       <CalculatorLayout 
         selectedInfoItem={selectedInfoItem}
-        companyName={vatCalculator.companyName}
-        setCompanyName={vatCalculator.setCompanyName}
-        creditCode=""
-        setCreditCode={() => {}}
-        contactPerson=""
-        setContactPerson={() => {}}
-        contactPhone=""
-        setContactPhone={() => {}}
       >
         <VatSalesSection 
           salesData={vatCalculator.salesData}

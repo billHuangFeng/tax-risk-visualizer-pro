@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';  // Added useState import
+import React, { useState } from 'react';
 import CalculatorHeader from '@/components/TaxCalculator/CalculatorHeader';
 import CalculatorActions from '@/components/TaxCalculator/CalculatorActions';
 import BasicInfo from '@/components/TaxCalculator/BasicInfo';
@@ -26,14 +26,6 @@ const Index = () => {
       <TaxNavbar />
       <CalculatorLayout 
         selectedInfoItem={selectedInfoItem}
-        companyName={calculator.companyName}
-        setCompanyName={calculator.setCompanyName}
-        creditCode={calculator.creditCode}
-        setCreditCode={calculator.setCreditCode}
-        contactPerson={calculator.contactPerson}
-        setContactPerson={calculator.setContactPerson}
-        contactPhone={calculator.contactPhone}
-        setContactPhone={calculator.setContactPhone}
       >
         <BasicInfo 
           isExcludedIndustry={calculator.isExcludedIndustry}
