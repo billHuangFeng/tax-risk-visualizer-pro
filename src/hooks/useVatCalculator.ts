@@ -1,3 +1,4 @@
+
 import { useEffect } from 'react';
 import { useToast } from './use-toast';
 import { useVatBasicInfo } from './vat/useVatBasicInfo';
@@ -54,16 +55,59 @@ export const useVatCalculator = () => {
     const unexplained = tax.taxDifference - explainedAmount;
     tax.setUnexplainedDifference(unexplained);
     
-    if (Math.abs(unexplained) > Math.abs(tax.payableTax) * 0.2) {
+    // Calculate sales unexplained difference percentage
+    const salesTotalWithTax = sales.salesTotal.amount + sales.salesTotal.tax;
+    const salesDifference = salesTotalWithTax - sales.bankSalesAmount;
+    const salesExplainedDifference = differences.differenceExplanations.reduce((sum, exp) => sum + exp.amount, 0);
+    const salesUnexplainedDifference = salesDifference - salesExplainedDifference;
+    const salesUnexplainedPercentage = salesTotalWithTax !== 0 
+      ? (Math.abs(salesUnexplainedDifference) / salesTotalWithTax) * 100 
+      : 0;
+    
+    // Calculate purchases unexplained difference percentage
+    const purchasesTotalWithTax = purchases.purchasesTotal.amount + purchases.purchasesTotal.tax;
+    const purchasesDifference = purchasesTotalWithTax - purchases.bankPurchasesAmount;
+    const purchasesExplainedDifference = differences.differenceExplanations.reduce((sum, exp) => sum + exp.amount, 0);
+    const purchasesUnexplainedDifference = purchasesDifference - purchasesExplainedDifference;
+    const purchasesUnexplainedPercentage = purchasesTotalWithTax !== 0 
+      ? (Math.abs(purchasesUnexplainedDifference) / purchasesTotalWithTax) * 100 
+      : 0;
+    
+    // New risk assessment logic based on specified criteria
+    // 1. Very high risk criteria
+    if (
+      salesUnexplainedPercentage > 30 || 
+      purchasesUnexplainedPercentage > 30 ||
+      (Math.abs(unexplained) > sales.salesTotal.tax * 0.1)
+    ) {
       tax.setRiskLevel('风险非常高');
-    } else if (Math.abs(unexplained) > Math.abs(tax.payableTax) * 0.1) {
+    }
+    // 2. High risk criteria
+    else if (
+      (salesUnexplainedPercentage > 10 && salesUnexplainedPercentage <= 30) ||
+      (purchasesUnexplainedPercentage > 10 && purchasesUnexplainedPercentage <= 30) ||
+      (Math.abs(unexplained) > Math.abs(tax.payableTax) * 0.3)
+    ) {
       tax.setRiskLevel('风险较高');
-    } else if (Math.abs(unexplained) > Math.abs(tax.payableTax) * 0.05) {
-      tax.setRiskLevel('风险较低');
-    } else {
+    }
+    // 3. Medium risk
+    else if (Math.abs(unexplained) > Math.abs(tax.payableTax) * 0.1) {
+      tax.setRiskLevel('风险中等');
+    }
+    // 4. Low risk
+    else {
       tax.setRiskLevel('风险较低');
     }
-  }, [tax.taxDifference, differences.differenceFactors, tax.payableTax]);
+  }, [
+    tax.taxDifference, 
+    differences.differenceFactors, 
+    tax.payableTax, 
+    sales.salesTotal, 
+    purchases.purchasesTotal,
+    sales.bankSalesAmount,
+    purchases.bankPurchasesAmount,
+    differences.differenceExplanations
+  ]);
 
   const handleReset = () => {
     basicInfo.setCompanyName('');
