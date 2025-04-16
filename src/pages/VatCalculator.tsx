@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import CalculatorHeader from '@/components/TaxCalculator/CalculatorHeader';
@@ -22,7 +23,10 @@ const VatCalculator = () => {
 
   return (
     <>
-      <CalculatorHeader title="增值税风险评测计算器" description="评估增值税风险，优化财税决策" />
+      <CalculatorHeader 
+        title="增值税风险评测计算器" 
+        description="本计算器用于评估增值税的潜在风险，数据仅供参考，请根据实际情况谨慎使用" 
+      />
       <TaxNavbar />
       <CalculatorLayout selectedInfoItem={selectedInfoItem}>
         <VatSalesSection 
@@ -78,3 +82,4 @@ const VatCalculator = () => {
 };
 
 export default VatCalculator;
+
