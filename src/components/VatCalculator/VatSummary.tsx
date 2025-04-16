@@ -145,7 +145,7 @@ const VatSummary: React.FC<VatSummaryProps> = ({
           <Table>
             <TableHeader>
               <TableRow className="bg-gray-100">
-                <TableHead className="w-3/4">差异原因</TableHead>
+                <TableHead className="w-3/4 text-left">差异原因</TableHead>
                 <TableHead className="text-right">金额</TableHead>
                 <TableHead className="w-[50px]"></TableHead>
               </TableRow>
@@ -157,7 +157,7 @@ const VatSummary: React.FC<VatSummaryProps> = ({
                     <Input
                       value={factor.description}
                       onChange={(e) => updateDifferenceFactor(factor.id, 'description', e.target.value)}
-                      className="w-full"
+                      className="w-full text-left"  // Explicitly set text-left
                     />
                   </TableCell>
                   <TableCell className="text-right">
