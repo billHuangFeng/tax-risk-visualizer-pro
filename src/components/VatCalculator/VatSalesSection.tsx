@@ -192,7 +192,7 @@ const VatSalesSection: React.FC<VatSalesSectionProps> = ({
         </div>
 
         {showDifferenceExplanation && (
-          <div className="mt-4 p-4 border rounded-lg bg-yellow-50 w-2/3 mx-auto">
+          <div className="mt-4 p-4 border rounded-lg bg-yellow-50 w-2/3 ml-auto mr-0">
             <div className="mb-2 font-medium text-yellow-800">
               差异说明
               <span className="ml-2 text-sm text-yellow-600">
@@ -252,7 +252,7 @@ const VatSalesSection: React.FC<VatSalesSectionProps> = ({
                       className="w-full"
                     >
                       <Plus className="h-4 w-4 mr-2" />
-                      添加差异说明
+                      添加差��说明
                     </Button>
                   </TableCell>
                 </TableRow>
