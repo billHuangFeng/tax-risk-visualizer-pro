@@ -1,9 +1,11 @@
-
 import { removeRedundantTextElements } from './textProcessing';
 import { enhanceLayoutStructure } from './layoutStructure';
 import { createCompanyHeader, enhanceHeadings } from './styles/headerStyles';
 import { enhanceTableLayout } from './styles/tableStyles';
 import { formatLabelValue, enhanceCheckboxes } from './styles/formStyles';
+import { processTextElements } from './styles/textStyles';
+import { processInputFields } from './styles/inputStyles';
+import { enhanceSpecificSections } from './styles/sectionStyles';
 
 export const enhanceLayout = (container: HTMLElement) => {
   try {
@@ -24,6 +26,9 @@ export const enhanceLayout = (container: HTMLElement) => {
     enhanceTableLayout(container);
     formatLabelValue(container);
     enhanceCheckboxes(container);
+    processTextElements(container);
+    processInputFields(container);
+    enhanceSpecificSections(container);
     
     // Apply additional template-specific styling
     applyTemplateStyling(container);
