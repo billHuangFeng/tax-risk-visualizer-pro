@@ -27,12 +27,19 @@ const CalculatorActions: React.FC<CalculatorActionsProps> = ({
 
   const handleExport = async () => {
     try {
+      toast({
+        title: "正在生成PDF",
+        description: "请稍候...",
+      });
+      
       await exportToPDF(calculator);
+      
       toast({
         title: "导出成功",
         description: "PDF文件已生成",
       });
     } catch (error) {
+      console.error("PDF export error:", error);
       toast({
         title: "导出失败",
         description: "请稍后重试",

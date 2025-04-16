@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import CalculatorHeader from '@/components/TaxCalculator/CalculatorHeader';
 import CalculatorActions from '@/components/TaxCalculator/CalculatorActions';
@@ -19,9 +20,9 @@ const Index = () => {
   };
 
   return (
-    <>
+    <div className="tax-calculator-wrapper">
       <CalculatorHeader />
-      <div id="calculator-content">
+      <div id="calculator-content" className="calculator-full-content">
         <CalculatorLayout selectedInfoItem={selectedInfoItem}>
           <BasicInfo 
             companyName={calculator.companyName}
@@ -102,16 +103,14 @@ const Index = () => {
             isHighTechEnterprise={calculator.isHighTechEnterprise}
           />
 
-          <div className="w-full px-4 py-4 bg-white border-t border-gray-200 shadow-sm flex flex-col md:flex-row gap-2 justify-end">
-            <CalculatorActions
-              riskPercentage={calculator.riskPercentage}
-              onReset={calculator.handleReset}
-              onExport={calculator.handleExport}
-            />
-          </div>
+          <CalculatorActions
+            riskPercentage={calculator.riskPercentage}
+            onReset={calculator.handleReset}
+            onExport={calculator.handleExport}
+          />
         </CalculatorLayout>
       </div>
-    </>
+    </div>
   );
 };
 
