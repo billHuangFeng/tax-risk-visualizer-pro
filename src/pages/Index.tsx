@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import CalculatorHeader from '@/components/TaxCalculator/CalculatorHeader';
 import CalculatorActions from '@/components/TaxCalculator/CalculatorActions';
@@ -6,6 +7,7 @@ import RevenueExpenses from '@/components/TaxCalculator/RevenueExpenses';
 import TaxAdjustments from '@/components/TaxCalculator/TaxAdjustments';
 import TaxSummary from '@/components/TaxCalculator/TaxSummary';
 import CalculatorLayout from '@/components/TaxCalculator/CalculatorLayout';
+import TaxNavbar from '@/components/TaxNavbar';
 import { useCalculator } from '@/hooks/useCalculator';
 import taxInfoData from '@/constants/taxInfoData';
 import type { TaxInfoPanelItem } from '@/types/calculator';
@@ -21,6 +23,7 @@ const Index = () => {
   return (
     <>
       <CalculatorHeader />
+      <TaxNavbar />
       <CalculatorLayout selectedInfoItem={selectedInfoItem}>
         <BasicInfo 
           companyName={calculator.companyName}
@@ -105,7 +108,6 @@ const Index = () => {
           <CalculatorActions
             riskPercentage={calculator.riskPercentage}
             onReset={calculator.handleReset}
-            onExport={calculator.handleExport}
           />
         </div>
       </CalculatorLayout>
