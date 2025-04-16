@@ -15,8 +15,8 @@ export const exportToPDF = async (calculator: any) => {
     const content = document.querySelector('#calculator-content');
     if (!content) return;
 
-    // Convert the content to canvas
-    const canvas = await html2canvas(content, {
+    // Convert the content to canvas - add proper type assertion for HTMLElement
+    const canvas = await html2canvas(content as HTMLElement, {
       scale: 2,
       useCORS: true,
       logging: false,
@@ -30,23 +30,42 @@ export const exportToPDF = async (calculator: any) => {
 
     pdf.addImage(imgData, 'PNG', margin, margin, imgWidth, imgHeight);
 
-    // Add annotations for info icons
-    let annotationY = margin;
+    // Add text annotations for info icons - using standard jsPDF text API instead of addAnnotation
+    let textY = imgHeight + margin + 10;
+    
+    // Add a section header for annotations
+    pdf.setFontSize(12);
+    pdf.setFont('helvetica', 'bold');
+    pdf.text('信息说明:', margin, textY);
+    textY += 8;
+    
+    pdf.setFont('helvetica', 'normal');
+    pdf.setFontSize(10);
+    
     Object.entries(taxInfoData).forEach(([key, info]) => {
       if (calculator[key]) {
-        pdf.addAnnotation({
-          type: 'text',
-          title: info.title,
-          contents: info.content,
-          bounds: {
-            x: pageWidth - 25,
-            y: annotationY,
-            w: 20,
-            h: 20
-          },
-          open: false
-        });
-        annotationY += 10;
+        // Add title and description instead of using unavailable addAnnotation method
+        pdf.setFont('helvetica', 'bold');
+        pdf.text(info.title, margin, textY);
+        pdf.setFont('helvetica', 'normal');
+        textY += 5;
+        
+        // Using analysis as content - wrapping text to fit page width
+        const splitText = pdf.splitTextToSize(info.analysis, pageWidth - (2 * margin));
+        pdf.text(splitText, margin, textY);
+        textY += 7 * splitText.length; // Add appropriate spacing based on number of lines
+        
+        // Add risk information
+        pdf.setFont('helvetica', 'italic');
+        const splitRiskText = pdf.splitTextToSize(`风险提示: ${info.risk}`, pageWidth - (2 * margin));
+        pdf.text(splitRiskText, margin, textY);
+        textY += 7 * splitRiskText.length + 5; // Extra spacing after risk text
+        
+        // Check if we need a new page
+        if (textY > pageHeight - margin) {
+          pdf.addPage();
+          textY = margin + 10;
+        }
       }
     });
 
