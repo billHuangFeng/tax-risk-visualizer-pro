@@ -92,3 +92,4 @@ export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({
       </DialogContent>
     </Dialog>
   );
+};
