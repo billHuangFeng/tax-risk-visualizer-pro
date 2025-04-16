@@ -1,3 +1,4 @@
+
 import { useEffect } from 'react';
 import { useToast } from './use-toast';
 import { useVatBasicInfo } from './vat/useVatBasicInfo';
@@ -42,9 +43,9 @@ export const useVatCalculator = () => {
     const difference = tax.payableTax - tax.actualTax;
     tax.setTaxDifference(difference);
     
-    // 取应交增值税与销项税的10%中的较大值作为基数
+    // 取销项税的10%与应交增值税中的较大值作为基数
     const baseAmount = Math.max(
-      Math.abs(tax.payableTax * 0.1), 
+      Math.abs(tax.payableTax), 
       Math.abs(sales.salesTotal.tax * 0.1)
     );
     
