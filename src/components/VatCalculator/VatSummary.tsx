@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -10,8 +9,6 @@ interface VatSummaryProps {
   setActualTax: (value: number) => void;
   taxDifference: number;
   taxDifferencePercentage: number;
-  bankSalesAmount: number;
-  setBankSalesAmount: (value: number) => void;
   bankPurchasesAmount: number;
   setBankPurchasesAmount: (value: number) => void;
   onInfoClick?: (infoKey: string) => void;
@@ -23,8 +20,6 @@ const VatSummary: React.FC<VatSummaryProps> = ({
   setActualTax,
   taxDifference,
   taxDifferencePercentage,
-  bankSalesAmount,
-  setBankSalesAmount,
   bankPurchasesAmount,
   setBankPurchasesAmount,
   onInfoClick
@@ -105,26 +100,6 @@ const VatSummary: React.FC<VatSummaryProps> = ({
           </div>
           
           <div className="space-y-4 border-l pl-6">
-            <div className="flex justify-between items-center">
-              <div className="font-medium flex items-center">
-                银行收款金额
-                <button 
-                  className="ml-2 text-tax-blue hover:text-tax-light-blue"
-                  onClick={() => onInfoClick?.('bankSalesAmount')}
-                >
-                  <Info size={16} />
-                </button>
-              </div>
-              <div className="flex items-center gap-2">
-                <Input
-                  type="number"
-                  value={bankSalesAmount}
-                  onChange={(e) => setBankSalesAmount(parseFloat(e.target.value) || 0)}
-                  className="w-32 text-right"
-                />
-              </div>
-            </div>
-            
             <div className="flex justify-between items-center">
               <div className="font-medium flex items-center">
                 银行采购款

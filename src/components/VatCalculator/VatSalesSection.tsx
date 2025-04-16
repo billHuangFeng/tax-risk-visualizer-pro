@@ -16,6 +16,8 @@ interface VatSalesSectionProps {
     amount: number;
     tax: number;
   };
+  bankSalesAmount: number;
+  setBankSalesAmount: (value: number) => void;
   onInfoClick?: (infoKey: string) => void;
 }
 
@@ -27,6 +29,8 @@ const VatSalesSection: React.FC<VatSalesSectionProps> = ({
   updateSalesItem,
   removeSalesItem,
   salesTotal,
+  bankSalesAmount,
+  setBankSalesAmount,
   onInfoClick
 }) => {
   return (
@@ -117,10 +121,29 @@ const VatSalesSection: React.FC<VatSalesSectionProps> = ({
           </TableBody>
         </Table>
         
+        <div className="flex justify-between items-center mt-6 mb-4">
+          <div className="font-medium flex items-center">
+            银行收款金额
+            <button 
+              className="ml-2 text-tax-blue hover:text-tax-light-blue"
+              onClick={() => onInfoClick?.('bankSalesAmount')}
+            >
+              <Info size={16} />
+            </button>
+          </div>
+          <div className="flex items-center gap-2">
+            <Input
+              type="number"
+              value={bankSalesAmount}
+              onChange={(e) => setBankSalesAmount(parseFloat(e.target.value) || 0)}
+              className="w-32 text-right"
+            />
+          </div>
+        </div>
+        
         <Button
           variant="outline"
           size="sm"
-          className="mt-4"
           onClick={addSalesItem}
         >
           <Plus className="h-4 w-4 mr-2" />
