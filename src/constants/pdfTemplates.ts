@@ -1,3 +1,4 @@
+
 import { PdfTemplate } from "@/types/pdfTemplates";
 
 const defaultLayout = {
@@ -39,6 +40,11 @@ const defaultLayout = {
   ]
 };
 
+// Creating a proper layout object that matches the PdfTemplateLayout interface
+const createLayoutObject = () => ({
+  sections: defaultLayout.sections,
+});
+
 export const DEFAULT_TEMPLATES: PdfTemplate[] = [
   {
     id: "classic",
@@ -63,8 +69,12 @@ export const DEFAULT_TEMPLATES: PdfTemplate[] = [
         padding: "4px 8px",
         labelColor: "#000000"
       },
-      layout: defaultLayout
-    }
+      layout: {
+        pageMargin: "20mm",
+        sectionSpacing: "16px"
+      }
+    },
+    layout: createLayoutObject()
   },
   {
     id: "modern",
@@ -89,8 +99,12 @@ export const DEFAULT_TEMPLATES: PdfTemplate[] = [
         padding: "6px 10px",
         labelColor: "#555555"
       },
-      layout: defaultLayout
-    }
+      layout: {
+        pageMargin: "15mm",
+        sectionSpacing: "20px"
+      }
+    },
+    layout: createLayoutObject()
   },
   {
     id: "minimal",
@@ -115,7 +129,11 @@ export const DEFAULT_TEMPLATES: PdfTemplate[] = [
         padding: "3px 6px",
         labelColor: "#888888"
       },
-      layout: defaultLayout
-    }
+      layout: {
+        pageMargin: "10mm",
+        sectionSpacing: "12px"
+      }
+    },
+    layout: createLayoutObject()
   }
 ];
