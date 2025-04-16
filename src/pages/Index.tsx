@@ -119,9 +119,15 @@ const Index = () => {
         </div>
       </CalculatorLayout>
 
-      <footer className="container text-center text-gray-500 text-sm py-4 flex items-center justify-center">
-        <Copyright className="h-4 w-4 mr-2" />
-        <span>© 2025 财倍贝企业成长研究院 版权所有</span>
+      <footer className="container text-center text-gray-500 text-sm py-4 flex items-center justify-center flex-col">
+        <div className="flex items-center">
+          <Copyright className="h-4 w-4 mr-2" />
+          <span>© 2025 财倍贝企业成长研究院 版权所有</span>
+        </div>
+        <div className="flex items-center mt-1 text-xs">
+          <Copyright className="h-3 w-3 mr-1" />
+          <span>© 2025 CaiBeiBei Enterprise Growth Research Institute. All Rights Reserved.</span>
+        </div>
       </footer>
     </>
   );
