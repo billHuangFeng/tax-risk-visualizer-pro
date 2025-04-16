@@ -4,14 +4,21 @@ import { Template } from '@pdfme/common';
 import { DEFAULT_TEMPLATES } from '@/constants/pdfTemplates';
 import { PdfTemplate } from '@/types/pdfTemplates';
 
+// Helper function to safely check if an object is an array with expected structure
+const isValidSchemaArray = (arr: any): arr is any[][] => {
+  return Array.isArray(arr) && 
+         arr.length > 0 && 
+         Array.isArray(arr[0]);
+};
+
 export const exportToPDF = async (calculator: any, template?: PdfTemplate) => {
   try {
     console.log("Starting PDF export with PDFME");
     
-    // 选择模板或使用默认模板
+    // Get template or use default
     const selectedTemplate = template || DEFAULT_TEMPLATES[0];
     
-    // 准备PDF数据
+    // Prepare PDF data
     const inputs = [
       {
         companyName: calculator.companyName || '税务计算',
@@ -25,8 +32,7 @@ export const exportToPDF = async (calculator: any, template?: PdfTemplate) => {
     
     console.log("Preparing template for PDF generation");
     
-    // 手动创建符合PDFME要求的模板对象
-    // 确保严格按照PDFME的Template类型创建
+    // Create a proper PDFME template
     const pdfTemplate: Template = {
       basePdf: selectedTemplate.baseTemplate instanceof Uint8Array 
                ? selectedTemplate.baseTemplate 
@@ -34,14 +40,13 @@ export const exportToPDF = async (calculator: any, template?: PdfTemplate) => {
       schemas: []
     };
     
-    // 安全地复制schemas
-    if (selectedTemplate.schemas && Array.isArray(selectedTemplate.schemas)) {
-      // 确保schemas是一个二维数组
+    // Safely assign schemas
+    if (isValidSchemaArray(selectedTemplate.schemas)) {
+      // Create a deep copy to avoid reference issues
       pdfTemplate.schemas = JSON.parse(JSON.stringify(selectedTemplate.schemas));
     } else {
-      // 如果没有有效的schemas，创建一个最小化的符合要求的结构
+      // Create a minimal valid schema structure if none is provided
       pdfTemplate.schemas = [[{
-        // 创建一个空的符合要求的schema
         emptyField: {
           type: 'text',
           position: { x: 0, y: 0 },
@@ -54,17 +59,18 @@ export const exportToPDF = async (calculator: any, template?: PdfTemplate) => {
     console.log("Template prepared:", {
       hasSchemasArray: Array.isArray(pdfTemplate.schemas),
       schemasLength: pdfTemplate.schemas.length,
-      innerArrayLength: pdfTemplate.schemas[0]?.length || 0
+      firstSchemaType: typeof pdfTemplate.schemas[0],
+      innerArrayLength: Array.isArray(pdfTemplate.schemas[0]) ? pdfTemplate.schemas[0].length : 0
     });
     
-    // 使用PDFME生成PDF
+    // Generate PDF with PDFME
     console.log("Generating PDF...");
     const pdf = await generate({
-      template: pdfTemplate as Template, // 使用类型断言确保编译器接受
+      template: pdfTemplate,
       inputs: inputs,
     });
     
-    // 创建并下载PDF
+    // Create and download PDF
     const blob = new Blob([pdf], { type: 'application/pdf' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');

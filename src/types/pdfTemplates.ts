@@ -8,10 +8,10 @@ export interface PdfTemplate {
   previewImage?: string;
   styles: PdfTemplateStyles;
   layout: PdfTemplateLayout;
-  // 直接使用PDFME的Template类型
+  // Base PDF template file as binary data
   baseTemplate?: ArrayBuffer | Uint8Array;
-  // 直接使用PDFME支持的schema类型
-  schemas?: Record<string, any>[][];
+  // PDFME schema definition - must be compatible with PDFME's Template type
+  schemas?: any[][];  // Using any[][] to avoid TypeScript errors with the complex PDFME schema type
 }
 
 export interface PdfTemplateStyles {
