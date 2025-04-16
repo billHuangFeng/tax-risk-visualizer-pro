@@ -51,13 +51,15 @@ const removeDuplicateElements = (container: HTMLElement) => {
         // This is a duplicate input, remove it
         if (input.parentElement) {
           const parentElement = input.parentElement;
-          parentElement.style.display = 'none';
-          
-          // If this is inside a grid, hide the entire row
-          const gridRow = parentElement.closest('.grid');
-          if (gridRow) {
-            gridRow.classList.add('pdf-duplicate-row');
-            gridRow.style.display = 'none';
+          if (parentElement instanceof HTMLElement) {
+            parentElement.style.display = 'none';
+            
+            // If this is inside a grid, hide the entire row
+            const gridRow = parentElement.closest('.grid');
+            if (gridRow && gridRow instanceof HTMLElement) {
+              gridRow.classList.add('pdf-duplicate-row');
+              gridRow.style.display = 'none';
+            }
           }
         }
       } else if (input.id) {
@@ -72,7 +74,9 @@ const removeDuplicateElements = (container: HTMLElement) => {
     headings.forEach((heading) => {
       const headingText = heading.textContent?.trim() || '';
       if (seenHeadings.has(headingText) && headingText.length > 0) {
-        heading.style.display = 'none';
+        if (heading instanceof HTMLElement) {
+          heading.style.display = 'none';
+        }
       } else {
         seenHeadings.add(headingText);
       }
@@ -88,7 +92,9 @@ const removeDuplicateElements = (container: HTMLElement) => {
       const key = `${labelText}-${labelId}`;
       
       if (seenLabels.has(key) && labelText.length > 0) {
-        label.style.display = 'none';
+        if (label instanceof HTMLElement) {
+          label.style.display = 'none';
+        }
       } else if (labelText.length > 0) {
         seenLabels.add(key);
       }

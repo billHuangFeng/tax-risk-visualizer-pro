@@ -1,3 +1,4 @@
+
 // Functions for enhancing layout for PDF export
 
 import { elementExists } from './domHelpers';
@@ -10,7 +11,9 @@ export const removeRedundantTextElements = (container: HTMLElement) => {
     redundantSpans.forEach((span) => {
       if (span.parentElement && elementExists(span) && span.parentElement.contains(span)) {
         try {
-          span.style.display = 'none';
+          if (span instanceof HTMLElement) {
+            span.style.display = 'none';
+          }
         } catch (e) {
           console.warn('Could not hide redundant span:', e);
         }
@@ -24,7 +27,9 @@ export const removeRedundantTextElements = (container: HTMLElement) => {
       if (pdfValues.length > 1) {
         // Keep only the first one
         for (let i = 1; i < pdfValues.length; i++) {
-          pdfValues[i].style.display = 'none';
+          if (pdfValues[i] instanceof HTMLElement) {
+            pdfValues[i].style.display = 'none';
+          }
         }
       }
     });
@@ -36,9 +41,13 @@ export const removeRedundantTextElements = (container: HTMLElement) => {
     labels.forEach((label) => {
       const text = label.textContent?.trim() || '';
       if (text && seen.has(text)) {
-        label.style.display = 'none';
+        if (label instanceof HTMLElement) {
+          label.style.display = 'none';
+        }
       } else if (text) {
-        seen.set(text, label as HTMLElement);
+        if (label instanceof HTMLElement) {
+          seen.set(text, label);
+        }
       }
     });
   } catch (error) {
