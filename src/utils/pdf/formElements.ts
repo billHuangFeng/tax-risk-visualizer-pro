@@ -1,4 +1,3 @@
-
 // Functions for handling form elements in PDF export
 
 // Process checkboxes for PDF display
@@ -52,89 +51,39 @@ export const processCheckboxes = (container: HTMLElement) => {
 
 // Process tables for PDF display
 export const enhanceTables = (container: HTMLElement) => {
-  try {
-    // Format all tables
-    const tables = container.querySelectorAll('table');
-    tables.forEach((table) => {
-      if (table instanceof HTMLTableElement) {
-        table.style.borderCollapse = 'collapse';
-        table.style.width = '100%';
-        table.style.visibility = 'visible';
-        table.style.display = 'table';
-        table.style.border = '1px solid #000';
-        table.style.marginBottom = '20px';
-        
-        // Process table rows
-        const rows = table.querySelectorAll('tr');
-        rows.forEach((row, rowIndex) => {
-          if (row instanceof HTMLTableRowElement) {
-            row.style.display = 'table-row';
-            row.style.visibility = 'visible';
+  const tables = container.querySelectorAll('table');
+  tables.forEach((table) => {
+    if (table instanceof HTMLElement) {
+      table.style.width = '100%';
+      table.style.borderCollapse = 'collapse';
+      table.style.marginBottom = '16px';
+      
+      const cells = table.querySelectorAll('td, th');
+      cells.forEach((cell, index) => {
+        if (cell instanceof HTMLElement) {
+          cell.style.border = '1px solid #000';
+          cell.style.padding = '8px';
+          cell.style.textAlign = index === 0 ? 'left' : 'right';
+          
+          // Format numbers
+          const input = cell.querySelector('input');
+          if (input instanceof HTMLInputElement) {
+            const value = input.value || '0';
+            const numValue = Number(value);
             
-            // Style header row differently
-            if (rowIndex === 0) {
-              row.style.backgroundColor = '#f8fafc';
-              row.style.fontWeight = 'bold';
+            if (!isNaN(numValue)) {
+              cell.textContent = numValue.toLocaleString('zh-CN', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+              });
             }
             
-            // Process table cells
-            const cells = row.querySelectorAll('td, th');
-            cells.forEach((cell, cellIndex) => {
-              if (cell instanceof HTMLTableCellElement) {
-                cell.style.border = '1px solid #000';
-                cell.style.padding = '8px';
-                cell.style.display = 'table-cell';
-                cell.style.visibility = 'visible';
-                cell.style.color = '#000';
-                
-                // Align first column left, others right
-                if (cellIndex === 0) {
-                  cell.style.textAlign = 'left';
-                } else {
-                  cell.style.textAlign = 'right';
-                }
-                
-                // Make inputs visible
-                const inputs = cell.querySelectorAll('input');
-                inputs.forEach((input) => {
-                  if (input instanceof HTMLInputElement) {
-                    // Create a visible display of the input value
-                    const value = input.value || '0';
-                    
-                    // Find or create value display
-                    let valueDisplay = cell.querySelector('.pdf-value');
-                    if (!valueDisplay) {
-                      valueDisplay = document.createElement('div');
-                      valueDisplay.className = 'pdf-value';
-                      cell.appendChild(valueDisplay);
-                    }
-                    
-                    if (valueDisplay instanceof HTMLElement) {
-                      valueDisplay.textContent = value;
-                      valueDisplay.style.display = 'block';
-                      valueDisplay.style.textAlign = cell.style.textAlign;
-                      valueDisplay.style.fontWeight = 'normal';
-                    }
-                    
-                    // Hide the input
-                    input.style.display = 'none';
-                  }
-                });
-              }
-            });
+            input.style.display = 'none';
           }
-        });
-      }
-    });
-    
-    // Special handling for the tax adjustment table (三栏式表格)
-    const taxAdjustments = container.querySelector('.tax-adjustments') || container.querySelector('h2:contains("企业所得税前调增/调减")');
-    if (taxAdjustments) {
-      createAdjustmentTable(container, taxAdjustments);
+        }
+      });
     }
-  } catch (error) {
-    console.warn('Error enhancing tables:', error);
-  }
+  });
 };
 
 // Create a special three-column adjustment table like the image

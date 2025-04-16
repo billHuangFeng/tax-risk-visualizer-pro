@@ -5,146 +5,73 @@
 
 /* PDF Export Specific Styles */
 @layer base {
-  /* General PDF export container settings */
   .for-pdf-export {
     background-color: white !important;
     color: black !important;
-    font-family: Arial, sans-serif !important;
+    font-family: "SimSun", serif !important;
     padding: 20px !important;
     width: 100% !important;
     min-height: 100vh !important;
     position: relative !important;
   }
   
-  /* Make all text elements visible */
-  .for-pdf-export p,
-  .for-pdf-export h1,
-  .for-pdf-export h2,
-  .for-pdf-export h3,
-  .for-pdf-export h4,
-  .for-pdf-export h5,
-  .for-pdf-export h6,
-  .for-pdf-export span,
-  .for-pdf-export div,
-  .for-pdf-export label,
-  .for-pdf-export td,
-  .for-pdf-export th {
-    color: black !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    font-family: Arial, sans-serif !important;
-  }
-  
-  /* Handle inputs */
-  .for-pdf-export input {
-    border: none !important;
-    box-shadow: none !important;
-    background-color: transparent !important;
-    display: none !important;
-  }
-  
-  /* Make PDF value elements visible */
-  .for-pdf-export .pdf-value {
-    display: inline-block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    color: black !important;
-    border: 1px solid #000 !important;
-    padding: 4px 8px !important;
-    min-width: 120px !important;
-    text-align: right !important;
-    min-height: 20px !important;
-  }
-  
-  /* Hide unnecessary elements */
-  .for-pdf-export button,
-  .for-pdf-export .pdf-duplicate,
-  .for-pdf-export [role="dialog"] {
-    display: none !important;
-  }
-  
-  /* Company header style */
   .for-pdf-export .company-header {
-    font-size: 20px !important;
+    font-size: 24px !important;
     font-weight: bold !important;
     text-align: center !important;
-    margin-bottom: 24px !important;
+    margin-bottom: 32px !important;
     border-bottom: 2px solid #000 !important;
-    padding-bottom: 12px !important;
+    padding-bottom: 16px !important;
     width: 100% !important;
   }
   
-  /* Section headers */
   .for-pdf-export h2 {
     font-size: 18px !important;
     font-weight: bold !important;
     margin-top: 24px !important;
     margin-bottom: 16px !important;
-    border-left: 4px solid #000 !important;
-    padding-left: 10px !important;
-    display: block !important;
-    width: 100% !important;
+    border-bottom: 1px solid #000 !important;
   }
   
-  /* Grid layout fix - to match the image style */
   .for-pdf-export [class*="grid"] {
     display: grid !important;
-    grid-template-columns: 50% 50% !important;
-    width: 100% !important;
-    margin-bottom: 8px !important;
+    grid-template-columns: auto 1fr !important;
+    gap: 16px !important;
     align-items: center !important;
-  }
-  
-  .for-pdf-export [class*="grid"] > * {
-    padding: 4px !important;
-  }
-  
-  .for-pdf-export [class*="grid"] > *:nth-child(odd) {
-    text-align: left !important;
-  }
-  
-  .for-pdf-export [class*="grid"] > *:nth-child(even) {
-    text-align: right !important;
-  }
-  
-  /* Subheader label style */
-  .for-pdf-export .subheader-label,
-  .for-pdf-export div:contains("其中:") {
-    font-style: italic !important;
-    margin-left: 20px !important;
-    margin-top: 10px !important;
     margin-bottom: 8px !important;
   }
   
-  /* Table styling to match the image */
+  .for-pdf-export .pdf-value {
+    display: inline-block !important;
+    min-width: 120px !important;
+    text-align: right !important;
+    padding: 4px 8px !important;
+  }
+  
   .for-pdf-export table {
     width: 100% !important;
     border-collapse: collapse !important;
-    margin-bottom: 16px !important;
-    border: 1px solid #000 !important;
+    margin: 16px 0 !important;
+    page-break-inside: avoid !important;
   }
   
   .for-pdf-export table th,
   .for-pdf-export table td {
-    padding: 8px !important;
     border: 1px solid #000 !important;
-  }
-  
-  .for-pdf-export table th {
-    background-color: #f8fafc !important;
-    font-weight: bold !important;
-    text-align: center !important;
-  }
-  
-  .for-pdf-export table td {
+    padding: 8px !important;
     text-align: right !important;
   }
   
-  .for-pdf-export table td:first-child {
+  .for-pdf-export table td:first-child,
+  .for-pdf-export table th:first-child {
     text-align: left !important;
   }
   
-  /* Checkbox styling to match the image */
+  .for-pdf-export table th {
+    background-color: #f8f9fa !important;
+    font-weight: bold !important;
+  }
+  
   .for-pdf-export [role="checkbox"] {
     display: inline-block !important;
     width: 16px !important;
@@ -152,10 +79,7 @@
     border: 1px solid #000 !important;
     position: relative !important;
     vertical-align: middle !important;
-  }
-  
-  .for-pdf-export [role="checkbox"][data-state="checked"] {
-    background-color: #000 !important;
+    margin-right: 8px !important;
   }
   
   .for-pdf-export [role="checkbox"][data-state="checked"]::after {
@@ -164,58 +88,16 @@
     top: -2px !important;
     left: 2px !important;
     font-size: 14px !important;
-    color: #fff !important;
   }
   
-  /* Label styling */
-  .for-pdf-export label {
-    font-weight: normal !important;
-    display: inline-block !important;
-    vertical-align: middle !important;
-  }
-  
-  /* Unit label (万元) */
   .for-pdf-export .unit-label {
     margin-left: 4px !important;
+    font-size: 14px !important;
   }
   
-  /* Adjustment table specific styling */
-  .for-pdf-export .adjustment-table {
-    width: 100% !important;
-    border-collapse: collapse !important;
-    margin-top: 15px !important;
-    margin-bottom: 15px !important;
-    border: 1px solid #000 !important;
-  }
-  
-  .for-pdf-export .adjustment-table th,
-  .for-pdf-export .adjustment-table td {
-    border: 1px solid #000 !important;
-    padding: 8px !important;
-  }
-  
-  .for-pdf-export .adjustment-table th {
-    background-color: #f8fafc !important;
-    font-weight: bold !important;
-    text-align: center !important;
-  }
-  
-  .for-pdf-export .adjustment-table td:first-child {
-    text-align: left !important;
-  }
-  
-  .for-pdf-export .adjustment-table td:not(:first-child) {
-    text-align: right !important;
-  }
-  
-  /* Temporary container styling */
-  #temp-pdf-container {
-    position: absolute !important;
-    left: -9999px !important;
-    top: 0 !important;
-    width: 800px !important;
-    background-color: white !important;
-    z-index: -9999 !important;
-    visibility: hidden !important;
+  .for-pdf-export .subheader-label {
+    font-style: italic !important;
+    margin-left: 20px !important;
+    color: #666 !important;
   }
 }
