@@ -29,7 +29,7 @@ const CalculatorLayout: React.FC<CalculatorLayoutProps> = ({ children, selectedI
       <div className="container max-w-[100vw] px-4 md:px-8">
         <div className="flex flex-col md:flex-row gap-8">
           <div className="w-full">
-            <div className="grid gap-4 md:gap-8 mb-8">
+            <div id="calculator-content" className="grid gap-4 md:gap-8 mb-8">
               <Card>
                 <CardHeader>
                   <CardTitle className="text-tax-blue flex items-center gap-2">

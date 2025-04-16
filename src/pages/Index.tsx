@@ -22,7 +22,7 @@ const Index = () => {
   return (
     <div className="tax-calculator-wrapper">
       <CalculatorHeader />
-      <div id="calculator-content" className="calculator-full-content">
+      <div className="calculator-full-content">
         <CalculatorLayout selectedInfoItem={selectedInfoItem}>
           <BasicInfo 
             companyName={calculator.companyName}

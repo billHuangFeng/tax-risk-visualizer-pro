@@ -1,5 +1,6 @@
-
+import { useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import { exportToPDF } from '@/utils/pdfExport';
 
 export const useActions = (riskValue: string, riskPercentage: number) => {
   const { toast } = useToast();
@@ -10,21 +11,16 @@ export const useActions = (riskValue: string, riskPercentage: number) => {
     return '高风险';
   };
 
-  const handleReset = () => {
+  const handleReset = useCallback(() => {
     toast({
       title: "表单已重置",
       description: "您已成功重置输入数据",
       variant: "default",
     });
-  };
+  }, [toast]);
 
-  const handleExport = () => {
-    toast({
-      title: "导出功能",
-      description: "导出功能即将推出",
-      variant: "default",
-    });
-  };
+  const handleExport = useCallback(async () => {
+  }, []);
 
   return {
     handleReset,

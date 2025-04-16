@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { RotateCcw, Download, Phone } from 'lucide-react';
 import SaveDataButton from './SaveDataButton';
@@ -18,6 +18,7 @@ const CalculatorActions: React.FC<CalculatorActionsProps> = ({
   onReset,
   onExport,
 }) => {
+  const [exporting, setExporting] = useState(false);
   const calculator = useCalculator();
   const { toast } = useToast();
   
@@ -26,25 +27,30 @@ const CalculatorActions: React.FC<CalculatorActionsProps> = ({
   };
 
   const handleExport = async () => {
+    if (exporting) return;
+    
     try {
+      setExporting(true);
       toast({
         title: "正在生成PDF",
-        description: "请稍候...",
+        description: "正在处理，请稍候...",
       });
       
       await exportToPDF(calculator);
       
       toast({
         title: "导出成功",
-        description: "PDF文件已生成",
+        description: "PDF文件已生成并下载",
       });
     } catch (error) {
       console.error("PDF export error:", error);
       toast({
         title: "导出失败",
-        description: "请稍后重试",
+        description: "无法生成PDF，请稍后重试",
         variant: "destructive",
       });
+    } finally {
+      setExporting(false);
     }
   };
   
@@ -62,10 +68,11 @@ const CalculatorActions: React.FC<CalculatorActionsProps> = ({
       <Button
         variant="outline"
         onClick={handleExport}
+        disabled={exporting}
         className="w-full md:w-auto"
       >
         <Download className="w-4 h-4 mr-2" />
-        导出PDF
+        {exporting ? '导出中...' : '导出PDF'}
       </Button>
 
       <Button 
