@@ -1,31 +1,45 @@
 
 /**
- * This is a helper file to work around the "vite not found" error.
+ * 项目启动指南
+ * Project Setup Guide
  * 
- * The issue occurs when Vite isn't properly accessible in the PATH.
- * This can happen for various reasons:
- * 1. Vite isn't installed globally
- * 2. node_modules/.bin is not in PATH
- * 3. Package installation is incomplete
+ * 按照以下步骤操作:
+ * Follow these steps:
  * 
- * To resolve this issue:
- * - Make sure all dependencies are installed with: npm install or yarn install
- * - You can run Vite directly with: npx vite or ./node_modules/.bin/vite
- * - For a global install: npm install -g vite
+ * 1. 安装依赖 (Install dependencies):
+ *    npm install
+ *    
+ * 2. 如果遇到依赖冲突 (If you encounter dependency conflicts):
+ *    npm install --legacy-peer-deps
+ *    
+ * 3. 启动开发服务器 (Start development server):
+ *    - 使用 npm: npm run dev
+ *    - 或者直接使用 npx: npx vite
+ *    - 或者使用本地安装: ./node_modules/.bin/vite
  */
 
-// This file is informational only and doesn't contain executable code
 export const DEV_INSTRUCTIONS = {
-  install: "npm install or yarn install",
-  runDev: "npx vite or ./node_modules/.bin/vite",
-  globalInstall: "npm install -g vite"
+  install: "npm install",
+  installWithLegacy: "npm install --legacy-peer-deps",
+  runDev: "npm run dev",
+  runDevDirect: "npx vite",
+  runDevLocal: "./node_modules/.bin/vite"
 };
 
 /**
- * Common troubleshooting steps:
+ * 常见问题解决方案:
+ * Common Troubleshooting:
  * 
- * 1. Run 'npm install' to ensure all dependencies are installed
- * 2. Try running 'npx vite' instead of 'npm run dev'
- * 3. Check if node_modules/.bin/vite exists
- * 4. Ensure your PATH includes node_modules/.bin
+ * 1. 确保Node.js版本 >= 18
+ *    Ensure Node.js version >= 18
+ * 
+ * 2. 检查package.json中的scripts是否包含dev
+ *    Check if package.json contains dev script
+ * 
+ * 3. 清除缓存:
+ *    Clear cache:
+ *    - npm cache clean --force
+ *    - 删除node_modules目录
+ *    - 重新安装依赖
  */
+
