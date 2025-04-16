@@ -25,13 +25,14 @@ export const exportToPDF = async (calculator: any, template?: PdfTemplate) => {
       }
     ];
     
+    // Create a proper empty schema if needed
+    const emptySchema = [[{}]];
+    
     // 创建一个符合PDFME Template类型要求的模板
-    const pdfTemplate: Template = {
+    const pdfTemplate = {
       basePdf: selectedTemplate.baseTemplate || new Uint8Array(),
-      schemas: selectedTemplate.schemas ? 
-        (Array.isArray(selectedTemplate.schemas) ? selectedTemplate.schemas : []) : 
-        [[]]  // Ensure schemas is a valid array array even if undefined
-    };
+      schemas: selectedTemplate.schemas || emptySchema
+    } as Template;
     
     // 使用PDFME生成PDF
     const pdf = await generate({
