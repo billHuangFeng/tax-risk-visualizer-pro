@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -97,6 +98,8 @@
 
   body {
     @apply bg-background text-foreground;
+    /* Ensure text is visible by default */
+    color: hsl(var(--foreground));
   }
   
   .w-36 {
@@ -131,12 +134,23 @@
     font-size: 14px !important;
   }
   
-  /* Hidden value for PDF export */
+  /* Make all text elements visible */
+  p, h1, h2, h3, h4, h5, h6, span, label, div {
+    color: inherit;
+    visibility: visible;
+    opacity: 1;
+  }
   
-  /* Special styling for table cells in PDF export */
+  /* Card backgrounds should be white */
+  .card, .bg-white {
+    background-color: white;
+  }
   
-  /* Special styling for PDF export */
-  
+  /* Fix for dark backgrounds in cards */
+  .card-content {
+    background-color: white;
+    color: hsl(var(--foreground));
+  }
 }
 
 @media (max-width: 768px) {
@@ -177,8 +191,3 @@
 .letter-spacing-normal {
   letter-spacing: normal !important;
 }
-
-/* Special PDF export class */
-
-/* Make inputs more visible in PDF */
-
