@@ -105,14 +105,9 @@ const VatCalculator = () => {
           <Copyright className="h-4 w-4 mr-2" />
           <span>© 2025 财倍贝企业成长研究院 版权所有</span>
         </div>
-        <div className="mt-1 text-xs flex flex-col">
-          <div className="flex items-center justify-center">
-            <span>著作权人：财倍贝企业成长研究院、无锡市财倍贝企业管理有限公司、黄夕兵</span>
-          </div>
-          <div className="flex items-center justify-center mt-1">
-            <Copyright className="h-3 w-3 mr-1" />
-            <span>© 2025 CaiBeiBei Enterprise Growth Research Institute. All Rights Reserved.</span>
-          </div>
+        <div className="flex items-center mt-1 text-xs">
+          <Copyright className="h-3 w-3 mr-1" />
+          <span>© 2025 CaiBeiBei Enterprise Growth Research Institute. All Rights Reserved.</span>
         </div>
       </footer>
     </>
