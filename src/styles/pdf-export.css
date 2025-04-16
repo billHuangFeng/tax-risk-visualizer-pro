@@ -24,11 +24,11 @@
     overflow: visible !important;
   }
   
-  .for-pdf-export .company-header {
-    font-size: 16px !important;
+  .for-pdf-export h1 {
+    font-size: 20px !important;
     font-weight: normal !important;
-    text-align: left !important;
-    margin-bottom: 24px !important;
+    text-align: center !important;
+    margin-bottom: 8px !important;
   }
   
   .for-pdf-export h2 {
@@ -38,19 +38,34 @@
     margin-bottom: 16px !important;
   }
   
-  .for-pdf-export [class*="grid"] {
+  .for-pdf-export .grid {
     display: grid !important;
-    grid-template-columns: auto 1fr !important;
+    grid-template-columns: repeat(2, 1fr) !important;
     gap: 16px !important;
-    align-items: baseline !important;
-    margin-bottom: 8px !important;
+    margin-bottom: 16px !important;
   }
   
-  .for-pdf-export input {
-    border: none !important;
-    border-bottom: 1px solid #000 !important;
-    padding: 4px 0 !important;
+  .for-pdf-export .flex {
+    display: flex !important;
+    align-items: center !important;
+  }
+  
+  .for-pdf-export .justify-between {
+    justify-content: space-between !important;
+  }
+  
+  .for-pdf-export input, 
+  .for-pdf-export .border {
+    border: 1px solid #000 !important;
+    padding: 4px 8px !important;
+  }
+  
+  .for-pdf-export .text-right {
     text-align: right !important;
+  }
+  
+  .for-pdf-export .text-center {
+    text-align: center !important;
   }
   
   .for-pdf-export [role="checkbox"] {
@@ -79,7 +94,6 @@
   .for-pdf-export table td {
     border: 1px solid #000 !important;
     padding: 8px !important;
-    text-align: right !important;
   }
   
   .for-pdf-export table th {
@@ -87,48 +101,17 @@
     font-weight: normal !important;
   }
   
-  .for-pdf-export .tax-adjustments-table {
-    width: 100% !important;
-    border-collapse: collapse !important;
-    margin-top: 16px !important;
+  .for-pdf-export table th:first-child,
+  .for-pdf-export table td:first-child {
+    text-align: left !important;
   }
   
-  .for-pdf-export .tax-adjustments-table th,
-  .for-pdf-export .tax-adjustments-table td {
-    border: 1px solid #000 !important;
-    padding: 8px !important;
+  .for-pdf-export table th:last-child,
+  .for-pdf-export table td:last-child {
     text-align: right !important;
   }
   
-  .for-pdf-export .tax-adjustments-table th:first-child,
-  .for-pdf-export .tax-adjustments-table td:first-child {
-    text-align: left !important;
-  }
-
-  .for-pdf-export .risk-evaluation {
-    margin-top: 24px !important;
-  }
-  
-  .for-pdf-export .risk-evaluation h3 {
-    font-size: 16px !important;
-    font-weight: normal !important;
-    margin-bottom: 16px !important;
-  }
-  
-  .for-pdf-export .risk-box {
-    border: 1px solid #000 !important;
-    min-height: 80px !important;
-    padding: 16px !important;
-  }
-  
-  .for-pdf-export .excluded-business {
-    margin-top: 8px !important;
-    margin-left: 24px !important;
-    font-size: 14px !important;
-  }
-
-  .for-pdf-export .unit-suffix {
-    margin-left: 4px !important;
-    font-size: 14px !important;
+  .for-pdf-export table tr:last-child td {
+    font-weight: bold !important;
   }
 }

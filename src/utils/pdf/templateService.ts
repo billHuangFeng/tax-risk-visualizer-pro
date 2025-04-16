@@ -1,4 +1,3 @@
-
 import { PdfTemplate, PdfSection, PdfField } from "@/types/pdfTemplates";
 import { DEFAULT_TEMPLATES } from "@/constants/pdfTemplates";
 
@@ -17,16 +16,24 @@ export const applyTemplateStyles = (container: HTMLElement, template: PdfTemplat
     container.style.fontFamily = styles.fontFamily;
     container.style.padding = styles.layout.pageMargin;
     
-    // 应用标题样式
+    // 应用标题样式 - 改为与预览一致的样式
     const headings = container.querySelectorAll('h1, h2, h3, h4, h5, h6');
     headings.forEach(heading => {
       if (heading instanceof HTMLElement) {
-        heading.style.fontSize = styles.headingStyle.fontSize;
-        heading.style.fontWeight = styles.headingStyle.fontWeight;
-        heading.style.color = styles.headingStyle.color;
-        heading.style.borderBottom = styles.headingStyle.borderBottom || '';
-        heading.style.marginBottom = styles.headingStyle.marginBottom || '16px';
-        heading.style.paddingBottom = '8px';
+        // 对于h1（公司名称标题），应用居中样式
+        if (heading.tagName === 'H1') {
+          heading.style.fontSize = '20px';
+          heading.style.fontWeight = 'normal';
+          heading.style.textAlign = 'center';
+          heading.style.marginBottom = '8px';
+        } else {
+          // 对于其他标题（如h2）
+          heading.style.fontSize = styles.headingStyle.fontSize;
+          heading.style.fontWeight = 'normal';
+          heading.style.color = styles.headingStyle.color;
+          heading.style.marginBottom = '16px';
+          heading.style.paddingBottom = '2px';
+        }
       }
     });
     
@@ -42,52 +49,76 @@ export const applyTemplateStyles = (container: HTMLElement, template: PdfTemplat
         const headerCells = table.querySelectorAll('th');
         headerCells.forEach(cell => {
           if (cell instanceof HTMLElement) {
-            cell.style.backgroundColor = styles.tableStyle.headerBgColor;
+            cell.style.backgroundColor = '#ffffff'; // 白色背景
             cell.style.padding = styles.tableStyle.cellPadding;
             cell.style.border = `1px solid ${styles.tableStyle.borderColor}`;
+            cell.style.fontWeight = 'normal';
+            
+            // 第一列左对齐，最后一列右对齐
+            if (cell === headerCells[0]) {
+              cell.style.textAlign = 'left';
+            } else {
+              cell.style.textAlign = 'right';
+            }
           }
         });
         
         // 应用单元格样式
         const cells = table.querySelectorAll('td');
-        cells.forEach(cell => {
+        cells.forEach((cell, index) => {
           if (cell instanceof HTMLElement) {
             cell.style.padding = styles.tableStyle.cellPadding;
             cell.style.border = `1px solid ${styles.tableStyle.borderColor}`;
+            
+            // 第一列左对齐，其他列右对齐
+            const row = cell.parentElement;
+            if (row) {
+              const isFirstCell = Array.from(row.cells).indexOf(cell) === 0;
+              cell.style.textAlign = isFirstCell ? 'left' : 'right';
+              
+              // 最后一行加粗
+              const tbody = row.parentElement;
+              if (tbody && Array.from(tbody.rows).indexOf(row) === tbody.rows.length - 1) {
+                cell.style.fontWeight = 'bold';
+              }
+            }
           }
         });
       }
     });
     
     // 应用表单字段样式
-    const labels = container.querySelectorAll('.label-field');
-    labels.forEach(label => {
-      if (label instanceof HTMLElement) {
-        label.style.color = styles.formFieldStyle.labelColor;
-      }
-    });
-    
-    const valueFields = container.querySelectorAll('.pdf-value');
+    const valueFields = container.querySelectorAll('.pdf-value, [class*="border"]');
     valueFields.forEach(field => {
       if (field instanceof HTMLElement) {
-        field.style.border = `1px solid ${styles.formFieldStyle.borderColor}`;
-        field.style.padding = styles.formFieldStyle.padding;
+        field.style.border = `1px solid #000`;
+        field.style.padding = '4px 8px';
       }
     });
     
-    // 应用部分间距
-    const sections = container.querySelectorAll('section, [class*="section"]');
-    sections.forEach(section => {
-      if (section instanceof HTMLElement) {
-        section.style.marginBottom = styles.layout.sectionSpacing;
-      }
-    });
-    
-    // 应用复选框样式
+    // 适用复选框的正确样式
     const checkboxes = container.querySelectorAll('[role="checkbox"]');
     checkboxes.forEach(checkbox => {
       if (checkbox instanceof HTMLElement) {
-        checkbox.style.border = `1px solid ${styles.formFieldStyle.borderColor}`;
+        checkbox.style.display = 'inline-block';
+        checkbox.style.width = '14px';
+        checkbox.style.height = '14px';
+        checkbox.style.border = '1px solid #000';
+        checkbox.style.position = 'relative';
+        
+        // 添加勾选标记
+        if (checkbox.getAttribute('data-state') === 'checked') {
+          if (!checkbox.querySelector('.checkmark')) {
+            const checkmark = document.createElement('span');
+            checkmark.className = 'checkmark';
+            checkmark.textContent = '✓';
+            checkmark.style.position = 'absolute';
+            checkmark.style.top = '-3px';
+            checkmark.style.left = '1px';
+            checkmark.style.fontSize = '14px';
+            checkbox.appendChild(checkmark);
+          }
+        }
       }
     });
     

@@ -2,8 +2,6 @@
 import React from 'react';
 import { PdfTemplate } from "@/types/pdfTemplates";
 import { PreviewHeader } from "./PdfTemplateComponents/Preview/PreviewHeader";
-import { CompanyHeader } from "./PdfTemplateComponents/Preview/CompanyHeader";
-import { PreviewSection } from "./PdfTemplateComponents/Preview/PreviewSection";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface PdfTemplatePreviewProps {
@@ -15,187 +13,134 @@ export const PdfTemplatePreview: React.FC<PdfTemplatePreviewProps> = ({
   template,
   onBack
 }) => {
-  const { styles } = template;
-  
   return (
     <div className="space-y-4 w-full h-full flex flex-col">
       <PreviewHeader templateName={template.name} onBack={onBack} />
       
       <ScrollArea className="flex-1 w-full rounded-lg border">
-        <div 
-          className="p-6 bg-white w-full"
-          style={{
-            fontFamily: styles.fontFamily,
-          }}
-        >
-          <CompanyHeader styles={styles} />
+        <div className="p-6 bg-white w-full min-h-[1100px]">
+          {/* 公司标题部分 */}
+          <div className="text-center mb-8">
+            <h1 className="text-2xl font-normal mb-2">示例公司名称</h1>
+            <p className="text-base">2023年度税务报告</p>
+          </div>
           
-          <PreviewSection title="基本信息" styles={styles}>
-            <div className="grid grid-cols-2 gap-3">
-              <div className="flex justify-between">
-                <span style={{ color: styles.formFieldStyle.labelColor }}>公司名称：</span>
-                <span style={{ 
-                  border: `1px solid ${styles.formFieldStyle.borderColor}`,
-                  padding: styles.formFieldStyle.padding
-                }}>示例公司名称</span>
+          {/* 基本信息部分 */}
+          <div className="mb-8">
+            <h2 className="text-lg font-normal mb-4 pb-2">基本信息</h2>
+            
+            <div className="grid grid-cols-2 gap-4">
+              <div className="flex justify-between items-center">
+                <span>公司名称：</span>
+                <div className="border border-black px-3 py-1 min-w-[200px] text-center">
+                  示例公司名称
+                </div>
               </div>
               
-              <div className="flex justify-between">
-                <span style={{ color: styles.formFieldStyle.labelColor }}>员工数量：</span>
-                <span style={{ 
-                  border: `1px solid ${styles.formFieldStyle.borderColor}`,
-                  padding: styles.formFieldStyle.padding
-                }}>50</span>
+              <div className="flex justify-between items-center">
+                <span>员工数量：</span>
+                <div className="border border-black px-3 py-1 min-w-[100px] text-center">
+                  50
+                </div>
               </div>
               
-              <div className="flex justify-between">
-                <span style={{ color: styles.formFieldStyle.labelColor }}>是否高新企业：</span>
+              <div className="flex justify-between items-center">
+                <span>是否高新企业：</span>
                 <div className="flex items-center">
-                  <div style={{
-                    width: "16px",
-                    height: "16px",
-                    border: `1px solid ${styles.formFieldStyle.borderColor}`,
-                    display: "inline-block",
-                    position: "relative",
-                    marginRight: "6px"
-                  }}>
-                    <span style={{
-                      position: "absolute",
-                      top: "-2px",
-                      left: "2px"
-                    }}>✓</span>
+                  <div className="inline-block border border-black w-4 h-4 mr-1 relative">
+                    <span className="absolute top-[-3px] left-[1px]">✓</span>
                   </div>
                   <span>是</span>
                 </div>
               </div>
               
-              <div className="flex justify-between">
-                <span style={{ color: styles.formFieldStyle.labelColor }}>总资产：</span>
-                <span style={{ 
-                  border: `1px solid ${styles.formFieldStyle.borderColor}`,
-                  padding: styles.formFieldStyle.padding
-                }}>¥ 10,000,000.00</span>
+              <div className="flex justify-between items-center">
+                <span>总资产：</span>
+                <div className="border border-black px-3 py-1 min-w-[200px] text-right">
+                  ¥ 10,000,000.00
+                </div>
               </div>
             </div>
-          </PreviewSection>
+          </div>
           
-          <PreviewSection title="收入与支出" styles={styles}>
-            <table style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              marginBottom: "16px",
-            }}>
+          {/* 收入与支出部分 */}
+          <div className="mb-8">
+            <h2 className="text-lg font-normal mb-4 pb-2">收入与支出</h2>
+            
+            <table className="w-full border-collapse">
               <thead>
                 <tr>
-                  <th style={{
-                    border: `1px solid ${styles.tableStyle.borderColor}`,
-                    padding: styles.tableStyle.cellPadding,
-                    backgroundColor: styles.tableStyle.headerBgColor,
-                    textAlign: "left"
-                  }}>
+                  <th className="border border-black p-2 text-left font-normal bg-white">
                     项目
                   </th>
-                  <th style={{
-                    border: `1px solid ${styles.tableStyle.borderColor}`,
-                    padding: styles.tableStyle.cellPadding,
-                    backgroundColor: styles.tableStyle.headerBgColor,
-                    textAlign: "right"
-                  }}>
+                  <th className="border border-black p-2 text-right font-normal bg-white">
                     金额（元）
                   </th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td style={{
-                    border: `1px solid ${styles.tableStyle.borderColor}`,
-                    padding: styles.tableStyle.cellPadding,
-                    textAlign: "left"
-                  }}>
+                  <td className="border border-black p-2 text-left">
                     总收入
                   </td>
-                  <td style={{
-                    border: `1px solid ${styles.tableStyle.borderColor}`,
-                    padding: styles.tableStyle.cellPadding,
-                    textAlign: "right"
-                  }}>
+                  <td className="border border-black p-2 text-right">
                     5,000,000.00
                   </td>
                 </tr>
                 <tr>
-                  <td style={{
-                    border: `1px solid ${styles.tableStyle.borderColor}`,
-                    padding: styles.tableStyle.cellPadding,
-                    textAlign: "left"
-                  }}>
+                  <td className="border border-black p-2 text-left">
                     总支出
                   </td>
-                  <td style={{
-                    border: `1px solid ${styles.tableStyle.borderColor}`,
-                    padding: styles.tableStyle.cellPadding,
-                    textAlign: "right"
-                  }}>
+                  <td className="border border-black p-2 text-right">
                     3,500,000.00
                   </td>
                 </tr>
                 <tr>
-                  <td style={{
-                    border: `1px solid ${styles.tableStyle.borderColor}`,
-                    padding: styles.tableStyle.cellPadding,
-                    textAlign: "left",
-                    fontWeight: "bold"
-                  }}>
+                  <td className="border border-black p-2 text-left font-bold">
                     应纳税所得额
                   </td>
-                  <td style={{
-                    border: `1px solid ${styles.tableStyle.borderColor}`,
-                    padding: styles.tableStyle.cellPadding,
-                    textAlign: "right",
-                    fontWeight: "bold"
-                  }}>
+                  <td className="border border-black p-2 text-right font-bold">
                     1,500,000.00
                   </td>
                 </tr>
               </tbody>
             </table>
-          </PreviewSection>
+          </div>
           
-          <PreviewSection title="税务总结" styles={styles}>
-            <div className="grid grid-cols-2 gap-3">
-              <div className="flex justify-between">
-                <span style={{ color: styles.formFieldStyle.labelColor }}>适用税率：</span>
-                <span style={{ 
-                  border: `1px solid ${styles.formFieldStyle.borderColor}`,
-                  padding: styles.formFieldStyle.padding
-                }}>25%</span>
+          {/* 税务总结部分 */}
+          <div className="mb-8">
+            <h2 className="text-lg font-normal mb-4 pb-2">税务总结</h2>
+            
+            <div className="grid grid-cols-2 gap-4">
+              <div className="flex justify-between items-center">
+                <span>适用税率：</span>
+                <div className="border border-black px-3 py-1 min-w-[100px] text-center">
+                  25%
+                </div>
               </div>
               
-              <div className="flex justify-between">
-                <span style={{ color: styles.formFieldStyle.labelColor }}>理论应缴税额：</span>
-                <span style={{ 
-                  border: `1px solid ${styles.formFieldStyle.borderColor}`,
-                  padding: styles.formFieldStyle.padding
-                }}>¥ 375,000.00</span>
+              <div className="flex justify-between items-center">
+                <span>理论应缴税额：</span>
+                <div className="border border-black px-3 py-1 min-w-[200px] text-right">
+                  ¥ 375,000.00
+                </div>
               </div>
               
-              <div className="flex justify-between">
-                <span style={{ color: styles.formFieldStyle.labelColor }}>实际缴纳税额：</span>
-                <span style={{ 
-                  border: `1px solid ${styles.formFieldStyle.borderColor}`,
-                  padding: styles.formFieldStyle.padding
-                }}>¥ 300,000.00</span>
+              <div className="flex justify-between items-center">
+                <span>实际缴纳税额：</span>
+                <div className="border border-black px-3 py-1 min-w-[200px] text-right">
+                  ¥ 300,000.00
+                </div>
               </div>
               
-              <div className="flex justify-between">
-                <span style={{ color: styles.formFieldStyle.labelColor }}>风险评估：</span>
-                <span style={{ 
-                  border: `1px solid ${styles.formFieldStyle.borderColor}`,
-                  padding: styles.formFieldStyle.padding,
-                  backgroundColor: "#FEF7CD"
-                }}>中等风险 (30%)</span>
+              <div className="flex justify-between items-center">
+                <span>风险评估：</span>
+                <div className="border border-black px-3 py-1 min-w-[200px] text-right">
+                  中等风险 (30%)
+                </div>
               </div>
             </div>
-          </PreviewSection>
+          </div>
         </div>
       </ScrollArea>
     </div>
