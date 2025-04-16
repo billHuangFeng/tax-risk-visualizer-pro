@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Phone } from 'lucide-react';
@@ -21,6 +22,12 @@ const FloatingContactButton = () => {
         setPosition({
           x: window.innerWidth - 80 - padding, // Button width + padding
           y: window.innerHeight - 120 - padding // Button height + padding
+        });
+      } else {
+        // 在桌面端时设置更靠右下角的位置
+        setPosition({
+          x: window.innerWidth - 100,
+          y: window.innerHeight - 100
         });
       }
     };
@@ -57,15 +64,18 @@ const FloatingContactButton = () => {
     }
   };
 
+  // 根据是否为移动设备调整按钮样式和位置
+  const buttonSize = isMobile ? "w-16 h-16" : "w-24 h-24";
+  const buttonTextClass = isMobile ? "text-xs" : "text-sm";
+
   return (
     <div
       style={{
         position: 'fixed',
-        left: isMobile ? position.x : position.x,
-        top: isMobile ? position.y : position.y,
+        left: position.x,
+        top: position.y,
         zIndex: 50,
         cursor: isDragging ? 'grabbing' : 'grab',
-        display: isMobile ? 'block' : 'block',
       }}
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
@@ -75,7 +85,7 @@ const FloatingContactButton = () => {
       <Button
         onClick={handleContactAdvisor}
         className={cn(
-          "rounded-full w-24 h-24 bg-blue-600 text-white border-4 border-white",
+          `rounded-full ${buttonSize} bg-blue-600 text-white border-4 border-white`,
           "flex flex-col items-center justify-center gap-2 p-0",
           "hover:bg-blue-700 transition-all duration-200",
           "shadow-[0_6px_12px_rgba(0,0,0,0.2)]",
@@ -84,8 +94,8 @@ const FloatingContactButton = () => {
           "hover:-translate-y-1 active:translate-y-0"
         )}
       >
-        <span className="text-sm whitespace-pre-line">立即{'\n'}咨询专家</span>
-        <Phone className="w-6 h-6" />
+        <span className={`${buttonTextClass} whitespace-pre-line`}>立即{'\n'}咨询专家</span>
+        <Phone className={isMobile ? "w-4 h-4" : "w-6 h-6"} />
       </Button>
     </div>
   );
