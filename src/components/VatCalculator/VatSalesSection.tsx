@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
-import { Trash2, Plus, Info, CircleCheck, CircleAlert, OctagonAlert } from 'lucide-react';
+import { Trash2, Plus, Info, CircleCheck, TriangleAlert, CircleX } from 'lucide-react';
 import { VatSalesItem, DifferenceExplanation } from '@/hooks/useVatCalculator';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 
@@ -52,13 +52,11 @@ const VatSalesSection: React.FC<VatSalesSectionProps> = ({
   const getWarningIcon = (percentage: number) => {
     const absPercentage = Math.abs(percentage);
     if (absPercentage <= 10) {
-      return <CircleCheck className="h-4 w-4 text-[#ea384c]" />;
+      return <CircleCheck className="h-4 w-4 text-green-500" />;
     } else if (absPercentage <= 30) {
-      return <CircleAlert className="h-4 w-4 text-[#FEF7CD]" />;
-    } else if (absPercentage <= 60) {
-      return <CircleAlert className="h-4 w-4 text-[#F97316]" />;
+      return <TriangleAlert className="h-4 w-4 text-yellow-500" />;
     } else {
-      return <OctagonAlert className="h-4 w-4 text-[#ea384c]" />;
+      return <CircleX className="h-4 w-4 text-red-500" />;
     }
   };
 
