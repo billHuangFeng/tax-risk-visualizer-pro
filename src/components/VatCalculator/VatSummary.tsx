@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -57,9 +56,7 @@ const VatSummary: React.FC<VatSummaryProps> = ({
         </CardTitle>
       </CardHeader>
       <CardContent>
-        {/* Top section with grid layout */}
         <div className="grid md:grid-cols-2 gap-6 mb-8">
-          {/* Left section - Payable and Actual Tax */}
           <div className="space-y-4">
             <div className="flex justify-between items-center">
               <div className="font-medium flex items-center">
@@ -100,7 +97,6 @@ const VatSummary: React.FC<VatSummaryProps> = ({
             </div>
           </div>
 
-          {/* Right section - Differences */}
           <div className="space-y-4">
             <div className="flex justify-between items-center">
               <div className="font-medium flex items-center">
@@ -130,7 +126,6 @@ const VatSummary: React.FC<VatSummaryProps> = ({
           </div>
         </div>
 
-        {/* Bottom section - Difference Analysis */}
         <div className="border-t pt-6">
           <div className="flex items-center mb-4">
             <h3 className="text-lg font-semibold">差异原因分析</h3>
@@ -152,23 +147,23 @@ const VatSummary: React.FC<VatSummaryProps> = ({
             </TableHeader>
             <TableBody>
               {differenceFactors.map((factor) => (
-                <TableRow key={factor.id}>
-                  <TableCell>
+                <TableRow key={factor.id} className="h-12">
+                  <TableCell className="py-1">
                     <Input
                       value={factor.description}
                       onChange={(e) => updateDifferenceFactor(factor.id, 'description', e.target.value)}
-                      className="w-full text-left"  // Explicitly set text-left
+                      className="w-full text-left h-8"
                     />
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-right py-1">
                     <Input
                       type="number"
                       value={factor.amount}
                       onChange={(e) => updateDifferenceFactor(factor.id, 'amount', parseFloat(e.target.value) || 0)}
-                      className="text-right w-full"
+                      className="text-right w-full h-8"
                     />
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="py-1">
                     <Button
                       variant="ghost"
                       size="icon"
