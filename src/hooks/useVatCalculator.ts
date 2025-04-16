@@ -1,3 +1,4 @@
+
 import { useEffect } from 'react';
 import { useToast } from './use-toast';
 import { useVatBasicInfo } from './vat/useVatBasicInfo';
@@ -50,8 +51,19 @@ export const useVatCalculator = () => {
 
   // Calculate unexplained difference and risk level
   useEffect(() => {
-    const explainedAmount = differences.differenceFactors.reduce((sum, factor) => sum + factor.amount, 0);
-    const unexplained = tax.taxDifference - explainedAmount;
+    // Calculate total explained difference from both sales and purchases difference factors
+    const salesExplainedAmount = differences.salesDifferenceFactors.reduce(
+      (sum, factor) => sum + factor.amount, 
+      0
+    );
+    
+    const purchasesExplainedAmount = differences.purchasesDifferenceFactors.reduce(
+      (sum, factor) => sum + factor.amount, 
+      0
+    );
+    
+    // Calculate total unexplained difference
+    const unexplained = tax.taxDifference - (salesExplainedAmount + purchasesExplainedAmount);
     tax.setUnexplainedDifference(unexplained);
     
     // Calculate sales unexplained difference percentage
@@ -93,7 +105,8 @@ export const useVatCalculator = () => {
     }
   }, [
     tax.taxDifference,
-    differences.differenceFactors,
+    differences.salesDifferenceFactors,
+    differences.purchasesDifferenceFactors,
     differences.salesExplainedDifferenceTotal,
     differences.purchasesExplainedDifferenceTotal,
     tax.payableTax,
@@ -114,8 +127,13 @@ export const useVatCalculator = () => {
     sales.setBankSalesAmount(0);
     purchases.setBankPurchasesAmount(0);
     tax.setActualTax(0);
-    differences.setDifferenceFactors([
-      { id: '1', description: '差异原因1', amount: 0 }
+    
+    // Reset difference factors for both sales and purchases
+    differences.setSalesDifferenceFactors([
+      { id: '1', description: '销售差异原因1', amount: 0 }
+    ]);
+    differences.setPurchasesDifferenceFactors([
+      { id: '1', description: '采购差异原因1', amount: 0 }
     ]);
     
     toast({
