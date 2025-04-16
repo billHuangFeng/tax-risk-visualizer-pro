@@ -19,61 +19,6 @@ const createBaseSchema = () => {
 };
 
 /**
- * Safely extracts and validates schemas from a PDF template
- * Ensures the output matches PDFME's required structure
- */
-const extractSchemas = (template: PdfTemplate): any[][] => {
-  // Default valid schema to use as fallback
-  const defaultSchema = [[createBaseSchema()]];
-  
-  try {
-    // Verify the template has schemas
-    if (!template.schemas || !Array.isArray(template.schemas) || template.schemas.length === 0) {
-      console.log("No valid schemas found in template, using default");
-      return defaultSchema;
-    }
-    
-    // Create a properly typed array for schemas
-    const validSchemas: any[][] = [];
-    
-    // Process each schema page
-    for (let i = 0; i < template.schemas.length; i++) {
-      const pageSchema = template.schemas[i];
-      
-      // Verify each page is an array
-      if (Array.isArray(pageSchema) && pageSchema.length > 0) {
-        const typedPageSchema: any[] = [];
-        
-        // Convert each schema object to proper type
-        for (let j = 0; j < pageSchema.length; j++) {
-          if (typeof pageSchema[j] === 'object' && pageSchema[j] !== null) {
-            typedPageSchema.push(pageSchema[j]);
-          }
-        }
-        
-        if (typedPageSchema.length > 0) {
-          validSchemas.push(typedPageSchema);
-        } else {
-          validSchemas.push([createBaseSchema()]);
-        }
-      } else {
-        validSchemas.push([createBaseSchema()]);
-      }
-    }
-    
-    if (validSchemas.length === 0) {
-      console.log("No valid schemas found after processing, using default");
-      return defaultSchema;
-    }
-    
-    return validSchemas;
-  } catch (error) {
-    console.error("Error processing schemas:", error);
-    return defaultSchema;
-  }
-};
-
-/**
  * Helper function to download the generated PDF
  */
 const downloadPdf = (pdf: Uint8Array, companyName?: string) => {
@@ -125,31 +70,74 @@ export const exportToPDF = async (calculator: any, template?: PdfTemplate) => {
     } else if (selectedTemplate.baseTemplate instanceof Uint8Array) {
       basePdf = selectedTemplate.baseTemplate;
     }
+
+    // Create a simpler, more direct approach to template creation
+    // that doesn't depend on complex type validation
+    const defaultSchemas = [
+      [
+        {
+          companyName: {
+            type: 'text',
+            position: { x: 50, y: 50 },
+            width: 100,
+            height: 10,
+          },
+          totalRevenue: {
+            type: 'text',
+            position: { x: 50, y: 70 },
+            width: 100,
+            height: 10,
+          },
+          invoicedRevenue: {
+            type: 'text',
+            position: { x: 50, y: 90 },
+            width: 100,
+            height: 10,
+          },
+          taxableIncome: {
+            type: 'text',
+            position: { x: 50, y: 110 },
+            width: 100,
+            height: 10,
+          },
+          actualTax: {
+            type: 'text',
+            position: { x: 50, y: 130 },
+            width: 100,
+            height: 10,
+          },
+          riskPercentage: {
+            type: 'text',
+            position: { x: 50, y: 150 },
+            width: 100, 
+            height: 10,
+          }
+        }
+      ]
+    ];
+
+    // Use template schemas if they exist, otherwise fall back to default
+    const schemas = Array.isArray(selectedTemplate.schemas) && 
+                   selectedTemplate.schemas.length > 0 ? 
+                   selectedTemplate.schemas : defaultSchemas;
     
-    // Extract and validate schemas from the template
-    const validatedSchemas = extractSchemas(selectedTemplate);
-    
-    // Construct the PDFME template with proper type assertions
-    // Using 'as unknown as Template' to bypass TypeScript's type checking
-    const pdfMeTemplate = {
-      basePdf: basePdf,
-      schemas: validatedSchemas
-    } as unknown as Template;
+    // Manually construct the template object with explicit typing
+    // We'll use a direct type assertion to override TypeScript's checking
+    const pdfTemplate = {
+      basePdf,
+      schemas
+    } as any;
     
     // Log template info for debugging
     console.log("PDF template prepared:", {
-      hasBasePdf: pdfMeTemplate.basePdf instanceof Uint8Array,
-      schemasCount: Array.isArray(pdfMeTemplate.schemas) ? pdfMeTemplate.schemas.length : 0,
-      firstSchemaFields: Array.isArray(pdfMeTemplate.schemas) && 
-                        Array.isArray(pdfMeTemplate.schemas[0]) && 
-                        pdfMeTemplate.schemas[0][0] ? 
-                        Object.keys(pdfMeTemplate.schemas[0][0]).length : 0
+      hasBasePdf: pdfTemplate.basePdf instanceof Uint8Array,
+      schemasCount: Array.isArray(pdfTemplate.schemas) ? pdfTemplate.schemas.length : 0
     });
     
     // Generate PDF with validated template
     console.log("Generating PDF with PDFME...");
     const pdf = await generate({
-      template: pdfMeTemplate,
+      template: pdfTemplate,
       inputs: inputs,
     });
     
@@ -166,8 +154,12 @@ export const exportToPDF = async (calculator: any, template?: PdfTemplate) => {
       // Create a minimal fallback template with just the base structure
       const fallbackTemplate = {
         basePdf: new Uint8Array(),
-        schemas: [[createBaseSchema()]]
-      } as unknown as Template;
+        schemas: [
+          [
+            createBaseSchema()
+          ]
+        ]
+      } as any;
       
       // Generate PDF with fallback template
       const pdf = await generate({
