@@ -24,6 +24,16 @@ export const useBasicInfo = () => {
     if (savedCreditCode) setCreditCode(savedCreditCode);
     if (savedContactPerson) setContactPerson(savedContactPerson);
     if (savedContactPhone) setContactPhone(savedContactPhone);
+    
+    // Check if we're loading test data
+    const isLoadingTestData = localStorage.getItem('isLoadingTestData') === 'true';
+    
+    if (isLoadingTestData) {
+      const isHighTech = localStorage.getItem('isHighTechEnterprise') === 'true';
+      setIsHighTechEnterprise(isHighTech);
+      setTotalAssets(localStorage.getItem('totalAssets') || '');
+      setEmployeeCount(localStorage.getItem('employeeCount') || '');
+    }
   }, []);
 
   // Save basic info to localStorage whenever it changes

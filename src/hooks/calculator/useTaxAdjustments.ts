@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 
 export const useTaxAdjustments = () => {
@@ -45,6 +44,55 @@ export const useTaxAdjustments = () => {
   });
   
   const [totalAdjustment, setTotalAdjustment] = useState('');
+
+  // Load test data if needed
+  useEffect(() => {
+    const isLoadingTestData = localStorage.getItem('isLoadingTestData') === 'true';
+    
+    if (isLoadingTestData) {
+      setRdExpenses({
+        actual: localStorage.getItem('rdExpenses') || '',
+        deductible: '',
+        adjustment: '',
+      });
+      
+      setEntertainmentExpenses({
+        actual: localStorage.getItem('entertainmentExpenses') || '',
+        deductible: '',
+        adjustment: '',
+      });
+      
+      setAdvertisingExpenses({
+        actual: localStorage.getItem('advertisingExpenses') || '',
+        deductible: '',
+        adjustment: '',
+      });
+      
+      setEducationExpenses({
+        actual: localStorage.getItem('educationExpenses') || '',
+        deductible: '',
+        adjustment: '',
+      });
+      
+      setWelfareExpenses({
+        actual: localStorage.getItem('welfareExpenses') || '',
+        deductible: '',
+        adjustment: '',
+      });
+      
+      setInsuranceExpenses({
+        actual: localStorage.getItem('insuranceExpenses') || '',
+        deductible: '',
+        adjustment: '',
+      });
+      
+      setNonDeductibleExpenses({
+        actual: localStorage.getItem('nonDeductibleExpenses') || '',
+        deductible: '',
+        adjustment: '',
+      });
+    }
+  }, []);
 
   // Calculate total adjustment whenever any individual adjustment changes
   useEffect(() => {

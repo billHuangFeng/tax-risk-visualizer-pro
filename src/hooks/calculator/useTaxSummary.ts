@@ -1,4 +1,3 @@
-
 import { useState, useCallback, useEffect } from 'react';
 import { DifferenceFactor } from '@/components/TaxCalculator/TaxSummaryComponents/DifferenceFactors';
 
@@ -15,6 +14,26 @@ export const useTaxSummary = () => {
   const [taxDifferenceFactors, setTaxDifferenceFactors] = useState<DifferenceFactor[]>([
     { id: '1', description: '差异原因1', amount: 0 }
   ]);
+
+  useEffect(() => {
+    const isLoadingTestData = localStorage.getItem('isLoadingTestData') === 'true';
+    
+    if (isLoadingTestData) {
+      setActualTax(localStorage.getItem('actualTax') || '');
+      
+      const factorsString = localStorage.getItem('taxDifferenceFactors');
+      if (factorsString) {
+        try {
+          const factors = JSON.parse(factorsString);
+          if (Array.isArray(factors)) {
+            setTaxDifferenceFactors(factors);
+          }
+        } catch (error) {
+          console.error('Error parsing tax difference factors:', error);
+        }
+      }
+    }
+  }, []);
 
   const addTaxDifferenceFactor = useCallback(() => {
     const newId = (taxDifferenceFactors.length + 1).toString();
@@ -33,7 +52,6 @@ export const useTaxSummary = () => {
         return factor;
       });
       
-      // Calculate unexplained difference
       const explainedAmount = updatedFactors.reduce(
         (sum, factor) => sum + factor.amount, 
         0
@@ -51,7 +69,6 @@ export const useTaxSummary = () => {
     setTaxDifferenceFactors(prevFactors => {
       const updatedFactors = prevFactors.filter(factor => factor.id !== id);
       
-      // Calculate unexplained difference
       const explainedAmount = updatedFactors.reduce(
         (sum, factor) => sum + factor.amount, 
         0
@@ -65,12 +82,10 @@ export const useTaxSummary = () => {
     });
   }, [riskValue]);
 
-  // Calculate unexplained difference percentage whenever the unexplained difference or theoretical tax changes
   useEffect(() => {
     const unexplainedDiff = parseFloat(unexplainedDifference) || 0;
     const theoretical = parseFloat(theoreticalTax) || 0;
     
-    // Calculate as: 未解释差异/理论应纳企业所得税的绝对值
     const percentage = theoretical !== 0 
       ? (unexplainedDiff / Math.abs(theoretical)) * 100 
       : 0;
@@ -78,9 +93,7 @@ export const useTaxSummary = () => {
     setUnexplainedDifferencePercentage(percentage);
   }, [unexplainedDifference, theoreticalTax]);
 
-  // Update unexplained difference whenever risk value changes
   useEffect(() => {
-    // Calculate explained amount
     const explainedAmount = taxDifferenceFactors.reduce(
       (sum, factor) => sum + factor.amount, 
       0

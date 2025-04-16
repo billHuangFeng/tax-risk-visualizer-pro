@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export const useRevenueExpenses = () => {
   const [totalRevenue, setTotalRevenue] = useState('');
@@ -14,6 +14,27 @@ export const useRevenueExpenses = () => {
   const [socialSecurity, setSocialSecurity] = useState('');
   const [depreciation, setDepreciation] = useState('');
   const [otherExpenses, setOtherExpenses] = useState('');
+
+  // Load values from localStorage on component mount
+  useEffect(() => {
+    const isLoadingTestData = localStorage.getItem('isLoadingTestData') === 'true';
+    
+    if (isLoadingTestData) {
+      setTotalRevenue(localStorage.getItem('totalRevenue') || '');
+      setInvoicedRevenue(localStorage.getItem('invoicedRevenue') || '');
+      setNonInvoicedRevenue(localStorage.getItem('nonInvoicedRevenue') || '');
+      setTotalExpenses(localStorage.getItem('totalExpenses') || '');
+      setInvoicedExpenses(localStorage.getItem('invoicedExpenses') || '');
+      setNonInvoicedExpenses(localStorage.getItem('nonInvoicedExpenses') || '');
+      setPersonalTax(localStorage.getItem('personalTax') || '');
+      setSocialSecurity(localStorage.getItem('socialSecurity') || '');
+      setDepreciation(localStorage.getItem('depreciation') || '');
+      setOtherExpenses(localStorage.getItem('otherExpenses') || '');
+      
+      // Reset the flag
+      localStorage.setItem('isLoadingTestData', 'false');
+    }
+  }, []);
 
   return {
     totalRevenue,

@@ -5,7 +5,7 @@ import { useTaxAdjustments } from './calculator/useTaxAdjustments';
 import { useTaxSummary } from './calculator/useTaxSummary';
 import { useCalculations } from './calculator/useCalculations';
 import { useActions } from './calculator/useActions';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 
 export const useCalculator = () => {
   const basicInfo = useBasicInfo();
@@ -29,76 +29,29 @@ export const useCalculator = () => {
       localStorage.setItem('contactPhone', contactPhone);
     }
     
-    // Flag to indicate if we're loading test data
+    // Check if we're loading test data
     const isLoadingTestData = localStorage.getItem('isLoadingTestData') === 'true';
     
-    // Reset enterprise info (unless loading test data)
     if (!isLoadingTestData) {
+      // Reset all fields if not loading test data
       basicInfo.setIsExcludedIndustry(false);
       basicInfo.setIsHighTechEnterprise(false);
       basicInfo.setTotalAssets('');
       basicInfo.setEmployeeCount('');
-    } else {
-      // Set enterprise info from test data
-      basicInfo.setIsHighTechEnterprise(true);
-      basicInfo.setTotalAssets(localStorage.getItem('totalAssets') || '');
-      basicInfo.setEmployeeCount(localStorage.getItem('employeeCount') || '');
-      localStorage.setItem('isLoadingTestData', 'false');
-    }
-    
-    // Reset or set revenue and expenses
-    revenueExpenses.setTotalRevenue(isLoadingTestData ? localStorage.getItem('totalRevenue') || '' : '');
-    revenueExpenses.setInvoicedRevenue(isLoadingTestData ? localStorage.getItem('invoicedRevenue') || '' : '');
-    revenueExpenses.setNonInvoicedRevenue(isLoadingTestData ? localStorage.getItem('nonInvoicedRevenue') || '' : '');
-    revenueExpenses.setNewInvoicedRevenue('');
-    revenueExpenses.setTotalExpenses(isLoadingTestData ? localStorage.getItem('totalExpenses') || '' : '');
-    revenueExpenses.setInvoicedExpenses(isLoadingTestData ? localStorage.getItem('invoicedExpenses') || '' : '');
-    revenueExpenses.setNonInvoicedExpenses(isLoadingTestData ? localStorage.getItem('nonInvoicedExpenses') || '' : '');
-    revenueExpenses.setPersonalTax(isLoadingTestData ? localStorage.getItem('personalTax') || '' : '');
-    revenueExpenses.setSocialSecurity(isLoadingTestData ? localStorage.getItem('socialSecurity') || '' : '');
-    revenueExpenses.setDepreciation(isLoadingTestData ? localStorage.getItem('depreciation') || '' : '');
-    revenueExpenses.setOtherExpenses(isLoadingTestData ? localStorage.getItem('otherExpenses') || '' : '');
-    
-    // Reset or set tax adjustments
-    const emptyAdjustment = { actual: '', deductible: '', adjustment: '' };
-    
-    if (isLoadingTestData) {
-      taxAdjustments.setRdExpenses({
-        actual: localStorage.getItem('rdExpenses') || '',
-        deductible: '',
-        adjustment: ''
-      });
-      taxAdjustments.setEntertainmentExpenses({
-        actual: localStorage.getItem('entertainmentExpenses') || '',
-        deductible: '',
-        adjustment: ''
-      });
-      taxAdjustments.setAdvertisingExpenses({
-        actual: localStorage.getItem('advertisingExpenses') || '',
-        deductible: '',
-        adjustment: ''
-      });
-      taxAdjustments.setEducationExpenses({
-        actual: localStorage.getItem('educationExpenses') || '',
-        deductible: '',
-        adjustment: ''
-      });
-      taxAdjustments.setWelfareExpenses({
-        actual: localStorage.getItem('welfareExpenses') || '',
-        deductible: '',
-        adjustment: ''
-      });
-      taxAdjustments.setInsuranceExpenses({
-        actual: localStorage.getItem('insuranceExpenses') || '',
-        deductible: '',
-        adjustment: ''
-      });
-      taxAdjustments.setNonDeductibleExpenses({
-        actual: localStorage.getItem('nonDeductibleExpenses') || '',
-        deductible: '',
-        adjustment: ''
-      });
-    } else {
+      
+      revenueExpenses.setTotalRevenue('');
+      revenueExpenses.setInvoicedRevenue('');
+      revenueExpenses.setNonInvoicedRevenue('');
+      revenueExpenses.setNewInvoicedRevenue('');
+      revenueExpenses.setTotalExpenses('');
+      revenueExpenses.setInvoicedExpenses('');
+      revenueExpenses.setNonInvoicedExpenses('');
+      revenueExpenses.setPersonalTax('');
+      revenueExpenses.setSocialSecurity('');
+      revenueExpenses.setDepreciation('');
+      revenueExpenses.setOtherExpenses('');
+      
+      const emptyAdjustment = { actual: '', deductible: '', adjustment: '' };
       taxAdjustments.setRdExpenses(emptyAdjustment);
       taxAdjustments.setEntertainmentExpenses(emptyAdjustment);
       taxAdjustments.setAdvertisingExpenses(emptyAdjustment);
@@ -106,34 +59,36 @@ export const useCalculator = () => {
       taxAdjustments.setWelfareExpenses(emptyAdjustment);
       taxAdjustments.setInsuranceExpenses(emptyAdjustment);
       taxAdjustments.setNonDeductibleExpenses(emptyAdjustment);
-    }
-    
-    // Reset or set tax summary
-    taxSummary.setTaxableIncome('');
-    taxSummary.setTaxRate('');
-    taxSummary.setTheoreticalTax('');
-    taxSummary.setActualTax(isLoadingTestData ? localStorage.getItem('actualTax') || '' : '');
-    taxSummary.setRiskValue('');
-    taxSummary.setRiskPercentage(0);
-    
-    // Reset or set tax difference factors
-    if (isLoadingTestData) {
-      const factorsString = localStorage.getItem('taxDifferenceFactors');
-      if (factorsString) {
-        try {
-          const factors = JSON.parse(factorsString);
-          if (Array.isArray(factors)) {
-            taxSummary.setTaxDifferenceFactors(factors);
-          }
-        } catch (error) {
-          console.error('Error parsing tax difference factors:', error);
-          taxSummary.setTaxDifferenceFactors([{ id: '1', description: '差异原因1', amount: 0 }]);
-        }
-      }
-    } else {
+      
+      taxSummary.setTaxableIncome('');
+      taxSummary.setTaxRate('');
+      taxSummary.setTheoreticalTax('');
+      taxSummary.setActualTax('');
+      taxSummary.setRiskValue('');
+      taxSummary.setRiskPercentage(0);
       taxSummary.setTaxDifferenceFactors([{ id: '1', description: '差异原因1', amount: 0 }]);
+    } else {
+      // For test data loading, we set the flag to false
+      // Each hook should read the values from localStorage directly
+      localStorage.setItem('isLoadingTestData', 'false');
+      
+      // Force a re-render to ensure all hooks load their test data
+      setTimeout(() => {
+        window.dispatchEvent(new Event('storage'));
+      }, 0);
     }
   }, [basicInfo, revenueExpenses, taxAdjustments, taxSummary]);
+  
+  // Listen for storage event to re-render components
+  useEffect(() => {
+    const handleStorageChange = () => {
+      // This is just to trigger a re-render when localStorage changes
+      console.log('Storage changed, refreshing state');
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
   
   const actions = useActions(taxSummary.riskValue, taxSummary.riskPercentage, resetCalculatorState);
 

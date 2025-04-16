@@ -24,7 +24,8 @@ export const useActions = (
   };
 
   const loadTestData = () => {
-    // Set test data in memory first, then update the calculator state
+    // Flag to indicate we're loading test data
+    localStorage.setItem('isLoadingTestData', 'true');
     
     // Set enterprise info
     localStorage.setItem('isHighTechEnterprise', 'true');
@@ -62,7 +63,7 @@ export const useActions = (
     ];
     localStorage.setItem('taxDifferenceFactors', JSON.stringify(taxDifferenceFactors));
     
-    // Reset calculator state and apply test data
+    // Apply test data to calculator state
     resetCalculatorState();
     
     toast({
