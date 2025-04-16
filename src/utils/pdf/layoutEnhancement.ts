@@ -1,3 +1,4 @@
+
 // Functions for enhancing layout for PDF export
 
 import { elementExists } from './domHelpers';
@@ -44,6 +45,7 @@ export const removeRedundantTextElements = (container: HTMLElement) => {
     inputGroups.forEach((group) => {
       if (group instanceof HTMLElement) {
         const values = group.querySelectorAll('.pdf-value');
+        // Check if elements are of HTMLElement type before accessing style property
         if (values.length > 1) {
           for (let i = 1; i < values.length; i++) {
             if (values[i] instanceof HTMLElement) {
@@ -227,3 +229,4 @@ export const enhanceLayout = (container: HTMLElement) => {
     console.warn('Error enhancing layout:', error);
   }
 };
+
