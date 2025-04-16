@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -57,29 +58,30 @@ const DifferenceExplanation: React.FC<DifferenceExplanationProps> = ({
         </TableHeader>
         <TableBody>
           {differenceExplanations.map((explanation) => (
-            <TableRow key={explanation.id}>
-              <TableCell>
+            <TableRow key={explanation.id} className="py-1 h-12">
+              <TableCell className="py-1">
                 <Input
                   value={explanation.reason}
                   onChange={(e) => updateDifferenceExplanation(explanation.id, 'reason', e.target.value)}
                   placeholder="请输入差异原因"
-                  className="w-full bg-white"
+                  className="w-full bg-white h-8"
                 />
               </TableCell>
-              <TableCell>
+              <TableCell className="py-1">
                 <Input
                   type="number"
                   value={explanation.amount}
                   onChange={(e) => updateDifferenceExplanation(explanation.id, 'amount', parseFloat(e.target.value) || 0)}
-                  className="text-right w-full bg-white"
+                  className="text-right w-full bg-white h-8"
                 />
               </TableCell>
-              <TableCell>
+              <TableCell className="py-1">
                 <Button
                   variant="ghost"
                   size="icon"
                   onClick={() => removeDifferenceExplanation(explanation.id)}
                   disabled={differenceExplanations.length <= 1}
+                  className="h-8 w-8"
                 >
                   <Trash2 className="h-4 w-4 text-gray-500" />
                 </Button>
@@ -88,12 +90,12 @@ const DifferenceExplanation: React.FC<DifferenceExplanationProps> = ({
           ))}
           
           <TableRow>
-            <TableCell colSpan={3}>
+            <TableCell colSpan={3} className="py-1">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={addDifferenceExplanation}
-                className="w-full"
+                className="w-full h-8"
               >
                 <Plus className="h-4 w-4 mr-2" />
                 添加差异说明
@@ -102,14 +104,14 @@ const DifferenceExplanation: React.FC<DifferenceExplanationProps> = ({
           </TableRow>
 
           <TableRow className="bg-gray-100/50 font-medium">
-            <TableCell>总计</TableCell>
-            <TableCell className="text-right">{explainedDifferenceTotal.toFixed(2)}</TableCell>
-            <TableCell></TableCell>
+            <TableCell className="py-1">总计</TableCell>
+            <TableCell className="text-right py-1">{explainedDifferenceTotal.toFixed(2)}</TableCell>
+            <TableCell className="py-1"></TableCell>
           </TableRow>
 
           <TableRow className="bg-gray-100/50 font-medium">
-            <TableCell>未解释差异</TableCell>
-            <TableCell className="text-right flex items-center justify-end gap-2">
+            <TableCell className="py-1">未解释差异</TableCell>
+            <TableCell className="text-right flex items-center justify-end gap-2 py-1">
               <div className="flex items-center gap-2">
                 {getWarningIcon(unexplainedDifferencePercentage)}
                 {unexplainedDifference.toFixed(2)}
@@ -118,7 +120,7 @@ const DifferenceExplanation: React.FC<DifferenceExplanationProps> = ({
                 {unexplainedDifferencePercentage.toFixed(2)}%
               </span>
             </TableCell>
-            <TableCell></TableCell>
+            <TableCell className="py-1"></TableCell>
           </TableRow>
         </TableBody>
       </Table>
