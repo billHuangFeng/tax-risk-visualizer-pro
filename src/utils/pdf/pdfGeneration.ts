@@ -1,9 +1,8 @@
-
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import { processTextElements, processInputFields } from './elementStyles';
 import { processCheckboxes, enhanceTables } from './formElements';
-import { enhanceLayout, removeRedundantTextElements } from './layoutEnhancement';
+import { enhanceLayout } from './enhancer';
 
 // Create canvas from prepared content
 const createCanvas = async (content: HTMLElement): Promise<HTMLCanvasElement> => {
@@ -23,7 +22,6 @@ const createCanvas = async (content: HTMLElement): Promise<HTMLCanvasElement> =>
         
         try {
           // First remove all redundant elements
-          removeRedundantTextElements(element);
           
           // Process text elements to ensure visibility
           processTextElements(element);
