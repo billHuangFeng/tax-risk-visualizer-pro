@@ -1,4 +1,3 @@
-
 import React from 'react';
 import RiskIndicator from './TaxSummaryComponents/RiskIndicator';
 import TaxInputRow from './TaxSummaryComponents/TaxInputRow';
@@ -77,7 +76,7 @@ const TaxSummary: React.FC<TaxSummaryProps> = ({
         />
         
         <TaxInputRow
-          label="风险差值 = 理论应纳税额 - 实际申报税额"
+          label="企业所得税差异 = 理论应纳税额 - 实际申报税额"
           value={riskValue}
           readOnly
           showInfo
