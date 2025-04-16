@@ -1,7 +1,6 @@
-
 import React from 'react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { AlertCircle, CircleInfo, ListOrdered } from 'lucide-react';
+import { CircleAlert, ListOrdered } from 'lucide-react';
 import { TaxInfoPanelItem } from '@/types/calculator';
 import TaxInfoPanel from '@/components/TaxCalculator/TaxInfoPanel';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -33,7 +32,7 @@ const CalculatorLayout: React.FC<CalculatorLayoutProps> = ({ children, selectedI
               <Card>
                 <CardHeader className="pb-3">
                   <CardTitle className="flex items-center text-tax-blue gap-2">
-                    <CircleInfo className="h-5 w-5" />
+                    <CircleAlert className="h-5 w-5" />
                     使用说明
                   </CardTitle>
                 </CardHeader>
@@ -76,7 +75,7 @@ const CalculatorLayout: React.FC<CalculatorLayoutProps> = ({ children, selectedI
                     variant="outline" 
                     className="fixed bottom-4 right-4 z-50 rounded-full shadow-lg bg-white"
                   >
-                    <CircleInfo className="h-5 w-5" />
+                    <CircleAlert className="h-5 w-5" />
                   </Button>
                 </SheetTrigger>
                 <SheetContent side="bottom" className="h-[80vh]">
@@ -96,4 +95,3 @@ const CalculatorLayout: React.FC<CalculatorLayoutProps> = ({ children, selectedI
 };
 
 export default CalculatorLayout;
-
