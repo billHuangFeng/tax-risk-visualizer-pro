@@ -6,9 +6,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Toggle } from "@/components/ui/toggle";
 import { DEFAULT_TEMPLATES } from "@/constants/pdfTemplates";
 import { PdfTemplate } from "@/types/pdfTemplates";
-import { Paintbrush, Eye, Download, Settings } from "lucide-react";
+import { Paintbrush, Eye, Download, Settings, Layout } from "lucide-react";
 import { PdfTemplateEditor } from './PdfTemplateEditor';
 import { PdfTemplatePreview } from './PdfTemplatePreview';
+import { PdfLayoutEditor } from './PdfLayoutEditor';
 
 interface PdfTemplateDialogProps {
   open: boolean;
@@ -16,8 +17,7 @@ interface PdfTemplateDialogProps {
   onExport: (template: PdfTemplate) => void;
 }
 
-// Define the view state as a union type for type safety
-type ViewState = 'select' | 'edit' | 'preview';
+type ViewState = 'select' | 'edit' | 'preview' | 'layout';
 
 export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({ 
   open, 
@@ -25,7 +25,6 @@ export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({
   onExport 
 }) => {
   const [selectedTemplate, setSelectedTemplate] = useState<PdfTemplate>(DEFAULT_TEMPLATES[0]);
-  // Use the ViewState type for the view state variable
   const [view, setView] = useState<ViewState>('select');
   
   const handleSelectTemplate = (template: PdfTemplate) => {
@@ -42,20 +41,24 @@ export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({
     onClose();
   };
   
-  // Handle toggle press for preview mode
+  // Determine if a toggle should be pressed based on current view
+  const isPreviewActive = view === 'preview';
+  const isEditActive = view === 'edit';
+  const isLayoutActive = view === 'layout';
+  
+  // Handle toggle press for each mode
   const handlePreviewToggle = (pressed: boolean) => {
     if (pressed) setView('preview');
   };
   
-  // Handle toggle press for edit mode
   const handleEditToggle = (pressed: boolean) => {
     if (pressed) setView('edit');
   };
   
-  // Determine if a toggle should be pressed based on current view
-  const isPreviewActive = view === 'preview';
-  const isEditActive = view === 'edit';
-  
+  const handleLayoutToggle = (pressed: boolean) => {
+    if (pressed) setView('layout');
+  };
+
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[900px] max-h-[80vh] overflow-y-auto">
@@ -76,6 +79,14 @@ export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({
               >
                 <Eye className="h-4 w-4 mr-2" />
                 预览
+              </Toggle>
+              <Toggle 
+                pressed={isLayoutActive}
+                onPressedChange={handleLayoutToggle}
+                aria-label="页面布局"
+              >
+                <Layout className="h-4 w-4 mr-2" />
+                布局
               </Toggle>
               <Toggle 
                 pressed={isEditActive} 
@@ -180,6 +191,13 @@ export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({
           <PdfTemplatePreview 
             template={selectedTemplate}
             onBack={() => setView('select')}
+          />
+        )}
+        
+        {view === 'layout' && (
+          <PdfLayoutEditor
+            template={selectedTemplate}
+            onUpdate={handleSaveTemplate}
           />
         )}
         

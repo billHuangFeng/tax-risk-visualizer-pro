@@ -1,5 +1,43 @@
-
 import { PdfTemplate } from "@/types/pdfTemplates";
+
+const defaultLayout = {
+  sections: [
+    {
+      id: "basic-info",
+      type: "basic-info",
+      title: "基本信息",
+      visible: true,
+      order: 1,
+      fields: [
+        { id: "companyName", type: "text", label: "公司名称", visible: true, sourceField: "companyName" },
+        { id: "employeeCount", type: "number", label: "员工数量", visible: true, sourceField: "employeeCount" },
+        { id: "highTechEnterprise", type: "checkbox", label: "高新技术企业", visible: true, sourceField: "isHighTech" }
+      ]
+    },
+    {
+      id: "revenue-expenses",
+      type: "revenue-expenses",
+      title: "收入支出",
+      visible: true,
+      order: 2,
+      fields: [
+        { id: "totalRevenue", type: "number", label: "总收入", visible: true, sourceField: "totalRevenue" },
+        { id: "totalExpenses", type: "number", label: "总支出", visible: true, sourceField: "totalExpenses" }
+      ]
+    },
+    {
+      id: "tax-summary",
+      type: "tax-summary",
+      title: "税务总结",
+      visible: true,
+      order: 3,
+      fields: [
+        { id: "taxRate", type: "number", label: "适用税率", visible: true, sourceField: "taxRate" },
+        { id: "taxAmount", type: "number", label: "应纳税额", visible: true, sourceField: "taxAmount" }
+      ]
+    }
+  ]
+};
 
 export const DEFAULT_TEMPLATES: PdfTemplate[] = [
   {
@@ -25,10 +63,7 @@ export const DEFAULT_TEMPLATES: PdfTemplate[] = [
         padding: "4px 8px",
         labelColor: "#000000"
       },
-      layout: {
-        pageMargin: "40px",
-        sectionSpacing: "24px"
-      }
+      layout: defaultLayout
     }
   },
   {
@@ -54,10 +89,7 @@ export const DEFAULT_TEMPLATES: PdfTemplate[] = [
         padding: "6px 10px",
         labelColor: "#555555"
       },
-      layout: {
-        pageMargin: "30px",
-        sectionSpacing: "30px"
-      }
+      layout: defaultLayout
     }
   },
   {
@@ -83,10 +115,7 @@ export const DEFAULT_TEMPLATES: PdfTemplate[] = [
         padding: "3px 6px",
         labelColor: "#888888"
       },
-      layout: {
-        pageMargin: "20px",
-        sectionSpacing: "16px"
-      }
+      layout: defaultLayout
     }
   }
 ];

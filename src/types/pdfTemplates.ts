@@ -5,6 +5,7 @@ export interface PdfTemplate {
   description: string;
   previewImage?: string;
   styles: PdfTemplateStyles;
+  layout: PdfTemplateLayout;
 }
 
 export interface PdfTemplateStyles {
@@ -30,6 +31,27 @@ export interface PdfTemplateStyles {
     pageMargin: string;
     sectionSpacing: string;
   };
+}
+
+export interface PdfTemplateLayout {
+  sections: PdfSection[];
+}
+
+export interface PdfSection {
+  id: string;
+  type: 'basic-info' | 'revenue-expenses' | 'tax-summary' | 'custom';
+  title: string;
+  visible: boolean;
+  order: number;
+  fields?: PdfField[];
+}
+
+export interface PdfField {
+  id: string;
+  type: 'text' | 'number' | 'checkbox' | 'table';
+  label: string;
+  visible: boolean;
+  sourceField?: string;
 }
 
 export interface PdfTemplateEditorState {
