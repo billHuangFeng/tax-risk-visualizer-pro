@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { CircleAlert, ListMinus } from 'lucide-react';
@@ -74,15 +75,15 @@ const TopSection: React.FC = () => {
         </div>
       </div>
       <div className="flex justify-end">
-        <Card className="w-full">
+        <Card className="w-full h-full">
           <CardHeader className="pb-2">
             <CardTitle className="flex items-center gap-2 text-[#1677FF]">
               <CircleAlert className="h-5 w-5" />
               <span className="text-base">使用说明</span>
             </CardTitle>
           </CardHeader>
-          <CardContent className="py-2">
-            <div className="text-gray-600 space-y-1 text-sm">
+          <CardContent className="py-2 h-full flex flex-col justify-between">
+            <div className="text-gray-600 space-y-1 text-sm flex-grow">
               <div className="flex items-start gap-2">
                 <ListMinus className="h-4 w-4 mt-1 flex-shrink-0 text-[#1677FF]" />
                 <span>填写基本信息和财务数据</span>
@@ -114,3 +115,4 @@ const TopSection: React.FC = () => {
 };
 
 export default TopSection;
+
