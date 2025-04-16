@@ -10,7 +10,7 @@ export const processInputFields = (container: HTMLElement) => {
         
         // Find or create a visible element to display the input value
         const parentElement = input.parentElement;
-        if (parentElement instanceof HTMLElement) {
+        if (parentElement) {
           // 查找现有的pdf-value元素
           let valueDisplay = parentElement.querySelector('.pdf-value');
           
@@ -18,12 +18,10 @@ export const processInputFields = (container: HTMLElement) => {
           if (!valueDisplay) {
             valueDisplay = document.createElement('div');
             valueDisplay.className = 'pdf-value pdf-only';
-            (valueDisplay as HTMLElement).style.display = 'none'; // 默认隐藏，仅PDF时显示
+            const valueDisplayElement = valueDisplay as HTMLElement;
+            valueDisplayElement.style.display = 'none'; // 默认隐藏，仅PDF时显示
             parentElement.appendChild(valueDisplay);
-          } else if (valueDisplay instanceof HTMLElement) {
-            // 确保现有的元素也有pdf-only类
-            valueDisplay.classList.add('pdf-only');
-          }
+          } 
           
           // 样式化值显示元素 (在PDF导出时将变为可见)
           if (valueDisplay instanceof HTMLElement) {
@@ -81,7 +79,7 @@ export const processInputFields = (container: HTMLElement) => {
       const value = companyNameField.value || '';
       const parentElement = companyNameField.parentElement;
       
-      if (parentElement instanceof HTMLElement) {
+      if (parentElement) {
         let valueDisplay = parentElement.querySelector('.pdf-value');
         
         if (!valueDisplay) {

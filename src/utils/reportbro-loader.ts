@@ -4,7 +4,10 @@ export const loadReportBroLibraries = (): Promise<void> => {
   return new Promise((resolve, reject) => {
     try {
       // 检查是否已经加载
-      if (typeof window.ReportBro === 'function' && typeof window.ReportBroDesigner === 'function') {
+      if (
+        typeof window.ReportBro === 'function' && 
+        typeof window.ReportBroDesigner === 'function'
+      ) {
         console.log("ReportBro already loaded, skipping load");
         return resolve();
       }
@@ -19,65 +22,228 @@ export const loadReportBroLibraries = (): Promise<void> => {
         reject(new Error('加载ReportBro库超时，请检查网络连接'));
       }, 20000);
       
-      // 嵌入jQuery
-      loadScriptDirectly(`
-        // jQuery Slim 3.6.0
-        !function(e,t){"use strict";"object"==typeof module&&"object"==typeof module.exports?module.exports=e.document?t(e,!0):function(e){if(!e.document)throw new Error("jQuery requires a window with a document");return t(e)}:t(e)}("undefined"!=typeof window?window:this,function(C,e){"use strict";var t=[],r=Object.getPrototypeOf,s=t.slice,g=t.flat?function(e){return t.flat.call(e)}:function(e){return t.concat.apply([],e)},u=t.push,i=t.indexOf,n={},o=n.toString,v=n.hasOwnProperty,a=v.toString,l=a.call(Object),y={},m=function(e){return"function"==typeof e&&"number"!=typeof e.nodeType&&"function"!=typeof e.item},x=function(e){return null!=e&&e===e.window},E=C.document,c={type:!0,src:!0,nonce:!0,noModule:!0};function b(e,t,n){var r,i,o=(n=n||E).createElement("script");if(o.text=e,t)for(r in c)(i=t[r]||t.getAttribute&&t.getAttribute(r))&&o.setAttribute(r,i);n.head.appendChild(o).parentNode.removeChild(o)}function w(e){return null==e?e+"":"object"==typeof e||"function"==typeof e?n[o.call(e)]||"object":typeof e}var f="3.6.0 -ajax,-ajax/jsonp,-ajax/load,-ajax/script,-ajax/var/location,-ajax/var/nonce,-ajax/var/rquery,-ajax/xhr,-manipulation/_evalUrl,-deprecated/ajax-event-alias,-effects,-effects/Tween,-effects/animatedSelector",S=function(e,t){return new S.fn.init(e,t)};function p(e){var t=!!e&&"length"in e&&e.length,n=w(e);return!m(e)&&!x(e)&&("array"===n||0===t||"number"==typeof t&&0<t&&t-1 in e)}S.fn=S.prototype={jquery:f,constructor:S,length:0,toArray:function(){return s.call(this)},get:function(e){return null==e?s.call(this):e<0?this[e+this.length]:this[e]},pushStack:function(e){var t=S.merge(this.constructor(),e);return t.prevObject=this,t},each:function(e){return S.each(this,e)},map:function(n){return this.pushStack(S.map(this,function(e,t){return n.call(e,t,e)}))},slice:function(){return this.pushStack(s.apply(this,arguments))},first:function(){return this.eq(0)},last:function(){return this.eq(-1)},even:function(){return this.pushStack(S.grep(this,function(e,t){return(t+1)%2}))},odd:function(){return this.pushStack(S.grep(this,function(e,t){return t%2}))},eq:function(e){var t=this.length,n=+e+(e<0?t:0);return this.pushStack(0<=n&&n<t?[this[n]]:[])},end:function(){return this.prevObject||this.constructor()},push:u,sort:t.sort,splice:t.splice},S.extend=S.fn.extend=function(){var e,t,n,r,i,o,a=arguments[0]||{},s=1,u=arguments.length,l=!1;for("boolean"==typeof a&&(l=a,a=arguments[s]||{},s++),"object"==typeof a||m(a)||(a={}),s===u&&(a=this,s--);s<u;s++)if(null!=(e=arguments[s]))for(t in e)r=e[t],"__proto__"!==t&&a!==r&&(l&&r&&(S.isPlainObject(r)||(i=Array.isArray(r)))?(n=a[t],o=i&&!Array.isArray(n)?[]:i||S.isPlainObject(n)?n:{},i=!1,a[t]=S.extend(l,o,r)):void 0!==r&&(a[t]=r));return a},S.extend({expando:"jQuery"+(f+Math.random()).replace(/\\D/g,""),isReady:!0,error:function(e){throw new Error(e)},noop:function(){},isPlainObject:function(e){var t,n;return!(!e||"[object Object]"!==o.call(e))&&(!(t=r(e))||"function"==typeof(n=v.call(t,"constructor")&&t.constructor)&&a.call(n)===l)},isEmptyObject:function(e){var t;for(t in e)return!1;return!0},globalEval:function(e,t,n){b(e,{nonce:t&&t.nonce},n)},each:function(e,t){var n,r=0;if(p(e)){for(n=e.length;r<n;r++)if(!1===t.call(e[r],r,e[r]))break}else for(r in e)if(!1===t.call(e[r],r,e[r]))break;return e},makeArray:function(e,t){var n=t||[];return null!=e&&(p(Object(e))?S.merge(n,"string"==typeof e?[e]:e):u.call(n,e)),n},inArray:function(e,t,n){return null==t?-1:i.call(t,e,n)},merge:function(e,t){for(var n=+t.length,r=0,i=e.length;r<n;r++)e[i++]=t[r];return e.length=i,e},grep:function(e,t,n){for(var r=[],i=0,o=e.length,a=!n;i<o;i++)!t(e[i],i)!==a&&r.push(e[i]);return r},map:function(e,t,n){var r,i,o=0,a=[];if(p(e))for(r=e.length;o<r;o++)null!=(i=t(e[o],o,n))&&a.push(i);else for(o in e)null!=(i=t(e[o],o,n))&&a.push(i);return g(a)},guid:1,support:y}),"function"==typeof Symbol&&(S.fn[Symbol.iterator]=t[Symbol.iterator]),S.each("Boolean Number String Function Array Date RegExp Object Error Symbol".split(" "),function(e,t){n["[object "+t+"]"]=t.toLowerCase()});var d=function(n){var e,d,b,o,i,h,f,g,w,u,l,T,C,a,E,v,s,c,y,S="sizzle"+1*new Date,p=n.document,k=0,r=0,m=ue(),x=ue(),A=ue(),N=ue(),j=function(e,t){return e===t&&(l=!0),0},D={}.hasOwnProperty,t=[],q=t.pop,L=t.push,H=t.push,O=t.slice,P=function(e,t){for(var n=0,r=e.length;n<r;n++)if(e[n]===t)return n;return-1},R="checked|selected|async|autofocus|autoplay|controls|defer|disabled|hidden|ismap|loop|multiple|open|readonly|required|scoped",M="[\\x20\\t\\r\\n\\f]",I="(?:\\\\[\\da-fA-F]{1,6}"+M+"?|\\\\[^\\r\\n\\f]|[\\w-]|[^\\0-\\x7f])+",W="\\["+M+"*("+I+")(?:"+M+"*([*^$|!~]?=)"+M+"*(?:'((?:\\\\.|[^\\\\'])*)'|\\"((?:\\\\.|[^\\\\\\"])*)\\"|("+I+"))|)"+M+"*\\]",F=":("+I+")(?:\\((('((?:\\\\.|[^\\\\'])*)'|\\"((?:\\\\.|[^\\\\\\"])*)\\")|([^\\\\\\(\\\\\\)\\"\\']*)(?:\\(([^\\\\\\(\\\\\\)\\"\\']*)\\)|))\\)|)",$=":(even|odd|eq|gt|lt|nth|first|last)(?:\\("+M+"*((?:-\\\\d)?\\\\d*)"+M+"*\\)|)(?=[^-]|$)",B=new RegExp(M+"+","g"),_=new RegExp("^"+M+"+|((?:^|[^\\\\])(?:\\\\.)*)"+M+"+$","g"),z=new RegExp("^"+M+"*,"+M+"*"),U=new RegExp("^"+M+"*([>+~]|"+M+")"+M+"*"),X=new RegExp(M+"|>"),V=new RegExp(F),G=new RegExp("^"+I+"$"),Y={ID:new RegExp("^#("+I+")"),CLASS:new RegExp("^\\.("+I+")"),TAG:new RegExp("^("+I+"|[*])"),ATTR:new RegExp("^"+W),PSEUDO:new RegExp("^"+F),CHILD:new RegExp("^:(only|first|last|nth|nth-last)-(child|of-type)(?:\\("+M+"*(even|odd|(([+-]|)(\\\\d*)n|)"+M+"*(?:([+-]|)"+M+"*(\\\\d+)|))"+M+"*\\)|)","i"),bool:new RegExp("^(?:"+R+")$","i"),needsContext:new RegExp("^"+M+"*[>+~]|:(even|odd|eq|gt|lt|nth|first|last)(?:\\("+M+"*((?:-\\\\d)?\\\\d*)"+M+"*\\)|)(?=[^-]|$)","i")},Q=/HTML$/i,J=/^(?:input|select|textarea|button)$/i,K=/^h\\d$/i,Z=/^[^{]+\\{\\s*\\[native \\w/,ee=/^(?:#([\\w-]+)|(\\w+)|\\.([\\w-]+))$/,te=/[+~]/,ne=new RegExp("\\\\[\\da-fA-F]{1,6}"+M+"?|\\\\([^\\r\\n\\f])","g"),re=function(e,t){var n="0x"+e.slice(1)-65536;return t||(n<0?String.fromCharCode(n+65536):String.fromCharCode(n>>10|55296,1023&n|56320))},ie=/([\0-\x1f\x7f]|^-?\d)|^-$|[^\0-\x1f\x7f-\uFFFF\w-]/g,oe=function(e,t){return t?"\0"===e?"\ufffd":e.slice(0,-1)+"\\"+e.charCodeAt(e.length-1).toString(16)+" ":"\\"+e},ae=function(){T()},se=be(function(e){return!0===e.disabled&&"fieldset"===e.nodeName.toLowerCase()},{dir:"parentNode",next:"legend"});try{H.apply(t=O.call(p.childNodes),p.childNodes),t[p.childNodes.length].nodeType}catch(e){H={apply:t.length?function(e,t){L.apply(e,O.call(t))}:function(e,t){var n=e.length,r=0;while(e[n++]=t[r++]);e.length=n-1}}}function ue(e,t){var n,r,i,o,a,s,u,l=t&&t.ownerDocument,c=t?t.nodeType:9;if(l=l||d,c!==9||!(i=l.documentElement))return{top:0,left:0};return{top:(a=(o=l.defaultView||l.parentWindow||C).pageYOffset||i.scrollTop||p.scrollTop)-((n=e.getBoundingClientRect()).top+parseInt(getComputedStyle(e).borderTopWidth)||0),left:s-((r=n.left)+parseInt(getComputedStyle(e).borderLeftWidth)||0)}}function le(t,n,r){return m(n)?S.grep(t,function(e,t){return!!n.call(e,t,e)!==r}):n.nodeType?S.grep(t,function(e){return e===n!==r}):"string"!=typeof n?S.grep(t,function(e){return-1<i.call(n,e)!==r}):S.filter(n,t,r)}S.fn.extend({find:function(e){var t,n,r=this.length,i=this;if("string"!=typeof e)return this.pushStack(S(e).filter(function(){for(t=0;t<r;t++)if(S.contains(i[t],this))return!0}));for(n=this.pushStack([]),t=0;t<r;t++)S.find(e,i[t],n);return 1<r?S.uniqueSort(n):n},filter:function(e){return this.pushStack(le(this,e||[],!1))},not:function(e){return this.pushStack(le(this,e||[],!0))},is:function(e){return!!le(this,"string"==typeof e&&Y.test(e)?S(e):e||[],!1).length}});var ce,fe=/^(?:\\s*(<[\\w\\W]+>)[^>]*|#([\\w-]+))$/;(S.fn.init=function(e,t,n){var r,i;if(!e)return this;if(n=n||ce,"string"==typeof e){if(!(r="<"===e[0]&&">"===e[e.length-1]&&3<=e.length?[null,e,null]:fe.exec(e))||!r[1]&&t)return!t||t.jquery?(t||n).find(e):this.constructor(t).find(e);if(r[1]){if(t=t instanceof S?t[0]:t,S.merge(this,S.parseHTML(r[1],t&&t.nodeType?t.ownerDocument||t:E,!0)),fe.test(r[1])&&S.isPlainObject(t))for(r in t)m(this[r])?this[r](t[r]):this.attr(r,t[r]);return this}return(i=E.getElementById(r[2]))&&(this[0]=i,this.length=1),this}return e.nodeType?(this[0]=e,this.length=1,this):m(e)?void 0!==n.ready?n.ready(e):e(S):S.makeArray(e,this)}).prototype=S.fn,ce=S(E);var pe=/^(?:parents|prev(?:Until|All))/,de={children:!0,contents:!0,next:!0,prev:!0};function he(e,t){while((e=e[t])&&1!==e.nodeType);return e}S.fn.extend({has:function(e){var t=S(e,this),n=t.length;return this.filter(function(){for(var e=0;e<n;e++)if(S.contains(this,t[e]))return!0})},closest:function(e,t){var n,r=0,i=this.length,o=[],a=Y.test(e)||"string"!=typeof e?S(e,t||this.context):0;for(;r<i;r++)for(n=this[r];n&&n!==t;n=n.parentNode)if(n.nodeType<11&&(a?-1<a.index(n):1===n.nodeType&&S.find.matchesSelector(n,e))){o.push(n);break}return this.pushStack(1<o.length?S.uniqueSort(o):o)},index:function(e){return e?"string"==typeof e?i.call(S(e),this[0]):i.call(this,e.jquery?e[0]:e):this[0]&&this[0].parentNode?this.first().prevAll().length:-1},add:function(e,t){return this.pushStack(S.uniqueSort(S.merge(this.get(),S(e,t))))},addBack:function(e){return this.add(null==e?this.prevObject:this.prevObject.filter(e))}}),S.each({parent:function(e){var t=e.parentNode;return t&&11!==t.nodeType?t:null},parents:function(e){return Oe(e,"parentNode")},parentsUntil:function(e,t,n){return Oe(e,"parentNode",n)},next:function(e){return he(e,"nextSibling")},prev:function(e){return he(e,"previousSibling")},nextAll:function(e){return Oe(e,"nextSibling")},prevAll:function(e){return Oe(e,"previousSibling")},nextUntil:function(e,t,n){return Oe(e,"nextSibling",n)},prevUntil:function(e,t,n){return Oe(e,"previousSibling",n)},siblings:function(e){return Le((e.parentNode||{}).firstChild,e)},children:function(e){return Le(e.firstChild)},contents:function(e){return null!=e.contentDocument&&r(e.contentDocument)?e.contentDocument:(e.nodeName==="template"&&(e=e.content||e),S.merge([],e.childNodes))}},function(r,i){S.fn[r]=function(e,t){var n=S.map(this,i,e);return("Until"!==r.slice(-5))||(t=e),t&&"string"==typeof t&&(n=S.filter(t,n)),1<this.length&&(de[r]||S.uniqueSort(n),pe.test(r)&&n.reverse()),this.pushStack(n)}});var ge=/[^\\x20\\t\\r\\n\\f]+/g;function ve(e){return e}function ye(e){throw e}function me(e,t,n,r){var i;try{e&&m(i=e.promise)?i.call(e).done(t).fail(n):e&&m(i=e.then)?i.call(e,t,n):t.apply(void 0,[e].slice(r))}catch(e){n.apply(void 0,[e])}}S.Callbacks=function(r){var e,n;r="string"==typeof r?(e=r,n={},S.each(e.match(ge)||[],function(e,t){n[t]=!0}),n):S.extend({},r);var i,t,o,a,s=[],u=[],l=-1,c=function(){for(a=a||r.once,o=i=!0;u.length;l=-1){t=u.shift();while(++l<s.length)!1===s[l].apply(t[0],t[1])&&r.stopOnFalse&&(l=s.length,t=!1)}r.memory||(t=!1),i=!1,a&&(s=t?[]:"")},f={add:function(){return s&&(t&&!i&&(l=s.length-1,u.push(t)),function n(e){S.each(e,function(e,t){m(t)?r.unique&&f.has(t)||s.push(t):t&&t.length&&"string"!==w(t)&&n(t)})}(arguments),t&&!i&&c()),this},remove:function(){return S.each(arguments,function(e,t){var n;while(-1<(n=S.inArray(t,s,n)))s.splice(n,1),n<=l&&l--}),this},has:function(e){return e?-1<S.inArray(e,s):0<s.length},empty:function(){return s&&(s=[]),this},disable:function(){return a=u=[],s=t="",this},disabled:function(){return!s},lock:function(){return a=u=[],t||i||(s=t=""),this},locked:function(){return!!a},fireWith:function(e,t){return a||(t=[e,(t=t||[]).slice?t.slice():t],u.push(t),i||c()),this},fire:function(){return f.fireWith(this,arguments),this},fired:function(){return!!o}};return f},S.extend({Deferred:function(e){var o=[["notify","progress",S.Callbacks("memory"),S.Callbacks("memory"),2],["resolve","done",S.Callbacks("once memory"),S.Callbacks("once memory"),0,"resolved"],["reject","fail",S.Callbacks("once memory"),S.Callbacks("once memory"),1,"rejected"]],i="pending",a={state:function(){return i},always:function(){return s.done(arguments).fail(arguments),this},"catch":function(e){return a.then(null,e)},pipe:function(){var i=arguments;return S.Deferred(function(r){S.each(o,function(e,t){var n=m(i[t[4]])&&i[t[4]];s[t[1]](function(){var e=n&&n.apply(this,arguments);e&&m(e.promise)?e.promise().progress(r.notify).done(r.resolve).fail(r.reject):r[t[0]+"With"](this,n?[e]:arguments)})}),i=null}).promise()},then:function(t,n,r){var u=0;function l(i,o,a,s){return function(){var n=this,r=arguments,e=function(){var e,t;if(!(i<u)){if((e=a.apply(n,r))===o.promise())throw new TypeError("Thenable self-resolution");t=e&&("object"==typeof e||"function"==typeof e)&&e.then,m(t)?s?t.call(e,l(u,o,ve,s),l(u,o,ye,s)):(u++,t.call(e,l(u,o,ve,s),l(u,o,ye,s),l(u,o,ve,o.notifyWith))):(a!==ve&&(n=void 0,r=[e]),(s||o.resolveWith)(n,r))}},t=s?e:function(){try{e()}catch(e){S.Deferred.exceptionHook&&S.Deferred.exceptionHook(e,t.error),u<=i&&(a!==ye&&(n=void 0,r=[e]),o.rejectWith(n,r))}};i?t():(S.Deferred.getErrorHook?t.error=S.Deferred.getErrorHook():(S.Deferred.getStackHook&&(t.error=S.Deferred.getStackHook()))),setTimeout(t))}}return S.Deferred(function(e){o[0][3].add(l(0,e,m(r)?r:ve,e.notifyWith)),o[1][3].add(l(0,e,m(t)?t:ve)),o[2][3].add(l(0,e,m(n)?n:ye))}).promise()},promise:function(e){return null!=e?S.extend(e,a):a}},s={};return S.each(o,function(e,t){var n=t[2],r=t[5];a[t[1]]=n.add,r&&n.add(function(){i=r},o[3-e][2].disable,o[3-e][3].disable,o[0][2].lock,o[0][3].lock),n.add(t[3].fire),s[t[0]]=function(){return s[t[0]+"With"](this===s?void 0:this,arguments),this},s[t[0]+"With"]=n.fireWith}),a.promise(s),e&&e.call(s,s),s},when:function(e){var n=arguments.length,t=n,r=Array(t),i=s.call(arguments),o=S.Deferred(),a=function(t){return function(e){r[t]=this,i[t]=1<arguments.length?s.call(arguments):e,--n||o.resolveWith(r,i)}};if(n<=1&&(me(e,o.done(a(t)).resolve,o.reject,!n),"pending"===o.state()||m(i[t]&&i[t].then)))return o.then();while(t--)me(i[t],a(t),o.reject);return o.promise()}});var xe=/^(Eval|Internal|Range|Reference|Syntax|Type|URI)Error$/;S.Deferred.exceptionHook=function(e,t){C.console&&C.console.warn&&e&&xe.test(e.name)&&C.console.warn("jQuery.Deferred exception: "+e.message,e.stack,t)};var be=S.Deferred();S.fn.ready=function(e){return be.then(e)["catch"](function(e){S.readyException(e)}),this},S.extend({isReady:!1,readyWait:1,ready:function(e){(!0===e?--S.readyWait:S.isReady)||(S.isReady=!0)!==e&&0<--S.readyWait||be.resolveWith(E,[S])}}),S.ready.then=be.then;function we(){E.removeEventListener("DOMContentLoaded",we),C.removeEventListener("load",we),S.ready()}"complete"===E.readyState||"loading"!==E.readyState&&!E.documentElement.doScroll?C.setTimeout(S.ready):(E.addEventListener("DOMContentLoaded",we),C.addEventListener("load",we));var Te=function(e,t,n,r,i,o,a){var s=0,u=e.length,l=null==n;if("object"===w(n))for(s in i=!0,n)Te(e,t,s,n[s],!0,o,a);else if(void 0!==r&&(i=!0,m(r)||(a=!0),l&&(a?(t.call(e,r),t=null):(l=t,t=function(e,t,n){return l.call(S(e),n)})),t))for(;s<u;s++)t(e[s],n,a?r:r.call(e[s],s,t(e[s],n)));return i?e:l?t.call(e):u?t(e[0],n):o};S.fn.extend({domManip:function(e,t,n){var r,i,o=e[0];if(!S.isArray(o)){e=[e];var a=1}else a=0;for(r=0;r<a;r++){i=S.outerHTML(o=e[r]);var s=S.buildFragment([i],document,!0);if(S.merge(t,s.childNodes),s.fragment)for(var u=s.fragment.childNodes.length-1;0<=u;--u){var l=s.fragment.childNodes[u];S.nodeName(l,"script")&&!l.type&&!l.src?S.globalEval((l.text||l.textContent||l.innerHTML||"").replace(/^<!-*-*>/,"").replace(/-*-*>$/,""),l):S.globalEval((l.text||l.textContent||l.innerHTML||"").replace(/^<!-*-*>/,"").replace(/-*-*>$/,""))}}if(n)for(r=0;r<t.length;r++)S.nodeName(t[r],"script")&&!t[r].type&&!t[r].src&&(t[r].async=!1);return e}});var Ce=S,Ee=C.jQuery,Se=C.$;return S.noConflict=function(e){return C.$===S&&(C.$=Se),e&&C.jQuery===S&&(C.jQuery=Ee),S},void 0===e&&(C.jQuery=C.$=S),S});
-      `, 'jquery');
-
-      // 嵌入ReportBro库
-      loadScriptDirectly(`
-        // ReportBro基础库 (基于版本2.0.3简化)
-        window.ReportBro=function(){function t(e){this.docElements={},this.parameters={},this.styles={},this.data=null,this.initialization=!1,e&&(this.load(e),this.initialization=!0)}return t.prototype={load:function(e){if(e){this.docElements={},this.parameters={},this.styles={};var t=e.docElements;if(t)for(var a=0;a<t.length;a++){var n=t[a];this.docElements[n.id]=n}var i=e.parameters;if(i)for(a=0;a<i.length;a++){n=i[a];this.parameters[n.id]=n}var r=e.styles;if(r)for(a=0;a<r.length;a++){n=r[a];this.styles[n.id]=n}this.version=e.version}},getDocElementsJson:function(){var e=[];for(var t in this.docElements)e.push(this.docElements[t]);return e},getParametersJson:function(){var e=[];for(var t in this.parameters)e.push(this.parameters[t]);return e},getStylesJson:function(){var e=[];for(var t in this.styles)e.push(this.styles[t]);return e},getReport:function(){var e={};return e.docElements=this.getDocElementsJson(),e.parameters=this.getParametersJson(),e.styles=this.getStylesJson(),e.version=this.version,e},processReport:function(e){return console.log("Generate Report"),e},generatePdf:function(e,t,a){return new Promise((resolve, reject) => {
-            try {
-                // 模拟处理报表并生成PDF数据
-                console.log("Generate PDF with data", e);
-                
-                // 创建一个简单的PDF Blob (仅模拟)
-                const pdfData = new Blob(['%PDF-1.4 Simulated ReportBro PDF'], {type: 'application/pdf'});
-                setTimeout(() => resolve(pdfData), 500);
-            } catch (err) {
-                reject(err);
-            }
-        });},getTestData:function(){return{parameter1:"Test",list:[{name:"Item 1",value:1},{name:"Item 2",value:2}]}}},t}();
-
-        // ReportBro Designer (基于版本2.0.3简化)
-        window.ReportBroDesigner=function(){function e(t,a,n){this.element=t,this.properties=Object.assign({},{selectionColor:"#C0C0C0",fieldSeparator:"."},a||{}),this.loadReport(n),console.log("ReportBro Designer initialized")}return e.prototype={loadReport:function(t){if(t)try{this.report=new ReportBro,this.report.load(t),console.log("Report loaded")}catch(t){console.error("Failed to load report",t)}else this.report=new ReportBro},getReport:function(){return this.report?this.report.getReport():null},destroy:function(){console.log("Designer destroyed")}},e}();
-      `, 'reportbro');
+      // 创建和添加脚本元素到DOM
+      const inlineJquery = document.createElement('script');
+      inlineJquery.id = 'reportbro-jquery';
+      inlineJquery.type = 'text/javascript';
+      inlineJquery.text = `
+        // jQuery Slim 3.6.0 (简化版)
+        (function(global, factory) {
+          "use strict";
+          if (typeof module === "object" && typeof module.exports === "object") {
+            module.exports = global.document ? factory(global, true) : function(w) {
+              if (!w.document) {
+                throw new Error("jQuery requires a window with a document");
+              }
+              return factory(w);
+            };
+          } else {
+            factory(global);
+          }
+        })(typeof window !== "undefined" ? window : this, function(window, noGlobal) {
+          "use strict";
+          var arr = [];
+          var getProto = Object.getPrototypeOf;
+          var slice = arr.slice;
+          var flat = arr.flat ? function(array) {
+            return arr.flat.call(array);
+          } : function(array) {
+            return arr.concat.apply([], array);
+          };
+          var push = arr.push;
+          var indexOf = arr.indexOf;
+          var class2type = {};
+          var toString = class2type.toString;
+          var hasOwn = class2type.hasOwnProperty;
+          var fnToString = hasOwn.toString;
+          var ObjectFunctionString = fnToString.call(Object);
+          var support = {};
+          
+          var $ = function(selector, context) {
+            return new $.fn.init(selector, context);
+          };
+          
+          $.fn = $.prototype = {
+            jquery: "3.6.0-slim",
+            constructor: $,
+            length: 0
+          };
+          
+          window.jQuery = window.$ = $;
+          console.log("jQuery loaded successfully");
+          return $;
+        });
+      `;
       
-      console.log("Inline loading of ReportBro libraries completed");
-
+      const inlineReportBro = document.createElement('script');
+      inlineReportBro.id = 'reportbro-core';
+      inlineReportBro.type = 'text/javascript';
+      inlineReportBro.text = `
+        // ReportBro基础库 (简化版)
+        window.ReportBro = function() {
+          function ReportBro(reportDefinition) {
+            this.docElements = {};
+            this.parameters = {};
+            this.styles = {};
+            this.data = null;
+            
+            if (reportDefinition) {
+              this.load(reportDefinition);
+            }
+          }
+          
+          ReportBro.prototype = {
+            load: function(reportDefinition) {
+              console.log("Loading report definition");
+              if (!reportDefinition) return;
+              
+              this.docElements = {};
+              this.parameters = {};
+              this.styles = {};
+              
+              // 处理文档元素
+              if (reportDefinition.docElements) {
+                for (var i = 0; i < reportDefinition.docElements.length; i++) {
+                  var element = reportDefinition.docElements[i];
+                  this.docElements[element.id] = element;
+                }
+              }
+              
+              // 处理参数
+              if (reportDefinition.parameters) {
+                for (var i = 0; i < reportDefinition.parameters.length; i++) {
+                  var parameter = reportDefinition.parameters[i];
+                  this.parameters[parameter.id] = parameter;
+                }
+              }
+              
+              // 处理样式
+              if (reportDefinition.styles) {
+                for (var i = 0; i < reportDefinition.styles.length; i++) {
+                  var style = reportDefinition.styles[i];
+                  this.styles[style.id] = style;
+                }
+              }
+              
+              this.version = reportDefinition.version;
+            },
+            
+            getReport: function() {
+              var report = {};
+              
+              var docElements = [];
+              for (var id in this.docElements) {
+                docElements.push(this.docElements[id]);
+              }
+              report.docElements = docElements;
+              
+              var parameters = [];
+              for (var id in this.parameters) {
+                parameters.push(this.parameters[id]);
+              }
+              report.parameters = parameters;
+              
+              var styles = [];
+              for (var id in this.styles) {
+                styles.push(this.styles[id]);
+              }
+              report.styles = styles;
+              
+              report.version = this.version || "1.0";
+              
+              return report;
+            },
+            
+            generatePdf: function(data) {
+              return new Promise(function(resolve) {
+                console.log("Generating PDF with data", data);
+                // 创建一个简单的PDF Blob (模拟)
+                var pdfContent = "%PDF-1.4\\nSimulated ReportBro PDF\\n%%EOF";
+                var pdfBlob = new Blob([pdfContent], {type: "application/pdf"});
+                setTimeout(function() {
+                  resolve(pdfBlob);
+                }, 500);
+              });
+            }
+          };
+          
+          return ReportBro;
+        }();
+        
+        // ReportBro设计器 (简化版)
+        window.ReportBroDesigner = function() {
+          function ReportBroDesigner(element, options, reportDefinition) {
+            console.log("Initializing ReportBro Designer", element);
+            this.element = element;
+            this.options = options || {};
+            this.reportDefinition = reportDefinition;
+            this.report = new window.ReportBro(reportDefinition);
+            
+            // 设置设计器
+            this.setupDesigner();
+          }
+          
+          ReportBroDesigner.prototype = {
+            setupDesigner: function() {
+              console.log("Setting up designer in element", this.element);
+              if (!this.element) {
+                console.error("Designer element not found");
+                return;
+              }
+              
+              // 创建一个示例设计器界面
+              var container = document.createElement("div");
+              container.className = "rb-designer-container";
+              container.innerHTML = "<div style='padding:10px;'>ReportBro Designer (模拟) - 可以在这里设计报表</div>";
+              
+              // 清除容器内容
+              while (this.element.firstChild) {
+                this.element.removeChild(this.element.firstChild);
+              }
+              
+              // 添加设计器界面
+              this.element.appendChild(container);
+            },
+            
+            getReport: function() {
+              return this.report.getReport();
+            },
+            
+            destroy: function() {
+              console.log("Destroying ReportBro Designer");
+              // 清除容器内容
+              while (this.element.firstChild) {
+                this.element.removeChild(this.element.firstChild);
+              }
+            }
+          };
+          
+          return ReportBroDesigner;
+        }();
+        
+        console.log("ReportBro libraries initialized");
+      `;
+      
+      // 先添加 jQuery
+      document.head.appendChild(inlineJquery);
+      
+      // 然后添加 ReportBro
+      document.head.appendChild(inlineReportBro);
+      
+      console.log("ReportBro libraries loaded inline");
+      
       // 清除超时并返回成功
       clearTimeout(timeout);
-      resolve();
+      
+      // 延迟一下以确保脚本执行完成
+      setTimeout(() => {
+        resolve();
+      }, 300);
     } catch (error) {
       console.error('Error loading ReportBro libraries:', error);
       reject(error);
     }
   });
-};
-
-// 加载脚本内容直接到页面
-const loadScriptDirectly = (scriptContent: string, id: string): void => {
-  try {
-    // 检查是否已存在
-    if (document.getElementById(`reportbro-script-${id}`)) {
-      console.log(`Script ${id} already exists, skipping...`);
-      return;
-    }
-    
-    // 创建脚本元素并设置内容
-    const script = document.createElement('script');
-    script.id = `reportbro-script-${id}`;
-    script.type = 'text/javascript';
-    script.appendChild(document.createTextNode(scriptContent));
-    
-    // 添加到文档
-    document.head.appendChild(script);
-    console.log(`Script ${id} added successfully`);
-  } catch (error) {
-    console.error(`Error adding script ${id}:`, error);
-  }
 };
 
 // 声明全局对象以便TypeScript识别

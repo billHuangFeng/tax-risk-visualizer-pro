@@ -17,9 +17,11 @@ export const ReportBroDesigner: React.FC<ReportBroDesignerProps> = ({
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [designer, setDesigner] = useState<any>(null);
+  const [retryCount, setRetryCount] = useState(0);
 
   useEffect(() => {
     let isMounted = true;
+    let initTimeout: number | null = null;
     
     const initReportBro = async () => {
       try {
@@ -36,47 +38,47 @@ export const ReportBroDesigner: React.FC<ReportBroDesignerProps> = ({
           throw new Error('ReportBro 库未正确加载');
         }
         
-        console.log("ReportBro libraries loaded successfully, initializing designer");
+        console.log("ReportBro libraries loaded successfully, waiting for DOM to be ready");
         
-        // 基本配置
-        const reportBroConfig = {
-          // 设计器基本设置
-          selectionColorLight: '#e0e0e0',
-          selectionColor: '#cecece',
-          initialReportZoom: 1,
-          // 调整为中文界面
-          locale: 'zh',
-          localeStrings: {
-            zh: {
-              ok: '确定',
-              cancel: '取消',
-              open: '打开',
-              save: '保存',
-              // 更多中文翻译...
-              close: '关闭',
-              add: '添加',
-              delete: '删除',
-              edit: '编辑',
-              name: '名称',
-              type: '类型',
-              width: '宽度',
-              height: '高度'
-            }
-          }
-        };
-        
-        // 检查DOM是否已准备好
-        if (!containerRef.current) {
-          throw new Error('设计器容器未准备好');
-        }
-        
-        // 等待浏览器渲染循环
-        setTimeout(() => {
+        // 确保DOM已准备好再初始化设计器
+        initTimeout = window.setTimeout(() => {
           try {
             if (!isMounted) return;
             
+            // 额外检查容器是否已准备好
+            if (!containerRef.current) {
+              throw new Error('设计器容器未准备好');
+            }
+            
+            console.log("Creating ReportBro designer instance with container:", containerRef.current);
+            
+            // 基本配置
+            const reportBroConfig = {
+              // 设计器基本设置
+              selectionColorLight: '#e0e0e0',
+              selectionColor: '#cecece',
+              initialReportZoom: 1,
+              // 调整为中文界面
+              locale: 'zh',
+              localeStrings: {
+                zh: {
+                  ok: '确定',
+                  cancel: '取消',
+                  open: '打开',
+                  save: '保存',
+                  close: '关闭',
+                  add: '添加',
+                  delete: '删除',
+                  edit: '编辑',
+                  name: '名称',
+                  type: '类型',
+                  width: '宽度',
+                  height: '高度'
+                }
+              }
+            };
+            
             // 创建设计器实例
-            console.log("Creating ReportBro designer instance");
             const rbDesigner = new window.ReportBroDesigner(
               containerRef.current, 
               reportBroConfig,
@@ -95,9 +97,18 @@ export const ReportBroDesigner: React.FC<ReportBroDesignerProps> = ({
             if (isMounted) {
               setLoadError(`ReportBro 设计器初始化失败: ${err instanceof Error ? err.message : String(err)}`);
               setIsLoading(false);
+              
+              // 如果尝试次数小于3次，则重试
+              if (retryCount < 3) {
+                setRetryCount(prev => prev + 1);
+                // 延迟重试，给DOM更多时间准备
+                setTimeout(() => {
+                  if (isMounted) initReportBro();
+                }, 1000);
+              }
             }
           }
-        }, 100);
+        }, 300); // 增加延迟，确保DOM完全渲染
       } catch (error) {
         console.error("Error loading ReportBro:", error);
         if (isMounted) {
@@ -112,6 +123,7 @@ export const ReportBroDesigner: React.FC<ReportBroDesignerProps> = ({
     // 清理函数
     return () => {
       isMounted = false;
+      if (initTimeout) clearTimeout(initTimeout);
       if (designer) {
         try {
           designer.destroy();
@@ -120,7 +132,7 @@ export const ReportBroDesigner: React.FC<ReportBroDesignerProps> = ({
         }
       }
     };
-  }, [initialReport]);
+  }, [initialReport, retryCount]);
 
   // 保存报表定义
   const handleSave = () => {
@@ -135,6 +147,11 @@ export const ReportBroDesigner: React.FC<ReportBroDesignerProps> = ({
         console.error("Error saving report:", error);
       }
     }
+  };
+
+  // 手动重试加载
+  const handleRetry = () => {
+    setRetryCount(prev => prev + 1);
   };
 
   return (
@@ -152,13 +169,22 @@ export const ReportBroDesigner: React.FC<ReportBroDesignerProps> = ({
         <div className="flex items-center justify-center h-64 border border-red-300 bg-red-50 rounded p-4">
           <div className="flex flex-col items-center space-y-4">
             <p className="text-red-600 text-center">{loadError}</p>
-            <Button 
-              variant="outline" 
-              onClick={() => window.location.reload()}
-              className="mt-2"
-            >
-              重新加载页面
-            </Button>
+            <div className="flex space-x-4">
+              <Button 
+                variant="outline" 
+                onClick={handleRetry}
+                className="mt-2"
+              >
+                重试加载
+              </Button>
+              <Button 
+                variant="outline" 
+                onClick={() => window.location.reload()}
+                className="mt-2"
+              >
+                重新加载页面
+              </Button>
+            </div>
           </div>
         </div>
       )}
@@ -176,7 +202,8 @@ export const ReportBroDesigner: React.FC<ReportBroDesignerProps> = ({
           
           <div 
             ref={containerRef} 
-            className="w-full border border-gray-300 rounded" 
+            id="reportbro-designer-container"
+            className="w-full border border-gray-300 rounded flex-grow" 
             style={{ height: '600px', minHeight: '600px' }}
           />
         </>
