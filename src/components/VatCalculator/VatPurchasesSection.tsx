@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { VatPurchaseItem, DifferenceExplanation } from '@/hooks/types';
@@ -47,13 +46,13 @@ const VatPurchasesSection: React.FC<VatPurchasesSectionProps> = ({
   const unexplainedDifferencePercentage = ((unexplainedDifference) / (purchasesTotal.amount + purchasesTotal.tax) * 100) || 0;
 
   return (
-    <Card className="mb-6">
+    <Card>
       <CardHeader className="pb-3">
         <CardTitle className="text-xl font-bold border-l-4 border-tax-blue pl-3">
           购进
         </CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="space-y-6">
         <PurchasesTable
           purchasesData={purchasesData}
           addPurchaseItem={addPurchaseItem}
@@ -87,4 +86,3 @@ const VatPurchasesSection: React.FC<VatPurchasesSectionProps> = ({
 };
 
 export default VatPurchasesSection;
-
