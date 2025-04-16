@@ -24,29 +24,43 @@ const prepareContentForExport = (content: HTMLElement): HTMLElement => {
 const processInputFields = (container: HTMLElement) => {
   const inputs = container.querySelectorAll('input');
   inputs.forEach((input: HTMLInputElement) => {
-    // Create a visible span to show the input value
-    const valueDisplay = document.createElement('div');
-    valueDisplay.textContent = input.value || '0';
-    valueDisplay.style.position = 'absolute';
-    valueDisplay.style.left = '0';
-    valueDisplay.style.top = '0';
-    valueDisplay.style.width = '100%';
-    valueDisplay.style.height = '100%';
-    valueDisplay.style.display = 'flex';
-    valueDisplay.style.alignItems = 'center';
-    valueDisplay.style.justifyContent = input.classList.contains('text-right') ? 'flex-end' : 'flex-start';
-    valueDisplay.style.paddingRight = input.classList.contains('text-right') ? '8px' : '0';
-    valueDisplay.style.paddingLeft = !input.classList.contains('text-right') ? '8px' : '0';
-    valueDisplay.style.backgroundColor = '#fff';
-    valueDisplay.style.color = '#000';
-    valueDisplay.style.fontSize = '14px';
-    valueDisplay.style.fontWeight = 'bold';
-    valueDisplay.style.zIndex = '10';
+    // Check if a value display element already exists for this input
+    const parentElement = input.parentElement;
+    if (!parentElement) return;
     
-    const parentNode = input.parentNode;
-    if (parentNode) {
-      parentNode.appendChild(valueDisplay);
+    // Check if a pdf-value element already exists
+    const existingValueDisplay = parentElement.querySelector('.pdf-value');
+    
+    // Only create a value display if one doesn't already exist
+    if (!existingValueDisplay) {
+      const valueDisplay = document.createElement('div');
+      valueDisplay.textContent = input.value || '0';
+      valueDisplay.className = 'pdf-value';
+      valueDisplay.setAttribute('data-pdf-value', 'true');
+      valueDisplay.style.position = 'absolute';
+      valueDisplay.style.left = '0';
+      valueDisplay.style.top = '0';
+      valueDisplay.style.width = '100%';
+      valueDisplay.style.height = '100%';
+      valueDisplay.style.display = 'flex';
+      valueDisplay.style.alignItems = 'center';
+      valueDisplay.style.justifyContent = input.classList.contains('text-right') ? 'flex-end' : 'flex-start';
+      valueDisplay.style.paddingRight = input.classList.contains('text-right') ? '8px' : '0';
+      valueDisplay.style.paddingLeft = !input.classList.contains('text-right') ? '8px' : '0';
+      valueDisplay.style.backgroundColor = '#fff';
+      valueDisplay.style.color = '#000';
+      valueDisplay.style.fontSize = '14px';
+      valueDisplay.style.fontWeight = 'bold';
+      valueDisplay.style.zIndex = '10';
+      
+      input.parentElement.appendChild(valueDisplay);
+      
+      // Hide the input for PDF export
       input.style.opacity = '0';
+    } else if (existingValueDisplay instanceof HTMLElement) {
+      // Update the existing value display
+      existingValueDisplay.textContent = input.value || '0';
+      existingValueDisplay.setAttribute('data-pdf-value', 'true');
     }
   });
 };
@@ -117,11 +131,25 @@ const enhanceVisualElements = (container: HTMLElement) => {
     valueElement.style.color = '#000';
     valueElement.style.backgroundColor = '#fff';
   });
+  
+  // Remove any duplicated text elements that might have been created
+  removeRedundantTextElements(container);
+};
+
+// Remove redundant text elements that might cause duplicates
+const removeRedundantTextElements = (container: HTMLElement) => {
+  // Find all spans that were added by the onclone callback in html2canvas
+  const redundantSpans = container.querySelectorAll('span:not(.pdf-value)[style*="position: absolute"]');
+  redundantSpans.forEach((span) => {
+    if (span.parentElement) {
+      span.parentElement.removeChild(span);
+    }
+  });
 };
 
 // Force all input values to be visible
 const forceInputValuesVisible = (container: HTMLElement) => {
-  // Find all input elements and get their parent div container
+  // Find all input elements and their containers
   const inputContainers = container.querySelectorAll('.pdf-text-visible');
   inputContainers.forEach((container: Element) => {
     const containerElement = container as HTMLElement;
@@ -135,6 +163,7 @@ const forceInputValuesVisible = (container: HTMLElement) => {
       if (!valueDisplay) {
         valueDisplay = document.createElement('div');
         valueDisplay.className = 'pdf-value';
+        valueDisplay.setAttribute('data-pdf-value', 'true');
         containerElement.appendChild(valueDisplay);
       }
       
@@ -170,28 +199,18 @@ const createCanvas = async (content: HTMLElement): Promise<HTMLCanvasElement> =>
     width: 1200,
     onclone: (document, element) => {
       console.log("Cloned document prepared for rendering");
-      // Additional processing in the cloned document
-      const allInputs = element.querySelectorAll('input');
-      allInputs.forEach((input: HTMLInputElement) => {
-        if (input.parentElement) {
-          const value = input.value || '0';
-          const textNode = document.createTextNode(value);
-          const span = document.createElement('span');
-          span.style.position = 'absolute';
-          span.style.top = '0';
-          span.style.left = '0';
-          span.style.right = '0';
-          span.style.bottom = '0';
-          span.style.display = 'flex';
-          span.style.alignItems = 'center';
-          span.style.justifyContent = 'flex-end';
-          span.style.paddingRight = '10px';
-          span.style.color = '#000';
-          span.style.backgroundColor = '#fff';
-          span.style.zIndex = '50';
-          span.appendChild(textNode);
-          input.parentElement.style.position = 'relative';
-          input.parentElement.appendChild(span);
+      
+      // Mark all existing value displays to prevent duplication
+      const existingDisplays = element.querySelectorAll('.pdf-value');
+      existingDisplays.forEach((display) => {
+        display.setAttribute('data-pdf-value', 'true');
+      });
+      
+      // Remove any already generated spans to avoid duplication
+      const redundantSpans = element.querySelectorAll('span:not([data-pdf-value="true"])[style*="position: absolute"]');
+      redundantSpans.forEach((span) => {
+        if (span.parentElement) {
+          span.parentElement.removeChild(span);
         }
       });
     }
@@ -260,6 +279,9 @@ export const exportToPDF = async (calculator: any) => {
     processCheckboxes(clonedContent);
     enhanceVisualElements(clonedContent);
     forceInputValuesVisible(clonedContent);
+    
+    // Remove any remaining duplicate elements
+    removeRedundantTextElements(clonedContent);
     
     // Create canvas
     const canvas = await createCanvas(clonedContent);

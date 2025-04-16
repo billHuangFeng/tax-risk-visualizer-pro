@@ -35,6 +35,14 @@ const CalculatorActions: React.FC<CalculatorActionsProps> = ({
         description: "正在处理所有页面，可能需要几秒钟...",
       });
       
+      // Get all existing duplicate spans that might cause issues and remove them before export
+      const duplicateSpans = document.querySelectorAll('span:not(.pdf-value)[style*="position: absolute"]');
+      duplicateSpans.forEach(span => {
+        if (span.parentElement) {
+          span.parentElement.removeChild(span);
+        }
+      });
+      
       // Add PDF-specific classes to container before export
       const calculatorContent = document.getElementById('calculator-content');
       if (calculatorContent) {

@@ -13,18 +13,28 @@
     white-space: normal !important;
   }
 
+  /* Hide regular pdf-value elements normally, show only in export mode */
   .pdf-value {
     opacity: 0 !important;
+    visibility: hidden !important;
     transition: opacity 0.1s ease;
     z-index: 5;
     font-weight: bold;
     padding-right: 4px;
   }
 
+  /* Only show pdf-value in export mode */
   .for-pdf-export .pdf-value {
     opacity: 1 !important;
+    visibility: visible !important;
     color: #000 !important;
     background-color: white !important;
+  }
+
+  /* Hide any other generated text spans during export */
+  .for-pdf-export input + span:not(.pdf-value),
+  .for-pdf-export div + span:not(.pdf-value) {
+    display: none !important;
   }
 
   .for-pdf-export td input {
@@ -37,11 +47,17 @@
     text-overflow: clip !important;
   }
 
+  /* Control visibility of all elements in PDF export */
   .pdf-export-container * {
     color: #000 !important;
     background-color: white !important;
     visibility: visible !important;
     opacity: 1 !important;
+  }
+
+  /* Prevent duplicate content in exported PDFs */
+  .pdf-export-container span[data-pdf-value="true"] {
+    display: none !important;
   }
 
   .pdf-export-container input {
