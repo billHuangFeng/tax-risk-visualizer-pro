@@ -50,7 +50,7 @@ export const useActions = (riskValue: string, riskPercentage: number) => {
         return data;
       };
       
-      // 使用收集的数据和模板执行PDF导出
+      // 使用导出到PDF函数
       await exportToPDF({
         riskValue,
         riskPercentage,

@@ -51,6 +51,7 @@ const CalculatorActions: React.FC<CalculatorActionsProps> = ({
             (window as any).currentPdfTemplate = template;
           }
           
+          // 使用重构后的exportToPDF方法
           await calculator.handleExport(template);
           
           toast({
