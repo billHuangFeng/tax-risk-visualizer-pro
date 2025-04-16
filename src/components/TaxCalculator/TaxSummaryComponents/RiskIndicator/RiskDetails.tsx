@@ -18,7 +18,7 @@ const RiskDetails: React.FC<RiskDetailsProps> = ({ riskDetails }) => {
       <AlertTriangle className="h-8 w-8 text-red-600" />
       <AlertTitle className="text-red-800">风险提示</AlertTitle>
       <AlertDescription className="space-y-2 text-red-700">
-        <p>你面临高达{riskDetails.totalRisk}万元的风险。具体如下：</p>
+        <p>基于未解释差异，你面临高达{riskDetails.totalRisk}万元的风险。具体如下：</p>
         <ol className="list-decimal pl-4 text-red-700">
           <li>补税{riskDetails.taxAmount}万元；</li>
           <li>滞纳金{riskDetails.lateFee}万元（每天0.05%，假设3年后暴雷）；</li>

@@ -21,13 +21,15 @@ const RiskIndicator: React.FC<RiskIndicatorProps> = ({
     setShowRiskDetails(false);
   }, [unexplainedDifference, riskPercentage]);
 
+  // Updated to use unexplained difference percentage instead of risk percentage
   const getRiskLevel = (percentage: number) => {
     if (percentage < 30) return '低风险';
     if (percentage < 70) return '中等风险';
-    return '风险非常高'; // Changed to match the image
+    return '风险非常高';
   };
 
   const calculateRiskDetails = () => {
+    // Using unexplained difference instead of risk value
     const baseRisk = parseFloat(unexplainedDifference);
     const taxAmount = baseRisk;
     const lateFee = baseRisk * 0.0005 * 365 * 3;
@@ -42,6 +44,7 @@ const RiskIndicator: React.FC<RiskIndicatorProps> = ({
     };
   };
 
+  // Use unexplained difference percentage for risk assessment
   const showRiskAlert = riskPercentage >= 30;
   const riskDetails = calculateRiskDetails();
 
