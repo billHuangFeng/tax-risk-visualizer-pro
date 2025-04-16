@@ -1,7 +1,9 @@
 
 import { removeRedundantTextElements } from './textProcessing';
 import { enhanceLayoutStructure } from './layoutStructure';
-import { enhanceStyles } from './styleEnhancement';
+import { createCompanyHeader, enhanceHeadings } from './styles/headerStyles';
+import { enhanceTableLayout } from './styles/tableStyles';
+import { formatLabelValue, enhanceCheckboxes } from './styles/formStyles';
 
 // Main function to enhance layout for PDF export
 export const enhanceLayout = (container: HTMLElement) => {
@@ -15,7 +17,11 @@ export const enhanceLayout = (container: HTMLElement) => {
     enhanceLayoutStructure(container);
     
     // Apply styles to match the template image
-    enhanceStyles(container);
+    createCompanyHeader(container);
+    enhanceHeadings(container);
+    enhanceTableLayout(container);
+    formatLabelValue(container);
+    enhanceCheckboxes(container);
     
     console.log("PDF layout enhancement completed");
   } catch (error) {
