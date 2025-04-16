@@ -3,7 +3,6 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { RotateCcw, Phone } from 'lucide-react';
 import SaveDataButton from './SaveDataButton';
-import { useCalculator } from '@/hooks/useCalculator';
 import { useToast } from '@/hooks/use-toast';
 
 interface CalculatorActionsProps {
@@ -15,7 +14,6 @@ const CalculatorActions: React.FC<CalculatorActionsProps> = ({
   riskPercentage,
   onReset,
 }) => {
-  const calculator = useCalculator();
   const { toast } = useToast();
   
   const handleContactAdvisor = () => {
@@ -41,7 +39,7 @@ const CalculatorActions: React.FC<CalculatorActionsProps> = ({
         立即联系税务顾问
       </Button>
       
-      <SaveDataButton calculatorData={calculator} />
+      <SaveDataButton />
     </div>
   );
 };

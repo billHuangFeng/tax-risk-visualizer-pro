@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import CalculatorHeader from '@/components/TaxCalculator/CalculatorHeader';
 import CalculatorActions from '@/components/TaxCalculator/CalculatorActions';
@@ -106,7 +105,6 @@ const Index = () => {
           <CalculatorActions
             riskPercentage={calculator.riskPercentage}
             onReset={calculator.handleReset}
-            onExport={calculator.handleExport}
           />
         </CalculatorLayout>
       </div>
