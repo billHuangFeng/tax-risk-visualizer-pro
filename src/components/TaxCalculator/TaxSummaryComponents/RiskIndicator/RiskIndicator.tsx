@@ -22,7 +22,7 @@ const RiskIndicator: React.FC<RiskIndicatorProps> = ({
   const getRiskLevel = (percentage: number) => {
     if (percentage < 30) return '低风险';
     if (percentage < 70) return '中等风险';
-    return '高风险';
+    return '风险非常高'; // Changed to match the image
   };
 
   const calculateRiskDetails = () => {

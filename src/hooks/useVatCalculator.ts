@@ -1,3 +1,4 @@
+
 import { useEffect } from 'react';
 import { useToast } from './use-toast';
 import { useVatBasicInfo } from './vat/useVatBasicInfo';
@@ -81,25 +82,11 @@ export const useVatCalculator = () => {
       ? (Math.abs(purchasesUnexplainedDifference) / purchasesTotalWithTax) * 100 
       : 0;
     
-    // Risk assessment logic based on specified criteria
-    if (
-      salesUnexplainedPercentage > 30 || 
-      purchasesUnexplainedPercentage > 30 ||
-      (Math.abs(unexplained) > sales.salesTotal.tax * 0.1)
-    ) {
+    // Updated risk assessment logic based on the specified requirements
+    if (Math.abs(unexplained) > 0) {
+      // If there is any unexplained difference, set risk to "风险非常高" as shown in the image
       tax.setRiskLevel('风险非常高');
-    }
-    else if (
-      (salesUnexplainedPercentage > 10 && salesUnexplainedPercentage <= 30) ||
-      (purchasesUnexplainedPercentage > 10 && purchasesUnexplainedPercentage <= 30) ||
-      (Math.abs(unexplained) > Math.abs(tax.payableTax) * 0.3)
-    ) {
-      tax.setRiskLevel('风险较高');
-    }
-    else if (Math.abs(unexplained) > Math.abs(tax.payableTax) * 0.1) {
-      tax.setRiskLevel('风险中等');
-    }
-    else {
+    } else {
       tax.setRiskLevel('风险较低');
     }
   }, [
