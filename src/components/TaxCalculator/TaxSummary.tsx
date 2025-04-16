@@ -39,7 +39,7 @@ const TaxSummary: React.FC<TaxSummaryProps> = ({
 }) => {
   return (
     <div className="space-y-6 border rounded-lg p-6 bg-white">
-      <h2 className="text-xl font-bold border-l-4 border-tax-blue pl-3">企业所得税</h2>
+      <h2 className="text-xl font-bold border-l-4 border-tax-blue pl-3 text-gray-800">企业所得税</h2>
       
       <div className="space-y-4">
         <TaxInputRow

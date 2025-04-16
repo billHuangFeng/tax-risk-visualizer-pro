@@ -8,13 +8,15 @@ import { useIsMobile } from '@/hooks/use-mobile';
 const FloatingContactButton = () => {
   const isMobile = useIsMobile();
   const [position, setPosition] = useState({ 
-    x: window.innerWidth - 200,
-    y: window.innerHeight - 148
+    x: typeof window !== 'undefined' ? window.innerWidth - 200 : 0,
+    y: typeof window !== 'undefined' ? window.innerHeight - 148 : 0
   });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
     const updatePosition = () => {
       if (isMobile) {
         const characterWidth = 16; // Approximate width of a Chinese character
@@ -94,7 +96,7 @@ const FloatingContactButton = () => {
           "hover:-translate-y-1 active:translate-y-0"
         )}
       >
-        <span className={`${buttonTextClass} whitespace-pre-line`}>立即{'\n'}咨询专家</span>
+        <span className={`${buttonTextClass} whitespace-pre-line text-white`}>立即{'\n'}咨询专家</span>
         <Phone className={isMobile ? "w-4 h-4" : "w-6 h-6"} />
       </Button>
     </div>

@@ -9,13 +9,18 @@ export function useIsMobile() {
 
   React.useEffect(() => {
     setIsClient(true)
-    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`)
-    const onChange = () => {
+    const checkMobile = () => {
       setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)
     }
-    mql.addEventListener("change", onChange)
-    setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)
-    return () => mql.removeEventListener("change", onChange)
+    
+    // 初始检查
+    checkMobile()
+    
+    // 监听窗口大小变化
+    window.addEventListener('resize', checkMobile)
+    
+    // 清理
+    return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
   return isClient ? isMobile : false
