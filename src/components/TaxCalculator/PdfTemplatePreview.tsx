@@ -1,8 +1,9 @@
 
 import React from 'react';
-import { Button } from "@/components/ui/button";
 import { PdfTemplate } from "@/types/pdfTemplates";
-import { ArrowLeft } from "lucide-react";
+import { PreviewHeader } from "./PdfTemplateComponents/Preview/PreviewHeader";
+import { CompanyHeader } from "./PdfTemplateComponents/Preview/CompanyHeader";
+import { PreviewSection } from "./PdfTemplateComponents/Preview/PreviewSection";
 
 interface PdfTemplatePreviewProps {
   template: PdfTemplate;
@@ -17,13 +18,7 @@ export const PdfTemplatePreview: React.FC<PdfTemplatePreviewProps> = ({
   
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-2">
-        <Button variant="ghost" size="sm" onClick={onBack}>
-          <ArrowLeft className="h-4 w-4 mr-1" />
-          返回
-        </Button>
-        <h3 className="text-lg font-medium">模板预览：{template.name}</h3>
-      </div>
+      <PreviewHeader templateName={template.name} onBack={onBack} />
       
       <div 
         className="border rounded-lg p-6 bg-white"
@@ -31,40 +26,9 @@ export const PdfTemplatePreview: React.FC<PdfTemplatePreviewProps> = ({
           fontFamily: styles.fontFamily,
         }}
       >
-        {/* 公司标题 */}
-        <div 
-          className="text-center"
-          style={{
-            marginBottom: styles.layout.sectionSpacing,
-          }}
-        >
-          <h1 style={{
-            fontSize: "20px",
-            fontWeight: styles.headingStyle.fontWeight,
-            marginBottom: "12px",
-            borderBottom: styles.headingStyle.borderBottom,
-            paddingBottom: "8px"
-          }}>
-            示例公司名称
-          </h1>
-          <p>2023年度税务报告</p>
-        </div>
+        <CompanyHeader styles={styles} />
         
-        {/* 基本信息部分 */}
-        <div style={{
-          marginBottom: styles.layout.sectionSpacing,
-        }}>
-          <h2 style={{
-            fontSize: styles.headingStyle.fontSize,
-            fontWeight: styles.headingStyle.fontWeight,
-            color: styles.headingStyle.color,
-            borderBottom: styles.headingStyle.borderBottom,
-            marginBottom: "16px",
-            paddingBottom: "4px"
-          }}>
-            基本信息
-          </h2>
-          
+        <PreviewSection title="基本信息" styles={styles}>
           <div className="grid grid-cols-2 gap-3">
             <div className="flex justify-between">
               <span style={{ color: styles.formFieldStyle.labelColor }}>公司名称：</span>
@@ -111,23 +75,9 @@ export const PdfTemplatePreview: React.FC<PdfTemplatePreviewProps> = ({
               }}>¥ 10,000,000.00</span>
             </div>
           </div>
-        </div>
+        </PreviewSection>
         
-        {/* 收入支出表格 */}
-        <div style={{
-          marginBottom: styles.layout.sectionSpacing,
-        }}>
-          <h2 style={{
-            fontSize: styles.headingStyle.fontSize,
-            fontWeight: styles.headingStyle.fontWeight,
-            color: styles.headingStyle.color,
-            borderBottom: styles.headingStyle.borderBottom,
-            marginBottom: "16px",
-            paddingBottom: "4px"
-          }}>
-            收入与支出
-          </h2>
-          
+        <PreviewSection title="收入与支出" styles={styles}>
           <table style={{
             width: "100%",
             borderCollapse: "collapse",
@@ -206,21 +156,9 @@ export const PdfTemplatePreview: React.FC<PdfTemplatePreviewProps> = ({
               </tr>
             </tbody>
           </table>
-        </div>
+        </PreviewSection>
         
-        {/* 税务总结 */}
-        <div>
-          <h2 style={{
-            fontSize: styles.headingStyle.fontSize,
-            fontWeight: styles.headingStyle.fontWeight,
-            color: styles.headingStyle.color,
-            borderBottom: styles.headingStyle.borderBottom,
-            marginBottom: "16px",
-            paddingBottom: "4px"
-          }}>
-            税务总结
-          </h2>
-          
+        <PreviewSection title="税务总结" styles={styles}>
           <div className="grid grid-cols-2 gap-3">
             <div className="flex justify-between">
               <span style={{ color: styles.formFieldStyle.labelColor }}>适用税率：</span>
@@ -255,7 +193,7 @@ export const PdfTemplatePreview: React.FC<PdfTemplatePreviewProps> = ({
               }}>中等风险 (30%)</span>
             </div>
           </div>
-        </div>
+        </PreviewSection>
       </div>
     </div>
   );
