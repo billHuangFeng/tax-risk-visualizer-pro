@@ -12,10 +12,8 @@ export const exportToPDF = async (calculator: any) => {
       format: 'a4',
     });
     
-    // Add font support for Chinese characters
-    // Using a standard font that supports Chinese characters
-    pdf.addFont('https://cdn.jsdelivr.net/npm/noto-sans-sc@2021.3.29/NotoSansSC-Regular.otf', 'NotoSansSC', 'normal');
-    pdf.setFont('NotoSansSC');
+    // Using standard built-in fonts instead of trying to load external fonts
+    // This approach is more reliable
     
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
@@ -34,6 +32,7 @@ export const exportToPDF = async (calculator: any) => {
     (content as HTMLElement).style.maxHeight = 'none';
     
     // Convert the content to canvas with higher quality settings
+    console.log("Starting HTML to canvas conversion");
     const canvas = await html2canvas(content as HTMLElement, {
       scale: 2, // Higher scale for better quality
       useCORS: true,
@@ -57,6 +56,7 @@ export const exportToPDF = async (calculator: any) => {
         return element;
       }
     });
+    console.log("Canvas created successfully", canvas.width, canvas.height);
     
     // Restore original styles
     (content as HTMLElement).style.cssText = originalStyle;
@@ -65,86 +65,16 @@ export const exportToPDF = async (calculator: any) => {
     const imgWidth = pageWidth - (2 * margin);
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
     
-    // Split the content across multiple pages if needed
-    let remainingHeight = canvas.height;
-    let currentY = 0;
-    let pdfY = margin;
-    let pageNumber = 1;
+    // Add the image to the PDF (simplified parameters)
+    pdf.addImage(
+      canvas.toDataURL('image/png'),
+      'PNG',
+      margin,
+      margin,
+      imgWidth,
+      imgHeight
+    );
     
-    while (remainingHeight > 0) {
-      // Calculate how much of the canvas to take for this page
-      const canvasChunkHeight = Math.min(
-        remainingHeight,
-        (canvas.width * (pageHeight - 2 * margin)) / imgWidth
-      );
-      
-      // Add this chunk to the PDF
-      if (pageNumber > 1) {
-        pdf.addPage();
-        pdfY = margin;
-      }
-      
-      // Fix this line - the addImage function has too many arguments
-      // The correct format is: addImage(imageData, format, x, y, width, height, alias, compression, rotation)
-      pdf.addImage(
-        canvas.toDataURL('image/png'),
-        'PNG',
-        margin,
-        pdfY,
-        imgWidth,
-        (canvasChunkHeight * imgWidth) / canvas.width
-      );
-      
-      // Update for next chunk
-      remainingHeight -= canvasChunkHeight;
-      currentY += canvasChunkHeight;
-      pageNumber++;
-    }
-    
-    // Add a new page for annotations
-    pdf.addPage();
-
-    // Add a section header for annotations
-    pdf.setFont('NotoSansSC', 'normal');
-    pdf.setFontSize(12);
-    let currentTextY = margin;
-    pdf.text('信息说明:', margin, currentTextY);
-    currentTextY += 8;
-    
-    pdf.setFontSize(10);
-    
-    // Add explanations for each tax info item
-    Object.entries(taxInfoData).forEach(([key, info]) => {
-      if (calculator[key]) {
-        // Check if we need a new page
-        if (currentTextY > pageHeight - margin) {
-          pdf.addPage();
-          currentTextY = margin;
-        }
-        
-        // Add title (bold would be ideal but not all fonts support it)
-        pdf.setFontSize(11);
-        pdf.text(info.title, margin, currentTextY);
-        currentTextY += 5;
-        
-        // Add description
-        pdf.setFontSize(9);
-        const descriptionText = pdf.splitTextToSize(info.description, pageWidth - (2 * margin));
-        pdf.text(descriptionText, margin, currentTextY);
-        currentTextY += 5 * descriptionText.length;
-        
-        // Add analysis
-        const analysisText = pdf.splitTextToSize(info.analysis, pageWidth - (2 * margin));
-        pdf.text(analysisText, margin, currentTextY);
-        currentTextY += 5 * analysisText.length;
-        
-        // Add risk information
-        const riskText = pdf.splitTextToSize(`风险提示: ${info.risk}`, pageWidth - (2 * margin));
-        pdf.text(riskText, margin, currentTextY);
-        currentTextY += 5 * riskText.length + 10; // Extra spacing after risk text
-      }
-    });
-
     // Save the PDF with proper encoding in the filename
     const filename = encodeURIComponent(`${calculator.companyName || '税务计算'}_${new Date().toLocaleDateString('zh-CN')}.pdf`);
     pdf.save(filename);

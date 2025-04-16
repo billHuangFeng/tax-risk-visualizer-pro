@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { RotateCcw, Download, Phone } from 'lucide-react';
 import SaveDataButton from './SaveDataButton';
 import { useCalculator } from '@/hooks/useCalculator';
-import { exportToPDF } from '@/utils/pdfExport';
 import { useToast } from '@/hooks/use-toast';
 
 interface CalculatorActionsProps {
@@ -31,26 +30,14 @@ const CalculatorActions: React.FC<CalculatorActionsProps> = ({
     
     try {
       setExporting(true);
-      toast({
-        title: "正在生成PDF",
-        description: "正在处理，请稍候...",
-      });
-      
-      await exportToPDF(calculator);
-      
-      toast({
-        title: "导出成功",
-        description: "PDF文件已生成并下载",
-      });
+      onExport();
     } catch (error) {
-      console.error("PDF export error:", error);
-      toast({
-        title: "导出失败",
-        description: "无法生成PDF，请稍后重试",
-        variant: "destructive",
-      });
+      console.error("Export error:", error);
     } finally {
-      setExporting(false);
+      // Set exporting to false after a short delay to prevent double clicks
+      setTimeout(() => {
+        setExporting(false);
+      }, 2000);
     }
   };
   

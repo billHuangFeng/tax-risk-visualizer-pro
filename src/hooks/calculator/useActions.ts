@@ -27,9 +27,17 @@ export const useActions = (riskValue: string, riskPercentage: number) => {
         description: "正在处理，请稍候...",
       });
       
+      // Get calculator content element to see if it exists
+      const calculatorContent = document.querySelector('#calculator-content');
+      if (!calculatorContent) {
+        throw new Error('计算器内容未找到');
+      }
+      
+      // Pass the full calculator data to the export function
       await exportToPDF({
         riskValue,
         riskPercentage,
+        companyName: '税务计算',  // Default name if not available
       });
       
       toast({
