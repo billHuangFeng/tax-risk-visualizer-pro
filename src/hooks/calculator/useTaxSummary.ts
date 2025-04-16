@@ -16,27 +16,6 @@ export const useTaxSummary = () => {
     { id: '1', description: '差异原因1', amount: 0 }
   ]);
 
-  // Load test data if flag is set
-  useEffect(() => {
-    if (localStorage.getItem('isLoadingTestData') === 'true') {
-      // Load tax summary data
-      setActualTax(localStorage.getItem('actualTax') || '');
-      
-      // Load tax difference factors
-      const factorsString = localStorage.getItem('taxDifferenceFactors');
-      if (factorsString) {
-        try {
-          const factors = JSON.parse(factorsString);
-          if (Array.isArray(factors)) {
-            setTaxDifferenceFactors(factors);
-          }
-        } catch (error) {
-          console.error('Error parsing tax difference factors:', error);
-        }
-      }
-    }
-  }, []);
-
   const addTaxDifferenceFactor = useCallback(() => {
     const newId = (taxDifferenceFactors.length + 1).toString();
     setTaxDifferenceFactors([
@@ -126,6 +105,7 @@ export const useTaxSummary = () => {
     riskPercentage,
     setRiskPercentage,
     taxDifferenceFactors,
+    setTaxDifferenceFactors,
     addTaxDifferenceFactor,
     updateTaxDifferenceFactor,
     removeTaxDifferenceFactor,

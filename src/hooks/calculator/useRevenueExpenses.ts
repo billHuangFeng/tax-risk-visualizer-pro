@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 export const useRevenueExpenses = () => {
   const [totalRevenue, setTotalRevenue] = useState('');
@@ -14,28 +14,6 @@ export const useRevenueExpenses = () => {
   const [socialSecurity, setSocialSecurity] = useState('');
   const [depreciation, setDepreciation] = useState('');
   const [otherExpenses, setOtherExpenses] = useState('');
-
-  // Load test data if flag is set
-  useEffect(() => {
-    if (localStorage.getItem('isLoadingTestData') === 'true') {
-      // Clear the flag
-      localStorage.setItem('isLoadingTestData', 'false');
-      
-      // Load revenue data
-      setTotalRevenue(localStorage.getItem('totalRevenue') || '');
-      setInvoicedRevenue(localStorage.getItem('invoicedRevenue') || '');
-      setNonInvoicedRevenue(localStorage.getItem('nonInvoicedRevenue') || '');
-      
-      // Load expenses data
-      setTotalExpenses(localStorage.getItem('totalExpenses') || '');
-      setInvoicedExpenses(localStorage.getItem('invoicedExpenses') || '');
-      setNonInvoicedExpenses(localStorage.getItem('nonInvoicedExpenses') || '');
-      setPersonalTax(localStorage.getItem('personalTax') || '');
-      setSocialSecurity(localStorage.getItem('socialSecurity') || '');
-      setDepreciation(localStorage.getItem('depreciation') || '');
-      setOtherExpenses(localStorage.getItem('otherExpenses') || '');
-    }
-  }, []);
 
   return {
     totalRevenue,

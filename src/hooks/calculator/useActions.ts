@@ -3,28 +3,17 @@ import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { DifferenceFactor } from '@/components/TaxCalculator/TaxSummaryComponents/DifferenceFactors';
 
-export const useActions = (riskValue: string, riskPercentage: number) => {
+export const useActions = (
+  riskValue: string, 
+  riskPercentage: number, 
+  resetCalculatorState: () => void
+) => {
   const { toast } = useToast();
 
   const handleReset = () => {
     if (confirm('确定要重置所有数据吗？')) {
-      // Reset all form fields except for basic info
-      // We'll reload the page but preserve basic info in localStorage
-      const companyName = localStorage.getItem('companyName') || '';
-      const creditCode = localStorage.getItem('creditCode') || '';
-      const contactPerson = localStorage.getItem('contactPerson') || '';
-      const contactPhone = localStorage.getItem('contactPhone') || '';
-      
-      // Save current basic info to localStorage before reset
-      localStorage.setItem('companyName', companyName);
-      localStorage.setItem('creditCode', creditCode);
-      localStorage.setItem('contactPerson', contactPerson);
-      localStorage.setItem('contactPhone', contactPhone);
-      
-      // Flag to indicate we're doing a reset (not a full page reload)
-      localStorage.setItem('isResetting', 'true');
-      
-      window.location.reload();
+      // Reset calculator state without reloading the page
+      resetCalculatorState();
       
       toast({
         title: "表单已重置",
@@ -35,17 +24,7 @@ export const useActions = (riskValue: string, riskPercentage: number) => {
   };
 
   const loadTestData = () => {
-    // Save current basic info
-    const companyName = localStorage.getItem('companyName') || '';
-    const creditCode = localStorage.getItem('creditCode') || '';
-    const contactPerson = localStorage.getItem('contactPerson') || '';
-    const contactPhone = localStorage.getItem('contactPhone') || '';
-    
-    // Set test data in localStorage
-    localStorage.setItem('companyName', companyName || '测试科技有限公司');
-    localStorage.setItem('creditCode', creditCode || '91310000XXXXXXXXXX');
-    localStorage.setItem('contactPerson', contactPerson || '张经理');
-    localStorage.setItem('contactPhone', contactPhone || '13800138000');
+    // Set test data in memory first, then update the calculator state
     
     // Set enterprise info
     localStorage.setItem('isHighTechEnterprise', 'true');
@@ -83,11 +62,8 @@ export const useActions = (riskValue: string, riskPercentage: number) => {
     ];
     localStorage.setItem('taxDifferenceFactors', JSON.stringify(taxDifferenceFactors));
     
-    // Flag to indicate we're loading test data
-    localStorage.setItem('isLoadingTestData', 'true');
-    
-    // Reload the page to apply test data
-    window.location.reload();
+    // Reset calculator state and apply test data
+    resetCalculatorState();
     
     toast({
       title: "测试数据已加载",
