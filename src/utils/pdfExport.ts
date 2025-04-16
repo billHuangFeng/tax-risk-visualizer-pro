@@ -52,19 +52,22 @@ const processInputFields = (container: HTMLElement) => {
 // Process checkboxes for PDF display
 const processCheckboxes = (container: HTMLElement) => {
   const checkboxes = container.querySelectorAll('[role="checkbox"]');
-  checkboxes.forEach((checkbox: HTMLElement) => {
-    if (checkbox.getAttribute('data-state') === 'checked') {
-      checkbox.style.backgroundColor = '#000';
-      checkbox.style.border = '2px solid #000';
+  checkboxes.forEach((checkbox: Element) => {
+    // Type assertion to HTMLElement
+    const checkboxElement = checkbox as HTMLElement;
+    
+    if (checkboxElement.getAttribute('data-state') === 'checked') {
+      checkboxElement.style.backgroundColor = '#000';
+      checkboxElement.style.border = '2px solid #000';
       
-      const checkIcon = checkbox.querySelector('svg');
-      if (checkIcon) {
+      const checkIcon = checkboxElement.querySelector('svg');
+      if (checkIcon && checkIcon instanceof SVGElement) {
         checkIcon.style.color = '#fff';
         checkIcon.style.width = '16px';
         checkIcon.style.height = '16px';
       }
     } else {
-      checkbox.style.border = '2px solid #000';
+      checkboxElement.style.border = '2px solid #000';
     }
   });
 };
@@ -73,16 +76,18 @@ const processCheckboxes = (container: HTMLElement) => {
 const enhanceVisualElements = (container: HTMLElement) => {
   // Improve table cell visibility
   const tableCells = container.querySelectorAll('td');
-  tableCells.forEach((cell: HTMLElement) => {
-    cell.style.border = '1px solid #ddd';
-    cell.style.padding = '8px';
+  tableCells.forEach((cell: Element) => {
+    const cellElement = cell as HTMLElement;
+    cellElement.style.border = '1px solid #ddd';
+    cellElement.style.padding = '8px';
   });
 
   // Scale up text elements
   const textElements = container.querySelectorAll('p, h1, h2, h3, h4, h5, h6, span, label');
-  textElements.forEach((el: HTMLElement) => {
-    el.style.color = '#000';
-    el.style.fontWeight = el.tagName.startsWith('H') ? 'bold' : 'normal';
+  textElements.forEach((el: Element) => {
+    const textElement = el as HTMLElement;
+    textElement.style.color = '#000';
+    textElement.style.fontWeight = textElement.tagName.startsWith('H') ? 'bold' : 'normal';
   });
 };
 
@@ -150,6 +155,11 @@ export const exportToPDF = async (calculator: any) => {
       throw new Error('计算器内容未找到');
     }
 
+    // Ensure content is an HTMLElement
+    if (!(content instanceof HTMLElement)) {
+      throw new Error('计算器内容不是有效的HTML元素');
+    }
+
     // Prepare content
     const tempContainer = prepareContentForExport(content);
     const clonedContent = tempContainer.firstChild as HTMLElement;
@@ -187,4 +197,3 @@ export const exportToPDF = async (calculator: any) => {
     throw error;
   }
 };
-
