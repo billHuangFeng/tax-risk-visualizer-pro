@@ -51,7 +51,7 @@ export const useVatCalculator = () => {
     
     // 计算风险百分比：税差异/基数（保留正负号）
     const riskPercentage = baseAmount !== 0 
-      ? (tax.unexplainedDifference / baseAmount) * 100 
+      ? (tax.taxDifference / baseAmount) * 100 
       : 0;
     
     tax.setTaxDifferencePercentage(parseFloat(riskPercentage.toFixed(2)));
@@ -68,7 +68,7 @@ export const useVatCalculator = () => {
     }
     
     tax.setRiskLevel(riskLevel);
-  }, [tax.payableTax, tax.actualTax, tax.unexplainedDifference, sales.salesTotal.tax]);
+  }, [tax.payableTax, tax.actualTax, sales.salesTotal.tax]);
 
   // Calculate unexplained difference
   useEffect(() => {
