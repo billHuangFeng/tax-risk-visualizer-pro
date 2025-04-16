@@ -39,13 +39,13 @@ const TaxInputRow: React.FC<TaxInputRowProps> = ({
         )}
       </div>
       <div className="md:col-span-3 flex items-center justify-end w-full">
-        <div className="min-w-[180px] w-full max-w-[240px]">
+        <div className="min-w-[200px] w-full max-w-[280px]">
           <Input
             type={type}
             value={value}
             onChange={onChange ? (e) => onChange(e.target.value) : undefined}
             readOnly={readOnly}
-            className="text-right font-bold pr-4 w-full"
+            className="text-right font-bold pr-8 w-full overflow-visible"
           />
         </div>
         <span className="ml-2 text-sm whitespace-nowrap">万元</span>

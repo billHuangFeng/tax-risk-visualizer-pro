@@ -18,12 +18,12 @@ const NumberInput: React.FC<NumberInputProps> = ({
   disabled = false
 }) => {
   return (
-    <div className="flex items-center min-w-[180px] max-w-full justify-end">
+    <div className="flex items-center min-w-[200px] max-w-full justify-end">
       <Input
         type="number"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className={`text-right w-full min-w-[140px] ${className}`}
+        className={`text-right w-full min-w-[160px] pr-8 overflow-visible ${className}`}
         disabled={disabled}
       />
       <span className="ml-2 text-sm whitespace-nowrap">{suffix}</span>

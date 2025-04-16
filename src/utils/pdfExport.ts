@@ -21,30 +21,85 @@ export const exportToPDF = async (calculator: any) => {
       throw new Error('计算器内容未找到');
     }
 
-    // Calculate scale to fit content width to page
-    const contentWidth = (content as HTMLElement).offsetWidth;
-    const scale = (pageWidth - 2 * margin) / contentWidth;
+    // Clone the content to avoid modifying the original DOM
+    const clonedContent = content.cloneNode(true) as HTMLElement;
+    const tempContainer = document.createElement('div');
+    document.body.appendChild(tempContainer);
+    tempContainer.appendChild(clonedContent);
+    tempContainer.style.position = 'absolute';
+    tempContainer.style.left = '-9999px';
+    tempContainer.style.top = '0';
     
-    // Temporarily set styles to ensure full content is visible
-    const originalStyle = (content as HTMLElement).style.cssText;
-    (content as HTMLElement).style.overflow = 'visible';
-    (content as HTMLElement).style.height = 'auto';
-    (content as HTMLElement).style.maxHeight = 'none';
+    // Set specific CSS for PDF rendering
+    // Make sure input values are fully visible
+    const inputElements = clonedContent.querySelectorAll('input');
+    inputElements.forEach((input: HTMLInputElement) => {
+      input.style.width = '100%';
+      input.style.textOverflow = 'visible';
+      input.style.borderColor = 'transparent';
+      input.style.paddingRight = '0';
+      input.style.letterSpacing = 'normal';
+      input.style.fontSize = '14px';
+    });
+    
+    // Ensure number containers are wide enough
+    const numberContainers = clonedContent.querySelectorAll('.min-w-\\[180px\\]');
+    numberContainers.forEach((container: HTMLElement) => {
+      container.style.minWidth = '200px';
+      container.style.width = 'auto';
+    });
+    
+    // Make sure text is not wrapped unnecessarily
+    const textElements = clonedContent.querySelectorAll('.break-words');
+    textElements.forEach((el: HTMLElement) => {
+      el.style.whiteSpace = 'nowrap';
+      el.style.overflow = 'visible';
+    });
+    
+    // Increase column widths in responsive grids
+    const gridCells = clonedContent.querySelectorAll('.md\\:col-span-3');
+    gridCells.forEach((cell: HTMLElement) => {
+      cell.style.minWidth = '200px';
+    });
     
     // Convert the content to canvas with higher quality settings
     console.log("Starting HTML to canvas conversion");
-    const canvas = await html2canvas(content as HTMLElement, {
-      scale: 2,
+    const canvas = await html2canvas(clonedContent, {
+      scale: 2.5, // Increased scale for better quality
       useCORS: true,
       logging: false,
       backgroundColor: '#ffffff',
       allowTaint: true,
+      onclone: (clonedDoc) => {
+        // Further modifications to the cloned document if needed
+        const inputs = clonedDoc.querySelectorAll('input');
+        inputs.forEach((input: HTMLInputElement) => {
+          // Create a visible text node to show the value
+          const textSpan = clonedDoc.createElement('span');
+          textSpan.textContent = input.value;
+          textSpan.style.position = 'absolute';
+          textSpan.style.left = '0';
+          textSpan.style.top = '0';
+          textSpan.style.width = '100%';
+          textSpan.style.height = '100%';
+          textSpan.style.display = 'flex';
+          textSpan.style.alignItems = 'center';
+          textSpan.style.paddingRight = '8px';
+          textSpan.style.textAlign = input.style.textAlign || 'right';
+          textSpan.style.fontWeight = 'bold';
+          textSpan.style.overflow = 'visible';
+          textSpan.style.whiteSpace = 'nowrap';
+          input.parentNode?.appendChild(textSpan);
+          input.style.opacity = '0'; // Hide the input but keep its layout
+        });
+      }
     });
+    
     console.log("Canvas created successfully", canvas.width, canvas.height);
     
-    // Restore original styles
-    (content as HTMLElement).style.cssText = originalStyle;
-
+    // Clean up the temporary container
+    document.body.removeChild(tempContainer);
+    
     // Calculate dimensions to fit on A4 page
     const imgWidth = pageWidth - (2 * margin);
     const imgHeight = (canvas.height * imgWidth) / canvas.width;

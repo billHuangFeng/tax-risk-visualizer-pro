@@ -45,7 +45,7 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
               id="companyName"
               value={companyName}
               onChange={(e) => setCompanyName(e.target.value)}
-              className="w-full text-left" 
+              className="w-full text-left overflow-visible" 
             />
           </div>
         </div>
@@ -106,13 +106,13 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
             </Tooltip>
           </Label>
           <div className="flex items-center">
-            <div className="min-w-[180px] w-full max-w-[240px]">
+            <div className="min-w-[200px] w-full max-w-[280px]">
               <Input
                 id="totalAssets"
                 type="number"
                 value={totalAssets}
                 onChange={(e) => setTotalAssets(e.target.value)}
-                className="text-right w-full pr-4"
+                className="text-right w-full pr-8 overflow-visible"
               />
             </div>
             <span className="ml-2 text-sm whitespace-nowrap">万元</span>
@@ -138,13 +138,13 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
             </Tooltip>
           </Label>
           <div className="flex items-center">
-            <div className="min-w-[180px] w-full max-w-[240px]">
+            <div className="min-w-[200px] w-full max-w-[280px]">
               <Input
                 id="employeeCount"
                 type="number"
                 value={employeeCount}
                 onChange={(e) => setEmployeeCount(e.target.value)}
-                className="text-right w-full pr-4"
+                className="text-right w-full pr-8 overflow-visible"
               />
             </div>
             <span className="ml-2 text-sm">人</span>

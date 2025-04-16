@@ -125,9 +125,16 @@
   /* Ensure text in inputs is fully visible */
   input[type="text"],
   input[type="number"] {
-    text-overflow: ellipsis;
+    text-overflow: visible;
     padding-right: 12px;
-    letter-spacing: -0.02em;
+    letter-spacing: normal;
+  }
+  
+  /* For PDF export, ensure inputs display values properly */
+  .for-pdf-export input {
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
   }
 }
 
@@ -163,4 +170,16 @@
     font-size: 0.875rem;
     line-height: 1.5rem;
   }
+}
+
+/* Fix letter spacing for number inputs */
+.letter-spacing-normal {
+  letter-spacing: normal !important;
+}
+
+/* Special styling for PDF export */
+.pdf-text-visible {
+  overflow: visible !important;
+  white-space: nowrap !important;
+  text-overflow: clip !important;
 }

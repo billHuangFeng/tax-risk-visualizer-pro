@@ -51,32 +51,32 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
           )}
         </div>
       </TableCell>
-      <TableCell className="w-[15%] min-w-[140px]">
+      <TableCell className="w-[15%] min-w-[160px]">
         <div className="w-full">
           <Input
             type="number"
             value={safeValues.actual}
             onChange={(e) => onChange('actual', e.target.value)}
-            className="text-right w-full pr-4"
+            className="text-right w-full pr-8 overflow-visible"
           />
         </div>
       </TableCell>
-      <TableCell className="w-[20%] min-w-[140px]">
+      <TableCell className="w-[20%] min-w-[160px]">
         <div className="w-full">
           <Input
             type="text"
             value={safeValues.deductible}
             readOnly
-            className="text-right bg-muted w-full pr-4"
+            className="text-right bg-muted w-full pr-8 overflow-visible"
           />
         </div>
       </TableCell>
-      <TableCell className="w-[20%] min-w-[140px]">
+      <TableCell className="w-[20%] min-w-[160px]">
         <Input
           type="text"
           value={safeValues.adjustment}
           readOnly
-          className={`text-right bg-muted w-full font-bold pr-4 ${
+          className={`text-right bg-muted w-full font-bold pr-8 overflow-visible ${
             parseFloat(safeValues.adjustment) !== 0
               ? 'text-tax-red' 
               : 'text-foreground'
