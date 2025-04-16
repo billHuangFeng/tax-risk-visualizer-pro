@@ -1,5 +1,5 @@
-
 import React, { useState } from 'react';
+import { Copyright } from 'lucide-react';
 import CalculatorHeader from '@/components/TaxCalculator/CalculatorHeader';
 import CalculatorActions from '@/components/TaxCalculator/CalculatorActions';
 import BasicInfo from '@/components/TaxCalculator/BasicInfo';
@@ -118,6 +118,11 @@ const Index = () => {
           />
         </div>
       </CalculatorLayout>
+
+      <footer className="container text-center text-gray-500 text-sm py-4 flex items-center justify-center">
+        <Copyright className="h-4 w-4 mr-2" />
+        <span>© 2025 财倍贝企业成长研究院 版权所有</span>
+      </footer>
     </>
   );
 };
