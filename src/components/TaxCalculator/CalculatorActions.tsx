@@ -34,43 +34,21 @@ const CalculatorActions: React.FC<CalculatorActionsProps> = ({
         description: "正在处理所有页面，请稍候...",
       });
       
-      setTimeout(async () => {
-        try {
-          const calculatorContent = document.getElementById('calculator-content');
-          
-          if (calculatorContent) {
-            calculatorContent.classList.add('for-pdf-export');
-          }
-          
-          await calculator.handleExport();
-          
-          toast({
-            title: "导出成功",
-            description: "PDF文件已生成并下载",
-            variant: "default",
-          });
-        } catch (error) {
-          console.error("Export error:", error);
-          
-          toast({
-            title: "导出失败",
-            description: "PDF生成过程中发生错误，请稍后再试",
-            variant: "destructive",
-          });
-        } finally {
-          const calculatorContent = document.getElementById('calculator-content');
-          if (calculatorContent) {
-            calculatorContent.classList.remove('for-pdf-export');
-          }
-          setExporting(false);
-        }
-      }, 500);
+      await calculator.handleExport();
+      
+      toast({
+        title: "导出成功",
+        description: "PDF文件已生成并下载",
+        variant: "default",
+      });
+      
+      setExporting(false);
     } catch (error) {
-      console.error("Export initialization error:", error);
+      console.error("Export error:", error);
       
       toast({
         title: "导出失败",
-        description: "无法初始化PDF导出",
+        description: "PDF生成过程中发生错误，请稍后再试",
         variant: "destructive",
       });
       

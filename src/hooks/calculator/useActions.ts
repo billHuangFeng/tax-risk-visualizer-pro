@@ -27,7 +27,7 @@ export const useActions = (riskValue: string, riskPercentage: number) => {
         description: "正在处理数据...",
       });
       
-      // 收集用于PDF的所有输入值
+      // 全面收集用于PDF的数据
       const collectFormData = () => {
         const data: Record<string, any> = {};
         
@@ -43,16 +43,43 @@ export const useActions = (riskValue: string, riskPercentage: number) => {
           }
         });
         
+        // 获取表单中的选择框和复选框数据
+        const checkboxes = document.querySelectorAll('[role="checkbox"]') as NodeListOf<HTMLElement>;
+        checkboxes.forEach(checkbox => {
+          const id = checkbox.id || checkbox.getAttribute('data-id');
+          if (id) {
+            data[id] = checkbox.getAttribute('data-state') === 'checked';
+          }
+        });
+        
         // 获取特定数据
         data.riskValue = riskValue;
         data.riskPercentage = riskPercentage;
         data.riskLevel = getRiskLevel(riskPercentage);
         
+        // 获取企业基本信息
+        const companyNameInput = document.getElementById('companyName') as HTMLInputElement;
+        if (companyNameInput) {
+          data.companyName = companyNameInput.value || '测试科技有限公司';
+        }
+        
+        // 是否高新技术企业
+        const isHighTechCheckbox = document.querySelector('[data-id="isHighTechEnterprise"]') as HTMLElement;
+        if (isHighTechCheckbox) {
+          data.isHighTechEnterprise = isHighTechCheckbox.getAttribute('data-state') === 'checked';
+        }
+        
+        // 是否享受研发费用加计扣除
+        const exemptBusinessCheckbox = document.querySelector('[data-id="exemptBusiness"]') as HTMLElement;
+        if (exemptBusinessCheckbox) {
+          data.exemptBusiness = exemptBusinessCheckbox.getAttribute('data-state') === 'checked';
+        }
+        
+        console.log("收集的表单数据:", data);
         return data;
       };
       
       const formData = collectFormData();
-      console.log("收集的表单数据:", formData);
       
       // 导出PDF
       await exportToPDF(formData);
