@@ -21,7 +21,30 @@ export const DEFAULT_TEMPLATES: PdfTemplate[] = [
           width: 100,
           height: 10,
         },
-        // 添加更多字段定义
+        invoicedRevenue: {
+          type: 'text',
+          position: { x: 50, y: 90 },
+          width: 100,
+          height: 10,
+        },
+        taxableIncome: {
+          type: 'text',
+          position: { x: 50, y: 110 },
+          width: 100,
+          height: 10,
+        },
+        actualTax: {
+          type: 'text',
+          position: { x: 50, y: 130 },
+          width: 100,
+          height: 10,
+        },
+        riskPercentage: {
+          type: 'text',
+          position: { x: 50, y: 150 },
+          width: 100,
+          height: 10,
+        }
       }
     ],
     styles: {
