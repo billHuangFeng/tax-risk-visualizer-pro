@@ -47,6 +47,7 @@ const VatSalesSection: React.FC<VatSalesSectionProps> = ({
   const salesCollectionDifferencePercentage = ((salesCollectionDifference) / (salesTotal.amount + salesTotal.tax) * 100) || 0;
   const showDifferenceExplanation = Math.abs(salesCollectionDifferencePercentage) > 10;
   const unexplainedDifference = salesCollectionDifference - explainedDifferenceTotal;
+  const unexplainedDifferencePercentage = ((unexplainedDifference) / (salesTotal.amount + salesTotal.tax) * 100) || 0;
 
   return (
     <Card className="mb-6">
@@ -265,7 +266,12 @@ const VatSalesSection: React.FC<VatSalesSectionProps> = ({
 
                 <TableRow className="bg-yellow-100/50 font-medium">
                   <TableCell>未解释差异</TableCell>
-                  <TableCell className="text-right">{unexplainedDifference.toFixed(2)}</TableCell>
+                  <TableCell className="text-right flex items-center justify-end gap-2">
+                    {unexplainedDifference.toFixed(2)}
+                    <span className="text-sm text-gray-500 whitespace-nowrap">
+                      {unexplainedDifferencePercentage.toFixed(2)}%
+                    </span>
+                  </TableCell>
                   <TableCell></TableCell>
                 </TableRow>
               </TableBody>
