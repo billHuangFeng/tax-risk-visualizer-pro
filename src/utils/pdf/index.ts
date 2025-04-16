@@ -2,8 +2,6 @@
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import { enhanceLayout } from './enhancer';
-import { PdfTemplate } from '@/types/pdfTemplates';
-import { applyTemplateStyles } from './templateService';
 
 /**
  * Export calculator data to PDF
@@ -24,13 +22,8 @@ export const exportToPDF = async (calculatorData: any): Promise<boolean> => {
     // Add PDF export styling class
     contentClone.classList.add('for-pdf-export');
     
-    // Apply the template styles if provided
-    if (calculatorData.template) {
-      applyTemplateStyles(contentClone, calculatorData.template);
-    }
-    
     // Apply enhanced styling for PDF output
-    enhanceLayout(contentClone, calculatorData.template);
+    enhanceLayout(contentClone);
     
     // Replace info icons with numbered annotations
     let annotationIndex = 1;
