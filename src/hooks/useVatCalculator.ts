@@ -49,19 +49,19 @@ export const useVatCalculator = () => {
       Math.abs(sales.salesTotal.tax * 0.1)
     );
     
-    // 计算风险百分比：税差异/基数（保留正负号）
+    // 计算风险百分比：(应交增值税 - 实缴增值税) / 基数 * 100
     const riskPercentage = baseAmount !== 0 
-      ? (difference / baseAmount) * 100 
+      ? (Math.abs(difference) / baseAmount) * 100 
       : 0;
     
     tax.setTaxDifferencePercentage(parseFloat(riskPercentage.toFixed(2)));
 
     let riskLevel = '';
-    if (Math.abs(riskPercentage) > 50) {
+    if (riskPercentage > 50) {
       riskLevel = '风险非常高';
-    } else if (Math.abs(riskPercentage) > 20) {
+    } else if (riskPercentage > 20) {
       riskLevel = '风险比较高';
-    } else if (Math.abs(riskPercentage) > 10) {
+    } else if (riskPercentage > 10) {
       riskLevel = '存在风险';
     } else {
       riskLevel = '基本安全';
