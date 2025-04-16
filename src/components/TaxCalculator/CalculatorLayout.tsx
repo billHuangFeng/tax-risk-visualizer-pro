@@ -11,27 +11,11 @@ import TopSection from './TopSection';
 interface CalculatorLayoutProps {
   children: React.ReactNode;
   selectedInfoItem: TaxInfoPanelItem | null;
-  companyName: string;
-  setCompanyName: (value: string) => void;
-  creditCode: string;
-  setCreditCode: (value: string) => void;
-  contactPerson: string;
-  setContactPerson: (value: string) => void;
-  contactPhone: string;
-  setContactPhone: (value: string) => void;
 }
 
 const CalculatorLayout: React.FC<CalculatorLayoutProps> = ({ 
   children, 
   selectedInfoItem,
-  companyName,
-  setCompanyName,
-  creditCode,
-  setCreditCode,
-  contactPerson,
-  setContactPerson,
-  contactPhone,
-  setContactPhone
 }) => {
   const isMobile = useIsMobile();
 
@@ -44,16 +28,7 @@ const CalculatorLayout: React.FC<CalculatorLayoutProps> = ({
       <div className="container max-w-[100vw] px-4 md:px-8">
         <div className="flex flex-col md:flex-row gap-8">
           <div className="w-full">
-            <TopSection 
-              companyName={companyName}
-              setCompanyName={setCompanyName}
-              creditCode={creditCode}
-              setCreditCode={setCreditCode}
-              contactPerson={contactPerson}
-              setContactPerson={setContactPerson}
-              contactPhone={contactPhone}
-              setContactPhone={setContactPhone}
-            />
+            <TopSection />
             {children}
           </div>
           

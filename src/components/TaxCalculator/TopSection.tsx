@@ -1,32 +1,22 @@
-
 import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { CircleAlert, ListMinus } from 'lucide-react';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
+import { useBasicInfo } from '@/contexts/BasicInfoContext';
 
-interface TopSectionProps {
-  companyName: string;
-  setCompanyName: (value: string) => void;
-  creditCode: string;
-  setCreditCode: (value: string) => void;
-  contactPerson: string;
-  setContactPerson: (value: string) => void;
-  contactPhone: string;
-  setContactPhone: (value: string) => void;
-}
+const TopSection: React.FC = () => {
+  const {
+    companyName,
+    setCompanyName,
+    creditCode,
+    setCreditCode,
+    contactPerson,
+    setContactPerson,
+    contactPhone,
+    setContactPhone,
+  } = useBasicInfo();
 
-const TopSection: React.FC<TopSectionProps> = ({
-  companyName,
-  setCompanyName,
-  creditCode,
-  setCreditCode,
-  contactPerson,
-  setContactPerson,
-  contactPhone,
-  setContactPhone,
-}) => {
   const handleContactAdvisor = () => {
     window.open('https://work.weixin.qq.com/ca/cawcde03d69f2d37e9', '_blank');
   };
