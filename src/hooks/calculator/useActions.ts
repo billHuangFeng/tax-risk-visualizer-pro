@@ -1,3 +1,4 @@
+
 import { useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { exportToPDF } from '@/utils/pdfExport';
@@ -20,7 +21,30 @@ export const useActions = (riskValue: string, riskPercentage: number) => {
   }, [toast]);
 
   const handleExport = useCallback(async () => {
-  }, []);
+    try {
+      toast({
+        title: "正在生成PDF",
+        description: "正在处理，请稍候...",
+      });
+      
+      await exportToPDF({
+        riskValue,
+        riskPercentage,
+      });
+      
+      toast({
+        title: "导出成功",
+        description: "PDF文件已生成并下载",
+      });
+    } catch (error) {
+      console.error("PDF export error:", error);
+      toast({
+        title: "导出失败",
+        description: "无法生成PDF，请稍后重试",
+        variant: "destructive",
+      });
+    }
+  }, [riskValue, riskPercentage, toast]);
 
   return {
     handleReset,

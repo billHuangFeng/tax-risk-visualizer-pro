@@ -84,19 +84,15 @@ export const exportToPDF = async (calculator: any) => {
         pdfY = margin;
       }
       
+      // Fix this line - the addImage function has too many arguments
+      // The correct format is: addImage(imageData, format, x, y, width, height, alias, compression, rotation)
       pdf.addImage(
-        canvas,
+        canvas.toDataURL('image/png'),
         'PNG',
         margin,
         pdfY,
         imgWidth,
-        (canvasChunkHeight * imgWidth) / canvas.width,
-        '',
-        'FAST',
-        0,
-        currentY,
-        canvas.width,
-        canvasChunkHeight
+        (canvasChunkHeight * imgWidth) / canvas.width
       );
       
       // Update for next chunk
