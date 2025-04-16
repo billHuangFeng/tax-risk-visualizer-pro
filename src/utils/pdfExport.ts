@@ -1,4 +1,3 @@
-
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 
@@ -255,7 +254,7 @@ const removeRedundantTextElements = (container: HTMLElement) => {
   }
 };
 
-// Ensure layout is properly displayed
+// Enhance layout is properly displayed
 const enhanceLayout = (container: HTMLElement) => {
   try {
     // Process headings to ensure they're visible and properly styled
