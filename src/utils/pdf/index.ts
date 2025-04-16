@@ -28,6 +28,9 @@ export const exportToPDF = async (calculator: any) => {
     }
     
     try {
+      // Wait a bit to ensure DOM is fully processed
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
       // Create canvas
       const canvas = await createCanvas(clonedContent);
       
@@ -36,7 +39,7 @@ export const exportToPDF = async (calculator: any) => {
         throw new Error('Canvas has invalid dimensions');
       }
       
-      // Initialize PDF
+      // Initialize PDF - using A4 dimensions
       const pdf = new jsPDF({
         orientation: 'portrait',
         unit: 'mm',

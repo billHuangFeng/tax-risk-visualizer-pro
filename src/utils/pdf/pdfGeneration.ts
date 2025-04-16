@@ -99,6 +99,40 @@ const fixGridLayout = (element: HTMLElement) => {
         label.style.fontWeight = 'bold';
       }
     });
+    
+    // Convert grid layout to table layout for better alignment
+    const gridContainers = element.querySelectorAll('[class*="grid"]');
+    gridContainers.forEach(grid => {
+      if (grid instanceof HTMLElement && !grid.classList.contains('pdf-duplicate-row')) {
+        // Skip if it's already been processed or should be hidden
+        if (grid.style.display === 'table' || grid.style.display === 'none') {
+          return;
+        }
+        
+        grid.style.display = 'table';
+        grid.style.width = '100%';
+        grid.style.marginBottom = '16px';
+        
+        const children = Array.from(grid.children);
+        children.forEach((child, index) => {
+          if (child instanceof HTMLElement) {
+            if (index % 2 === 0) { // Label column
+              child.style.display = 'table-cell';
+              child.style.width = '60%';
+              child.style.textAlign = 'left';
+              child.style.verticalAlign = 'middle';
+              child.style.padding = '8px';
+            } else { // Value column
+              child.style.display = 'table-cell';
+              child.style.width = '40%';
+              child.style.textAlign = 'right';
+              child.style.verticalAlign = 'middle';
+              child.style.padding = '8px';
+            }
+          }
+        });
+      }
+    });
   } catch (error) {
     console.warn('Error fixing grid layout:', error);
   }

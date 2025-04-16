@@ -40,6 +40,7 @@ const NumberInput: React.FC<NumberInputProps> = ({
         disabled={disabled}
         data-value={value} /* Add data attribute for PDF export */
       />
+      {/* Single pdf-value element to avoid duplication */}
       <div className="absolute right-[45px] top-0 bottom-0 flex items-center justify-end h-full pointer-events-none pdf-value">
         {value}
       </div>

@@ -61,6 +61,7 @@ const TaxInputRow: React.FC<TaxInputRowProps> = ({
             className="text-right font-bold pr-8 w-full overflow-visible letter-spacing-normal"
             data-value={value} /* Add data attribute for PDF export */
           />
+          {/* Ensure only one pdf-value element */}
           <span className="absolute right-3 top-0 bottom-0 flex items-center justify-end h-full pointer-events-none pdf-value">
             {value}
           </span>

@@ -29,10 +29,40 @@ export const processTextElements = (container: HTMLElement) => {
       if (heading instanceof HTMLElement) {
         heading.style.pageBreakBefore = 'auto';
         heading.style.pageBreakAfter = 'avoid';
-        heading.style.marginTop = '20px';
-        heading.style.marginBottom = '10px';
+        heading.style.marginTop = '24px';
+        heading.style.marginBottom = '16px';
+        heading.style.width = '100%';
       }
     });
+    
+    // Make company name prominent at the top
+    const companyNameInput = container.querySelector('input#companyName');
+    if (companyNameInput instanceof HTMLInputElement) {
+      const companyName = companyNameInput.value || companyNameInput.getAttribute('data-value') || '税务计算报告';
+      
+      const titleElement = document.createElement('h1');
+      titleElement.textContent = companyName + ' - 税务计算报告';
+      titleElement.style.fontSize = '24px';
+      titleElement.style.fontWeight = 'bold';
+      titleElement.style.textAlign = 'center';
+      titleElement.style.marginBottom = '24px';
+      titleElement.style.borderBottom = '2px solid #3B82F6';
+      titleElement.style.paddingBottom = '12px';
+      titleElement.style.width = '100%';
+      titleElement.style.pageBreakAfter = 'avoid';
+      
+      if (container.firstChild) {
+        container.insertBefore(titleElement, container.firstChild);
+      } else {
+        container.appendChild(titleElement);
+      }
+      
+      // Hide the original company name field
+      const companyField = companyNameInput.closest('[class*="grid"]');
+      if (companyField instanceof HTMLElement) {
+        companyField.style.display = 'none';
+      }
+    }
   } catch (error) {
     console.warn('Error processing text elements:', error);
   }
@@ -45,10 +75,12 @@ export const processInputFields = (container: HTMLElement) => {
     const processedParents = new Set<HTMLElement>();
     
     inputs.forEach((input: HTMLInputElement) => {
-      const parentElement = input.parentElement;
-      if (!parentElement || processedParents.has(parentElement)) return;
+      const parentElement = input.closest('.pdf-text-visible');
+      if (!parentElement || !(parentElement instanceof HTMLElement) || processedParents.has(parentElement)) return;
       
       processedParents.add(parentElement);
+      
+      // Find or create the pdf-value element
       let valueDisplay = parentElement.querySelector('.pdf-value');
       
       if (!valueDisplay) {
@@ -76,12 +108,41 @@ export const processInputFields = (container: HTMLElement) => {
         valueDisplay.textContent = inputValue;
         valueDisplay.style.visibility = 'visible';
         valueDisplay.style.opacity = '1';
+        valueDisplay.style.position = 'static';
+        valueDisplay.style.display = 'inline-block';
+        valueDisplay.style.marginRight = '4px';
       }
       
+      // Hide the actual input to avoid duplication
+      input.style.opacity = '0';
+      input.style.height = '0';
+      input.style.position = 'absolute';
       input.style.border = 'none';
       input.style.boxShadow = 'none';
       input.style.outline = 'none';
       input.style.backgroundColor = 'transparent';
+    });
+    
+    // Handle standalone inputs (not in pdf-text-visible containers)
+    const standaloneInputs = container.querySelectorAll('input:not(.pdf-text-visible *)');
+    standaloneInputs.forEach((input) => {
+      if (input instanceof HTMLInputElement) {
+        const parentElement = input.parentElement;
+        if (!parentElement || !(parentElement instanceof HTMLElement)) return;
+        
+        const inputValue = input.getAttribute('data-value') || input.value || '';
+        
+        // Create a text display to replace the input
+        const textDisplay = document.createElement('span');
+        textDisplay.textContent = inputValue;
+        textDisplay.style.fontWeight = 'bold';
+        textDisplay.style.fontSize = '14px';
+        textDisplay.style.color = '#000';
+        
+        // Add the text display and hide the input
+        parentElement.appendChild(textDisplay);
+        input.style.display = 'none';
+      }
     });
   } catch (error) {
     console.warn('Error processing input fields:', error);
