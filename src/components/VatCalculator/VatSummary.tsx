@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -46,7 +45,7 @@ const VatSummary: React.FC<VatSummaryProps> = ({
                 </button>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-lg font-bold">{payableTax.toFixed(1)}</span>
+                <span className="text-lg font-bold">{payableTax.toFixed(2)}</span>
                 <span className="text-sm text-gray-500">
                   {payableTax < 0 ? "(留抵)" : ""}
                 </span>
@@ -85,7 +84,7 @@ const VatSummary: React.FC<VatSummaryProps> = ({
               </div>
               <div className="flex items-center gap-2">
                 <span className={`text-lg font-bold ${Math.abs(taxDifference) > 0 ? 'text-red-500' : ''}`}>
-                  {taxDifference.toFixed(1)}
+                  {taxDifference.toFixed(2)}
                 </span>
               </div>
             </div>
@@ -125,7 +124,7 @@ const VatSummary: React.FC<VatSummaryProps> = ({
               <p className="text-yellow-800">请确认资金支出与申报增值税的采购是否一致？</p>
               <p className="text-yellow-600 mt-1">
                 {bankPurchasesAmount > 0 
-                  ? `银行采购支出与申报额差异: ${Math.abs(bankPurchasesAmount - payableTax).toFixed(1)}`
+                  ? `银行采购支出与申报额差异: ${Math.abs(bankPurchasesAmount - payableTax).toFixed(2)}`
                   : "请输入银行采购支出金额以进行比对"}
               </p>
             </div>
@@ -137,4 +136,3 @@ const VatSummary: React.FC<VatSummaryProps> = ({
 };
 
 export default VatSummary;
-

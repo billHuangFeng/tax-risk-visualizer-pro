@@ -111,7 +111,7 @@ const VatSalesSection: React.FC<VatSalesSectionProps> = ({
                   </div>
                 </TableCell>
                 <TableCell className="text-right font-medium">
-                  {item.outputTax.toFixed(1)}
+                  {item.outputTax.toFixed(2)}
                 </TableCell>
                 <TableCell>
                   <Button
@@ -142,9 +142,9 @@ const VatSalesSection: React.FC<VatSalesSectionProps> = ({
             
             <TableRow className="bg-gray-50 font-bold">
               <TableCell>合计</TableCell>
-              <TableCell className="text-right">{salesTotal.amount.toFixed(1)}</TableCell>
+              <TableCell className="text-right">{salesTotal.amount.toFixed(2)}</TableCell>
               <TableCell></TableCell>
-              <TableCell className="text-right">{salesTotal.tax.toFixed(1)}</TableCell>
+              <TableCell className="text-right">{salesTotal.tax.toFixed(2)}</TableCell>
               <TableCell></TableCell>
             </TableRow>
           </TableBody>
@@ -186,7 +186,7 @@ const VatSalesSection: React.FC<VatSalesSectionProps> = ({
               disabled
             />
             <span className="text-sm text-gray-500 whitespace-nowrap">
-              {salesCollectionDifferencePercentage.toFixed(1)}%
+              {salesCollectionDifferencePercentage.toFixed(2)}%
             </span>
           </div>
         </div>
@@ -256,13 +256,13 @@ const VatSalesSection: React.FC<VatSalesSectionProps> = ({
 
                 <TableRow className="bg-yellow-100/50 font-medium">
                   <TableCell>总计</TableCell>
-                  <TableCell className="text-right">{explainedDifferenceTotal.toFixed(1)}</TableCell>
+                  <TableCell className="text-right">{explainedDifferenceTotal.toFixed(2)}</TableCell>
                   <TableCell></TableCell>
                 </TableRow>
 
                 <TableRow className="bg-yellow-100/50 font-medium">
                   <TableCell>未解释差异</TableCell>
-                  <TableCell className="text-right">{unexplainedDifference.toFixed(1)}</TableCell>
+                  <TableCell className="text-right">{unexplainedDifference.toFixed(2)}</TableCell>
                   <TableCell></TableCell>
                 </TableRow>
               </TableBody>
