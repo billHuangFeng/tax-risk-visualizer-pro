@@ -68,14 +68,11 @@ export const useCalculator = () => {
       taxSummary.setRiskPercentage(0);
       taxSummary.setTaxDifferenceFactors([{ id: '1', description: '差异原因1', amount: 0 }]);
     } else {
-      // For test data loading, we set the flag to false
-      // Each hook should read the values from localStorage directly
-      localStorage.setItem('isLoadingTestData', 'false');
+      // After test data is loaded, trigger storage event to update all components
+      window.dispatchEvent(new Event('storage'));
       
-      // Force a re-render to ensure all hooks load their test data
-      setTimeout(() => {
-        window.dispatchEvent(new Event('storage'));
-      }, 0);
+      // Reset the flag after data is loaded
+      localStorage.setItem('isLoadingTestData', 'false');
     }
   }, [basicInfo, revenueExpenses, taxAdjustments, taxSummary]);
   

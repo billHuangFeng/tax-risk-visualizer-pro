@@ -30,10 +30,30 @@ export const useRevenueExpenses = () => {
       setSocialSecurity(localStorage.getItem('socialSecurity') || '');
       setDepreciation(localStorage.getItem('depreciation') || '');
       setOtherExpenses(localStorage.getItem('otherExpenses') || '');
-      
-      // Reset the flag
-      localStorage.setItem('isLoadingTestData', 'false');
     }
+  }, []);
+  
+  // Add event listener for storage changes
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const isLoadingTestData = localStorage.getItem('isLoadingTestData') === 'true';
+      
+      if (isLoadingTestData) {
+        setTotalRevenue(localStorage.getItem('totalRevenue') || '');
+        setInvoicedRevenue(localStorage.getItem('invoicedRevenue') || '');
+        setNonInvoicedRevenue(localStorage.getItem('nonInvoicedRevenue') || '');
+        setTotalExpenses(localStorage.getItem('totalExpenses') || '');
+        setInvoicedExpenses(localStorage.getItem('invoicedExpenses') || '');
+        setNonInvoicedExpenses(localStorage.getItem('nonInvoicedExpenses') || '');
+        setPersonalTax(localStorage.getItem('personalTax') || '');
+        setSocialSecurity(localStorage.getItem('socialSecurity') || '');
+        setDepreciation(localStorage.getItem('depreciation') || '');
+        setOtherExpenses(localStorage.getItem('otherExpenses') || '');
+      }
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
   return {

@@ -34,6 +34,31 @@ export const useTaxSummary = () => {
       }
     }
   }, []);
+  
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const isLoadingTestData = localStorage.getItem('isLoadingTestData') === 'true';
+      
+      if (isLoadingTestData) {
+        setActualTax(localStorage.getItem('actualTax') || '');
+        
+        const factorsString = localStorage.getItem('taxDifferenceFactors');
+        if (factorsString) {
+          try {
+            const factors = JSON.parse(factorsString);
+            if (Array.isArray(factors)) {
+              setTaxDifferenceFactors(factors);
+            }
+          } catch (error) {
+            console.error('Error parsing tax difference factors:', error);
+          }
+        }
+      }
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
 
   const addTaxDifferenceFactor = useCallback(() => {
     const newId = (taxDifferenceFactors.length + 1).toString();

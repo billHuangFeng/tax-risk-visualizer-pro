@@ -36,6 +36,23 @@ export const useBasicInfo = () => {
     }
   }, []);
 
+  // Add event listener for storage changes
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const isLoadingTestData = localStorage.getItem('isLoadingTestData') === 'true';
+      
+      if (isLoadingTestData) {
+        const isHighTech = localStorage.getItem('isHighTechEnterprise') === 'true';
+        setIsHighTechEnterprise(isHighTech);
+        setTotalAssets(localStorage.getItem('totalAssets') || '');
+        setEmployeeCount(localStorage.getItem('employeeCount') || '');
+      }
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
   // Save basic info to localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem('companyName', companyName);

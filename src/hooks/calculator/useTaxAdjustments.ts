@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 
 export const useTaxAdjustments = () => {
@@ -92,6 +93,60 @@ export const useTaxAdjustments = () => {
         adjustment: '',
       });
     }
+  }, []);
+  
+  // Add event listener for storage changes
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const isLoadingTestData = localStorage.getItem('isLoadingTestData') === 'true';
+      
+      if (isLoadingTestData) {
+        setRdExpenses({
+          actual: localStorage.getItem('rdExpenses') || '',
+          deductible: '',
+          adjustment: '',
+        });
+        
+        setEntertainmentExpenses({
+          actual: localStorage.getItem('entertainmentExpenses') || '',
+          deductible: '',
+          adjustment: '',
+        });
+        
+        setAdvertisingExpenses({
+          actual: localStorage.getItem('advertisingExpenses') || '',
+          deductible: '',
+          adjustment: '',
+        });
+        
+        setEducationExpenses({
+          actual: localStorage.getItem('educationExpenses') || '',
+          deductible: '',
+          adjustment: '',
+        });
+        
+        setWelfareExpenses({
+          actual: localStorage.getItem('welfareExpenses') || '',
+          deductible: '',
+          adjustment: '',
+        });
+        
+        setInsuranceExpenses({
+          actual: localStorage.getItem('insuranceExpenses') || '',
+          deductible: '',
+          adjustment: '',
+        });
+        
+        setNonDeductibleExpenses({
+          actual: localStorage.getItem('nonDeductibleExpenses') || '',
+          deductible: '',
+          adjustment: '',
+        });
+      }
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
   // Calculate total adjustment whenever any individual adjustment changes

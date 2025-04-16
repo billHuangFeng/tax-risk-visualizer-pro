@@ -63,6 +63,9 @@ export const useActions = (
     ];
     localStorage.setItem('taxDifferenceFactors', JSON.stringify(taxDifferenceFactors));
     
+    // Force state refresh without page reload
+    window.dispatchEvent(new Event('storage'));
+    
     // Apply test data to calculator state
     resetCalculatorState();
     
