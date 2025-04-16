@@ -9,11 +9,23 @@ import { Button } from '@/components/ui/button';
 interface TopSectionProps {
   companyName: string;
   setCompanyName: (value: string) => void;
+  creditCode: string;
+  setCreditCode: (value: string) => void;
+  contactPerson: string;
+  setContactPerson: (value: string) => void;
+  contactPhone: string;
+  setContactPhone: (value: string) => void;
 }
 
 const TopSection: React.FC<TopSectionProps> = ({
   companyName,
   setCompanyName,
+  creditCode,
+  setCreditCode,
+  contactPerson,
+  setContactPerson,
+  contactPhone,
+  setContactPhone,
 }) => {
   const handleContactAdvisor = () => {
     window.open('https://work.weixin.qq.com/ca/cawcde03d69f2d37e9', '_blank');
@@ -35,6 +47,26 @@ const TopSection: React.FC<TopSectionProps> = ({
           <Label htmlFor="creditCode" className="font-medium text-base whitespace-nowrap min-w-24">统一社会信用代码：</Label>
           <Input
             id="creditCode"
+            value={creditCode}
+            onChange={(e) => setCreditCode(e.target.value)}
+            className="flex-1"
+          />
+        </div>
+        <div className="flex items-center gap-4">
+          <Label htmlFor="contactPerson" className="font-medium text-base whitespace-nowrap min-w-24">联系人：</Label>
+          <Input
+            id="contactPerson"
+            value={contactPerson}
+            onChange={(e) => setContactPerson(e.target.value)}
+            className="flex-1"
+          />
+        </div>
+        <div className="flex items-center gap-4">
+          <Label htmlFor="contactPhone" className="font-medium text-base whitespace-nowrap min-w-24">联系电话：</Label>
+          <Input
+            id="contactPhone"
+            value={contactPhone}
+            onChange={(e) => setContactPhone(e.target.value)}
             className="flex-1"
           />
         </div>
