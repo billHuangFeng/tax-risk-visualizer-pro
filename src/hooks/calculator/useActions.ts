@@ -1,11 +1,11 @@
-
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { exportToPDF } from '@/utils/pdf';
 import { PdfTemplate } from '@/types/pdfTemplates';
 
 export const useActions = (riskValue: string, riskPercentage: number) => {
   const { toast } = useToast();
+  const [isEditingTemplate, setIsEditingTemplate] = useState(false);
 
   const getRiskLevel = (percentage: number) => {
     if (percentage < 30) return '低风险';
@@ -66,8 +66,14 @@ export const useActions = (riskValue: string, riskPercentage: number) => {
     }
   }, [riskValue, riskPercentage]);
 
+  const toggleTemplateEditor = useCallback(() => {
+    setIsEditingTemplate(prev => !prev);
+  }, []);
+
   return {
     handleReset,
     handleExport,
+    isEditingTemplate,
+    toggleTemplateEditor,
   };
 };
