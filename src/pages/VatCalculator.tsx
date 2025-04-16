@@ -38,11 +38,11 @@ const VatCalculator = () => {
           bankSalesAmount={vatCalculator.bankSalesAmount}
           setBankSalesAmount={vatCalculator.setBankSalesAmount}
           onInfoClick={onInfoClick}
-          differenceExplanations={vatCalculator.differenceExplanations}
-          addDifferenceExplanation={vatCalculator.addDifferenceExplanation}
-          updateDifferenceExplanation={vatCalculator.updateDifferenceExplanation}
-          removeDifferenceExplanation={vatCalculator.removeDifferenceExplanation}
-          explainedDifferenceTotal={vatCalculator.explainedDifferenceTotal}
+          differenceExplanations={vatCalculator.salesDifferenceExplanations}
+          addDifferenceExplanation={vatCalculator.addSalesDifferenceExplanation}
+          updateDifferenceExplanation={vatCalculator.updateSalesDifferenceExplanation}
+          removeDifferenceExplanation={vatCalculator.removeSalesDifferenceExplanation}
+          explainedDifferenceTotal={vatCalculator.salesExplainedDifferenceTotal}
         />
 
         <VatPurchasesSection 
@@ -54,11 +54,11 @@ const VatCalculator = () => {
           bankPurchasesAmount={vatCalculator.bankPurchasesAmount}
           setBankPurchasesAmount={vatCalculator.setBankPurchasesAmount}
           onInfoClick={onInfoClick}
-          differenceExplanations={vatCalculator.differenceExplanations}
-          addDifferenceExplanation={vatCalculator.addDifferenceExplanation}
-          updateDifferenceExplanation={vatCalculator.updateDifferenceExplanation}
-          removeDifferenceExplanation={vatCalculator.removeDifferenceExplanation}
-          explainedDifferenceTotal={vatCalculator.explainedDifferenceTotal}
+          differenceExplanations={vatCalculator.purchasesDifferenceExplanations}
+          addDifferenceExplanation={vatCalculator.addPurchasesDifferenceExplanation}
+          updateDifferenceExplanation={vatCalculator.updatePurchasesDifferenceExplanation}
+          removeDifferenceExplanation={vatCalculator.removePurchasesDifferenceExplanation}
+          explainedDifferenceTotal={vatCalculator.purchasesExplainedDifferenceTotal}
         />
 
         <VatSummary 

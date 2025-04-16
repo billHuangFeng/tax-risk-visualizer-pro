@@ -1,15 +1,16 @@
-
 import { useState, useCallback, useMemo } from 'react';
 import type { DifferenceFactor, DifferenceExplanation } from '../types';
 
 export const useVatDifferences = () => {
   const [differenceFactors, setDifferenceFactors] = useState<DifferenceFactor[]>([
-    { id: '1', description: '差异原因1', amount: 100 },
-    { id: '2', description: '差异原因2', amount: 130 },
-    { id: '3', description: '差异原因3', amount: -140 }
+    { id: '1', description: '差异原因1', amount: 0 }
   ]);
 
-  const [differenceExplanations, setDifferenceExplanations] = useState<DifferenceExplanation[]>([
+  const [salesDifferenceExplanations, setSalesDifferenceExplanations] = useState<DifferenceExplanation[]>([
+    { id: '1', reason: '', amount: 0 }
+  ]);
+
+  const [purchasesDifferenceExplanations, setPurchasesDifferenceExplanations] = useState<DifferenceExplanation[]>([
     { id: '1', reason: '', amount: 0 }
   ]);
 
@@ -36,24 +37,43 @@ export const useVatDifferences = () => {
     setDifferenceFactors(prevFactors => prevFactors.filter(factor => factor.id !== id));
   }, []);
 
-  const addDifferenceExplanation = useCallback(() => {
-    const newId = (differenceExplanations.length + 1).toString();
-    setDifferenceExplanations(prev => [...prev, { id: newId, reason: '', amount: 0 }]);
-  }, [differenceExplanations]);
+  const addSalesDifferenceExplanation = useCallback(() => {
+    const newId = (salesDifferenceExplanations.length + 1).toString();
+    setSalesDifferenceExplanations(prev => [...prev, { id: newId, reason: '', amount: 0 }]);
+  }, [salesDifferenceExplanations]);
 
-  const updateDifferenceExplanation = useCallback((id: string, field: keyof DifferenceExplanation, value: any) => {
-    setDifferenceExplanations(prev => 
+  const updateSalesDifferenceExplanation = useCallback((id: string, field: keyof DifferenceExplanation, value: any) => {
+    setSalesDifferenceExplanations(prev => 
       prev.map(item => item.id === id ? { ...item, [field]: value } : item)
     );
   }, []);
 
-  const removeDifferenceExplanation = useCallback((id: string) => {
-    setDifferenceExplanations(prev => prev.filter(item => item.id !== id));
+  const removeSalesDifferenceExplanation = useCallback((id: string) => {
+    setSalesDifferenceExplanations(prev => prev.filter(item => item.id !== id));
   }, []);
 
-  const explainedDifferenceTotal = useMemo(() => {
-    return differenceExplanations.reduce((sum, explanation) => sum + explanation.amount, 0);
-  }, [differenceExplanations]);
+  const addPurchasesDifferenceExplanation = useCallback(() => {
+    const newId = (purchasesDifferenceExplanations.length + 1).toString();
+    setPurchasesDifferenceExplanations(prev => [...prev, { id: newId, reason: '', amount: 0 }]);
+  }, [purchasesDifferenceExplanations]);
+
+  const updatePurchasesDifferenceExplanation = useCallback((id: string, field: keyof DifferenceExplanation, value: any) => {
+    setPurchasesDifferenceExplanations(prev => 
+      prev.map(item => item.id === id ? { ...item, [field]: value } : item)
+    );
+  }, []);
+
+  const removePurchasesDifferenceExplanation = useCallback((id: string) => {
+    setPurchasesDifferenceExplanations(prev => prev.filter(item => item.id !== id));
+  }, []);
+
+  const salesExplainedDifferenceTotal = useMemo(() => {
+    return salesDifferenceExplanations.reduce((sum, explanation) => sum + explanation.amount, 0);
+  }, [salesDifferenceExplanations]);
+
+  const purchasesExplainedDifferenceTotal = useMemo(() => {
+    return purchasesDifferenceExplanations.reduce((sum, explanation) => sum + explanation.amount, 0);
+  }, [purchasesDifferenceExplanations]);
 
   return {
     differenceFactors,
@@ -61,10 +81,15 @@ export const useVatDifferences = () => {
     addDifferenceFactor,
     updateDifferenceFactor,
     removeDifferenceFactor,
-    differenceExplanations,
-    addDifferenceExplanation,
-    updateDifferenceExplanation,
-    removeDifferenceExplanation,
-    explainedDifferenceTotal
+    salesDifferenceExplanations,
+    addSalesDifferenceExplanation,
+    updateSalesDifferenceExplanation,
+    removeSalesDifferenceExplanation,
+    purchasesDifferenceExplanations,
+    addPurchasesDifferenceExplanation,
+    updatePurchasesDifferenceExplanation,
+    removePurchasesDifferenceExplanation,
+    salesExplainedDifferenceTotal,
+    purchasesExplainedDifferenceTotal
   };
 };
