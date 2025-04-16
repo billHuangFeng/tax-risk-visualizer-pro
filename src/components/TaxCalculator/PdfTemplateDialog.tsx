@@ -49,10 +49,15 @@ export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({
       return true;
     } catch (error) {
       console.error("PDF设计器库预加载失败:", error);
+      toast({
+        title: "加载错误",
+        description: "无法加载PDF设计器库: " + (error instanceof Error ? error.message : "未知错误"),
+        variant: "destructive",
+      });
       setIsPreloading(false);
       return false;
     }
-  }, [designerLoaded]);
+  }, [designerLoaded, toast]);
   
   // 对话框打开时预加载库
   useEffect(() => {
@@ -62,7 +67,12 @@ export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({
     
     // 对话框关闭时重置视图到选择模式
     if (!open && view !== 'select') {
-      setView('select');
+      // 用延迟确保状态更新在对话框关闭后进行
+      const timer = setTimeout(() => {
+        setView('select');
+      }, 300);
+      
+      return () => clearTimeout(timer);
     }
   }, [open, preloadDesignerLibraries, view]);
   
@@ -86,6 +96,8 @@ export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({
   };
 
   const handleViewChange = async (newView: string) => {
+    if (newView === view) return; // 如果是同一视图，不做任何操作
+    
     // 处理从设计器视图切换出去的情况
     if (view === 'designer' && newView !== 'designer' && reportDefinition) {
       const updatedTemplate = {
@@ -105,6 +117,7 @@ export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({
       const loaded = await preloadDesignerLibraries();
       
       if (loaded) {
+        // 先切换视图，再加载设计器
         setView('designer' as ViewState);
       } else {
         toast({
@@ -138,8 +151,23 @@ export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({
     );
   };
 
+  // 处理对话框关闭，确保数据保存
+  const handleDialogClose = () => {
+    // 如果在设计器视图，保存当前报表定义
+    if (view === 'designer' && reportDefinition) {
+      const updatedTemplate = {
+        ...selectedTemplate,
+        reportDefinition: reportDefinition
+      };
+      setSelectedTemplate(updatedTemplate);
+    }
+    
+    // 调用父组件的关闭方法
+    onClose();
+  };
+
   return (
-    <Dialog open={open} onOpenChange={onClose}>
+    <Dialog open={open} onOpenChange={handleDialogClose}>
       <DialogContent className="sm:max-w-[900px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>PDF模板设计器</DialogTitle>
@@ -180,7 +208,7 @@ export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={onClose}>
+          <Button variant="outline" onClick={handleDialogClose}>
             取消
           </Button>
           <Button variant="default" onClick={() => onExport(selectedTemplate)} className="gap-2">

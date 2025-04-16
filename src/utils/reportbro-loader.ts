@@ -21,6 +21,7 @@ export const loadReportBroLibraries = (): Promise<void> => {
             styles: [],
             version: "1.0"
           };
+          console.log("ReportBro实例已创建");
         }
         
         ReportBro.prototype.load = function(reportDefinition: any) {
@@ -69,16 +70,23 @@ export const loadReportBroLibraries = (): Promise<void> => {
             throw new Error("容器元素无效");
           }
           
+          // 检查元素是否在DOM中
           if (!document.body.contains(element)) {
             console.error("Designer初始化失败: 容器元素不在DOM中", element);
             throw new Error("容器元素不在DOM中");
           }
 
-          // 简单检查元素尺寸和可见性
+          // 检查元素可见性
           const styles = getComputedStyle(element);
-          if (styles.display === 'none' || styles.visibility === 'hidden' || 
-              element.offsetWidth === 0 || element.offsetHeight === 0) {
-            console.warn("Designer警告: 容器元素可能不可见", {
+          const isVisible = !(
+            styles.display === 'none' || 
+            styles.visibility === 'hidden' || 
+            element.offsetWidth === 0 || 
+            element.offsetHeight === 0
+          );
+          
+          if (!isVisible) {
+            console.warn("Designer警告: 容器元素不可见", {
               display: styles.display,
               visibility: styles.visibility,
               width: element.offsetWidth,
@@ -86,6 +94,7 @@ export const loadReportBroLibraries = (): Promise<void> => {
             });
           }
 
+          // 保存参数
           this.element = element;
           this.options = options || {};
           this.reportDefinition = reportDefinition || { 
@@ -94,23 +103,28 @@ export const loadReportBroLibraries = (): Promise<void> => {
             styles: [],
             version: "1.0"
           };
+          
+          // 创建报表对象
           this.report = new window.ReportBro(this.reportDefinition);
           
-          // 立即设置设计器UI
+          // 设置设计器UI
           this.setupDesigner();
+          
+          console.log("ReportBroDesigner实例已创建");
         }
         
-        // 简化设计器UI设置逻辑
+        // 设计器UI设置
         ReportBroDesigner.prototype.setupDesigner = function() {
+          // 再次检查元素是否在DOM中
           if (!this.element || !document.body.contains(this.element)) {
             console.error("设计器设置失败: 容器元素不存在或不在DOM中");
-            return;
+            throw new Error("容器元素无效");
           }
           
           // 清空容器
           this.element.innerHTML = '';
           
-          // 创建一个简单的设计器界面
+          // 设置设计器UI
           const container = document.createElement('div');
           container.className = 'rb-designer-container';
           container.style.display = 'flex';
@@ -133,7 +147,7 @@ export const loadReportBroLibraries = (): Promise<void> => {
           toolbar.style.gap = '8px';
           toolbar.style.marginBottom = '16px';
           
-          // 添加一些工具按钮
+          // 添加工具按钮
           const tools = ['文本', '表格', '图片', '形状'];
           tools.forEach(tool => {
             const btn = document.createElement('button');
@@ -166,13 +180,17 @@ export const loadReportBroLibraries = (): Promise<void> => {
           console.log("设计器界面设置完成");
         };
         
+        // 获取报表定义
         ReportBroDesigner.prototype.getReport = function() {
+          console.log("获取报表定义");
           return this.report.getReport();
         };
         
+        // 销毁设计器实例
         ReportBroDesigner.prototype.destroy = function() {
           try {
             if (this.element) {
+              console.log("清理设计器DOM元素");
               this.element.innerHTML = '';
             }
           } catch (e) {
@@ -185,8 +203,8 @@ export const loadReportBroLibraries = (): Promise<void> => {
       
       console.log("本地PDF设计器库初始化完成");
       
-      // 模拟库加载完成
-      setTimeout(resolve, 0);
+      // 给浏览器一点时间完成初始化
+      setTimeout(resolve, 200);
     } catch (error) {
       console.error("PDF设计器库加载错误:", error);
       reject(error);
