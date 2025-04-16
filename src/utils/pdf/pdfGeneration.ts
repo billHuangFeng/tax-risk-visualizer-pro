@@ -9,7 +9,7 @@ import { enhanceLayout } from './enhancer';
 // Create canvas from prepared content
 const createCanvas = async (content: HTMLElement): Promise<HTMLCanvasElement> => {
   console.log("Starting HTML to canvas conversion");
-  await new Promise(resolve => setTimeout(resolve, 1800)); // Increase timeout for better rendering
+  await new Promise(resolve => setTimeout(resolve, 2000)); // Increased timeout for better rendering
   
   try {
     const canvas = await html2canvas(content, {
@@ -23,6 +23,9 @@ const createCanvas = async (content: HTMLElement): Promise<HTMLCanvasElement> =>
         console.log("Cloned document prepared for rendering");
         
         try {
+          // Apply all styles needed for PDF export
+          element.classList.add('for-pdf-export');
+          
           // Process text elements to ensure visibility
           processTextElements(element);
           
@@ -36,32 +39,51 @@ const createCanvas = async (content: HTMLElement): Promise<HTMLCanvasElement> =>
           // Apply final layout enhancements
           enhanceLayout(element);
           
-          // Force all text to be black for better visibility
-          const allTextElements = element.querySelectorAll('*');
-          allTextElements.forEach(el => {
-            if (el instanceof HTMLElement) {
-              el.style.color = '#000';
-              el.style.visibility = 'visible';
-              el.style.opacity = '1';
-              
-              // Fix for content that should be visible
-              if (el.tagName !== 'BUTTON' && 
-                  !el.classList.contains('pdf-duplicate') &&
-                  el.style.display !== 'none') {
-                el.style.display = el.style.display || 'block';
-              }
+          // Ensure all styles are applied
+          const style = document.createElement('style');
+          style.textContent = `
+            .for-pdf-export * {
+              color: #000 !important;
+              visibility: visible !important;
+              opacity: 1 !important;
+              font-family: "SimSun", serif !important;
             }
-          });
+            .for-pdf-export h2 {
+              font-size: 16px !important;
+              font-weight: bold !important;
+              margin-top: 24px !important;
+              margin-bottom: 16px !important;
+              border-bottom: 1px solid #000 !important;
+              padding-bottom: 8px !important;
+            }
+            .for-pdf-export table {
+              width: 100% !important;
+              border-collapse: collapse !important;
+              margin: 16px 0 !important;
+            }
+            .for-pdf-export table th, .for-pdf-export table td {
+              border: 1px solid #000 !important;
+              padding: 8px !important;
+            }
+            .for-pdf-export [role="checkbox"] {
+              display: inline-block !important;
+              width: 16px !important;
+              height: 16px !important;
+              border: 1px solid #000 !important;
+              position: relative !important;
+            }
+          `;
+          element.appendChild(style);
           
-          // Set explicitly visible style on all elements
+          // Make sure the element and all its children are visible
           element.style.display = 'block';
           element.style.visibility = 'visible';
           element.style.width = '800px';
-          element.style.padding = '20px';
+          element.style.padding = '40px';
           element.style.boxSizing = 'border-box';
           element.style.position = 'relative';
           element.style.minHeight = '1200px';
-          element.style.fontFamily = 'Arial, sans-serif';
+          element.style.fontFamily = 'SimSun, serif';
         } catch (error) {
           console.warn("Error in html2canvas onclone callback:", error);
         }

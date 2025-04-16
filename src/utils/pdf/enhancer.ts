@@ -1,3 +1,4 @@
+
 import { removeRedundantTextElements } from './textProcessing';
 import { enhanceLayoutStructure } from './layoutStructure';
 import { createCompanyHeader, enhanceHeadings } from './styles/headerStyles';
@@ -11,27 +12,37 @@ export const enhanceLayout = (container: HTMLElement) => {
   try {
     console.log("Starting PDF layout enhancement");
     
-    // Add PDF export class
+    // Apply global styles
+    container.style.fontFamily = "SimSun, serif";
+    container.style.color = "#000000";
+    container.style.backgroundColor = "#ffffff";
+    container.style.padding = "40px";
+    container.style.width = "100%";
+    container.style.boxSizing = "border-box";
+    
+    // Add PDF export class for CSS targeting
     container.classList.add('for-pdf-export');
     
-    // Remove redundant elements
-    removeRedundantTextElements(container);
-    
-    // Enhance layout structure
-    enhanceLayoutStructure(container);
-    
-    // Apply template styling
+    // Apply template styling in the correct order
     createCompanyHeader(container);
     enhanceHeadings(container);
-    enhanceTableLayout(container);
-    formatLabelValue(container);
-    enhanceCheckboxes(container);
+    
+    // Process all elements to ensure proper styling
     processTextElements(container);
     processInputFields(container);
+    
+    // Enhance form elements and layout
+    enhanceCheckboxes(container);
+    formatLabelValue(container);
+    enhanceTableLayout(container);
+    enhanceLayoutStructure(container);
     enhanceSpecificSections(container);
     
-    // Apply additional template-specific styling
-    applyTemplateStyling(container);
+    // Remove redundant elements for cleaner output
+    removeRedundantTextElements(container);
+    
+    // Force style application for specific elements that might have missed styling
+    forceApplyStyles(container);
     
     console.log("PDF layout enhancement completed");
   } catch (error) {
@@ -39,44 +50,82 @@ export const enhanceLayout = (container: HTMLElement) => {
   }
 };
 
-const applyTemplateStyling = (container: HTMLElement) => {
+const forceApplyStyles = (container: HTMLElement) => {
   try {
-    // Set global font and styles
-    container.style.fontFamily = "SimSun, serif";
-    container.style.fontSize = "14px";
-    container.style.padding = "40px 60px";
-    container.style.lineHeight = "1.5";
-    
-    // Add spacing between sections
-    const sections = container.querySelectorAll('section');
-    sections.forEach((section) => {
-      if (section instanceof HTMLElement) {
-        section.style.marginBottom = '24px';
+    // Force visibility and styling on all elements
+    const allElements = container.querySelectorAll('*');
+    allElements.forEach(el => {
+      if (el instanceof HTMLElement) {
+        el.style.visibility = 'visible';
+        el.style.color = '#000';
+        
+        // Don't show elements that should be hidden
+        if (el.classList.contains('pdf-duplicate') || 
+            el.classList.contains('hidden') || 
+            el.tagName === 'BUTTON' ||
+            (el.style.display === 'none' && !el.classList.contains('pdf-value'))) {
+          el.style.display = 'none';
+        }
       }
     });
     
-    // Style basic info section
-    const basicInfoSection = container.querySelector('.basic-info-section');
-    if (basicInfoSection instanceof HTMLElement) {
-      basicInfoSection.style.marginBottom = '32px';
-    }
-    
-    // Style revenue and expenses sections
-    const gridSections = container.querySelectorAll('.grid-section');
-    gridSections.forEach((section) => {
-      if (section instanceof HTMLElement) {
-        section.style.marginBottom = '24px';
+    // Ensure checkbox checked state is visible
+    const checkboxes = container.querySelectorAll('[role="checkbox"]');
+    checkboxes.forEach((checkbox) => {
+      if (checkbox instanceof HTMLElement) {
+        checkbox.style.border = '1px solid #000';
+        checkbox.style.minWidth = '14px';
+        checkbox.style.minHeight = '14px';
+        checkbox.style.display = 'inline-block';
+        
+        if (checkbox.getAttribute('data-state') === 'checked') {
+          // Create checkmark if it doesn't exist
+          if (!checkbox.querySelector('.checkmark')) {
+            const checkmark = document.createElement('div');
+            checkmark.className = 'checkmark';
+            checkmark.textContent = '✓';
+            checkmark.style.position = 'absolute';
+            checkmark.style.top = '-2px';
+            checkmark.style.left = '2px';
+            checkmark.style.fontSize = '14px';
+            checkmark.style.fontWeight = 'bold';
+            checkbox.appendChild(checkmark);
+          }
+        }
       }
     });
     
-    // Ensure proper page breaks
-    const mainSections = container.querySelectorAll('section[class*="main-section"]');
-    mainSections.forEach((section) => {
-      if (section instanceof HTMLElement) {
-        section.style.pageBreakInside = 'avoid';
+    // Properly style tables
+    const tables = container.querySelectorAll('table');
+    tables.forEach((table) => {
+      if (table instanceof HTMLElement) {
+        table.style.borderCollapse = 'collapse';
+        table.style.width = '100%';
+        table.style.marginBottom = '20px';
+        
+        const cells = table.querySelectorAll('th, td');
+        cells.forEach((cell) => {
+          if (cell instanceof HTMLElement) {
+            cell.style.border = '1px solid #000';
+            cell.style.padding = '8px';
+            cell.style.textAlign = 'right';
+          }
+        });
+      }
+    });
+    
+    // Ensure form grids are properly displayed
+    const gridRows = container.querySelectorAll('[class*="grid"]');
+    gridRows.forEach((row) => {
+      if (row instanceof HTMLElement && !row.classList.contains('grid-cols-1')) {
+        row.style.display = 'grid';
+        row.style.gridTemplateColumns = 'repeat(2, 1fr)';
+        row.style.gap = '20px';
+        row.style.alignItems = 'center';
+        row.style.marginBottom = '12px';
       }
     });
   } catch (error) {
-    console.error('Error applying template styling:', error);
+    console.error('Error forcing styles:', error);
   }
 };
