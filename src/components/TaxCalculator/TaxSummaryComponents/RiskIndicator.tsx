@@ -1,6 +1,7 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Check } from 'lucide-react';
+import { Check, OctagonAlert } from 'lucide-react';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { AlertTriangle } from 'lucide-react';
 
@@ -79,7 +80,13 @@ const RiskIndicator: React.FC<RiskIndicatorProps> = ({
 
       {showRiskAlert && !showRiskDetails && (
         <div className="flex flex-col items-center space-y-4 mt-4 bg-blue-50 p-4 rounded-lg border border-blue-200">
-          <p className="text-lg font-semibold text-blue-800">想看看风险到底有多高？</p>
+          <div className="flex items-center space-x-3">
+            <OctagonAlert 
+              className="text-red-600 w-12 h-12" 
+              strokeWidth={2.5} 
+            />
+            <p className="text-lg font-semibold text-blue-800">想看看风险到底有多高？</p>
+          </div>
           <div className="flex gap-4">
             <Button 
               variant="default"
@@ -95,7 +102,7 @@ const RiskIndicator: React.FC<RiskIndicatorProps> = ({
 
       {showRiskAlert && showRiskDetails && (
         <Alert variant="destructive" className="mt-4 bg-red-50 border-red-200">
-          <AlertTriangle className="h-4 w-4 text-red-600" />
+          <AlertTriangle className="h-8 w-8 text-red-600" />
           <AlertTitle className="text-red-800">风险提示</AlertTitle>
           <AlertDescription className="space-y-2 text-red-700">
             <p>你面临高达{riskDetails.totalRisk}万元的风险。具体如下：</p>
