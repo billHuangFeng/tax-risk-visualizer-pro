@@ -34,6 +34,7 @@ const VatSalesSection: React.FC<VatSalesSectionProps> = ({
   onInfoClick
 }) => {
   const salesCollectionDifference = salesTotal.amount + salesTotal.tax - bankSalesAmount;
+  const salesCollectionDifferencePercentage = ((salesCollectionDifference) / (salesTotal.amount + salesTotal.tax) * 100) || 0;
 
   return (
     <Card className="mb-6">
@@ -165,13 +166,16 @@ const VatSalesSection: React.FC<VatSalesSectionProps> = ({
               <Info size={16} />
             </button>
           </div>
-          <div className="col-span-3 text-right">
+          <div className="col-span-3 text-right flex items-center justify-end gap-2">
             <Input
               type="number"
               value={salesCollectionDifference}
               className="w-full text-right bg-gray-100"
               disabled
             />
+            <span className="text-sm text-gray-500 whitespace-nowrap">
+              {salesCollectionDifferencePercentage.toFixed(1)}%
+            </span>
           </div>
         </div>
       </CardContent>
