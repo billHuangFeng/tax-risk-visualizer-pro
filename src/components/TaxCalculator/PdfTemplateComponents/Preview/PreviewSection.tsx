@@ -1,6 +1,9 @@
 
 import React from 'react';
 import { PdfTemplate } from "@/types/pdfTemplates";
+import { FormFieldRow } from './FormFieldRow';
+import { PreviewTable } from './PreviewTable';
+import { PreviewCheckbox } from './PreviewCheckbox';
 
 interface PreviewSectionProps {
   title: string;
