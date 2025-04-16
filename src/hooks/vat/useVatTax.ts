@@ -17,16 +17,18 @@ export const useVatTax = () => {
     return ((actualTax - payableTax) / Math.abs(payableTax)) * 100;
   };
 
-  // Calculate risk percentage based on unexplained difference (风险百分比)
-  const calculateRiskPercentage = (unexplainedDiff: number, payableTax: number, outputTax: number) => {
-    // Calculate base amount as max of payable tax and 10% of output tax
+  // Calculate risk percentage based on updated formula (风险百分比)
+  const calculateRiskPercentage = (actualTax: number, payableTax: number, outputTax: number) => {
+    // 基数 = Max(应交增值税, 销项税额×10%)
     const baseAmount = Math.max(
       Math.abs(payableTax),  // 应交增值税
-      outputTax * 0.1  // 销项税的10%
+      outputTax * 0.1        // 销项税的10%
     );
     
     if (baseAmount === 0) return 0;
-    return (Math.abs(unexplainedDiff) / baseAmount) * 100;
+    
+    // 风险百分比 = |应交增值税 - 实缴增值税| ÷ 基数 × 100%
+    return (Math.abs(actualTax - payableTax) / baseAmount) * 100;
   };
 
   // Override setPayableTax to auto-update both percentages
