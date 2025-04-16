@@ -5,7 +5,7 @@ import { DEFAULT_TEMPLATES } from '@/constants/pdfTemplates';
 import { PdfTemplate } from '@/types/pdfTemplates';
 
 /**
- * Creates a basic valid schema structure
+ * Creates a basic valid schema structure for PDF fields
  */
 const createBaseSchema = (): Record<string, any>[] => {
   return [{
@@ -20,10 +20,11 @@ const createBaseSchema = (): Record<string, any>[] => {
 
 /**
  * Safely extracts and validates schemas from a PDF template
+ * Ensures the output matches PDFME's required structure
  */
-const extractSchemas = (template: PdfTemplate): Record<string, any>[][] => {
+const extractSchemas = (template: PdfTemplate): any[][] => {
   // Default valid schema to use as fallback
-  const defaultSchema: Record<string, any>[][] = [createBaseSchema()];
+  const defaultSchema: any[][] = [createBaseSchema()];
   
   try {
     // Verify the template has schemas
@@ -33,7 +34,7 @@ const extractSchemas = (template: PdfTemplate): Record<string, any>[][] => {
     }
     
     // Create a properly typed array for schemas
-    const validSchemas: Record<string, any>[][] = [];
+    const validSchemas: any[][] = [];
     
     // Process each schema page
     for (let i = 0; i < template.schemas.length; i++) {
@@ -70,28 +71,6 @@ const extractSchemas = (template: PdfTemplate): Record<string, any>[][] => {
     console.error("Error processing schemas:", error);
     return defaultSchema;
   }
-};
-
-/**
- * Creates a properly typed Template object for PDFME generator
- */
-const createPdfMeTemplate = (template: PdfTemplate): Template => {
-  // Process base PDF
-  let basePdf = new Uint8Array();
-  if (template.baseTemplate instanceof ArrayBuffer) {
-    basePdf = new Uint8Array(template.baseTemplate);
-  } else if (template.baseTemplate instanceof Uint8Array) {
-    basePdf = template.baseTemplate;
-  }
-  
-  // Extract schemas with proper typing
-  const schemas = extractSchemas(template);
-  
-  // Return properly typed Template object
-  return {
-    basePdf,
-    schemas
-  } as Template;
 };
 
 /**
@@ -139,29 +118,22 @@ export const exportToPDF = async (calculator: any, template?: PdfTemplate) => {
     
     console.log("Preparing template for PDF generation");
     
-    // Create PDFME template with proper typing
-    const pdfMeTemplate = createPdfMeTemplate(selectedTemplate);
-    
-    // Validate the generated template structure
-    if (!pdfMeTemplate.schemas || !Array.isArray(pdfMeTemplate.schemas) || pdfMeTemplate.schemas.length === 0) {
-      console.warn("Generated template has invalid schemas, creating fallback");
-      
-      // Create a fallback template ensuring correct structure
-      const fallbackTemplate: Template = {
-        basePdf: pdfMeTemplate.basePdf,
-        schemas: [createBaseSchema()]
-      };
-      
-      // Generate PDF with fallback template
-      const pdf = await generate({
-        template: fallbackTemplate,
-        inputs: inputs,
-      });
-      
-      // Download the generated PDF
-      downloadPdf(pdf, calculator.companyName);
-      return true;
+    // Extract the basePdf from the template
+    let basePdf = new Uint8Array();
+    if (selectedTemplate.baseTemplate instanceof ArrayBuffer) {
+      basePdf = new Uint8Array(selectedTemplate.baseTemplate);
+    } else if (selectedTemplate.baseTemplate instanceof Uint8Array) {
+      basePdf = selectedTemplate.baseTemplate;
     }
+    
+    // Extract and validate schemas from the template
+    const schemas = extractSchemas(selectedTemplate);
+    
+    // Create properly structured template compatible with PDFME
+    const pdfMeTemplate: Template = {
+      basePdf,
+      schemas
+    };
     
     // Log template info for debugging
     console.log("PDF template prepared:", {
@@ -183,6 +155,32 @@ export const exportToPDF = async (calculator: any, template?: PdfTemplate) => {
     return true;
   } catch (error) {
     console.error('PDF generation error:', error);
-    throw error;
+    
+    try {
+      // Fallback to simplified template on error
+      console.log("Attempting to generate PDF with fallback template");
+      
+      // Create a minimal fallback template with just the base structure
+      const fallbackTemplate: Template = {
+        basePdf: new Uint8Array(),
+        schemas: [[createBaseSchema()[0]]]
+      };
+      
+      // Generate PDF with fallback template
+      const pdf = await generate({
+        template: fallbackTemplate,
+        inputs: [{
+          companyName: calculator.companyName || '税务计算',
+          totalRevenue: calculator.totalRevenue?.toString() || '0'
+        }],
+      });
+      
+      // Download the generated PDF
+      downloadPdf(pdf, calculator.companyName);
+      return true;
+    } catch (fallbackError) {
+      console.error("Even fallback PDF generation failed:", fallbackError);
+      throw error; // Throw the original error
+    }
   }
 };
