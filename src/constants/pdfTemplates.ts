@@ -6,7 +6,7 @@ export const DEFAULT_TEMPLATES: PdfTemplate[] = [
     id: 'default-tax-report',
     name: '默认税务报告模板',
     description: '标准税务计算报告模板',
-    baseTemplate: undefined, // 可以添加基础PDF模板路径
+    baseTemplate: undefined,
     schemas: [
       [
         {

@@ -5,79 +5,82 @@ import { DEFAULT_TEMPLATES } from '@/constants/pdfTemplates';
 import { PdfTemplate } from '@/types/pdfTemplates';
 
 /**
- * Creates a base schema structure that is guaranteed to be valid
+ * 创建一个基础的有效schema结构
  */
-const createBaseSchema = (): any[][] => {
-  return [[{
+const createBaseSchema = (): any[] => {
+  return [{
     emptyField: {
       type: 'text',
       position: { x: 0, y: 0 },
       width: 0,
       height: 0
     }
-  }]];
+  }];
 };
 
 /**
- * Safely validates and processes schemas
+ * 从PDF模板中提取schema并处理
  */
-const processSchemas = (template: PdfTemplate): any[][] => {
-  // Start with a valid base schema
-  let finalSchemas: any[][] = createBaseSchema();
+const extractSchemas = (template: PdfTemplate): any[][] => {
+  // 先创建一个默认有效的schema
+  const defaultSchema = [createBaseSchema()];
   
   try {
-    // Only process if template has schemas and they appear to be valid
-    if (template.schemas && 
-        Array.isArray(template.schemas) && 
-        template.schemas.length > 0 && 
-        Array.isArray(template.schemas[0])) {
-      
-      // Create a deep copy to avoid reference issues
-      finalSchemas = JSON.parse(JSON.stringify(template.schemas));
-      
-      console.log("Using template schemas:", {
-        schemasCount: finalSchemas.length,
-        firstSchemaLength: finalSchemas[0].length
-      });
+    // 检查模板是否有有效的schemas
+    if (!template.schemas || !Array.isArray(template.schemas)) {
+      console.log("No valid schemas found, using default");
+      return defaultSchema;
     }
+    
+    // 确保它是一个二维数组
+    if (template.schemas.length === 0 || !Array.isArray(template.schemas[0])) {
+      console.log("Invalid schema format, using default");
+      return defaultSchema;
+    }
+    
+    // 创建深拷贝以避免引用问题
+    const schemasCopy = JSON.parse(JSON.stringify(template.schemas));
+    console.log("Using template schemas, count:", schemasCopy.length);
+    return schemasCopy;
   } catch (error) {
-    console.error("Error processing schemas, using base schema:", error);
+    console.error("Schema processing error:", error);
+    return defaultSchema;
   }
-  
-  return finalSchemas;
 };
 
 /**
- * Creates a properly typed PDF template object
+ * 创建适用于PDFME生成器的模板
  */
-const createPdfTemplate = (template: PdfTemplate): Template => {
-  // Process the base PDF
-  let basePdf: ArrayBuffer | Uint8Array = new Uint8Array();
-  if (template.baseTemplate instanceof ArrayBuffer || template.baseTemplate instanceof Uint8Array) {
+const createPdfMeTemplate = (template: PdfTemplate): Template => {
+  // 处理基础PDF
+  let basePdf = new Uint8Array();
+  if (template.baseTemplate instanceof ArrayBuffer) {
+    basePdf = new Uint8Array(template.baseTemplate);
+  } else if (template.baseTemplate instanceof Uint8Array) {
     basePdf = template.baseTemplate;
   }
   
-  // Process schemas with our safe function
-  const schemas = processSchemas(template);
+  // 从模板中提取并处理schemas
+  const schemas = extractSchemas(template);
   
-  // Return a properly constructed Template object
+  // 创建符合PDFME要求的模板对象
   return {
     basePdf,
-    schemas: schemas
+    schemas
   };
 };
 
 /**
- * Exports calculator data to PDF using PDFME generator
+ * 使用PDFME生成器导出计算器数据为PDF
  */
 export const exportToPDF = async (calculator: any, template?: PdfTemplate) => {
   try {
     console.log("Starting PDF export with PDFME");
     
-    // Get template or use default
+    // 使用提供的模板或默认模板
     const selectedTemplate = template || DEFAULT_TEMPLATES[0];
     
-    // Prepare PDF input data
+    // 准备输入数据
     const inputs = [
       {
         companyName: calculator.companyName || '税务计算',
@@ -91,24 +94,24 @@ export const exportToPDF = async (calculator: any, template?: PdfTemplate) => {
     
     console.log("Preparing template for PDF generation");
     
-    // Create a properly typed template object
-    const pdfTemplate = createPdfTemplate(selectedTemplate);
+    // 创建PDFME所需的模板对象
+    const pdfMeTemplate = createPdfMeTemplate(selectedTemplate);
     
-    // Log for debugging
-    console.log("Template constructed:", {
-      hasBasePdf: !!pdfTemplate.basePdf,
-      hasSchemas: Array.isArray(pdfTemplate.schemas),
-      schemasLength: Array.isArray(pdfTemplate.schemas) ? pdfTemplate.schemas.length : 0
+    // 记录调试信息
+    console.log("PDF template prepared:", {
+      hasBasePdf: pdfMeTemplate.basePdf instanceof Uint8Array,
+      schemasCount: pdfMeTemplate.schemas.length,
+      firstSchemaFields: Object.keys(pdfMeTemplate.schemas[0][0] || {}).length
     });
     
-    // Generate PDF with PDFME
-    console.log("Generating PDF...");
+    // 使用PDFME生成PDF
+    console.log("Generating PDF with PDFME...");
     const pdf = await generate({
-      template: pdfTemplate,
+      template: pdfMeTemplate,
       inputs: inputs,
     });
     
-    // Create and download PDF
+    // 创建并下载PDF文件
     const blob = new Blob([pdf], { type: 'application/pdf' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -119,10 +122,10 @@ export const exportToPDF = async (calculator: any, template?: PdfTemplate) => {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
     
-    console.log("PDF generated successfully");
+    console.log("PDF generated and downloaded successfully");
     return true;
   } catch (error) {
-    console.error('PDFME PDF generation error:', error);
+    console.error('PDF generation error:', error);
     throw error;
   }
 };
