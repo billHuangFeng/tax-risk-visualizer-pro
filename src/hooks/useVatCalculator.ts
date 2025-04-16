@@ -85,26 +85,40 @@ export const useVatCalculator = () => {
   }, [tax.riskPercentage, tax.unexplainedDifference]);
 
   const handleReset = () => {
-    basicInfo.setCompanyName('');
-    sales.setSalesData([
-      { id: '1', productName: '产品类别1', salesAmount: 0, vatRate: 13, outputTax: 0 }
-    ]);
-    purchases.setPurchasesData([
-      { id: '1', productName: '采购物料或服务1', purchaseAmount: 0, vatRate: 13, inputTax: 0 }
-    ]);
-    sales.setBankSalesAmount(0);
-    purchases.setBankPurchasesAmount(0);
-    tax.setActualTax(0);
-    
-    differences.setTaxDifferenceFactors([
-      { id: '1', description: '差异原因1', amount: 0 }
-    ]);
-    
-    toast({
-      title: "表单已重置",
-      description: "您已成功重置增值税计算器数据",
-      variant: "default",
-    });
+    if (confirm('确定要重置所有数据吗？')) {
+      // Save current basic info before reset
+      const companyName = basicInfo.companyName;
+      const creditCode = basicInfo.creditCode;
+      const contactPerson = basicInfo.contactPerson;
+      const contactPhone = basicInfo.contactPhone;
+      
+      // Reset data except basic info
+      sales.setSalesData([
+        { id: '1', productName: '产品类别1', salesAmount: 0, vatRate: 13, outputTax: 0 }
+      ]);
+      purchases.setPurchasesData([
+        { id: '1', productName: '采购物料或服务1', purchaseAmount: 0, vatRate: 13, inputTax: 0 }
+      ]);
+      sales.setBankSalesAmount(0);
+      purchases.setBankPurchasesAmount(0);
+      tax.setActualTax(0);
+      
+      differences.setTaxDifferenceFactors([
+        { id: '1', description: '差异原因1', amount: 0 }
+      ]);
+      
+      // Restore basic info
+      basicInfo.setCompanyName(companyName);
+      basicInfo.setCreditCode(creditCode);
+      basicInfo.setContactPerson(contactPerson);
+      basicInfo.setContactPhone(contactPhone);
+      
+      toast({
+        title: "表单已重置",
+        description: "您已成功重置增值税计算器数据",
+        variant: "default",
+      });
+    }
   };
 
   return {
