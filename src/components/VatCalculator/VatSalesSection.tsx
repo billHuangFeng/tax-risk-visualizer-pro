@@ -41,10 +41,16 @@ const VatSalesSection: React.FC<VatSalesSectionProps> = ({
   explainedDifferenceTotal
 }) => {
   const salesCollectionDifference = salesTotal.amount + salesTotal.tax - bankSalesAmount;
-  const salesCollectionDifferencePercentage = ((salesCollectionDifference) / (salesTotal.amount + salesTotal.tax) * 100) || 0;
+  // 修改百分比计算方式：(销售收入 - 银行收款) / 销售收入 * 100
+  const totalSalesAmount = salesTotal.amount + salesTotal.tax;
+  const salesCollectionDifferencePercentage = totalSalesAmount !== 0 
+    ? (salesCollectionDifference / totalSalesAmount * 100) 
+    : 0;
   const showDifferenceExplanation = Math.abs(salesCollectionDifferencePercentage) > 10;
   const unexplainedDifference = salesCollectionDifference - explainedDifferenceTotal;
-  const unexplainedDifferencePercentage = ((unexplainedDifference) / (salesTotal.amount + salesTotal.tax) * 100) || 0;
+  const unexplainedDifferencePercentage = totalSalesAmount !== 0
+    ? ((unexplainedDifference) / totalSalesAmount * 100) 
+    : 0;
 
   return (
     <Card className="mb-6">
