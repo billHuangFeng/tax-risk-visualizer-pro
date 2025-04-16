@@ -43,7 +43,7 @@ export const DEFAULT_TEMPLATES: PdfTemplate[] = [
           riskPercentage: {
             type: 'text',
             position: { x: 50, y: 150 },
-            width: 100,
+            width: 100, 
             height: 10,
           }
         }

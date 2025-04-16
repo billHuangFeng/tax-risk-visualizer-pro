@@ -8,9 +8,10 @@ export interface PdfTemplate {
   previewImage?: string;
   styles: PdfTemplateStyles;
   layout: PdfTemplateLayout;
-  // 修改这些类型以确保与pdfme兼容
+  // 直接使用PDFME的Template类型
   baseTemplate?: ArrayBuffer | Uint8Array;
-  schemas?: Record<string, any>[][];  // 更精确地匹配PDFME的schema结构
+  // 直接使用PDFME支持的schema类型
+  schemas?: Record<string, any>[][];
 }
 
 export interface PdfTemplateStyles {
