@@ -1,93 +1,110 @@
 
+import { PdfTemplate } from '@/types/pdfTemplates';
+
+/**
+ * 创建公司标题
+ */
 export const createCompanyHeader = (container: HTMLElement) => {
   try {
-    // Find company name from input or use default
-    const companyNameInput = container.querySelector('input#companyName') as HTMLInputElement;
-    let companyNameValue = '税务计算报告';
+    // 查找公司名称
+    const companyNameInput = document.querySelector('input#companyName') as HTMLInputElement;
+    const companyName = companyNameInput ? companyNameInput.value : '税务计算';
     
-    if (companyNameInput) {
-      companyNameValue = companyNameInput.value || companyNameInput.getAttribute('data-value') || '税务计算报告';
+    // 查找或创建页面标题
+    let headerEl = container.querySelector('.company-header');
+    if (!headerEl) {
+      // 创建标题容器
+      const headerContainer = document.createElement('div');
+      headerContainer.className = 'company-header';
+      
+      // 创建公司名称标题
+      const titleEl = document.createElement('h1');
+      titleEl.textContent = companyName;
+      headerContainer.appendChild(titleEl);
+      
+      // 添加日期子标题
+      const today = new Date();
+      const dateStr = `${today.getFullYear()}年${today.getMonth() + 1}月${today.getDate()}日`;
+      const subtitleEl = document.createElement('div');
+      subtitleEl.textContent = `税务计算报告 - ${dateStr}`;
+      subtitleEl.style.fontSize = '14px';
+      subtitleEl.style.marginTop = '8px';
+      headerContainer.appendChild(subtitleEl);
+      
+      // 将标题添加到文档顶部
+      if (container.firstChild) {
+        container.insertBefore(headerContainer, container.firstChild);
+      } else {
+        container.appendChild(headerContainer);
+      }
+      
+      // 设置样式
+      headerContainer.style.textAlign = 'center';
+      headerContainer.style.marginBottom = '24px';
+      headerContainer.style.paddingBottom = '16px';
+      headerContainer.style.borderBottom = '2px solid #000';
+      
+      titleEl.style.fontSize = '20px';
+      titleEl.style.fontWeight = 'bold';
+      titleEl.style.margin = '0 0 8px 0';
+    } else if (headerEl instanceof HTMLElement) {
+      // 更新现有标题
+      const titleEl = headerEl.querySelector('h1');
+      if (titleEl) {
+        titleEl.textContent = companyName;
+      }
     }
-    
-    // Remove any existing header to avoid duplicates
-    const existingHeader = container.querySelector('.company-header');
-    if (existingHeader) {
-      existingHeader.remove();
-    }
-    
-    // Create header div
-    const headerDiv = document.createElement('div');
-    headerDiv.className = 'company-header';
-    headerDiv.textContent = companyNameValue + ' - 税务计算报告';
-    headerDiv.style.fontSize = '18px';
-    headerDiv.style.fontWeight = 'bold';
-    headerDiv.style.textAlign = 'center';
-    headerDiv.style.marginBottom = '24px';
-    headerDiv.style.paddingBottom = '12px';
-    headerDiv.style.borderBottom = '1px solid #000';
-    headerDiv.style.width = '100%';
-    
-    // Insert at the beginning of the container
-    if (container.firstChild) {
-      container.insertBefore(headerDiv, container.firstChild);
-    } else {
-      container.appendChild(headerDiv);
-    }
-    
-    // Add horizontal line under the header for visual separation
-    const headerLine = document.createElement('hr');
-    headerLine.style.border = 'none';
-    headerLine.style.borderTop = '1px solid #000';
-    headerLine.style.margin = '0';
-    headerLine.style.padding = '0';
-    headerLine.style.width = '100%';
-    
-    headerDiv.appendChild(headerLine);
   } catch (error) {
     console.error('Error creating company header:', error);
   }
 };
 
-export const enhanceHeadings = (container: HTMLElement) => {
+/**
+ * 增强标题样式
+ */
+export const enhanceHeadings = (container: HTMLElement, template?: PdfTemplate) => {
   try {
-    // Style section headings (h2)
-    const sectionHeadings = container.querySelectorAll('h2');
-    sectionHeadings.forEach((heading) => {
+    const headingFontSize = template?.styles.headingStyle.fontSize || '16px';
+    const headingFontWeight = template?.styles.headingStyle.fontWeight || 'bold';
+    const headingColor = template?.styles.headingStyle.color || '#000';
+    const headingBorder = template?.styles.headingStyle.borderBottom || '1px solid #000';
+    const headingMargin = template?.styles.headingStyle.marginBottom || '16px';
+    
+    // 处理所有标题（h1, h2等）
+    const headings = container.querySelectorAll('h1, h2, h3, h4, h5, h6');
+    headings.forEach(heading => {
       if (heading instanceof HTMLElement) {
-        heading.style.fontSize = '16px';
-        heading.style.fontWeight = 'bold';
-        heading.style.marginTop = '20px';
-        heading.style.marginBottom = '16px';
-        heading.style.paddingBottom = '8px';
-        heading.style.borderBottom = '1px solid #000';
-        heading.style.borderLeft = '4px solid #000';
-        heading.style.paddingLeft = '8px';
-        heading.style.pageBreakAfter = 'avoid';
+        // 应用通用标题样式
+        heading.style.fontSize = heading.tagName === 'H1' ? '20px' : headingFontSize;
+        heading.style.fontWeight = headingFontWeight;
+        heading.style.color = headingColor;
+        heading.style.marginBottom = heading.tagName === 'H1' ? '8px' : headingMargin;
+        
+        // 为非公司标头的所有标题添加底部边框
+        if (!heading.closest('.company-header')) {
+          heading.style.borderBottom = headingBorder;
+          heading.style.paddingBottom = '8px';
+        }
+        
+        // 设置特定样式
+        if (heading.tagName === 'H2') {
+          heading.style.marginTop = '24px';
+        }
       }
     });
     
-    // Create a specific style for "基本信息" section
-    const basicInfoHeading = Array.from(sectionHeadings).find(
-      heading => heading.textContent?.includes('基本信息')
-    );
-    
-    if (basicInfoHeading && basicInfoHeading instanceof HTMLElement) {
-      // Add a vertical bar to the left of 基本信息
-      const verticalBar = document.createElement('div');
-      verticalBar.style.width = '4px';
-      verticalBar.style.backgroundColor = '#000';
-      verticalBar.style.position = 'absolute';
-      verticalBar.style.left = '0';
-      verticalBar.style.top = '0';
-      verticalBar.style.height = '100%';
-      
-      // Position the parent relatively for the absolute positioning of the bar
-      if (basicInfoHeading.parentElement) {
-        basicInfoHeading.parentElement.style.position = 'relative';
-        basicInfoHeading.parentElement.style.paddingLeft = '20px';
-        basicInfoHeading.parentElement.insertBefore(verticalBar, basicInfoHeading.parentElement.firstChild);
+    // 处理特定类型的标题
+    const sectionTitles = container.querySelectorAll('.section-title, [class*="-title"]');
+    sectionTitles.forEach(title => {
+      if (title instanceof HTMLElement && !title.closest('.company-header')) {
+        title.style.fontSize = headingFontSize;
+        title.style.fontWeight = headingFontWeight;
+        title.style.color = headingColor;
+        title.style.marginBottom = '12px';
+        title.style.borderBottom = headingBorder;
+        title.style.paddingBottom = '4px';
       }
-    }
+    });
   } catch (error) {
     console.error('Error enhancing headings:', error);
   }

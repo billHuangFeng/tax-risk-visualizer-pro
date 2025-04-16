@@ -2,6 +2,7 @@
 import { useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { exportToPDF } from '@/utils/pdf';
+import { PdfTemplate } from '@/types/pdfTemplates';
 
 export const useActions = (riskValue: string, riskPercentage: number) => {
   const { toast } = useToast();
@@ -20,22 +21,22 @@ export const useActions = (riskValue: string, riskPercentage: number) => {
     });
   }, [toast]);
 
-  const handleExport = useCallback(async () => {
+  const handleExport = useCallback(async (template?: PdfTemplate) => {
     try {
-      // Ensure calculator content exists
+      // 确保计算器内容存在
       const calculatorContent = document.getElementById('calculator-content');
       if (!calculatorContent) {
         throw new Error('计算器内容未找到');
       }
       
-      // Wait a moment to ensure all DOM updates are processed
+      // 等一下确保所有DOM更新都已处理
       await new Promise(resolve => setTimeout(resolve, 200));
       
-      // Define data for export
+      // 定义导出数据
       const companyNameInput = document.querySelector('input#companyName') as HTMLInputElement | null;
       const companyName = companyNameInput?.value || '税务计算';
       
-      // Collect all input values for the PDF
+      // 收集用于PDF的所有输入值
       const collectFormData = () => {
         const data: Record<string, string> = {};
         const inputs = document.querySelectorAll('input') as NodeListOf<HTMLInputElement>;
@@ -49,13 +50,13 @@ export const useActions = (riskValue: string, riskPercentage: number) => {
         return data;
       };
       
-      // Execute the PDF export with collected data
+      // 使用收集的数据和模板执行PDF导出
       await exportToPDF({
         riskValue,
         riskPercentage,
         companyName,
         ...collectFormData()
-      });
+      }, template || (window as any).currentPdfTemplate);
       
       return true;
     } catch (error) {

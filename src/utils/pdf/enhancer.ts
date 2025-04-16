@@ -7,42 +7,43 @@ import { formatLabelValue, enhanceCheckboxes } from './styles/formStyles';
 import { processTextElements } from './styles/textStyles';
 import { processInputFields } from './styles/inputStyles';
 import { enhanceSpecificSections } from './styles/sectionStyles';
+import { PdfTemplate } from '@/types/pdfTemplates';
 
-export const enhanceLayout = (container: HTMLElement) => {
+export const enhanceLayout = (container: HTMLElement, template?: PdfTemplate) => {
   try {
     console.log("Starting PDF layout enhancement");
     
-    // Apply global styles
-    container.style.fontFamily = "SimSun, serif";
+    // 应用全局样式
+    container.style.fontFamily = template?.styles.fontFamily || "SimSun, serif";
     container.style.color = "#000000";
     container.style.backgroundColor = "#ffffff";
-    container.style.padding = "40px";
+    container.style.padding = template?.styles.layout.pageMargin || "40px";
     container.style.width = "100%";
     container.style.boxSizing = "border-box";
     
-    // Add PDF export class for CSS targeting
+    // 添加PDF导出类用于CSS定位
     container.classList.add('for-pdf-export');
     
-    // Apply template styling in the correct order
+    // 按正确顺序应用模板样式
     createCompanyHeader(container);
-    enhanceHeadings(container);
+    enhanceHeadings(container, template);
     
-    // Process all elements to ensure proper styling
+    // 处理所有元素以确保正确的样式
     processTextElements(container);
     processInputFields(container);
     
-    // Enhance form elements and layout
-    enhanceCheckboxes(container);
-    formatLabelValue(container);
-    enhanceTableLayout(container);
+    // 增强表单元素和布局
+    enhanceCheckboxes(container, template);
+    formatLabelValue(container, template);
+    enhanceTableLayout(container, template);
     enhanceLayoutStructure(container);
     enhanceSpecificSections(container);
     
-    // Remove redundant elements for cleaner output
+    // 移除冗余元素以获得更清晰的输出
     removeRedundantTextElements(container);
     
-    // Force style application for specific elements that might have missed styling
-    forceApplyStyles(container);
+    // 强制为可能遗漏样式的特定元素应用样式
+    forceApplyStyles(container, template);
     
     console.log("PDF layout enhancement completed");
   } catch (error) {
@@ -50,16 +51,20 @@ export const enhanceLayout = (container: HTMLElement) => {
   }
 };
 
-const forceApplyStyles = (container: HTMLElement) => {
+const forceApplyStyles = (container: HTMLElement, template?: PdfTemplate) => {
   try {
-    // Force visibility and styling on all elements
+    const borderColor = template?.styles.tableStyle.borderColor || "#000";
+    const headerBgColor = template?.styles.tableStyle.headerBgColor || "#f5f5f5";
+    const cellPadding = template?.styles.tableStyle.cellPadding || "8px";
+    
+    // 强制对所有元素应用可见性和样式
     const allElements = container.querySelectorAll('*');
     allElements.forEach(el => {
       if (el instanceof HTMLElement) {
         el.style.visibility = 'visible';
         el.style.color = '#000';
         
-        // Don't show elements that should be hidden
+        // 不显示应该隐藏的元素
         if (el.classList.contains('pdf-duplicate') || 
             el.classList.contains('hidden') || 
             el.tagName === 'BUTTON' ||
@@ -69,17 +74,17 @@ const forceApplyStyles = (container: HTMLElement) => {
       }
     });
     
-    // Ensure checkbox checked state is visible
+    // 确保复选框选中状态可见
     const checkboxes = container.querySelectorAll('[role="checkbox"]');
     checkboxes.forEach((checkbox) => {
       if (checkbox instanceof HTMLElement) {
-        checkbox.style.border = '1px solid #000';
+        checkbox.style.border = `1px solid ${borderColor}`;
         checkbox.style.minWidth = '14px';
         checkbox.style.minHeight = '14px';
         checkbox.style.display = 'inline-block';
         
         if (checkbox.getAttribute('data-state') === 'checked') {
-          // Create checkmark if it doesn't exist
+          // 如果不存在，创建勾选标记
           if (!checkbox.querySelector('.checkmark')) {
             const checkmark = document.createElement('div');
             checkmark.className = 'checkmark';
@@ -95,7 +100,7 @@ const forceApplyStyles = (container: HTMLElement) => {
       }
     });
     
-    // Properly style tables
+    // 正确设置表格样式
     const tables = container.querySelectorAll('table');
     tables.forEach((table) => {
       if (table instanceof HTMLElement) {
@@ -103,18 +108,35 @@ const forceApplyStyles = (container: HTMLElement) => {
         table.style.width = '100%';
         table.style.marginBottom = '20px';
         
-        const cells = table.querySelectorAll('th, td');
+        // 表头单元格
+        const headerCells = table.querySelectorAll('th');
+        headerCells.forEach((cell) => {
+          if (cell instanceof HTMLElement) {
+            cell.style.border = `1px solid ${borderColor}`;
+            cell.style.padding = cellPadding;
+            cell.style.backgroundColor = headerBgColor;
+            cell.style.fontWeight = 'bold';
+          }
+        });
+        
+        // 表格单元格
+        const cells = table.querySelectorAll('td');
         cells.forEach((cell) => {
           if (cell instanceof HTMLElement) {
-            cell.style.border = '1px solid #000';
-            cell.style.padding = '8px';
+            cell.style.border = `1px solid ${borderColor}`;
+            cell.style.padding = cellPadding;
             cell.style.textAlign = 'right';
+            
+            // 第一列左对齐
+            if (cell instanceof HTMLTableCellElement && cell.cellIndex === 0) {
+              cell.style.textAlign = 'left';
+            }
           }
         });
       }
     });
     
-    // Ensure form grids are properly displayed
+    // 确保表单网格正确显示
     const gridRows = container.querySelectorAll('[class*="grid"]');
     gridRows.forEach((row) => {
       if (row instanceof HTMLElement && !row.classList.contains('grid-cols-1')) {

@@ -1,10 +1,13 @@
 
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { RotateCcw, Download, Phone } from 'lucide-react';
+import { RotateCcw, Download, Phone, FileText } from 'lucide-react';
 import SaveDataButton from './SaveDataButton';
 import { useCalculator } from '@/hooks/useCalculator';
 import { useToast } from '@/hooks/use-toast';
+import { PdfTemplateDialog } from './PdfTemplateDialog';
+import { PdfTemplate } from '@/types/pdfTemplates';
+import { DEFAULT_TEMPLATES } from '@/constants/pdfTemplates';
 
 interface CalculatorActionsProps {
   riskPercentage: number;
@@ -18,6 +21,8 @@ const CalculatorActions: React.FC<CalculatorActionsProps> = ({
   onExport,
 }) => {
   const [exporting, setExporting] = useState(false);
+  const [isTemplateDialogOpen, setIsTemplateDialogOpen] = useState(false);
+  const [selectedTemplate, setSelectedTemplate] = useState<PdfTemplate>(DEFAULT_TEMPLATES[0]);
   const calculator = useCalculator();
   const { toast } = useToast();
   
@@ -25,10 +30,14 @@ const CalculatorActions: React.FC<CalculatorActionsProps> = ({
     window.open('https://work.weixin.qq.com/ca/cawcde03d69f2d37e9', '_blank');
   };
 
-  const handleExport = async () => {
-    // Prevent multiple export attempts
-    if (exporting) return;
+  const handleExportWithTemplate = async (template: PdfTemplate) => {
+    // 存储选中的模板
+    setSelectedTemplate(template);
     
+    // 关闭对话框
+    setIsTemplateDialogOpen(false);
+    
+    // 开始导出过程
     try {
       setExporting(true);
       
@@ -37,21 +46,23 @@ const CalculatorActions: React.FC<CalculatorActionsProps> = ({
         description: "正在处理所有页面，请稍候...",
       });
       
-      // Allow the toast to render and give time for synchronous operations
+      // 给同步操作时间
       setTimeout(async () => {
         try {
-          // Find calculator content
+          // 找到计算器内容
           const calculatorContent = document.getElementById('calculator-content');
           
-          // Add PDF export classes before export
+          // 导出前添加PDF导出类
           if (calculatorContent) {
             calculatorContent.classList.add('for-pdf-export', 'pdf-export-container');
+            // 存储当前模板信息用于PDF导出
+            (window as any).currentPdfTemplate = template;
           }
           
-          // Wait for the export to complete
-          await onExport();
+          // 等待导出完成
+          await calculator.handleExport(template);
           
-          // Success notification
+          // 成功通知
           toast({
             title: "导出成功",
             description: "PDF文件已生成并下载",
@@ -60,25 +71,27 @@ const CalculatorActions: React.FC<CalculatorActionsProps> = ({
         } catch (error) {
           console.error("Export error:", error);
           
-          // Error notification
+          // 错误通知
           toast({
             title: "导出失败",
             description: "PDF生成过程中发生错误",
             variant: "destructive",
           });
         } finally {
-          // Clean up classes
+          // 清理类
           const calculatorContent = document.getElementById('calculator-content');
           if (calculatorContent) {
             calculatorContent.classList.remove('for-pdf-export', 'pdf-export-container');
           }
           
-          // Reset export state
+          // 重置导出状态
           setTimeout(() => {
             setExporting(false);
+            // 清理模板信息
+            delete (window as any).currentPdfTemplate;
           }, 1000);
         }
-      }, 1000); // Increased timeout for better rendering preparation
+      }, 1000);
     } catch (error) {
       console.error("Export initialization error:", error);
       
@@ -93,36 +106,44 @@ const CalculatorActions: React.FC<CalculatorActionsProps> = ({
   };
   
   return (
-    <div className="w-full px-4 py-4 bg-white border-t border-gray-200 shadow-sm flex flex-col md:flex-row gap-2 justify-end">
-      <Button
-        variant="outline"
-        onClick={onReset}
-        className="w-full md:w-auto"
-      >
-        <RotateCcw className="w-4 h-4 mr-2" />
-        重置
-      </Button>
-      
-      <Button
-        variant="outline"
-        onClick={handleExport}
-        disabled={exporting}
-        className="w-full md:w-auto"
-      >
-        <Download className="w-4 h-4 mr-2" />
-        {exporting ? '导出中...' : '导出PDF'}
-      </Button>
+    <>
+      <div className="w-full px-4 py-4 bg-white border-t border-gray-200 shadow-sm flex flex-col md:flex-row gap-2 justify-end">
+        <Button
+          variant="outline"
+          onClick={onReset}
+          className="w-full md:w-auto"
+        >
+          <RotateCcw className="w-4 h-4 mr-2" />
+          重置
+        </Button>
+        
+        <Button
+          variant="outline"
+          onClick={() => setIsTemplateDialogOpen(true)}
+          disabled={exporting}
+          className="w-full md:w-auto"
+        >
+          <FileText className="w-4 h-4 mr-2" />
+          {exporting ? '导出中...' : '选择PDF模板'}
+        </Button>
 
-      <Button 
-        onClick={handleContactAdvisor} 
-        className="w-full md:w-auto bg-vivid-purple hover:bg-secondary-purple text-white"
-      >
-        <Phone className="w-4 h-4 mr-2" />
-        立即联系税务顾问
-      </Button>
+        <Button 
+          onClick={handleContactAdvisor} 
+          className="w-full md:w-auto bg-vivid-purple hover:bg-secondary-purple text-white"
+        >
+          <Phone className="w-4 h-4 mr-2" />
+          立即联系税务顾问
+        </Button>
+        
+        <SaveDataButton calculatorData={calculator} />
+      </div>
       
-      <SaveDataButton calculatorData={calculator} />
-    </div>
+      <PdfTemplateDialog 
+        open={isTemplateDialogOpen}
+        onClose={() => setIsTemplateDialogOpen(false)}
+        onExport={handleExportWithTemplate}
+      />
+    </>
   );
 };
 
