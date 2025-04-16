@@ -1,4 +1,3 @@
-
 // Functions for enhancing layout for PDF export
 
 import { elementExists } from './domHelpers';
@@ -229,4 +228,3 @@ export const enhanceLayout = (container: HTMLElement) => {
     console.warn('Error enhancing layout:', error);
   }
 };
-
