@@ -19,40 +19,79 @@ export const ReportBroDesigner: React.FC<ReportBroDesignerProps> = ({
   const [isLoading, setIsLoading] = useState(true);
   const [designer, setDesigner] = useState<any>(null);
   const { toast } = useToast();
+  const designerInitializedRef = useRef(false);
 
+  // 确保设计器库已加载
   useEffect(() => {
     let isMounted = true;
     
-    const initDesigner = async () => {
+    const preloadLibraries = async () => {
       try {
-        if (!containerRef.current) {
-          console.log("设计器容器未准备好，等待DOM加载");
-          return;
-        }
-
-        setIsLoading(true);
-        console.log("开始加载PDF设计器库");
         await loadReportBroLibraries();
+        console.log("PDF设计器库预加载成功");
+      } catch (error) {
+        console.error("PDF设计器库预加载失败:", error);
+      }
+    };
+
+    preloadLibraries();
+    
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+  
+  // 初始化设计器实例
+  useEffect(() => {
+    let isMounted = true;
+    let rbDesigner: any = null;
+    
+    const initDesigner = async () => {
+      // 防止重复初始化
+      if (designerInitializedRef.current) {
+        console.log("设计器已初始化，跳过");
+        return;
+      }
+      
+      if (!containerRef.current) {
+        console.log("容器元素未就绪，10ms后重试");
+        setTimeout(initDesigner, 10);
+        return;
+      }
+      
+      try {
+        setIsLoading(true);
+        console.log("开始初始化设计器");
+        
+        // 确保设计器库已加载
+        if (!window.ReportBroDesigner) {
+          console.log("重新加载设计器库");
+          await loadReportBroLibraries();
+        }
         
         if (!isMounted) return;
         
+        // 再次检查容器
         if (!containerRef.current || !document.body.contains(containerRef.current)) {
-          console.log("初始化时设计器容器已被移除");
+          console.error("容器已被移除或不在DOM中");
           return;
         }
         
-        console.log("创建设计器实例");
-        const rbDesigner = new window.ReportBroDesigner(
+        console.log("创建设计器实例，容器:", containerRef.current);
+        rbDesigner = new window.ReportBroDesigner(
           containerRef.current, 
           {},
           initialReport || null
         );
         
-        setDesigner(rbDesigner);
-        setIsLoading(false);
-        console.log("PDF设计器初始化完成");
+        if (isMounted) {
+          designerInitializedRef.current = true;
+          setDesigner(rbDesigner);
+          setIsLoading(false);
+          console.log("设计器实例创建成功");
+        }
       } catch (error) {
-        console.error("PDF设计器初始化失败:", error);
+        console.error("设计器初始化失败:", error);
         if (isMounted) {
           setIsLoading(false);
           toast({
@@ -64,17 +103,18 @@ export const ReportBroDesigner: React.FC<ReportBroDesignerProps> = ({
       }
     };
 
+    // 延迟初始化以确保DOM已准备好
     const timer = setTimeout(() => {
       initDesigner();
-    }, 100);
+    }, 300);
     
     return () => {
       isMounted = false;
       clearTimeout(timer);
       
-      if (designer) {
+      if (rbDesigner) {
         try {
-          designer.destroy();
+          rbDesigner.destroy();
         } catch (e) {
           console.error("销毁设计器时出错", e);
         }
@@ -104,7 +144,7 @@ export const ReportBroDesigner: React.FC<ReportBroDesignerProps> = ({
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full border border-gray-200 rounded-md">
       {isLoading ? (
         <DesignerLoading />
       ) : (
