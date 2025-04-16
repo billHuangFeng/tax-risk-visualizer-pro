@@ -47,7 +47,7 @@ const CalculatorActions: React.FC<CalculatorActionsProps> = ({
           const calculatorContent = document.getElementById('calculator-content');
           
           if (calculatorContent) {
-            calculatorContent.classList.add('for-pdf-export', 'pdf-export-container');
+            calculatorContent.classList.add('for-pdf-export');
             (window as any).currentPdfTemplate = template;
           }
           
@@ -63,13 +63,13 @@ const CalculatorActions: React.FC<CalculatorActionsProps> = ({
           
           toast({
             title: "导出失败",
-            description: "PDF生成过程中发生错误",
+            description: "PDF生成过程中发生错误，请稍后再试",
             variant: "destructive",
           });
         } finally {
           const calculatorContent = document.getElementById('calculator-content');
           if (calculatorContent) {
-            calculatorContent.classList.remove('for-pdf-export', 'pdf-export-container');
+            calculatorContent.classList.remove('for-pdf-export');
           }
           
           setTimeout(() => {
@@ -77,7 +77,7 @@ const CalculatorActions: React.FC<CalculatorActionsProps> = ({
             delete (window as any).currentPdfTemplate;
           }, 1000);
         }
-      }, 1000);
+      }, 500);
     } catch (error) {
       console.error("Export initialization error:", error);
       
