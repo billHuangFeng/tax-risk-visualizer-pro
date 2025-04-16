@@ -1,5 +1,6 @@
 
-import { generate, Template } from '@pdfme/generator';
+import { generate } from '@pdfme/generator';
+import { Template } from '@pdfme/common';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import { PdfTemplate } from '@/types/pdfTemplates';
