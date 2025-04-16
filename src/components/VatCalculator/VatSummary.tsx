@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -13,10 +12,14 @@ interface VatSummaryProps {
   setActualTax: (value: number) => void;
   taxDifference: number;
   taxDifferencePercentage: number;
-  differenceFactors: DifferenceFactor[];
-  addDifferenceFactor: () => void;
-  updateDifferenceFactor: (id: string, field: keyof DifferenceFactor, value: any) => void;
-  removeDifferenceFactor: (id: string) => void;
+  salesDifferenceFactors: DifferenceFactor[];
+  addSalesDifferenceFactor: () => void;
+  updateSalesDifferenceFactor: (id: string, field: keyof DifferenceFactor, value: any) => void;
+  removeSalesDifferenceFactor: (id: string) => void;
+  purchasesDifferenceFactors: DifferenceFactor[];
+  addPurchasesDifferenceFactor: () => void;
+  updatePurchasesDifferenceFactor: (id: string, field: keyof DifferenceFactor, value: any) => void;
+  removePurchasesDifferenceFactor: (id: string) => void;
   unexplainedDifference: number;
   riskLevel: string;
   onInfoClick?: (infoKey: string) => void;
@@ -28,10 +31,14 @@ const VatSummary: React.FC<VatSummaryProps> = ({
   setActualTax,
   taxDifference,
   taxDifferencePercentage,
-  differenceFactors,
-  addDifferenceFactor,
-  updateDifferenceFactor,
-  removeDifferenceFactor,
+  salesDifferenceFactors,
+  addSalesDifferenceFactor,
+  updateSalesDifferenceFactor,
+  removeSalesDifferenceFactor,
+  purchasesDifferenceFactors,
+  addPurchasesDifferenceFactor,
+  updatePurchasesDifferenceFactor,
+  removePurchasesDifferenceFactor,
   unexplainedDifference,
   riskLevel,
   onInfoClick
@@ -127,68 +134,133 @@ const VatSummary: React.FC<VatSummaryProps> = ({
           </div>
         </div>
 
-        <div className="border-t pt-6">
-          <div className="flex items-center mb-4">
-            <h3 className="text-lg font-semibold">差异原因分析</h3>
-            <button 
-              className="ml-2 text-tax-blue hover:text-tax-light-blue"
-              onClick={() => onInfoClick?.('differenceFactors')}
+        <div className="border-t pt-6 space-y-6">
+          <div>
+            <div className="flex items-center mb-4">
+              <h3 className="text-lg font-semibold">销售差异原因分析</h3>
+              <button 
+                className="ml-2 text-tax-blue hover:text-tax-light-blue"
+                onClick={() => onInfoClick?.('salesDifferenceFactors')}
+              >
+                <Info size={16} />
+              </button>
+            </div>
+
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-gray-100">
+                  <TableHead className="w-3/4 text-left">差异原因</TableHead>
+                  <TableHead className="text-right">金额</TableHead>
+                  <TableHead className="w-[50px]"></TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {salesDifferenceFactors.map((factor) => (
+                  <TableRow key={factor.id} className="h-12">
+                    <TableCell className="py-1">
+                      <Input
+                        value={factor.description}
+                        onChange={(e) => updateSalesDifferenceFactor(factor.id, 'description', e.target.value)}
+                        className="w-full text-left h-8"
+                      />
+                    </TableCell>
+                    <TableCell className="text-right py-1">
+                      <Input
+                        type="number"
+                        value={factor.amount}
+                        onChange={(e) => updateSalesDifferenceFactor(factor.id, 'amount', parseFloat(e.target.value) || 0)}
+                        className="text-right w-full h-8"
+                      />
+                    </TableCell>
+                    <TableCell className="py-1">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => removeSalesDifferenceFactor(factor.id)}
+                        disabled={salesDifferenceFactors.length <= 1}
+                      >
+                        <Trash2 className="h-4 w-4 text-gray-500" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+            
+            <Button
+              variant="outline"
+              size="sm"
+              className="mt-4"
+              onClick={addSalesDifferenceFactor}
             >
-              <Info size={16} />
-            </button>
+              <Plus className="h-4 w-4 mr-2" />
+              添加销售差异原因
+            </Button>
           </div>
 
-          <Table>
-            <TableHeader>
-              <TableRow className="bg-gray-100">
-                <TableHead className="w-3/4 text-left">差异原因</TableHead>
-                <TableHead className="text-right">金额</TableHead>
-                <TableHead className="w-[50px]"></TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {differenceFactors.map((factor) => (
-                <TableRow key={factor.id} className="h-12">
-                  <TableCell className="py-1">
-                    <Input
-                      value={factor.description}
-                      onChange={(e) => updateDifferenceFactor(factor.id, 'description', e.target.value)}
-                      className="w-full text-left h-8"
-                    />
-                  </TableCell>
-                  <TableCell className="text-right py-1">
-                    <Input
-                      type="number"
-                      value={factor.amount}
-                      onChange={(e) => updateDifferenceFactor(factor.id, 'amount', parseFloat(e.target.value) || 0)}
-                      className="text-right w-full h-8"
-                    />
-                  </TableCell>
-                  <TableCell className="py-1">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => removeDifferenceFactor(factor.id)}
-                      disabled={differenceFactors.length <= 1}
-                    >
-                      <Trash2 className="h-4 w-4 text-gray-500" />
-                    </Button>
-                  </TableCell>
+          <div>
+            <div className="flex items-center mb-4">
+              <h3 className="text-lg font-semibold">采购差异原因分析</h3>
+              <button 
+                className="ml-2 text-tax-blue hover:text-tax-light-blue"
+                onClick={() => onInfoClick?.('purchasesDifferenceFactors')}
+              >
+                <Info size={16} />
+              </button>
+            </div>
+
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-gray-100">
+                  <TableHead className="w-3/4 text-left">差异原因</TableHead>
+                  <TableHead className="text-right">金额</TableHead>
+                  <TableHead className="w-[50px]"></TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-          
-          <Button
-            variant="outline"
-            size="sm"
-            className="mt-4"
-            onClick={addDifferenceFactor}
-          >
-            <Plus className="h-4 w-4 mr-2" />
-            添加差异原因
-          </Button>
-          
+              </TableHeader>
+              <TableBody>
+                {purchasesDifferenceFactors.map((factor) => (
+                  <TableRow key={factor.id} className="h-12">
+                    <TableCell className="py-1">
+                      <Input
+                        value={factor.description}
+                        onChange={(e) => updatePurchasesDifferenceFactor(factor.id, 'description', e.target.value)}
+                        className="w-full text-left h-8"
+                      />
+                    </TableCell>
+                    <TableCell className="text-right py-1">
+                      <Input
+                        type="number"
+                        value={factor.amount}
+                        onChange={(e) => updatePurchasesDifferenceFactor(factor.id, 'amount', parseFloat(e.target.value) || 0)}
+                        className="text-right w-full h-8"
+                      />
+                    </TableCell>
+                    <TableCell className="py-1">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => removePurchasesDifferenceFactor(factor.id)}
+                        disabled={purchasesDifferenceFactors.length <= 1}
+                      >
+                        <Trash2 className="h-4 w-4 text-gray-500" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+            
+            <Button
+              variant="outline"
+              size="sm"
+              className="mt-4"
+              onClick={addPurchasesDifferenceFactor}
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              添加采购差异原因
+            </Button>
+          </div>
+
           <div className="mt-6 p-4 border rounded-md space-y-3">
             <div className="flex justify-between items-center">
               <div className="font-medium flex items-center">

@@ -2,8 +2,12 @@ import { useState, useCallback, useMemo } from 'react';
 import type { DifferenceFactor, DifferenceExplanation } from '../types';
 
 export const useVatDifferences = () => {
-  const [differenceFactors, setDifferenceFactors] = useState<DifferenceFactor[]>([
-    { id: '1', description: '差异原因1', amount: 0 }
+  const [salesDifferenceFactors, setSalesDifferenceFactors] = useState<DifferenceFactor[]>([
+    { id: '1', description: '销售差异原因1', amount: 0 }
+  ]);
+
+  const [purchasesDifferenceFactors, setPurchasesDifferenceFactors] = useState<DifferenceFactor[]>([
+    { id: '1', description: '采购差异原因1', amount: 0 }
   ]);
 
   const [salesDifferenceExplanations, setSalesDifferenceExplanations] = useState<DifferenceExplanation[]>([
@@ -14,16 +18,16 @@ export const useVatDifferences = () => {
     { id: '1', reason: '', amount: 0 }
   ]);
 
-  const addDifferenceFactor = useCallback(() => {
-    const newId = (differenceFactors.length + 1).toString();
-    setDifferenceFactors([
-      ...differenceFactors,
-      { id: newId, description: `差异原因${newId}`, amount: 0 }
+  const addSalesDifferenceFactor = useCallback(() => {
+    const newId = (salesDifferenceFactors.length + 1).toString();
+    setSalesDifferenceFactors([
+      ...salesDifferenceFactors,
+      { id: newId, description: `销售差异原因${newId}`, amount: 0 }
     ]);
-  }, [differenceFactors]);
+  }, [salesDifferenceFactors]);
 
-  const updateDifferenceFactor = useCallback((id: string, field: keyof DifferenceFactor, value: any) => {
-    setDifferenceFactors(prevFactors => {
+  const updateSalesDifferenceFactor = useCallback((id: string, field: keyof DifferenceFactor, value: any) => {
+    setSalesDifferenceFactors(prevFactors => {
       return prevFactors.map(factor => {
         if (factor.id === id) {
           return { ...factor, [field]: value };
@@ -33,8 +37,31 @@ export const useVatDifferences = () => {
     });
   }, []);
 
-  const removeDifferenceFactor = useCallback((id: string) => {
-    setDifferenceFactors(prevFactors => prevFactors.filter(factor => factor.id !== id));
+  const removeSalesDifferenceFactor = useCallback((id: string) => {
+    setSalesDifferenceFactors(prevFactors => prevFactors.filter(factor => factor.id !== id));
+  }, []);
+
+  const addPurchasesDifferenceFactor = useCallback(() => {
+    const newId = (purchasesDifferenceFactors.length + 1).toString();
+    setPurchasesDifferenceFactors([
+      ...purchasesDifferenceFactors,
+      { id: newId, description: `采购差异原因${newId}`, amount: 0 }
+    ]);
+  }, [purchasesDifferenceFactors]);
+
+  const updatePurchasesDifferenceFactor = useCallback((id: string, field: keyof DifferenceFactor, value: any) => {
+    setPurchasesDifferenceFactors(prevFactors => {
+      return prevFactors.map(factor => {
+        if (factor.id === id) {
+          return { ...factor, [field]: value };
+        }
+        return factor;
+      });
+    });
+  }, []);
+
+  const removePurchasesDifferenceFactor = useCallback((id: string) => {
+    setPurchasesDifferenceFactors(prevFactors => prevFactors.filter(factor => factor.id !== id));
   }, []);
 
   const addSalesDifferenceExplanation = useCallback(() => {
@@ -76,11 +103,14 @@ export const useVatDifferences = () => {
   }, [purchasesDifferenceExplanations]);
 
   return {
-    differenceFactors,
-    setDifferenceFactors,
-    addDifferenceFactor,
-    updateDifferenceFactor,
-    removeDifferenceFactor,
+    salesDifferenceFactors,
+    addSalesDifferenceFactor,
+    updateSalesDifferenceFactor,
+    removeSalesDifferenceFactor,
+    purchasesDifferenceFactors,
+    addPurchasesDifferenceFactor,
+    updatePurchasesDifferenceFactor,
+    removePurchasesDifferenceFactor,
     salesDifferenceExplanations,
     addSalesDifferenceExplanation,
     updateSalesDifferenceExplanation,
