@@ -27,6 +27,9 @@ export interface DifferenceFactor {
 export const useVatCalculator = () => {
   const { toast } = useToast();
   
+  // Company name
+  const [companyName, setCompanyName] = useState<string>('');
+  
   // Sales data
   const [salesData, setSalesData] = useState<VatSalesItem[]>([
     { id: '1', productName: '产品类别1', salesAmount: 3000, vatRate: 13, outputTax: 390 },
@@ -231,6 +234,7 @@ export const useVatCalculator = () => {
   
   // Reset calculator
   const handleReset = useCallback(() => {
+    setCompanyName('');
     setSalesData([
       { id: '1', productName: '产品类别1', salesAmount: 0, vatRate: 13, outputTax: 0 }
     ]);
@@ -252,6 +256,10 @@ export const useVatCalculator = () => {
   }, [toast]);
   
   return {
+    // Company name
+    companyName,
+    setCompanyName,
+    
     // Sales data
     salesData,
     addSalesItem,
