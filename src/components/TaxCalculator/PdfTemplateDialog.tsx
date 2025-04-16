@@ -16,13 +16,15 @@ interface PdfTemplateDialogProps {
   onExport: (template: PdfTemplate) => void;
 }
 
+type ViewState = 'select' | 'edit' | 'preview';
+
 export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({ 
   open, 
   onClose, 
   onExport 
 }) => {
   const [selectedTemplate, setSelectedTemplate] = useState<PdfTemplate>(DEFAULT_TEMPLATES[0]);
-  const [view, setView] = useState<'select' | 'edit' | 'preview'>('select');
+  const [view, setView] = useState<ViewState>('select');
   
   const handleSelectTemplate = (template: PdfTemplate) => {
     setSelectedTemplate(template);
