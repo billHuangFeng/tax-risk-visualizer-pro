@@ -63,9 +63,10 @@ export const processInputFields = (container: HTMLElement) => {
                 const unitLabel = document.createElement('span');
                 unitLabel.className = 'unit-label pdf-only';
                 unitLabel.textContent = input.dataset.unit || ' 万元';
-                (unitLabel as HTMLElement).style.marginLeft = '4px';
-                (unitLabel as HTMLElement).style.display = 'none'; // 默认隐藏
-                (unitLabel as HTMLElement).dataset.pdfOnly = 'true';
+                const unitLabelElement = unitLabel as HTMLElement;
+                unitLabelElement.style.marginLeft = '4px';
+                unitLabelElement.style.display = 'none'; // 默认隐藏
+                unitLabelElement.dataset.pdfOnly = 'true';
                 parentElement.appendChild(unitLabel);
               }
             }
@@ -89,8 +90,9 @@ export const processInputFields = (container: HTMLElement) => {
         if (!valueDisplay) {
           valueDisplay = document.createElement('div');
           valueDisplay.className = 'pdf-value pdf-only';
-          (valueDisplay as HTMLElement).style.display = 'none'; // 默认隐藏
-          (valueDisplay as HTMLElement).dataset.pdfOnly = 'true';
+          const valueDisplayElement = valueDisplay as HTMLElement;
+          valueDisplayElement.style.display = 'none'; // 默认隐藏
+          valueDisplayElement.dataset.pdfOnly = 'true';
           parentElement.appendChild(valueDisplay);
         }
         
