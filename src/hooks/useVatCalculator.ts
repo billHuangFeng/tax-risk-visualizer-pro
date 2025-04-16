@@ -1,4 +1,3 @@
-
 import { useEffect } from 'react';
 import { useToast } from './use-toast';
 import { useVatBasicInfo } from './vat/useVatBasicInfo';
@@ -40,7 +39,7 @@ export const useVatCalculator = () => {
 
   // Calculate tax difference and risk level
   useEffect(() => {
-    const difference = tax.payableTax - tax.actualTax;
+    const difference = tax.actualTax - tax.payableTax;
     tax.setTaxDifference(difference);
     
     // 计算差异幅度百分比：(实缴增值税 - 应交增值税) / 应交增值税 * 100
@@ -50,33 +49,22 @@ export const useVatCalculator = () => {
     
     tax.setTaxDifferencePercentage(parseFloat(differencePercentage.toFixed(2)));
     
-    // 计算风险评估百分比
-    // 取销项税的10%与应交增值税中的较大值作为基数
-    const baseAmount = Math.max(
-      Math.abs(tax.payableTax), 
-      sales.salesTotal.tax * 0.1
-    );
+    // 风险百分比计算已经在VatCalculator组件中通过useEffect处理，这里不再重复计算
     
-    // 计算风险百分比：(应交增值税 - 实缴增值税) / 基数 * 100
-    const riskPercentage = baseAmount !== 0 
-      ? (Math.abs(difference) / baseAmount) * 100 
-      : 0;
-    
-    tax.setRiskPercentage(parseFloat(riskPercentage.toFixed(2)));
-
+    // 根据风险百分比确定风险等级
     let riskLevel = '';
-    if (riskPercentage > 50) {
+    if (tax.riskPercentage > 50) {
       riskLevel = '风险非常高';
-    } else if (riskPercentage > 20) {
+    } else if (tax.riskPercentage > 20) {
       riskLevel = '风险比较高';
-    } else if (riskPercentage > 10) {
+    } else if (tax.riskPercentage > 10) {
       riskLevel = '存在风险';
     } else {
       riskLevel = '基本安全';
     }
     
     tax.setRiskLevel(riskLevel);
-  }, [tax.payableTax, tax.actualTax, sales.salesTotal.tax]);
+  }, [tax.payableTax, tax.actualTax, tax.riskPercentage]);
 
   // Calculate unexplained difference
   useEffect(() => {
