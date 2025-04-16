@@ -1,4 +1,3 @@
-
 import { useEffect } from 'react';
 import { useToast } from './use-toast';
 import { useVatBasicInfo } from './vat/useVatBasicInfo';
@@ -43,15 +42,9 @@ export const useVatCalculator = () => {
     const difference = tax.payableTax - tax.actualTax;
     tax.setTaxDifference(difference);
     
-    // 取销项税的10%与应交增值税中绝对值的较大值作为基数
-    const baseAmount = Math.max(
-      Math.abs(tax.payableTax), 
-      Math.abs(sales.salesTotal.tax * 0.1)
-    );
-    
-    // 计算风险百分比：税差异/基数（保留正负号）
-    const riskPercentage = baseAmount !== 0 
-      ? (tax.taxDifference / baseAmount) * 100 
+    // 使用应交增值税作为基数计算差异幅度
+    const riskPercentage = tax.payableTax !== 0 
+      ? (difference / tax.payableTax) * 100 
       : 0;
     
     tax.setTaxDifferencePercentage(parseFloat(riskPercentage.toFixed(2)));
@@ -68,7 +61,7 @@ export const useVatCalculator = () => {
     }
     
     tax.setRiskLevel(riskLevel);
-  }, [tax.payableTax, tax.actualTax, sales.salesTotal.tax]);
+  }, [tax.payableTax, tax.actualTax]);
 
   // Calculate unexplained difference
   useEffect(() => {
