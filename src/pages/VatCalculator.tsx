@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
+import { Copyright } from 'lucide-react';
 import CalculatorHeader from '@/components/TaxCalculator/CalculatorHeader';
 import TaxNavbar from '@/components/TaxNavbar';
 import CalculatorLayout from '@/components/TaxCalculator/CalculatorLayout';
@@ -100,8 +101,15 @@ const VatCalculator = () => {
           />
         </Card>
       </CalculatorLayout>
+
+      {/* Add copyright notice */}
+      <footer className="container text-center text-gray-500 text-sm py-4 flex items-center justify-center">
+        <Copyright className="h-4 w-4 mr-2" />
+        <span>© 2025 财倍贝企业成长研究院 版权所有</span>
+      </footer>
     </>
   );
 };
 
 export default VatCalculator;
+
