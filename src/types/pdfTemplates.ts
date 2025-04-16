@@ -45,7 +45,7 @@ export interface PdfTemplateLayout {
 
 export interface PdfSection {
   id: string;
-  type: 'basic-info' | 'revenue-expenses' | 'tax-summary' | 'tax-adjustments' | 'custom';
+  type: 'basic-info' | 'revenue-expenses' | 'expenses' | 'tax-summary' | 'tax-adjustments' | 'tax-calculation' | 'custom';
   title: string;
   visible: boolean;
   order: number;
