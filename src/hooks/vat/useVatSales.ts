@@ -1,6 +1,6 @@
 
 import { useState, useCallback } from 'react';
-import { VatSalesItem } from '../types';
+import type { VatSalesItem } from '../types';
 
 export const useVatSales = () => {
   const [salesData, setSalesData] = useState<VatSalesItem[]>([

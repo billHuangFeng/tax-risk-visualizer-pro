@@ -1,4 +1,3 @@
-
 import { useEffect } from 'react';
 import { useToast } from './use-toast';
 import { useVatBasicInfo } from './vat/useVatBasicInfo';
@@ -6,14 +5,9 @@ import { useVatSales } from './vat/useVatSales';
 import { useVatPurchases } from './vat/useVatPurchases';
 import { useVatDifferences } from './vat/useVatDifferences';
 import { useVatTax } from './vat/useVatTax';
-import { VatSalesItem, VatPurchaseItem, DifferenceFactor, DifferenceExplanation } from './types';
+import type { VatSalesItem, VatPurchaseItem, DifferenceFactor, DifferenceExplanation } from './types';
 
-export {
-  VatSalesItem,
-  VatPurchaseItem,
-  DifferenceFactor,
-  DifferenceExplanation
-};
+export type { VatSalesItem, VatPurchaseItem, DifferenceFactor, DifferenceExplanation };
 
 export const useVatCalculator = () => {
   const { toast } = useToast();

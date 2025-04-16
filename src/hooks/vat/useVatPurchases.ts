@@ -1,6 +1,6 @@
 
 import { useState, useCallback } from 'react';
-import { VatPurchaseItem } from '../types';
+import type { VatPurchaseItem } from '../types';
 
 export const useVatPurchases = () => {
   const [purchasesData, setPurchasesData] = useState<VatPurchaseItem[]>([

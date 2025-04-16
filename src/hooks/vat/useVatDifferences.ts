@@ -1,6 +1,6 @@
 
 import { useState, useCallback, useMemo } from 'react';
-import { DifferenceFactor, DifferenceExplanation } from '../types';
+import type { DifferenceFactor, DifferenceExplanation } from '../types';
 
 export const useVatDifferences = () => {
   const [differenceFactors, setDifferenceFactors] = useState<DifferenceFactor[]>([
