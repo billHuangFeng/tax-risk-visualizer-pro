@@ -21,16 +21,23 @@ const TopSection: React.FC<TopSectionProps> = ({
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 mb-8">
-      <div className="flex flex-col gap-2">
-        <div className="flex items-center">
-          <Label htmlFor="companyName" className="font-medium whitespace-nowrap">企业名称：</Label>
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center gap-4">
+          <Label htmlFor="companyName" className="font-medium text-base whitespace-nowrap min-w-24">企业名称：</Label>
+          <Input
+            id="companyName"
+            value={companyName}
+            onChange={(e) => setCompanyName(e.target.value)}
+            className="flex-1"
+          />
         </div>
-        <Input
-          id="companyName"
-          value={companyName}
-          onChange={(e) => setCompanyName(e.target.value)}
-          className="w-full"
-        />
+        <div className="flex items-center gap-4">
+          <Label htmlFor="creditCode" className="font-medium text-base whitespace-nowrap min-w-24">统一社会信用代码：</Label>
+          <Input
+            id="creditCode"
+            className="flex-1"
+          />
+        </div>
       </div>
       <div className="md:col-span-2 flex justify-end">
         <Card className="w-full md:w-[66%]">

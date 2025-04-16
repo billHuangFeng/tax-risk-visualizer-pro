@@ -3,6 +3,7 @@ import { useState } from 'react';
 
 export const useBasicInfo = () => {
   const [companyName, setCompanyName] = useState('');
+  const [creditCode, setCreditCode] = useState('');
   const [isExcludedIndustry, setIsExcludedIndustry] = useState(false);
   const [isHighTechEnterprise, setIsHighTechEnterprise] = useState(false);
   const [totalAssets, setTotalAssets] = useState('');
@@ -11,6 +12,8 @@ export const useBasicInfo = () => {
   return {
     companyName,
     setCompanyName,
+    creditCode,
+    setCreditCode,
     isExcludedIndustry,
     setIsExcludedIndustry,
     isHighTechEnterprise,
