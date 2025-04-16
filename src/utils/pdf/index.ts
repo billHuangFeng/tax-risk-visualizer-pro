@@ -7,7 +7,7 @@ import { jsPDF } from 'jspdf';
  */
 export const exportToPDF = async (calculatorData: any): Promise<boolean> => {
   try {
-    console.log("Starting PDF export process");
+    console.log("Starting PDF export process", calculatorData);
     
     // Get calculator content
     const content = document.getElementById('calculator-content');
@@ -93,7 +93,7 @@ export const exportToPDF = async (calculatorData: any): Promise<boolean> => {
       });
     }
     
-    // Save PDF
+    // Save PDF with company name from data or default
     pdf.save(`${calculatorData.companyName || '税务计算'}_${new Date().toISOString().slice(0, 10)}.pdf`);
     
     // Cleanup

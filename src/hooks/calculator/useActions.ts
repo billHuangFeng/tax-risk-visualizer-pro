@@ -50,13 +50,14 @@ export const useActions = (riskValue: string, riskPercentage: number) => {
         return data;
       };
       
-      // 使用导出到PDF函数
+      // 使用导出到PDF函数 - fix: only pass one argument now
       await exportToPDF({
         riskValue,
         riskPercentage,
         companyName,
-        ...collectFormData()
-      }, template || (window as any).currentPdfTemplate);
+        ...collectFormData(),
+        template: template || (window as any).currentPdfTemplate
+      });
       
       return true;
     } catch (error) {
