@@ -4,13 +4,32 @@ import { Template } from '@pdfme/common';
 import { DEFAULT_TEMPLATES } from '@/constants/pdfTemplates';
 import { PdfTemplate } from '@/types/pdfTemplates';
 
-// Helper function to safely check if an object is an array with expected structure
-const isValidSchemaArray = (arr: any): arr is any[][] => {
-  return Array.isArray(arr) && 
-         arr.length > 0 && 
-         Array.isArray(arr[0]);
+/**
+ * Validates if the provided value is a properly structured schemas array
+ */
+const isValidSchemas = (value: any): boolean => {
+  return Array.isArray(value) && 
+         value.length > 0 && 
+         Array.isArray(value[0]);
 };
 
+/**
+ * Creates a minimal valid schema structure for PDFME
+ */
+const createMinimalSchema = (): any[][] => {
+  return [[{
+    emptyField: {
+      type: 'text',
+      position: { x: 0, y: 0 },
+      width: 0,
+      height: 0
+    }
+  }]];
+};
+
+/**
+ * Exports calculator data to PDF using PDFME generator
+ */
 export const exportToPDF = async (calculator: any, template?: PdfTemplate) => {
   try {
     console.log("Starting PDF export with PDFME");
@@ -32,7 +51,7 @@ export const exportToPDF = async (calculator: any, template?: PdfTemplate) => {
     
     console.log("Preparing template for PDF generation");
     
-    // Create a proper PDFME template
+    // Create a PDFME template object
     const pdfTemplate: Template = {
       basePdf: selectedTemplate.baseTemplate instanceof Uint8Array 
                ? selectedTemplate.baseTemplate 
@@ -40,26 +59,25 @@ export const exportToPDF = async (calculator: any, template?: PdfTemplate) => {
       schemas: []
     };
     
-    // Safely assign schemas
-    if (isValidSchemaArray(selectedTemplate.schemas)) {
-      // Create a deep copy to avoid reference issues
-      pdfTemplate.schemas = JSON.parse(JSON.stringify(selectedTemplate.schemas));
-    } else {
-      // Create a minimal valid schema structure if none is provided
-      pdfTemplate.schemas = [[{
-        emptyField: {
-          type: 'text',
-          position: { x: 0, y: 0 },
-          width: 0,
-          height: 0
-        }
-      }]];
+    // Safely handle schemas assignment
+    let schemasToUse: any[][] = createMinimalSchema();
+    
+    if (selectedTemplate.schemas && isValidSchemas(selectedTemplate.schemas)) {
+      try {
+        // Deep copy the schemas to avoid reference issues
+        schemasToUse = JSON.parse(JSON.stringify(selectedTemplate.schemas));
+      } catch (err) {
+        console.error("Error parsing schemas, using minimal schema:", err);
+      }
     }
+    
+    // Assign the schemas to the template
+    pdfTemplate.schemas = schemasToUse;
     
     console.log("Template prepared:", {
       hasSchemasArray: Array.isArray(pdfTemplate.schemas),
       schemasLength: pdfTemplate.schemas.length,
-      firstSchemaType: typeof pdfTemplate.schemas[0],
+      firstSchemaIsArray: Array.isArray(pdfTemplate.schemas[0]),
       innerArrayLength: Array.isArray(pdfTemplate.schemas[0]) ? pdfTemplate.schemas[0].length : 0
     });
     

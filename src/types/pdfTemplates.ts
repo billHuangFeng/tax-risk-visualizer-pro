@@ -10,8 +10,8 @@ export interface PdfTemplate {
   layout: PdfTemplateLayout;
   // Base PDF template file as binary data
   baseTemplate?: ArrayBuffer | Uint8Array;
-  // PDFME schema definition - must be compatible with PDFME's Template type
-  schemas?: any[][];  // Using any[][] to avoid TypeScript errors with the complex PDFME schema type
+  // PDFME schema definition
+  schemas?: any[][];  // Using any[][] to match PDFME's expected schema format
 }
 
 export interface PdfTemplateStyles {
