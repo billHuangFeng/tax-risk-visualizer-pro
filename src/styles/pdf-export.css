@@ -12,6 +12,8 @@
     font-family: Arial, sans-serif !important;
     padding: 20px !important;
     width: 100% !important;
+    min-height: 100vh !important;
+    position: relative !important;
   }
   
   /* Make all text elements visible */
@@ -99,12 +101,12 @@
   }
   
   .for-pdf-export [class*="grid"] > *:nth-child(odd) {
-    width: 60% !important;
+    width: 50% !important;
     text-align: left !important;
   }
   
   .for-pdf-export [class*="grid"] > *:nth-child(even) {
-    width: 40% !important;
+    width: 50% !important;
     text-align: right !important;
   }
   
@@ -127,7 +129,7 @@
   .for-pdf-export table td {
     padding: 12px !important;
     border: 1px solid #e5e7eb !important;
-    text-align: left !important;
+    text-align: right !important;
   }
   
   .for-pdf-export table th {
@@ -153,5 +155,54 @@
     background-color: white !important;
     z-index: -9999 !important;
     visibility: hidden !important;
+  }
+  
+  /* Vertical title for company name */
+  .for-pdf-export .pdf-vertical-title {
+    position: absolute;
+    left: 20px;
+    top: 0;
+    bottom: 0;
+    width: 30px;
+    height: 100%;
+  }
+  
+  /* Make checkboxes visible */
+  .for-pdf-export [role="checkbox"] {
+    display: inline-block !important;
+    width: 16px !important;
+    height: 16px !important;
+    border: 2px solid #000 !important;
+    visibility: visible !important;
+    position: relative !important;
+  }
+  
+  .for-pdf-export [role="checkbox"][data-state="checked"]::after {
+    content: "✓" !important;
+    position: absolute !important;
+    top: -3px !important;
+    left: 2px !important;
+    font-size: 14px !important;
+    color: #000 !important;
+  }
+  
+  /* Fix for content alignment */
+  .for-pdf-export #calculator-content {
+    padding-left: 40px !important; /* Make space for vertical title */
+    width: calc(100% - 40px) !important;
+  }
+  
+  /* Label and field alignment */
+  .for-pdf-export label {
+    font-weight: normal !important;
+    margin-bottom: 4px !important;
+    display: inline-block !important;
+  }
+  
+  /* Fix for container width */
+  .for-pdf-export .container {
+    width: 100% !important;
+    max-width: none !important;
+    padding: 0 !important;
   }
 }

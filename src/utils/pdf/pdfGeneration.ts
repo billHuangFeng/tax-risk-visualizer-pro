@@ -8,7 +8,7 @@ import { enhanceLayout, removeRedundantTextElements } from './layoutEnhancement'
 // Create canvas from prepared content
 const createCanvas = async (content: HTMLElement): Promise<HTMLCanvasElement> => {
   console.log("Starting HTML to canvas conversion");
-  await new Promise(resolve => setTimeout(resolve, 1500));
+  await new Promise(resolve => setTimeout(resolve, 1800)); // Increase timeout for better rendering
   
   try {
     const canvas = await html2canvas(content, {
@@ -43,6 +43,15 @@ const createCanvas = async (content: HTMLElement): Promise<HTMLCanvasElement> =>
           allTextElements.forEach(el => {
             if (el instanceof HTMLElement) {
               el.style.color = '#000';
+              el.style.visibility = 'visible';
+              el.style.opacity = '1';
+              
+              // Fix for content that should be visible
+              if (el.tagName !== 'BUTTON' && 
+                  !el.classList.contains('pdf-duplicate') &&
+                  el.style.display !== 'none') {
+                el.style.display = el.style.display || 'block';
+              }
             }
           });
           
@@ -52,6 +61,8 @@ const createCanvas = async (content: HTMLElement): Promise<HTMLCanvasElement> =>
           element.style.width = '1000px';
           element.style.padding = '20px';
           element.style.boxSizing = 'border-box';
+          element.style.position = 'relative';
+          element.style.minHeight = '1200px';
         } catch (error) {
           console.warn("Error in html2canvas onclone callback:", error);
         }

@@ -41,7 +41,7 @@ const NumberInput: React.FC<NumberInputProps> = ({
         data-value={value} /* Add data attribute for PDF export */
       />
       <div className="pdf-value absolute right-3 top-0 bottom-0 flex items-center justify-center h-full pointer-events-none opacity-0">
-        {value}
+        {value || '0'}
       </div>
       <span className="ml-2 text-sm whitespace-nowrap">{suffix}</span>
     </div>

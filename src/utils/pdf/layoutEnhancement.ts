@@ -1,3 +1,4 @@
+
 // Functions for enhancing layout for PDF export
 
 import { elementExists } from './domHelpers';
@@ -129,7 +130,7 @@ export const enhanceLayout = (container: HTMLElement) => {
           
           if (labelItem instanceof HTMLElement) {
             labelItem.style.display = 'table-cell';
-            labelItem.style.width = '60%';
+            labelItem.style.width = '50%';
             labelItem.style.textAlign = 'left';
             labelItem.style.paddingTop = '8px';
             labelItem.style.paddingBottom = '8px';
@@ -139,7 +140,7 @@ export const enhanceLayout = (container: HTMLElement) => {
           
           if (valueItem instanceof HTMLElement) {
             valueItem.style.display = 'table-cell';
-            valueItem.style.width = '40%';
+            valueItem.style.width = '50%';
             valueItem.style.textAlign = 'right';
             valueItem.style.paddingTop = '8px';
             valueItem.style.paddingBottom = '8px';
@@ -177,6 +178,42 @@ export const enhanceLayout = (container: HTMLElement) => {
       }
     });
     
+    // Ensure labels are visible and properly aligned
+    const labels = container.querySelectorAll('label');
+    labels.forEach((label) => {
+      if (label instanceof HTMLElement) {
+        label.style.color = '#000000';
+        label.style.display = 'inline-block';
+        label.style.textAlign = 'left';
+        label.style.marginBottom = '4px';
+        label.style.fontWeight = 'normal';
+      }
+    });
+    
+    // Fix checkbox display
+    const checkboxes = container.querySelectorAll('[role="checkbox"]');
+    checkboxes.forEach((checkbox) => {
+      if (checkbox instanceof HTMLElement) {
+        checkbox.style.display = 'inline-block';
+        checkbox.style.visibility = 'visible';
+        
+        // Make checkbox label visible
+        const parent = checkbox.parentElement;
+        if (parent instanceof HTMLElement) {
+          parent.style.display = 'flex';
+          parent.style.alignItems = 'center';
+          parent.style.gap = '8px';
+          
+          const label = parent.querySelector('label');
+          if (label instanceof HTMLElement) {
+            label.style.display = 'inline';
+            label.style.fontSize = '14px';
+            label.style.color = '#000';
+          }
+        }
+      }
+    });
+    
     // Fix table layout
     const tables = container.querySelectorAll('table');
     tables.forEach((table) => {
@@ -198,6 +235,7 @@ export const enhanceLayout = (container: HTMLElement) => {
           if (cell instanceof HTMLTableCellElement) {
             cell.style.padding = '12px';
             cell.style.border = '1px solid #e5e7eb';
+            cell.style.textAlign = 'right'; // Set text alignment
             
             // Make sure text is visible
             cell.style.color = '#000';
@@ -224,7 +262,79 @@ export const enhanceLayout = (container: HTMLElement) => {
         card.style.borderRadius = '8px';
       }
     });
+    
+    // Ensure proper display of title section
+    fixTitleSection(container);
+    
+    // Force all elements to be visible
+    ensureAllElementsVisible(container);
+    
   } catch (error) {
     console.warn('Error enhancing layout:', error);
+  }
+};
+
+// Fix the title section for better layout in PDF
+const fixTitleSection = (container: HTMLElement) => {
+  try {
+    // The left side title "测试科技有限公司 - 税务计算报告" should be fixed
+    const titleElements = container.querySelectorAll('h1, .text-xl, .text-lg, .text-2xl');
+    titleElements.forEach((title) => {
+      if (title instanceof HTMLElement) {
+        title.style.color = '#000';
+        title.style.fontWeight = 'bold';
+        title.style.fontSize = '20px';
+        title.style.marginBottom = '16px';
+        title.style.visibility = 'visible';
+        title.style.display = 'block';
+      }
+    });
+    
+    // Fix the calculator wrapper 
+    const wrapper = container.querySelector('.tax-calculator-wrapper');
+    if (wrapper instanceof HTMLElement) {
+      wrapper.style.display = 'block';
+      wrapper.style.width = '100%';
+      wrapper.style.maxWidth = '100%';
+      wrapper.style.padding = '0';
+    }
+  } catch (error) {
+    console.warn('Error fixing title section:', error);
+  }
+};
+
+// Ensure all elements are visible in PDF
+const ensureAllElementsVisible = (container: HTMLElement) => {
+  try {
+    // Force all text elements to be visible and black
+    const allElements = container.querySelectorAll('*');
+    allElements.forEach((el) => {
+      if (el instanceof HTMLElement) {
+        if (
+          el.tagName !== 'BUTTON' && 
+          !el.classList.contains('pdf-duplicate') &&
+          el.style.display !== 'none'
+        ) {
+          el.style.color = '#000';
+          el.style.visibility = 'visible';
+          el.style.opacity = '1';
+        }
+      }
+    });
+    
+    // Fix specific issues with the vertical company name on the left
+    const companyText = container.textContent || '';
+    if (companyText.includes('测试科技有限公司')) {
+      // Create a vertical title if it doesn't exist
+      let verticalTitle = container.querySelector('.pdf-vertical-title');
+      if (!verticalTitle) {
+        verticalTitle = document.createElement('div');
+        verticalTitle.className = 'pdf-vertical-title';
+        verticalTitle.innerHTML = '<div style="writing-mode: vertical-rl; transform: rotate(180deg); position: absolute; left: 20px; top: 50%; transform-origin: center; font-size: 20px; font-weight: bold; color: #000;">测试科技有限公司 - 税务计算报告</div>';
+        container.insertBefore(verticalTitle, container.firstChild);
+      }
+    }
+  } catch (error) {
+    console.warn('Error ensuring elements visibility:', error);
   }
 };
