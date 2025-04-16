@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
-import { Trash2, Plus, Info } from 'lucide-react';
+import { Trash2, Plus, Info, CircleCheck, CircleAlert, OctagonAlert } from 'lucide-react';
 import { VatSalesItem, DifferenceExplanation } from '@/hooks/useVatCalculator';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 
@@ -48,6 +48,19 @@ const VatSalesSection: React.FC<VatSalesSectionProps> = ({
   const showDifferenceExplanation = Math.abs(salesCollectionDifferencePercentage) > 10;
   const unexplainedDifference = salesCollectionDifference - explainedDifferenceTotal;
   const unexplainedDifferencePercentage = ((unexplainedDifference) / (salesTotal.amount + salesTotal.tax) * 100) || 0;
+
+  const getWarningIcon = (percentage: number) => {
+    const absPercentage = Math.abs(percentage);
+    if (absPercentage <= 10) {
+      return <CircleCheck className="h-4 w-4 text-[#ea384c]" />;
+    } else if (absPercentage <= 30) {
+      return <CircleAlert className="h-4 w-4 text-[#FEF7CD]" />;
+    } else if (absPercentage <= 60) {
+      return <CircleAlert className="h-4 w-4 text-[#F97316]" />;
+    } else {
+      return <OctagonAlert className="h-4 w-4 text-[#ea384c]" />;
+    }
+  };
 
   return (
     <Card className="mb-6">
@@ -267,7 +280,10 @@ const VatSalesSection: React.FC<VatSalesSectionProps> = ({
                 <TableRow className="bg-yellow-100/50 font-medium">
                   <TableCell>未解释差异</TableCell>
                   <TableCell className="text-right flex items-center justify-end gap-2">
-                    {unexplainedDifference.toFixed(2)}
+                    <div className="flex items-center gap-2">
+                      {getWarningIcon(unexplainedDifferencePercentage)}
+                      {unexplainedDifference.toFixed(2)}
+                    </div>
                     <span className="text-sm text-gray-500 whitespace-nowrap">
                       {unexplainedDifferencePercentage.toFixed(2)}%
                     </span>
