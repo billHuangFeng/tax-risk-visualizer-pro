@@ -51,7 +51,7 @@ export const useVatCalculator = () => {
 
   // Calculate unexplained difference and risk level
   useEffect(() => {
-    // Calculate total explained difference from both sales and purchases difference factors
+    // Calculate total explained difference from the difference factors in the VAT summary
     const salesExplainedAmount = differences.salesDifferenceFactors.reduce(
       (sum, factor) => sum + factor.amount, 
       0
@@ -62,25 +62,12 @@ export const useVatCalculator = () => {
       0
     );
     
-    // Calculate total unexplained difference
-    const unexplained = tax.taxDifference - (salesExplainedAmount + purchasesExplainedAmount);
+    // Calculate total explained difference
+    const totalExplainedDifference = salesExplainedAmount + purchasesExplainedAmount;
+    
+    // Calculate unexplained difference
+    const unexplained = tax.taxDifference - totalExplainedDifference;
     tax.setUnexplainedDifference(unexplained);
-    
-    // Calculate sales unexplained difference percentage
-    const salesTotalWithTax = sales.salesTotal.amount + sales.salesTotal.tax;
-    const salesDifference = salesTotalWithTax - sales.bankSalesAmount;
-    const salesUnexplainedDifference = salesDifference - differences.salesExplainedDifferenceTotal;
-    const salesUnexplainedPercentage = salesTotalWithTax !== 0 
-      ? (Math.abs(salesUnexplainedDifference) / salesTotalWithTax) * 100 
-      : 0;
-    
-    // Calculate purchases unexplained difference percentage
-    const purchasesTotalWithTax = purchases.purchasesTotal.amount + purchases.purchasesTotal.tax;
-    const purchasesDifference = purchasesTotalWithTax - purchases.bankPurchasesAmount;
-    const purchasesUnexplainedDifference = purchasesDifference - differences.purchasesExplainedDifferenceTotal;
-    const purchasesUnexplainedPercentage = purchasesTotalWithTax !== 0 
-      ? (Math.abs(purchasesUnexplainedDifference) / purchasesTotalWithTax) * 100 
-      : 0;
     
     // Updated risk assessment logic based on the specified requirements
     if (Math.abs(unexplained) > 0) {
@@ -92,14 +79,7 @@ export const useVatCalculator = () => {
   }, [
     tax.taxDifference,
     differences.salesDifferenceFactors,
-    differences.purchasesDifferenceFactors,
-    differences.salesExplainedDifferenceTotal,
-    differences.purchasesExplainedDifferenceTotal,
-    tax.payableTax,
-    sales.salesTotal,
-    purchases.purchasesTotal,
-    sales.bankSalesAmount,
-    purchases.bankPurchasesAmount
+    differences.purchasesDifferenceFactors
   ]);
 
   const handleReset = () => {
