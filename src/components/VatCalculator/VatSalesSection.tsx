@@ -204,7 +204,7 @@ const VatSalesSection: React.FC<VatSalesSectionProps> = ({
         </div>
 
         {showDifferenceExplanation && (
-          <div className="mt-4 p-4 border rounded-lg bg-yellow-50 w-2/3 ml-auto mr-0">
+          <div className="mt-4 p-4 border rounded-lg bg-amber-50/70 w-2/3 ml-auto mr-0">
             <div className="mb-2 font-medium text-yellow-800">
               差异说明
               <span className="ml-2 text-sm text-yellow-600">
