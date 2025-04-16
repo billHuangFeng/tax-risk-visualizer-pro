@@ -1,6 +1,7 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { RotateCcw, Download, Phone, FilePdf } from 'lucide-react';
+import { RotateCcw, Download, Phone, FileText } from 'lucide-react';
 import SaveDataButton from './SaveDataButton';
 import { useCalculator } from '@/hooks/useCalculator';
 import { useToast } from '@/hooks/use-toast';
@@ -108,7 +109,7 @@ const CalculatorActions: React.FC<CalculatorActionsProps> = ({
           disabled={exporting}
           className="w-full md:w-auto"
         >
-          <FilePdf className="w-4 h-4 mr-2" />
+          <FileText className="w-4 h-4 mr-2" />
           {exporting ? '导出中...' : 'PDF导出'}
         </Button>
 

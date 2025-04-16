@@ -130,20 +130,16 @@ export const exportToPDF = async (calculator: any, template?: PdfTemplate) => {
     const validatedSchemas = extractSchemas(selectedTemplate);
     
     // Create properly structured template compatible with PDFME
-    // Use type assertions to bypass TypeScript's limitations
     const pdfMeTemplate = {
       basePdf: basePdf,
       schemas: validatedSchemas
-    } as unknown as Template;
+    } as Template;
     
     // Log template info for debugging
     console.log("PDF template prepared:", {
       hasBasePdf: pdfMeTemplate.basePdf instanceof Uint8Array,
-      schemasCount: Array.isArray(pdfMeTemplate.schemas) ? pdfMeTemplate.schemas.length : 0,
-      firstSchemaFields: Array.isArray(pdfMeTemplate.schemas) && 
-                        Array.isArray(pdfMeTemplate.schemas[0]) && 
-                        pdfMeTemplate.schemas[0][0] ? 
-                        Object.keys(pdfMeTemplate.schemas[0][0]).length : 0
+      schemasCount: pdfMeTemplate.schemas.length,
+      firstSchemaFields: pdfMeTemplate.schemas[0] ? Object.keys(pdfMeTemplate.schemas[0][0] || {}).length : 0
     });
     
     // Generate PDF with validated template
@@ -167,7 +163,7 @@ export const exportToPDF = async (calculator: any, template?: PdfTemplate) => {
       const fallbackTemplate = {
         basePdf: new Uint8Array(),
         schemas: [[createBaseSchema()[0]]]
-      } as unknown as Template;
+      } as Template;
       
       // Generate PDF with fallback template
       const pdf = await generate({
