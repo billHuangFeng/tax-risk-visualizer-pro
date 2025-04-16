@@ -33,11 +33,15 @@ export const useActions = (riskValue: string, riskPercentage: number) => {
         throw new Error('计算器内容未找到');
       }
       
+      // Properly type the input element before accessing its value
+      const companyNameInput = document.querySelector('input#companyName') as HTMLInputElement | null;
+      const companyName = companyNameInput?.value || '税务计算';
+      
       // Pass the full calculator data to the export function
       await exportToPDF({
         riskValue,
         riskPercentage,
-        companyName: document.querySelector('input#companyName')?.value || '税务计算',
+        companyName,
       });
       
       toast({
