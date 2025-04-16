@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Info, Plus, Trash2 } from 'lucide-react';
+import { Info, Plus, Trash2, AlertCircle } from 'lucide-react';
 import { DifferenceFactor } from '@/hooks/useVatCalculator';
 
 interface VatSummaryProps {
@@ -207,7 +207,15 @@ const VatSummary: React.FC<VatSummaryProps> = ({
             </div>
             
             <div className="flex justify-between items-center pt-2 border-t">
-              <div className="font-medium">风险评估</div>
+              <div className="font-medium flex items-center gap-2">
+                风险评估
+                <button 
+                  className="text-tax-blue hover:text-tax-light-blue"
+                  onClick={() => onInfoClick?.('riskAssessment')}
+                >
+                  <AlertCircle size={16} />
+                </button>
+              </div>
               <div className={`px-3 py-1 rounded-full font-medium ${getRiskColor()}`}>
                 {riskLevel} (风险百分比: {taxDifferencePercentage.toFixed(2)}%)
               </div>
