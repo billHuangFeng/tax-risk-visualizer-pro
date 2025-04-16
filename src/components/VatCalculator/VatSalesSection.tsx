@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { VatSalesItem, DifferenceExplanation } from '@/hooks/useVatCalculator';
+import { VatSalesItem, DifferenceExplanation as DifferenceExplanationType } from '@/hooks/useVatCalculator';
 import SalesTable from './SalesComponents/SalesTable';
 import SalesCollectionDifference from './SalesComponents/SalesCollectionDifference';
 import DifferenceExplanation from './SalesComponents/DifferenceExplanation';
@@ -18,9 +18,9 @@ interface VatSalesSectionProps {
   bankSalesAmount: number;
   setBankSalesAmount: (value: number) => void;
   onInfoClick?: (infoKey: string) => void;
-  differenceExplanations: DifferenceExplanation[];
+  differenceExplanations: DifferenceExplanationType[];
   addDifferenceExplanation: () => void;
-  updateDifferenceExplanation: (id: string, field: keyof DifferenceExplanation, value: any) => void;
+  updateDifferenceExplanation: (id: string, field: keyof DifferenceExplanationType, value: any) => void;
   removeDifferenceExplanation: (id: string) => void;
   explainedDifferenceTotal: number;
 }
