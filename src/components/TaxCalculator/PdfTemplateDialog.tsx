@@ -16,6 +16,7 @@ interface PdfTemplateDialogProps {
   onExport: (template: PdfTemplate) => void;
 }
 
+// Define the view state as a union type to ensure type safety
 type ViewState = 'select' | 'edit' | 'preview';
 
 export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({ 
@@ -24,6 +25,7 @@ export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({
   onExport 
 }) => {
   const [selectedTemplate, setSelectedTemplate] = useState<PdfTemplate>(DEFAULT_TEMPLATES[0]);
+  // Explicitly type the view state to ensure type safety
   const [view, setView] = useState<ViewState>('select');
   
   const handleSelectTemplate = (template: PdfTemplate) => {
@@ -55,7 +57,7 @@ export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({
             <div className="flex items-center justify-end space-x-2 mb-4">
               <Toggle 
                 pressed={view === 'preview'} 
-                onPressedChange={() => setView('preview' as ViewState)}
+                onPressedChange={() => setView('preview')}
                 aria-label="预览模板"
               >
                 <Eye className="h-4 w-4 mr-2" />
@@ -63,7 +65,7 @@ export const PdfTemplateDialog: React.FC<PdfTemplateDialogProps> = ({
               </Toggle>
               <Toggle 
                 pressed={view === 'edit'} 
-                onPressedChange={() => setView('edit' as ViewState)}
+                onPressedChange={() => setView('edit')}
                 aria-label="编辑模板"
               >
                 <Paintbrush className="h-4 w-4 mr-2" />
