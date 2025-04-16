@@ -209,7 +209,7 @@ const VatSummary: React.FC<VatSummaryProps> = ({
             <div className="flex justify-between items-center pt-2 border-t">
               <div className="font-medium">风险评估</div>
               <div className={`px-3 py-1 rounded-full font-medium ${getRiskColor()}`}>
-                {riskLevel} (Risk percentage: {taxDifferencePercentage.toFixed(2)}%)
+                {riskLevel} (Risk percentage: {taxDifferencePercentage.toFixed(2)})
               </div>
             </div>
           </div>
