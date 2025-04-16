@@ -19,7 +19,7 @@ interface VatPurchasesSectionProps {
   onInfoClick?: (infoKey: string) => void;
 }
 
-const VAT_RATES = ['13', '9', '6', '5', '3', '1'];
+const VAT_RATES = ['13', '10', '9', '6', '5', '3', '1'];
 
 const VatPurchasesSection: React.FC<VatPurchasesSectionProps> = ({
   purchasesData,
