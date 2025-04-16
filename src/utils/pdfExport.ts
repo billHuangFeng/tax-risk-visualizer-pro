@@ -313,34 +313,61 @@ const generateFilename = (calculator: any): string => {
   return `税务计算_${today}`;
 };
 
-// Add content to PDF document with improved safety
+// Add content to PDF document with improved safety - THIS FUNCTION FIXED
 const addContentToPDF = (pdf: jsPDF, canvas: HTMLCanvasElement, margin: number): void => {
   try {
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
     
+    // Check if canvas has valid dimensions
+    if (canvas.width <= 0 || canvas.height <= 0) {
+      console.error("Invalid canvas dimensions:", canvas.width, canvas.height);
+      throw new Error("Canvas has invalid dimensions");
+    }
+
+    // Calculate image dimensions to fit the page width
     const imgWidth = pageWidth - (2 * margin);
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
     
-    let heightLeft = imgHeight;
-    let position = margin;
+    // Add first page
+    pdf.addImage(
+      canvas.toDataURL('image/jpeg', 0.95), 
+      'JPEG', 
+      margin, 
+      margin, 
+      imgWidth, 
+      imgHeight
+    );
+    
+    // Check if content needs multiple pages
+    let heightLeft = imgHeight - (pageHeight - 2 * margin);
+    let position = 0;
     let page = 1;
     
-    // Add first page
-    pdf.addImage(canvas.toDataURL('image/jpeg', 0.95), 'JPEG', margin, position, imgWidth, imgHeight);
-    console.log(`Added page ${page} to PDF`);
-    
-    // Add new pages if needed
-    heightLeft -= (pageHeight - 2 * margin);
+    // Add additional pages if needed
     while (heightLeft > 0) {
-      position = margin - (page * (pageHeight - 2 * margin));
+      // Add a new page
       pdf.addPage();
       page++;
       
-      pdf.addImage(canvas.toDataURL('image/jpeg', 0.95), 'JPEG', margin, position, imgWidth, imgHeight);
-      console.log(`Added page ${page} to PDF`);
+      // Calculate new position (negative to move the image up)
+      position = margin - (page - 1) * (pageHeight - 2 * margin);
+      
+      // Add the image at the new position
+      pdf.addImage(
+        canvas.toDataURL('image/jpeg', 0.95), 
+        'JPEG', 
+        margin, 
+        position, 
+        imgWidth, 
+        imgHeight
+      );
+      
+      // Reduce remaining height
       heightLeft -= (pageHeight - 2 * margin);
     }
+    
+    console.log(`PDF created with ${page} pages`);
   } catch (error) {
     console.error('Error adding content to PDF:', error);
     throw error;
@@ -404,6 +431,11 @@ export const exportToPDF = async (calculator: any) => {
     try {
       // Create canvas
       const canvas = await createCanvas(clonedContent);
+      
+      // Validate canvas
+      if (canvas.width <= 0 || canvas.height <= 0) {
+        throw new Error('Canvas has invalid dimensions');
+      }
       
       // Initialize PDF
       const pdf = new jsPDF({

@@ -55,6 +55,7 @@ const CalculatorActions: React.FC<CalculatorActionsProps> = ({
           toast({
             title: "导出成功",
             description: "PDF文件已生成并下载",
+            variant: "default",
           });
         } catch (error) {
           console.error("Export error:", error);
@@ -66,18 +67,18 @@ const CalculatorActions: React.FC<CalculatorActionsProps> = ({
             variant: "destructive",
           });
         } finally {
-          // Remove PDF classes regardless of outcome
+          // Clean up classes
           const calculatorContent = document.getElementById('calculator-content');
           if (calculatorContent) {
             calculatorContent.classList.remove('for-pdf-export', 'pdf-export-container');
           }
           
-          // Reset export state after a delay
+          // Reset export state
           setTimeout(() => {
             setExporting(false);
           }, 1000);
         }
-      }, 300);
+      }, 500); // Increased timeout for better stability
     } catch (error) {
       console.error("Export initialization error:", error);
       
