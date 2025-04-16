@@ -104,10 +104,12 @@ export const useVatDifferences = () => {
 
   return {
     salesDifferenceFactors,
+    setSalesDifferenceFactors,
     addSalesDifferenceFactor,
     updateSalesDifferenceFactor,
     removeSalesDifferenceFactor,
     purchasesDifferenceFactors,
+    setPurchasesDifferenceFactors,
     addPurchasesDifferenceFactor,
     updatePurchasesDifferenceFactor,
     removePurchasesDifferenceFactor,
