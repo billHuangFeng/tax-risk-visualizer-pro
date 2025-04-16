@@ -40,7 +40,7 @@ export const applyTemplateStyles = (container: HTMLElement, template: PdfTemplat
     // 应用表格样式
     const tables = container.querySelectorAll('table');
     tables.forEach(table => {
-      if (table instanceof HTMLElement) {
+      if (table instanceof HTMLTableElement) {
         table.style.borderCollapse = 'collapse';
         table.style.width = '100%';
         table.style.marginBottom = styles.layout.sectionSpacing;
@@ -48,13 +48,12 @@ export const applyTemplateStyles = (container: HTMLElement, template: PdfTemplat
         // 应用表头样式
         const headerCells = table.querySelectorAll('th');
         headerCells.forEach(cell => {
-          if (cell instanceof HTMLElement) {
-            cell.style.backgroundColor = '#ffffff'; // 白色背景
+          if (cell instanceof HTMLTableCellElement) {
+            cell.style.backgroundColor = '#ffffff';
             cell.style.padding = styles.tableStyle.cellPadding;
             cell.style.border = `1px solid ${styles.tableStyle.borderColor}`;
             cell.style.fontWeight = 'normal';
             
-            // 第一列左对齐，最后一列右对齐
             if (cell === headerCells[0]) {
               cell.style.textAlign = 'left';
             } else {
@@ -65,20 +64,19 @@ export const applyTemplateStyles = (container: HTMLElement, template: PdfTemplat
         
         // 应用单元格样式
         const cells = table.querySelectorAll('td');
-        cells.forEach((cell, index) => {
-          if (cell instanceof HTMLElement) {
+        cells.forEach(cell => {
+          if (cell instanceof HTMLTableCellElement) {
             cell.style.padding = styles.tableStyle.cellPadding;
             cell.style.border = `1px solid ${styles.tableStyle.borderColor}`;
             
-            // 第一列左对齐，其他列右对齐
             const row = cell.parentElement;
-            if (row) {
+            if (row instanceof HTMLTableRowElement) {
               const isFirstCell = Array.from(row.cells).indexOf(cell) === 0;
               cell.style.textAlign = isFirstCell ? 'left' : 'right';
               
-              // 最后一行加粗
               const tbody = row.parentElement;
-              if (tbody && Array.from(tbody.rows).indexOf(row) === tbody.rows.length - 1) {
+              if (tbody instanceof HTMLTableSectionElement && 
+                  Array.from(tbody.rows).indexOf(row) === tbody.rows.length - 1) {
                 cell.style.fontWeight = 'bold';
               }
             }

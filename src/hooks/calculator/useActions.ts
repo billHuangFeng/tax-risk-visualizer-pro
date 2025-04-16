@@ -1,11 +1,10 @@
+
 import { useCallback, useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { exportToPDF } from '@/utils/pdf';
-import { PdfTemplate } from '@/types/pdfTemplates';
 
 export const useActions = (riskValue: string, riskPercentage: number) => {
   const { toast } = useToast();
-  const [isEditingTemplate, setIsEditingTemplate] = useState(false);
 
   const getRiskLevel = (percentage: number) => {
     if (percentage < 30) return '低风险';
@@ -21,7 +20,7 @@ export const useActions = (riskValue: string, riskPercentage: number) => {
     });
   }, [toast]);
 
-  const handleExport = useCallback(async (template?: PdfTemplate) => {
+  const handleExport = useCallback(async () => {
     try {
       // 确保计算器内容存在
       const calculatorContent = document.getElementById('calculator-content');
@@ -29,12 +28,8 @@ export const useActions = (riskValue: string, riskPercentage: number) => {
         throw new Error('计算器内容未找到');
       }
       
-      // 等一下确保所有DOM更新都已处理
+      // 等待DOM更新
       await new Promise(resolve => setTimeout(resolve, 200));
-      
-      // 定义导出数据
-      const companyNameInput = document.querySelector('input#companyName') as HTMLInputElement | null;
-      const companyName = companyNameInput?.value || '税务计算';
       
       // 收集用于PDF的所有输入值
       const collectFormData = () => {
@@ -50,13 +45,11 @@ export const useActions = (riskValue: string, riskPercentage: number) => {
         return data;
       };
       
-      // 使用导出到PDF函数 - fix: only pass one argument now
+      // 使用导出到PDF函数
       await exportToPDF({
         riskValue,
         riskPercentage,
-        companyName,
-        ...collectFormData(),
-        template: template || (window as any).currentPdfTemplate
+        ...collectFormData()
       });
       
       return true;
@@ -66,14 +59,8 @@ export const useActions = (riskValue: string, riskPercentage: number) => {
     }
   }, [riskValue, riskPercentage]);
 
-  const toggleTemplateEditor = useCallback(() => {
-    setIsEditingTemplate(prev => !prev);
-  }, []);
-
   return {
     handleReset,
-    handleExport,
-    isEditingTemplate,
-    toggleTemplateEditor,
+    handleExport
   };
 };
