@@ -11,7 +11,7 @@ export const loadReportBroLibraries = (): Promise<void> => {
       // 加载ReportBro样式
       const reportBroStyle = document.createElement('link');
       reportBroStyle.rel = 'stylesheet';
-      reportBroStyle.href = 'https://cdn.jsdelivr.net/npm/reportbro-designer@3.0.0/dist/reportbro.css';
+      reportBroStyle.href = 'https://unpkg.com/reportbro-designer@2.0.3/dist/reportbro.css';
       document.head.appendChild(reportBroStyle);
 
       // 加载jQuery (ReportBro依赖)
@@ -21,28 +21,51 @@ export const loadReportBroLibraries = (): Promise<void> => {
       jqueryScript.onload = () => {
         console.log("jQuery loaded successfully");
         
-        // 加载ReportBro库 - 使用旧版本可能更稳定
+        // 加载ReportBro库 - 使用unpkg作为备用CDN
         const reportBroScript = document.createElement('script');
-        reportBroScript.src = 'https://cdn.jsdelivr.net/npm/reportbro-lib@2.0.3/dist/reportbro.min.js';
+        reportBroScript.src = 'https://unpkg.com/reportbro-lib@2.0.3/dist/reportbro.min.js';
+        reportBroScript.crossOrigin = 'anonymous';
         
         reportBroScript.onload = () => {
           console.log("ReportBro library loaded successfully");
           
           // 加载ReportBro Designer
           const designerScript = document.createElement('script');
-          designerScript.src = 'https://cdn.jsdelivr.net/npm/reportbro-designer@2.0.3/dist/reportbro-designer.min.js';
+          designerScript.src = 'https://unpkg.com/reportbro-designer@2.0.3/dist/reportbro-designer.min.js';
+          designerScript.crossOrigin = 'anonymous';
           
           designerScript.onload = () => {
             console.log("ReportBro Designer loaded successfully");
             // 确保所有脚本都已完全加载
             setTimeout(() => {
-              resolve();
+              // 验证ReportBro是否正确加载
+              if (window.ReportBro && window.ReportBroDesigner) {
+                console.log("All ReportBro components verified");
+                resolve();
+              } else {
+                reject(new Error('ReportBro组件加载不完整'));
+              }
             }, 500);
           };
           
           designerScript.onerror = (err) => {
             console.error("Failed to load ReportBro Designer", err);
-            reject(new Error('无法加载 ReportBro 设计器'));
+            
+            // 尝试第二个CDN源
+            const fallbackScript = document.createElement('script');
+            fallbackScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/reportbro-designer/2.0.3/reportbro-designer.min.js';
+            fallbackScript.crossOrigin = 'anonymous';
+            
+            fallbackScript.onload = () => {
+              console.log("ReportBro Designer loaded from fallback CDN");
+              setTimeout(() => resolve(), 500);
+            };
+            
+            fallbackScript.onerror = () => {
+              reject(new Error('无法加载 ReportBro 设计器'));
+            };
+            
+            document.head.appendChild(fallbackScript);
           };
           
           document.head.appendChild(designerScript);
@@ -50,7 +73,36 @@ export const loadReportBroLibraries = (): Promise<void> => {
         
         reportBroScript.onerror = (err) => {
           console.error("Failed to load ReportBro Lib", err);
-          reject(new Error('无法加载 ReportBro 库'));
+          
+          // 尝试第二个CDN源
+          const fallbackScript = document.createElement('script');
+          fallbackScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/reportbro/2.0.3/reportbro.min.js';
+          fallbackScript.crossOrigin = 'anonymous';
+          
+          fallbackScript.onload = () => {
+            console.log("ReportBro library loaded from fallback CDN");
+            
+            // 继续加载设计器
+            const designerScript = document.createElement('script');
+            designerScript.src = 'https://unpkg.com/reportbro-designer@2.0.3/dist/reportbro-designer.min.js';
+            
+            designerScript.onload = () => {
+              console.log("ReportBro Designer loaded successfully");
+              setTimeout(() => resolve(), 500);
+            };
+            
+            designerScript.onerror = () => {
+              reject(new Error('无法加载 ReportBro 设计器'));
+            };
+            
+            document.head.appendChild(designerScript);
+          };
+          
+          fallbackScript.onerror = () => {
+            reject(new Error('无法加载 ReportBro 库'));
+          };
+          
+          document.head.appendChild(fallbackScript);
         };
         
         document.head.appendChild(reportBroScript);
