@@ -1,174 +1,138 @@
-import { PdfTemplate, PdfSection, PdfField } from "@/types/pdfTemplates";
-import { DEFAULT_TEMPLATES } from "@/constants/pdfTemplates";
 
-// 根据模板ID获取模板
-export const getTemplateById = (templateId: string): PdfTemplate => {
-  const template = DEFAULT_TEMPLATES.find(t => t.id === templateId);
-  return template || DEFAULT_TEMPLATES[0]; // 如果找不到，返回默认模板
+/**
+ * 创建与参考图片完全一致的PDF模板
+ */
+export const createPdfTemplate = (data: any): string => {
+  const today = new Date();
+  const dateStr = `${today.getFullYear()}年${today.getMonth() + 1}月${today.getDate()}日`;
+  const companyName = data.companyName || '测试科技有限公司';
+  
+  return `
+    <div style="font-family: SimSun, serif; color: #000; width: 100%; max-width: 210mm;">
+      <!-- 页眉 -->
+      <div style="text-align: center; margin-bottom: 20px;">
+        <h1 style="font-size: 18px; font-weight: normal; margin: 0;">${companyName}</h1>
+        <p style="font-size: 14px; margin: 5px 0;">税务计算报告 - ${dateStr}</p>
+      </div>
+      
+      <!-- 分隔线 -->
+      <div style="height: 1px; background-color: #000; margin-bottom: 30px;"></div>
+      
+      <!-- 使用说明框 -->
+      <div style="border: 1px solid #000; border-radius: 5px; padding: 20px; margin-bottom: 30px; text-align: center;">
+        <div style="display: inline-block; border: 1px solid #000; border-radius: 50%; width: 20px; height: 20px; line-height: 20px; margin-bottom: 10px;">i</div>
+        <div style="margin-bottom: 5px; font-weight: bold;">使用说明</div>
+        <div style="font-size: 14px; text-align: center;">
+          本计算器用于评估企业所得税的潜在风险，数据仅供参考，请根据实际情况谨慎使用
+        </div>
+      </div>
+      
+      <!-- 基本信息部分 -->
+      <div style="margin-bottom: 30px;">
+        <div style="display: flex; align-items: center; margin-bottom: 10px;">
+          <div style="width: 3px; height: 16px; background-color: #000; margin-right: 5px;"></div>
+          <div style="font-size: 16px; font-weight: bold;">基本信息</div>
+        </div>
+        <div style="height: 1px; background-color: #000; margin-bottom: 20px;"></div>
+        
+        <!-- 企业名称 -->
+        <div style="margin-bottom: 15px;">
+          <div style="margin-bottom: 5px;">企业名称：</div>
+          <div style="border: 1px solid #000; padding: 8px; margin-bottom: 5px;">${companyName}</div>
+        </div>
+        
+        <!-- 是否享受研发费加计扣除 -->
+        <div style="display: flex; align-items: flex-start; margin-bottom: 15px;">
+          <div style="min-width: 20px; height: 20px; border: 1px solid #000; margin-right: 8px; ${data.exemptBusiness === true ? 'position: relative;' : ''}">
+            ${data.exemptBusiness === true ? '<span style="position: absolute; top: -3px; left: 3px;">✓</span>' : ''}
+          </div>
+          <div style="flex: 1;">
+            是否享受研发费加计扣除优惠政策的企业？
+            <div style="text-align: right; padding-right: 20px;">
+              以下企业不能享受受研发费加计扣除政策：1. 烟草制造业、2. 住宿和餐饮业、3. 批发和零售业、4. 房地产业、5. 租赁和商务服务业、6. 娱乐业
+            </div>
+          </div>
+        </div>
+        
+        <!-- 是否享受15%企业所得税优惠 -->
+        <div style="display: flex; align-items: flex-start; margin-bottom: 15px;">
+          <div style="min-width: 20px; height: 20px; border: 1px solid #000; margin-right: 8px; ${data.isHighTechEnterprise === true ? 'position: relative;' : ''}">
+            ${data.isHighTechEnterprise === true ? '<span style="position: absolute; top: -3px; left: 3px;">✓</span>' : ''}
+          </div>
+          <div style="flex: 1;">
+            是否享受15%企业所得税优惠的高新技术企业或其他企业？
+          </div>
+        </div>
+        
+        <!-- 资产总额 -->
+        <div style="display: flex; margin-bottom: 15px;">
+          <div style="flex: 1;">资产总额：</div>
+          <div style="flex: 1; text-align: right;">
+            <div style="border: 1px solid #000; padding: 8px; display: inline-block; min-width: 150px; text-align: right;">
+              ${formatNumber(data.totalAssets) || '2000'}
+            </div>
+            <span style="margin-left: 5px;">万元</span>
+          </div>
+        </div>
+        
+        <!-- 员工人数 -->
+        <div style="display: flex; margin-bottom: 15px;">
+          <div style="flex: 1;">发薪资、劳务费的员工人数：</div>
+          <div style="flex: 1; text-align: right;">
+            <div style="border: 1px solid #000; padding: 8px; display: inline-block; min-width: 150px; text-align: right;">
+              ${formatNumber(data.employeeCount) || '25'}
+            </div>
+            <span style="margin-left: 5px;">人</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 销售收入部分 -->
+      <div style="margin-bottom: 30px;">
+        <div style="display: flex; align-items: center; margin-bottom: 10px;">
+          <div style="width: 3px; height: 16px; background-color: #000; margin-right: 5px;"></div>
+          <div style="font-size: 16px; font-weight: bold;">销售收入</div>
+        </div>
+        <div style="height: 1px; background-color: #000; margin-bottom: 20px;"></div>
+        
+        <!-- 销售收入（不含增值税） -->
+        <div style="display: flex; margin-bottom: 15px;">
+          <div style="flex: 1;">
+            销售收入<br>
+            <span style="font-size: 12px;">(不含增值税)</span>
+          </div>
+          <div style="flex: 1; text-align: right;">
+            <table style="border-collapse: collapse; width: 200px; float: right;">
+              <tr>
+                <td style="border: 1px solid #000; padding: 8px; text-align: right;"></td>
+                <td style="border: 1px solid #000; padding: 8px; text-align: right; width: 100px;">
+                  ${formatNumber(data.totalRevenue) || '1000'}
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
 };
 
-// 应用模板样式到DOM元素
-export const applyTemplateStyles = (container: HTMLElement, template: PdfTemplate) => {
-  const { styles, layout } = template;
+// 格式化数字为千分位显示
+const formatNumber = (value: any): string => {
+  if (!value) return '';
   
   try {
-    // 应用全局样式
-    container.style.fontFamily = styles.fontFamily;
-    container.style.padding = styles.layout.pageMargin;
+    const num = typeof value === 'string' ? parseFloat(value) : value;
     
-    // 应用标题样式 - 改为与预览一致的样式
-    const headings = container.querySelectorAll('h1, h2, h3, h4, h5, h6');
-    headings.forEach(heading => {
-      if (heading instanceof HTMLElement) {
-        // 对于h1（公司名称标题），应用居中样式
-        if (heading.tagName === 'H1') {
-          heading.style.fontSize = '20px';
-          heading.style.fontWeight = 'normal';
-          heading.style.textAlign = 'center';
-          heading.style.marginBottom = '8px';
-        } else {
-          // 对于其他标题（如h2）
-          heading.style.fontSize = styles.headingStyle.fontSize;
-          heading.style.fontWeight = 'normal';
-          heading.style.color = styles.headingStyle.color;
-          heading.style.marginBottom = '16px';
-          heading.style.paddingBottom = '2px';
-        }
-      }
+    if (isNaN(num)) return '';
+    
+    // 固定两位小数并格式化为千分位
+    return num.toLocaleString('zh-CN', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
     });
-    
-    // 应用表格样式
-    const tables = container.querySelectorAll('table');
-    tables.forEach(table => {
-      if (table instanceof HTMLTableElement) {
-        table.style.borderCollapse = 'collapse';
-        table.style.width = '100%';
-        table.style.marginBottom = styles.layout.sectionSpacing;
-        
-        // 应用表头样式
-        const headerCells = table.querySelectorAll('th');
-        headerCells.forEach(cell => {
-          if (cell instanceof HTMLTableCellElement) {
-            cell.style.backgroundColor = '#ffffff';
-            cell.style.padding = styles.tableStyle.cellPadding;
-            cell.style.border = `1px solid ${styles.tableStyle.borderColor}`;
-            cell.style.fontWeight = 'normal';
-            
-            if (cell === headerCells[0]) {
-              cell.style.textAlign = 'left';
-            } else {
-              cell.style.textAlign = 'right';
-            }
-          }
-        });
-        
-        // 应用单元格样式
-        const cells = table.querySelectorAll('td');
-        cells.forEach(cell => {
-          if (cell instanceof HTMLTableCellElement) {
-            cell.style.padding = styles.tableStyle.cellPadding;
-            cell.style.border = `1px solid ${styles.tableStyle.borderColor}`;
-            
-            const row = cell.parentElement;
-            if (row instanceof HTMLTableRowElement) {
-              const isFirstCell = Array.from(row.cells).indexOf(cell) === 0;
-              cell.style.textAlign = isFirstCell ? 'left' : 'right';
-              
-              const tbody = row.parentElement;
-              if (tbody instanceof HTMLTableSectionElement && 
-                  Array.from(tbody.rows).indexOf(row) === tbody.rows.length - 1) {
-                cell.style.fontWeight = 'bold';
-              }
-            }
-          }
-        });
-      }
-    });
-    
-    // 应用表单字段样式
-    const valueFields = container.querySelectorAll('.pdf-value, [class*="border"]');
-    valueFields.forEach(field => {
-      if (field instanceof HTMLElement) {
-        field.style.border = `1px solid #000`;
-        field.style.padding = '4px 8px';
-      }
-    });
-    
-    // 适用复选框的正确样式
-    const checkboxes = container.querySelectorAll('[role="checkbox"]');
-    checkboxes.forEach(checkbox => {
-      if (checkbox instanceof HTMLElement) {
-        checkbox.style.display = 'inline-block';
-        checkbox.style.width = '14px';
-        checkbox.style.height = '14px';
-        checkbox.style.border = '1px solid #000';
-        checkbox.style.position = 'relative';
-        
-        // 添加勾选标记
-        if (checkbox.getAttribute('data-state') === 'checked') {
-          if (!checkbox.querySelector('.checkmark')) {
-            const checkmark = document.createElement('span');
-            checkmark.className = 'checkmark';
-            checkmark.textContent = '✓';
-            checkmark.style.position = 'absolute';
-            checkmark.style.top = '-3px';
-            checkmark.style.left = '1px';
-            checkmark.style.fontSize = '14px';
-            checkbox.appendChild(checkmark);
-          }
-        }
-      }
-    });
-    
-    // 应用模板布局 - 隐藏不可见部分和字段
-    applyLayoutVisibility(container, layout.sections);
-    
-    console.log("Template styles applied successfully");
-  } catch (error) {
-    console.error("Error applying template styles:", error);
-  }
-};
-
-// 应用布局可见性设置
-const applyLayoutVisibility = (container: HTMLElement, sections: PdfSection[]) => {
-  try {
-    // 处理节区可见性
-    sections.forEach(section => {
-      const sectionElement = container.querySelector(`[data-section="${section.id}"], [data-section-type="${section.type}"]`);
-      if (sectionElement instanceof HTMLElement) {
-        sectionElement.style.display = section.visible ? 'block' : 'none';
-        
-        // 处理字段可见性
-        if (section.fields) {
-          section.fields.forEach(field => {
-            const fieldSelector = `[data-field="${field.sourceField}"], [data-field-id="${field.id}"]`;
-            const fieldElement = sectionElement.querySelector(fieldSelector);
-            
-            if (fieldElement instanceof HTMLElement) {
-              fieldElement.style.display = field.visible ? '' : 'none';
-              
-              // 应用字段样式（如果有）
-              if (field.style) {
-                if (field.style.fontWeight) fieldElement.style.fontWeight = field.style.fontWeight;
-                if (field.style.color) fieldElement.style.color = field.style.color;
-                if (field.style.alignment) fieldElement.style.textAlign = field.style.alignment;
-              }
-              
-              // 应用前缀和后缀（如果有）
-              if (field.type === 'number' || field.type === 'text') {
-                const textContent = fieldElement.textContent || '';
-                
-                if (field.prefix || field.suffix) {
-                  const value = textContent.replace(field.prefix || '', '').replace(field.suffix || '', '');
-                  fieldElement.textContent = `${field.prefix || ''}${value}${field.suffix || ''}`;
-                }
-              }
-            }
-          });
-        }
-      }
-    });
-  } catch (error) {
-    console.error("Error applying layout visibility:", error);
+  } catch (e) {
+    console.error('Number formatting error:', e);
+    return value?.toString() || '';
   }
 };

@@ -1,5 +1,5 @@
 
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { exportToPDF } from '@/utils/pdf';
 
@@ -22,42 +22,60 @@ export const useActions = (riskValue: string, riskPercentage: number) => {
 
   const handleExport = useCallback(async () => {
     try {
-      // 确保计算器内容存在
-      const calculatorContent = document.getElementById('calculator-content');
-      if (!calculatorContent) {
-        throw new Error('计算器内容未找到');
-      }
-      
-      // 等待DOM更新
-      await new Promise(resolve => setTimeout(resolve, 200));
+      toast({
+        title: "准备导出PDF",
+        description: "正在处理数据...",
+      });
       
       // 收集用于PDF的所有输入值
       const collectFormData = () => {
-        const data: Record<string, string> = {};
-        const inputs = document.querySelectorAll('input') as NodeListOf<HTMLInputElement>;
+        const data: Record<string, any> = {};
         
+        // 获取所有输入字段
+        const inputs = document.querySelectorAll('input') as NodeListOf<HTMLInputElement>;
         inputs.forEach(input => {
           if (input.id) {
-            data[input.id] = input.value || '';
+            if (input.type === 'checkbox' || input.getAttribute('role') === 'checkbox') {
+              data[input.id] = input.checked || input.getAttribute('data-state') === 'checked';
+            } else {
+              data[input.id] = input.value || '';
+            }
           }
         });
+        
+        // 获取特定数据
+        data.riskValue = riskValue;
+        data.riskPercentage = riskPercentage;
+        data.riskLevel = getRiskLevel(riskPercentage);
         
         return data;
       };
       
-      // 使用导出到PDF函数
-      await exportToPDF({
-        riskValue,
-        riskPercentage,
-        ...collectFormData()
+      const formData = collectFormData();
+      console.log("收集的表单数据:", formData);
+      
+      // 导出PDF
+      await exportToPDF(formData);
+      
+      toast({
+        title: "PDF导出成功",
+        description: "文件已保存到您的下载文件夹",
+        variant: "default",
       });
       
       return true;
     } catch (error) {
       console.error("PDF export error:", error);
+      
+      toast({
+        title: "PDF导出失败",
+        description: error instanceof Error ? error.message : "未知错误",
+        variant: "destructive",
+      });
+      
       throw error;
     }
-  }, [riskValue, riskPercentage]);
+  }, [riskValue, riskPercentage, toast]);
 
   return {
     handleReset,

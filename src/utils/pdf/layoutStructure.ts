@@ -3,93 +3,156 @@
 
 export const enhanceLayoutStructure = (container: HTMLElement) => {
   try {
-    // 处理基本信息部分
-    const basicInfoSection = container.querySelector('h2:contains("基本信息")');
-    if (basicInfoSection instanceof HTMLElement) {
-      basicInfoSection.style.fontSize = '16px';
-      basicInfoSection.style.fontWeight = 'bold';
-      basicInfoSection.style.marginBottom = '16px';
+    // 处理标题和页眉
+    const companyHeader = container.querySelector('.company-header');
+    if (companyHeader instanceof HTMLElement) {
+      companyHeader.style.textAlign = 'center';
+      companyHeader.style.marginBottom = '20px';
+      
+      const headerH1 = companyHeader.querySelector('h1');
+      if (headerH1 instanceof HTMLElement) {
+        headerH1.style.fontSize = '18px';
+        headerH1.style.fontWeight = 'normal';
+        headerH1.style.margin = '0';
+      }
+      
+      const headerSubtitle = companyHeader.querySelector('div:not(h1)');
+      if (headerSubtitle instanceof HTMLElement) {
+        headerSubtitle.style.fontSize = '14px';
+        headerSubtitle.style.margin = '5px 0';
+      }
     }
     
-    // 处理复选框和说明文字
-    const checkboxes = container.querySelectorAll('[role="checkbox"]');
-    checkboxes.forEach((checkbox) => {
-      if (checkbox instanceof HTMLElement) {
-        const parentLabel = checkbox.closest('label');
-        if (parentLabel) {
-          // 设置复选框容器样式
-          parentLabel.style.display = 'flex';
-          parentLabel.style.alignItems = 'center';
-          parentLabel.style.gap = '8px';
-          parentLabel.style.marginBottom = '8px';
-          
-          // 为免受要求企业类型添加缩进说明
-          if (checkbox.id === 'exemptBusiness') {
-            const description = document.createElement('div');
-            description.textContent = '以下企业不能享受：1.烟草制造业、2.住宿和餐饮业、3.批发和零售业、4.房地产业、5.租赁和商务服务业、6.娱乐业';
-            description.style.marginLeft = '24px';
-            description.style.fontSize = '14px';
-            description.style.color = '#666';
-            description.style.marginTop = '4px';
-            parentLabel.after(description);
-          }
+    // 处理使用说明框
+    const instructionBox = container.querySelector('.instruction-box');
+    if (instructionBox instanceof HTMLElement) {
+      instructionBox.style.border = '1px solid #000';
+      instructionBox.style.borderRadius = '5px';
+      instructionBox.style.padding = '20px';
+      instructionBox.style.marginBottom = '30px';
+      instructionBox.style.textAlign = 'center';
+      
+      const icon = instructionBox.querySelector('.info-icon');
+      if (icon instanceof HTMLElement) {
+        icon.style.display = 'inline-block';
+        icon.style.border = '1px solid #000';
+        icon.style.borderRadius = '50%';
+        icon.style.width = '20px';
+        icon.style.height = '20px';
+        icon.style.lineHeight = '20px';
+        icon.style.marginBottom = '10px';
+        icon.style.textAlign = 'center';
+      }
+    }
+    
+    // 处理基本信息标题
+    const basicInfoTitle = container.querySelector('.section-title.basic-info');
+    if (basicInfoTitle instanceof HTMLElement) {
+      basicInfoTitle.style.display = 'flex';
+      basicInfoTitle.style.alignItems = 'center';
+      basicInfoTitle.style.marginBottom = '10px';
+      
+      const titleBar = basicInfoTitle.querySelector('.title-bar');
+      if (titleBar instanceof HTMLElement) {
+        titleBar.style.width = '3px';
+        titleBar.style.height = '16px';
+        titleBar.style.backgroundColor = '#000';
+        titleBar.style.marginRight = '5px';
+      }
+      
+      const titleText = basicInfoTitle.querySelector('.title-text');
+      if (titleText instanceof HTMLElement) {
+        titleText.style.fontSize = '16px';
+        titleText.style.fontWeight = 'bold';
+      }
+    }
+    
+    // 处理分隔线
+    const separators = container.querySelectorAll('.separator');
+    separators.forEach(separator => {
+      if (separator instanceof HTMLElement) {
+        separator.style.height = '1px';
+        separator.style.backgroundColor = '#000';
+        separator.style.marginBottom = '20px';
+      }
+    });
+    
+    // 处理表单字段
+    const formFields = container.querySelectorAll('.form-field');
+    formFields.forEach(field => {
+      if (field instanceof HTMLElement) {
+        field.style.marginBottom = '15px';
+        
+        const label = field.querySelector('.field-label');
+        if (label instanceof HTMLElement) {
+          label.style.marginBottom = '5px';
+        }
+        
+        const input = field.querySelector('.field-input');
+        if (input instanceof HTMLElement) {
+          input.style.border = '1px solid #000';
+          input.style.padding = '8px';
+          input.style.width = '100%';
+          input.style.boxSizing = 'border-box';
         }
       }
     });
     
-    // 处理表格布局
+    // 处理复选框
+    const checkboxes = container.querySelectorAll('.checkbox-container');
+    checkboxes.forEach(checkbox => {
+      if (checkbox instanceof HTMLElement) {
+        checkbox.style.display = 'flex';
+        checkbox.style.alignItems = 'flex-start';
+        checkbox.style.marginBottom = '15px';
+        
+        const box = checkbox.querySelector('.checkbox');
+        if (box instanceof HTMLElement) {
+          box.style.minWidth = '20px';
+          box.style.height = '20px';
+          box.style.border = '1px solid #000';
+          box.style.marginRight = '8px';
+          
+          if (box.classList.contains('checked')) {
+            box.style.position = 'relative';
+            
+            const checkmark = box.querySelector('.checkmark');
+            if (!checkmark) {
+              const mark = document.createElement('span');
+              mark.className = 'checkmark';
+              mark.style.position = 'absolute';
+              mark.style.top = '-3px';
+              mark.style.left = '3px';
+              mark.textContent = '✓';
+              box.appendChild(mark);
+            }
+          }
+        }
+        
+        const label = checkbox.querySelector('.checkbox-label');
+        if (label instanceof HTMLElement) {
+          label.style.flex = '1';
+        }
+      }
+    });
+    
+    // 处理表格
     const tables = container.querySelectorAll('table');
     tables.forEach(table => {
       if (table instanceof HTMLElement) {
-        table.style.width = '100%';
         table.style.borderCollapse = 'collapse';
-        table.style.marginTop = '16px';
+        table.style.width = '100%';
         
-        // 处理表格标题对齐
-        const headers = table.querySelectorAll('th');
-        headers.forEach(header => {
-          if (header instanceof HTMLElement) {
-            header.style.textAlign = 'left';
-            header.style.padding = '8px';
-            header.style.borderBottom = '1px solid #000';
-          }
-        });
-        
-        // 处理表格单元格
-        const cells = table.querySelectorAll('td');
+        const cells = table.querySelectorAll('td, th');
         cells.forEach(cell => {
           if (cell instanceof HTMLElement) {
+            cell.style.border = '1px solid #000';
             cell.style.padding = '8px';
-            cell.style.borderBottom = '1px solid #ccc';
-            
-            // 数值单元格右对齐
-            if (cell.textContent?.includes('万元') || !isNaN(Number(cell.textContent))) {
-              cell.style.textAlign = 'right';
-            }
+            cell.style.textAlign = 'right';
           }
         });
       }
     });
-    
-    // 处理"其中："标签的样式
-    const subHeaders = container.querySelectorAll('.subheader');
-    subHeaders.forEach(header => {
-      if (header instanceof HTMLElement) {
-        header.style.marginLeft = '2em';
-        header.style.marginTop = '8px';
-        header.style.marginBottom = '8px';
-      }
-    });
-    
-    // 处理风险提示框
-    const riskBox = container.querySelector('.risk-box');
-    if (riskBox instanceof HTMLElement) {
-      riskBox.style.border = '1px solid #000';
-      riskBox.style.padding = '16px';
-      riskBox.style.marginTop = '16px';
-      riskBox.style.minHeight = '100px';
-    }
-    
   } catch (error) {
     console.error('Error in enhanceLayoutStructure:', error);
   }
