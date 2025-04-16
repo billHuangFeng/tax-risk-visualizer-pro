@@ -10,7 +10,7 @@ interface CalculatorHeaderProps {
 
 const CalculatorHeader: React.FC<CalculatorHeaderProps> = ({ 
   title = "企业所得税风险评测计算器",
-  description = "评估企业所得税风险，优化税务决策"
+  description = "本计算器用于评估企业所得税的潜在风险，数据仅供参考，请根据实际情况谨慎使用"
 }) => {
   const isMobile = useIsMobile();
 
