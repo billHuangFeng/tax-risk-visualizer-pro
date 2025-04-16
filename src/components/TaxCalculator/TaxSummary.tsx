@@ -104,7 +104,16 @@ const TaxSummary: React.FC<TaxSummaryProps> = ({
           addTaxDifferenceFactor={addTaxDifferenceFactor}
           updateTaxDifferenceFactor={updateTaxDifferenceFactor}
           removeTaxDifferenceFactor={removeTaxDifferenceFactor}
-          onInfoClick={onInfoClick}
+          onInfoClick={(infoKey) => {
+            if (infoKey === 'taxDifferenceFactors') {
+              onInfoClick?.('taxDifferenceFactors', {
+                title: '差异原因分析',
+                description: '差异原因分析是对企业所得税理论税额与实际申报税额之间的差异进行详细解释和分类。',
+                analysis: '通过差异原因分析，可以：\n1. 识别税额差异的具体来源\n2. 评估税收筹划的合理性\n3. 降低税务风险',
+                risk: '详细准确地记录差异原因是降低税务审计风险的关键。不同的差异原因可能带来不同程度的税务风险。'
+              });
+            }
+          }}
         />
         
         <div className="pt-4 border-t">
@@ -116,7 +125,12 @@ const TaxSummary: React.FC<TaxSummaryProps> = ({
                   <TooltipTrigger asChild>
                     <button 
                       className="ml-2 text-tax-blue hover:text-tax-light-blue"
-                      onClick={() => onInfoClick?.('unexplainedDifference')}
+                      onClick={() => onInfoClick?.('unexplainedDifference', {
+                        title: '未解释差异',
+                        description: '未解释差异是指企业所得税中，扣除已知差异因素后的剩余税额差异金额。',
+                        analysis: '未解释差异反映了企业财务和税务申报中可能存在的未说明变动：\n1. 差异金额越大，潜在税务风险越高\n2. 百分比是衡量税务风险的关键指标\n3. 超过30%需要高度重视',
+                        risk: '未解释差异可能意味着：\n1. 可能存在未披露的收入或成本\n2. 税务筹划存在潜在问题\n3. 需要进一步调查和解释财务变动'
+                      })}
                     >
                       <AlertCircle size={16} />
                     </button>
