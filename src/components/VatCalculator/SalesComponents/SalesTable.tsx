@@ -50,29 +50,29 @@ const SalesTable: React.FC<SalesTableProps> = ({
       </TableHeader>
       <TableBody>
         {salesData.map((item) => (
-          <TableRow key={item.id}>
-            <TableCell>
+          <TableRow key={item.id} className="h-10 py-0">
+            <TableCell className="py-1">
               <Input
                 value={item.productName}
                 onChange={(e) => updateSalesItem(item.id, 'productName', e.target.value)}
-                className="w-full"
+                className="w-full h-8"
               />
             </TableCell>
-            <TableCell className="text-right">
+            <TableCell className="text-right py-1">
               <Input
                 type="number"
                 value={item.salesAmount}
                 onChange={(e) => updateSalesItem(item.id, 'salesAmount', parseFloat(e.target.value) || 0)}
-                className="text-right w-full"
+                className="text-right w-full h-8"
               />
             </TableCell>
-            <TableCell className="text-right">
+            <TableCell className="text-right py-1">
               <div className="flex items-center justify-end gap-2">
                 <Select
                   value={item.vatRate.toString()}
                   onValueChange={(value) => updateSalesItem(item.id, 'vatRate', parseFloat(value))}
                 >
-                  <SelectTrigger className="w-20">
+                  <SelectTrigger className="w-20 h-8">
                     <SelectValue placeholder="税率" />
                   </SelectTrigger>
                   <SelectContent>
@@ -84,15 +84,16 @@ const SalesTable: React.FC<SalesTableProps> = ({
                 <span>%</span>
               </div>
             </TableCell>
-            <TableCell className="text-right font-medium">
+            <TableCell className="text-right font-medium py-1">
               {item.outputTax.toFixed(2)}
             </TableCell>
-            <TableCell>
+            <TableCell className="py-1">
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => removeSalesItem(item.id)}
                 disabled={salesData.length <= 1}
+                className="h-8 w-8"
               >
                 <Trash2 className="h-4 w-4 text-gray-500" />
               </Button>
@@ -101,12 +102,12 @@ const SalesTable: React.FC<SalesTableProps> = ({
         ))}
         
         <TableRow>
-          <TableCell colSpan={5}>
+          <TableCell colSpan={5} className="py-1">
             <Button
               variant="outline"
               size="sm"
               onClick={addSalesItem}
-              className="w-full"
+              className="w-full h-8"
             >
               <Plus className="h-4 w-4 mr-2" />
               添加产品类别
@@ -115,11 +116,11 @@ const SalesTable: React.FC<SalesTableProps> = ({
         </TableRow>
         
         <TableRow className="bg-gray-50 font-bold">
-          <TableCell>合计</TableCell>
-          <TableCell className="text-right">{salesTotal.amount.toFixed(2)}</TableCell>
-          <TableCell></TableCell>
-          <TableCell className="text-right">{salesTotal.tax.toFixed(2)}</TableCell>
-          <TableCell></TableCell>
+          <TableCell className="py-1">合计</TableCell>
+          <TableCell className="text-right py-1">{salesTotal.amount.toFixed(2)}</TableCell>
+          <TableCell className="py-1"></TableCell>
+          <TableCell className="text-right py-1">{salesTotal.tax.toFixed(2)}</TableCell>
+          <TableCell className="py-1"></TableCell>
         </TableRow>
       </TableBody>
     </Table>
