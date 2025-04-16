@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { CircleAlert, ListMinus } from 'lucide-react';
@@ -36,44 +37,48 @@ const TopSection: React.FC<TopSectionProps> = ({
         <div className="flex items-center gap-4">
           <Label htmlFor="companyName" className="font-medium text-base whitespace-nowrap min-w-[6rem]">企业名称：</Label>
           <div className="flex-1">
-            <Input
+            <input
               id="companyName"
+              type="text"
               value={companyName}
               onChange={(e) => setCompanyName(e.target.value)}
-              className="w-full text-left"
+              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base text-left ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
             />
           </div>
         </div>
         <div className="flex items-center gap-4">
           <Label htmlFor="creditCode" className="font-medium text-base whitespace-nowrap min-w-[6rem]">统一社会信用代码：</Label>
           <div className="flex-1">
-            <Input
+            <input
               id="creditCode"
+              type="text"
               value={creditCode}
               onChange={(e) => setCreditCode(e.target.value)}
-              className="w-full text-left"
+              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base text-left ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
             />
           </div>
         </div>
         <div className="flex items-center gap-4">
           <Label htmlFor="contactPerson" className="font-medium text-base whitespace-nowrap min-w-[6rem]">联系人：</Label>
           <div className="flex-1">
-            <Input
+            <input
               id="contactPerson"
+              type="text"
               value={contactPerson}
               onChange={(e) => setContactPerson(e.target.value)}
-              className="w-full text-left"
+              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base text-left ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
             />
           </div>
         </div>
         <div className="flex items-center gap-4">
           <Label htmlFor="contactPhone" className="font-medium text-base whitespace-nowrap min-w-[6rem]">联系电话：</Label>
           <div className="flex-1">
-            <Input
+            <input
               id="contactPhone"
+              type="text"
               value={contactPhone}
               onChange={(e) => setContactPhone(e.target.value)}
-              className="w-full text-left"
+              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base text-left ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
             />
           </div>
         </div>

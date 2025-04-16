@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { Input } from '@/components/ui/input';
 import { Info } from 'lucide-react';
 
 interface TaxInputRowProps {
@@ -40,12 +39,12 @@ const TaxInputRow: React.FC<TaxInputRowProps> = ({
       </div>
       <div className="md:col-span-3 flex items-center justify-end w-full">
         <div className="min-w-[120px] w-[120px]">
-          <Input
+          <input
             type={type}
             value={value}
             onChange={onChange ? (e) => onChange(e.target.value) : undefined}
             readOnly={readOnly}
-            className="text-right font-bold pr-2 w-full"
+            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base text-right ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm font-bold pr-2"
           />
         </div>
         <span className="ml-2 text-sm whitespace-nowrap">万元</span>
